@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Land Banking → Builder Takedowns — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-height:60%;overflow:auto}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  #stats{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:11px 20px;border-radius:8px;width:min(700px,94%);box-shadow:0 2px 8px rgba(0,0,0,.25);text-align:center;font-size:13px}
+  #stats .big{font-size:18px;font-weight:bold;color:#8a5a00}
+  #methods{margin-top:8px;padding-top:7px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#8a5a00} #methods a{color:#1769aa}
+  select{font-family:inherit;font-size:12.5px} .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Land Banking → Builder Takedowns</h2>
+  <p>Each dot is a lot a land-bank / development entity assembled and later sold to a production builder.</p></div>
+<div id="legend"></div>
+<div id="stats">loading…</div>
+<script>
+const PAL=[['NVR / Ryan Homes','#e6194b'],['Ole South','#3cb44b'],['Regent Homes','#4363d8'],['PulteGroup','#f58231'],
+ ['Fox Ridge','#911eb4'],['Beazer','#008080'],['Jones Co','#bfa100'],['Drees','#e377c2'],['Lennar','#1a3a5c'],
+ ['D.R. Horton','#9a6324'],['Meritage','#46f0f0'],['Goodall','#808000']];
+const CMAP={}; PAL.forEach(([k,c])=>CMAP[k]=c);
+const cExpr=['match',['get','b']]; PAL.forEach(([k,c])=>cExpr.push(k,c)); cExpr.push('#999');
+const map=new maplibregl.Map({container:'map',center:[-86.75,36.10],zoom:9.6,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let feats=[],bSel='ALL';
+function stats(){
+  const sub=bSel==='ALL'?feats:feats.filter(f=>f.properties.b===bSel);
+  const hs=sub.map(f=>f.properties.h).filter(v=>v!=null).sort((a,b)=>a-b);
+  const medh=hs.length?hs[Math.floor(hs.length/2)]:'–';
+  document.getElementById('stats').innerHTML=
+    `<span class="big">${sub.length.toLocaleString()}</span> lots assembled then sold to ${bSel==='ALL'?'a production builder':bSel} &mdash; median land hold <b>${medh}</b> yrs`+
+    `<div id="methods"><b>Land banking</b> = an entity (land-bank investor / developer JV, names with AIV, JV, Land&nbsp;Bank, or a development LLC) assembles parcels and later conveys them by deed to a production homebuilder. Each dot is one such lot; the builder is the deed <b>buyer</b>, the land banker the <b>seller</b>. The recorded Memorandum-of-Option that governs the takedown is a separate Land-Records filing (not a deed) and is not shown here; this maps the deed result. Source: ParcelHistory ownership (Layer&nbsp;2) + Cadastral (Layer&nbsp;4). Davidson County, 1987&ndash;2026.</div>`;
+}
+function applyB(){ if(map.getLayer('dots')) map.setFilter('dots', bSel==='ALL'?null:['==',['get','b'],bSel]); stats(); }
+map.on('load',()=>{
+  fetch('Davidson_LandBank_Takedowns.geojson').then(r=>r.json()).then(g=>{
+    feats=g.features; map.addSource('p',{type:'geojson',data:g});
+    map.addLayer({id:'dots',type:'circle',source:'p',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2.4,13,4,16,7],'circle-color':cExpr,'circle-opacity':0.82,
+      'circle-stroke-width':0.3,'circle-stroke-color':'#fff'}});
+    const cnt={}; feats.forEach(f=>cnt[f.properties.b]=(cnt[f.properties.b]||0)+1);
+    const ord=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+    let lg='<b>Builder (takedown buyer)</b><br><select id="fB"><option value="ALL">All builders</option>'+
+      ord.map(k=>`<option value="${k}">${k} (${cnt[k].toLocaleString()})</option>`).join('')+'</select><br>'+
+      ord.slice(0,12).map(k=>`<div><i style="background:${CMAP[k]||'#999'}"></i>${k} ${cnt[k].toLocaleString()}</div>`).join('');
+    document.getElementById('legend').innerHTML=lg;
+    document.getElementById('fB').addEventListener('change',e=>{bSel=e.target.value;applyB();});
+    map.on('click','dots',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>${p.a||''}</b><br>Land banker: <b>${p.s}</b><br>Sold to: <b>${p.b}</b><br>Year: ${p.y||'?'}${p.h!=null?` &middot; held ${p.h} yr`:''}`).addTo(map);});
+    map.on('mouseenter','dots',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','dots',()=>map.getCanvas().style.cursor='');
+    stats();
+  });
+});
+</script></body></html>

@@ -14,6 +14,11 @@
   #count{position:absolute;bottom:14px;right:12px;z-index:4;background:rgba(255,255,255,.93);padding:6px 11px;border-radius:5px;font-size:12.5px}
   #methods{position:absolute;bottom:14px;left:12px;z-index:4;background:rgba(255,255,255,.93);padding:8px 11px;border-radius:6px;font-size:9.5px;line-height:1.45;color:#666;max-width:300px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
   #methods b{color:#1a3a5c} #methods a{color:#1769aa}
+  #opbox{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:10px 18px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25);text-align:center;width:min(660px,70%)}
+  #opbox select{font-family:inherit;font-size:13px;padding:2px 4px}
+  #opstats{margin-top:8px;display:flex;justify-content:center;flex-wrap:wrap;gap:16px;font-size:12.5px}
+  #opstats div{min-width:78px} #opstats .v{font-size:18px;font-weight:bold;color:#9b2a23} #opstats .l{color:#555;font-size:10.5px}
   .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px;line-height:1.5}
   .pp b{color:#1a3a5c} .pp .nm{font-size:13.5px;font-weight:bold} .pp .par{color:#9b2a23;font-weight:bold}
   .pp table{border-collapse:collapse;margin:5px 0} .pp td{padding:1px 6px 1px 0;vertical-align:top}
@@ -25,6 +30,8 @@
 <div id="legend"></div>
 <div id="count">loading…</div>
 <div id="methods"><b>Methodology.</b> Each dot is a single-family home owned by a corporate entity with a <b>currently-active</b> landlord registration (ePermits caseTypeID&nbsp;176). <b>Corporate-owned</b> = entity-keyword test (LLC, Inc, LP, Trust&hellip;). <b>Single-family</b> = 2 or fewer dwelling units, excl. manufactured homes (<a href="https://www.govinfo.gov/content/pkg/BILLS-119hres1299ih/html/BILLS-119hres1299ih.htm" target="_blank" rel="noopener">H.&nbsp;Res.&nbsp;1299 &sect;&nbsp;1001(3)</a>; Davidson cadastral). Mandate: <a href="https://library.municode.com/tn/metro_government_of_nashville_and_davidson_county/codes/code_of_ordinances?nodeId=CD_TIT16BUCO_CH16.33REIN_16.33.170RERE" target="_blank" rel="noopener">Metro Code &sect;&nbsp;16.33.170</a> &amp; <a href="https://tca.bagel.legal/Title_66_Property#66-28-107" target="_blank" rel="noopener">Tenn.&nbsp;Code&nbsp;Ann. &sect;&nbsp;66-28-107</a>. Sources: ePermits + ParcelHistory (L2) + Cadastral (L4). Davidson County.</div>
+<div id="opbox"><label>Operator: <select id="fOp"><option value="ALL" selected>All corporate operators</option></select></label>
+  <div id="opstats">loading…</div></div>
 <div id="map"></div>
 <script>
 const COLORS=[['Progress Residential','#e6194b'],['American Homes 4 Rent','#2166ac'],['Amherst (Main Street Renewal)','#1a9850'],
@@ -50,6 +57,29 @@ map.on('load',()=>{
       'circle-radius':['interpolate',['linear'],['zoom'],9,2.6,13,4.5,16,7],
       'circle-color':cExpr,'circle-opacity':0.85,'circle-stroke-width':0.4,'circle-stroke-color':'#fff'}});
     document.getElementById('count').innerHTML='<b>'+g.features.length.toLocaleString()+'</b> active corporate SF rentals';
+    // ---- operator filter + housing-characteristics box ----
+    const feats=g.features;
+    const med=arr=>{const a=arr.map(Number).filter(v=>!isNaN(v)&&v>0).sort((x,y)=>x-y);
+      if(!a.length)return null; const m=Math.floor(a.length/2); return a.length%2?a[m]:(a[m-1]+a[m])/2;};
+    const cnt={}; feats.forEach(f=>{const k=f.properties.p||'Other'; cnt[k]=(cnt[k]||0)+1;});
+    const order=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+    const sel=document.getElementById('fOp');
+    order.forEach(k=>{const o=document.createElement('option'); o.value=k;
+      o.textContent=(LABEL[k]||k)+' ('+cnt[k].toLocaleString()+')'; sel.appendChild(o);});
+    function stats(op){
+      const sub=op==='ALL'?feats:feats.filter(f=>(f.properties.p||'Other')===op);
+      const cell=(v,l,suf='')=>`<div><span class="v">${v==null?'–':(Math.round(v).toLocaleString()+suf)}</span><br><span class="l">${l}</span></div>`;
+      document.getElementById('opstats').innerHTML=
+        cell(sub.length,'holdings')+
+        cell(med(sub.map(f=>f.properties.acq)),'median acq. year')+
+        cell(med(sub.map(f=>f.properties.ybuilt)),'median year built')+
+        cell(med(sub.map(f=>f.properties.sqft)),'median sq ft')+
+        cell(med(sub.map(f=>f.properties.beds)),'median beds')+
+        cell(med(sub.map(f=>f.properties.baths)),'median baths');
+    }
+    sel.addEventListener('change',e=>{const op=e.target.value;
+      map.setFilter('dots', op==='ALL'?null:['==',['get','p'],op]); stats(op);});
+    stats('ALL');
     map.on('click','dots',e=>{const p=e.features[0].properties;
       const bb=(p.beds||p.baths)?`${p.beds||'?'} bd / ${p.baths||'?'} ba`:'';
       const html=`<div class="pp"><span class="nm">${p.owner||''}</span><br><span class="par">${LABEL[p.p]||p.p}</span><br>${p.addr||''} ${p.zip||''}
