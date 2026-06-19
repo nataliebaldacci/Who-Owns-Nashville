@@ -14,12 +14,15 @@
   .sw{display:inline-block;width:13px;height:13px;border-radius:2px;margin-right:7px;vertical-align:-2px;border:.5px solid #888}
   .tog{cursor:pointer;display:block;margin:3px 0} .tog input{margin-right:5px}
   #count{position:absolute;bottom:18px;right:14px;z-index:2;background:rgba(255,255,255,.93);padding:7px 11px;border-radius:4px;font-size:12.5px}
+  #methods{position:absolute;top:12px;left:14px;z-index:2;background:rgba(255,255,255,.93);padding:8px 11px;border-radius:6px;font-size:9.5px;line-height:1.45;color:#666;max-width:270px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  #methods b{color:#1a3a5c} #methods a{color:#1769aa}
   .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px}
 </style></head><body>
 <div id="title"><h2>Build-to-Rent in Nashville — Current vs. Pipeline</h2>
   <p>Each shape is one BTR parcel. <b>Green</b> = built &amp; held home (current). <b>Orange</b> = vacant lot in development (pipeline).</p></div>
 <div id="legend"></div>
 <div id="count">loading…</div>
+<div id="methods"><b>Methodology.</b> Each shape is a build-to-rent parcel. <b>Current</b> = a built home held by the operator; <b>Pipeline</b> = a vacant lot in development (vacant / null land use). Operators identified from a curated BTR list plus the ownership crosswalk (name + Shelton-Seymour address matching). <b>Single-family</b> = 2 or fewer dwelling units (<a href="https://www.govinfo.gov/content/pkg/BILLS-119hres1299ih/html/BILLS-119hres1299ih.htm" target="_blank" rel="noopener">H.&nbsp;Res.&nbsp;1299 &sect;&nbsp;1001(3)</a>). Sources: ParcelHistory ownership (Layer&nbsp;2) + Cadastral (Layer&nbsp;4). Davidson County.</div>
 <div id="map"></div>
 <script>
 const C_CUR='#1a9850', C_PIPE='#f16913';
