@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>When Did Nashville's Homes Become Non-Owner-Occupied?</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:12px 20px;border-radius:8px;width:min(660px,92%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:14px}
+  #play{font-family:Garamond,serif;font-size:14px;padding:6px 14px;cursor:pointer;background:#7a1f6e;color:#fff;border:none;border-radius:4px;min-width:74px}
+  #play:hover{background:#97307f} #yr{font-size:30px;font-weight:bold;color:#7a1f6e;min-width:78px;text-align:center}
+  #slider{flex:1} #count{text-align:center;font-size:13px;margin-top:7px} #count b{font-size:16px;color:#7a1f6e}
+  #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#7a1f6e} #methods a{color:#1769aa}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>When Did Nashville's Single-Family Homes Become Non-Owner-Occupied?</h2>
+  <p>Each dot is a home that is <b>non-owner-occupied today</b>, placed in the year its current owner acquired it (any transfer). Acquired by any transfer (sale, gift, inheritance, foreclosure). Press Play to watch the absentee-owned stock build up.</p></div>
+<div id="legend"></div>
+<div id="ctrl">
+  <div class="row"><button id="play">▶ Play</button><span id="yr">2024</span>
+    <input id="slider" type="range" min="1985" max="2024" value="2024" step="1"></div>
+  <div class="row" style="justify-content:center;gap:14px;margin-top:7px;font-size:12.5px">
+    <label>Show: <select id="fType" style="font-family:inherit;font-size:12.5px">
+      <option value="ALL" selected>All single-family</option>
+      <option value="D">Single-family detached</option>
+      <option value="A">Single-family attached (condo / townhome)</option>
+      <option value="X">Duplex / 2-unit</option>
+    </select></label></div>
+  <div id="count"><b id="ctot">0</b> of 42,446 non-owner-occupied <span id="clabel">single-family</span> homes acquired through <span id="cyr">2024</span></div>
+  <div id="methods"><b>Methodology.</b> Each dot is a single-family home (federal def, <a href="https://www.govinfo.gov/content/pkg/BILLS-119hres1299ih/html/BILLS-119hres1299ih.htm" target="_blank" rel="noopener">H.&nbsp;Res.&nbsp;1299 &sect;&nbsp;1001(3)</a>: DUCount&nbsp;1&ndash;2, no mobile/multistory/non-residential) that is <b>non-owner-occupied in the current cadastral</b> (owner mailing zip &ne; property zip), placed in the year its current owner acquired it &mdash; by <b>any transfer type</b> (sale, quitclaim, gift, inheritance, or foreclosure; sale price ignored). Captures all <b>42,446</b> currently non-owner-occupied homes (100% coverage). A companion map restricts to arm's-length sales over $1,000. Sources: ParcelHistory ownership (Layer&nbsp;2) + Cadastral (Layer&nbsp;4). Davidson County.</div>
+</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+const TYPECOLOR=['match',['get','t'],'D','#2166ac','A','#d95f0e','X','#6a51a3','#888'];
+let feats=[],year=2024,cum={ALL:{},D:{},A:{},X:{}};
+function precompute(){const per={ALL:{},D:{},A:{},X:{}};
+  for(const f of feats){const y=f.properties.y,t=f.properties.t;per.ALL[y]=(per.ALL[y]||0)+1;per[t][y]=(per[t][y]||0)+1;}
+  for(const k of ['ALL','D','A','X']){let c=0;for(let y=1900;y<=2026;y++){c+=(per[k][y]||0);cum[k][y]=c;}}}
+function build(){const type=document.getElementById('fType').value; const yf=['<=',['get','y'],year];
+  if(map.getLayer('dots')) map.setFilter('dots', type==='ALL'?yf:['all',yf,['==',['get','t'],type]]);
+  document.getElementById('ctot').textContent=(cum[type][year]||0).toLocaleString();
+  document.getElementById('clabel').textContent={ALL:'single-family',D:'single-family detached',A:'single-family attached',X:'duplex / 2-unit'}[type];}
+function applyYear(y){year=y;document.getElementById('yr').textContent=y;document.getElementById('slider').value=y;document.getElementById('cyr').textContent=y;build();}
+map.on('load',()=>{
+  fetch('Davidson_SF_BecameNonOwner_AllTransfers.geojson').then(r=>r.json()).then(g=>{
+    feats=g.features;precompute();map.addSource('t',{type:'geojson',data:g});
+    map.addLayer({id:'dots',type:'circle',source:'t',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2,12,3.2,16,6],'circle-color':TYPECOLOR,'circle-opacity':0.78}});
+    applyYear(2024);});
+  document.getElementById('legend').innerHTML='<b>Structure type</b><br><div><i style="background:#2166ac"></i>Detached</div><div><i style="background:#d95f0e"></i>Attached (condo / townhome)</div><div><i style="background:#6a51a3"></i>Duplex / 2-unit</div>';
+});
+document.getElementById('slider').addEventListener('input',e=>applyYear(+e.target.value));
+document.getElementById('fType').addEventListener('change',build);
+let timer=null;
+document.getElementById('play').addEventListener('click',function(){
+  if(timer){clearInterval(timer);timer=null;this.textContent='▶ Play';return;}
+  this.textContent='❚❚ Pause';if(year>=2024)applyYear(1985);
+  timer=setInterval(()=>{if(year>=2024){clearInterval(timer);timer=null;document.getElementById('play').textContent='▶ Play';return;}applyYear(year+1);},300);
+});
+</script></body></html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Current Single-Family Property Types — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  #occ{position:absolute;top:74px;right:12px;z-index:5;background:rgba(255,255,255,.95);padding:9px 12px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #occ label{display:block;cursor:pointer;margin:2px 0}
+  #stats{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:11px 20px;border-radius:8px;width:min(680px,93%);box-shadow:0 2px 8px rgba(0,0,0,.25);text-align:center;font-size:13px}
+  #stats .big{font-size:17px;font-weight:bold;color:#1a3a5c}
+  #stats .t{display:inline-block;margin:0 9px} #stats .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  #methods{margin-top:8px;padding-top:7px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#1a3a5c} #methods a{color:#1769aa}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Current Single-Family Property Types in Davidson County</h2>
+  <p>Every single-family home (1&ndash;2 units), colored by structure type. Filter by owner-occupancy at right.</p></div>
+<div id="legend"></div>
+<div id="occ"><b>Occupancy</b>
+  <label><input type="radio" name="occ" value="ALL" checked> All</label>
+  <label><input type="radio" name="occ" value="1"> Owner-occupied</label>
+  <label><input type="radio" name="occ" value="0"> Non-owner-occupied</label></div>
+<div id="stats">loading…</div>
+<script>
+const TYPECOLOR=['match',['get','t'],'D','#2166ac','A','#d95f0e','X','#6a51a3','#888'];
+const TC={D:'#2166ac',A:'#d95f0e',X:'#6a51a3'};
+let feats=[],occ='ALL';
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+function fmt(n){return n.toLocaleString()}
+function stats(){
+  const sub=feats.filter(f=> occ==='ALL' || String(f.properties.oo)===occ);
+  const c={D:0,A:0,X:0}; let oo1=0;
+  for(const f of feats){if(occ==='ALL'||String(f.properties.oo)===occ)c[f.properties.t]++; }
+  for(const f of feats){if(f.properties.oo===1)oo1++;}
+  const tot=sub.length, all=feats.length;
+  const occlabel = occ==='ALL'?'all homes' : (occ==='1'?'owner-occupied':'non-owner-occupied');
+  document.getElementById('stats').innerHTML=
+    `<span class="big">${fmt(tot)}</span> single-family homes &mdash; <i>${occlabel}</i><br>`+
+    `<span class="t"><span class="sw" style="background:${TC.D}"></span>Detached ${fmt(c.D)} (${(c.D/tot*100).toFixed(1)}%)</span>`+
+    `<span class="t"><span class="sw" style="background:${TC.A}"></span>Attached ${fmt(c.A)} (${(c.A/tot*100).toFixed(1)}%)</span>`+
+    `<span class="t"><span class="sw" style="background:${TC.X}"></span>Duplex / 2-unit ${fmt(c.X)} (${(c.X/tot*100).toFixed(1)}%)</span><br>`+
+    `<span style="font-size:12px;color:#555">Of all ${fmt(all)} homes: owner-occupied ${(oo1/all*100).toFixed(1)}% · non-owner ${(100-oo1/all*100).toFixed(1)}% &nbsp;(owner mailing zip vs property zip)</span>`+
+    `<div id="methods"><b>Single-family</b> per the federal definition (<a href="https://www.govinfo.gov/content/pkg/BILLS-119hres1299ih/html/BILLS-119hres1299ih.htm" target="_blank" rel="noopener">H.&nbsp;Res.&nbsp;1299 &sect;&nbsp;1001(3)</a>): a structure with 2 or fewer dwelling units, residential occupancy. DUCount&nbsp;1&ndash;2, excluding manufactured/mobile homes, multistory condo complexes, and non-residential structures. <b>Detached</b> = single-family on a lot · <b>Attached</b> = condo / zero-lot-line townhome · <b>Duplex</b> = 2 units. Occupancy proxied by owner&nbsp;mailing&nbsp;zip = property&nbsp;zip. Source: Davidson cadastral / CAMA. Davidson County.</div>`;
+}
+function applyOcc(){
+  if(map.getLayer('dots')) map.setFilter('dots', occ==='ALL'?null:['==',['get','oo'],+occ]);
+  stats();
+}
+map.on('load',()=>{
+  fetch('Davidson_SF_YearBuilt_Timeline.geojson').then(r=>r.json()).then(g=>{
+    feats=g.features; map.addSource('p',{type:'geojson',data:g});
+    map.addLayer({id:'dots',type:'circle',source:'p',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,1.4,12,2.4,16,5],
+      'circle-color':TYPECOLOR,'circle-opacity':0.72}});
+    stats();});
+  document.getElementById('legend').innerHTML='<b>Structure type</b><br><div><i style="background:#2166ac"></i>Detached</div><div><i style="background:#d95f0e"></i>Attached (condo / townhome)</div><div><i style="background:#6a51a3"></i>Duplex / 2-unit</div>';
+});
+document.querySelectorAll('input[name=occ]').forEach(r=>r.addEventListener('change',e=>{occ=e.target.value;applyOcc();}));
+</script></body></html>

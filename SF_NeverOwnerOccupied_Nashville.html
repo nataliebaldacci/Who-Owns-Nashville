@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Single-Family Homes Never Owner-Occupied — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  #stats{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:11px 20px;border-radius:8px;width:min(700px,94%);box-shadow:0 2px 8px rgba(0,0,0,.25);text-align:center;font-size:13px}
+  #stats .big{font-size:18px;font-weight:bold;color:#7a1f6e}
+  #stats .t{display:inline-block;margin:0 9px} #stats .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  #methods{margin-top:8px;padding-top:7px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#7a1f6e} #methods a{color:#1769aa}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Single-Family Homes That Were Never Owner-Occupied</h2>
+  <p>Davidson County parcels where no owner in the entire chain of title ever lived in the home.</p></div>
+<div id="legend"></div>
+<div id="stats">loading…</div>
+<script>
+const TYPECOLOR=['match',['get','t'],'D','#2166ac','A','#d95f0e','X','#6a51a3','#888'];
+const TC={D:'#2166ac',A:'#d95f0e',X:'#6a51a3'};
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+function fmt(n){return n.toLocaleString()}
+map.on('load',()=>{
+  fetch('Davidson_SF_NeverOwnerOccupied.geojson').then(r=>r.json()).then(g=>{
+    map.addSource('p',{type:'geojson',data:g});
+    map.addLayer({id:'dots',type:'circle',source:'p',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2,12,3.2,16,6],
+      'circle-color':TYPECOLOR,'circle-opacity':0.8,'circle-stroke-width':0.3,'circle-stroke-color':'#fff'}});
+    const c={D:0,A:0,X:0}; g.features.forEach(f=>c[f.properties.t]++); const tot=g.features.length;
+    document.getElementById('stats').innerHTML=
+      `<span class="big">${fmt(tot)}</span> single-family homes never owner-occupied &mdash; <i>4.4% of the 206,364 SF stock</i><br>`+
+      `<span class="t"><span class="sw" style="background:${TC.D}"></span>Detached ${fmt(c.D)} (${(c.D/tot*100).toFixed(0)}%)</span>`+
+      `<span class="t"><span class="sw" style="background:${TC.A}"></span>Attached ${fmt(c.A)} (${(c.A/tot*100).toFixed(0)}%)</span>`+
+      `<span class="t"><span class="sw" style="background:${TC.X}"></span>Duplex / 2-unit ${fmt(c.X)} (${(c.X/tot*100).toFixed(0)}%)</span>`+
+      `<div id="methods"><b>Never owner-occupied</b> = a single-family parcel (federal def, <a href="https://www.govinfo.gov/content/pkg/BILLS-119hres1299ih/html/BILLS-119hres1299ih.htm" target="_blank" rel="noopener">H.&nbsp;Res.&nbsp;1299 &sect;&nbsp;1001(3)</a>: DUCount 1&ndash;2, no mobile/multistory/non-residential) where <b>every owner in the recorded chain of title</b> had a mailing zip different from the property zip &mdash; no owner ever lived in the home. Strict test: a parcel counts only if every owner has a usable mailing zip and all differ from the property zip; parcels with any missing zip are excluded as indeterminate (3,144). Of 203,220 SF parcels with full owner-zip coverage, 4.4% were never owner-occupied. Source: ParcelHistory ownership (Layer&nbsp;2) + Cadastral (Layer&nbsp;4). Davidson County.</div>`;
+    document.getElementById('legend').innerHTML='<b>Structure type</b><br><div><i style="background:#2166ac"></i>Detached</div><div><i style="background:#d95f0e"></i>Attached (condo / townhome)</div><div><i style="background:#6a51a3"></i>Duplex / 2-unit</div>';
+    map.on('click','dots',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<b>${p.a||'(address n/a)'}</b><br>${({D:'Detached',A:'Attached (condo/townhome)',X:'Duplex / 2-unit'})[p.t]}<br><i>Never owner-occupied</i>`).addTo(map);});
+    map.on('mouseenter','dots',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','dots',()=>map.getCanvas().style.cursor='');
+  });
+});
+</script></body></html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>What Happened to Nashville's Foreclosed Homes?</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:12px 20px;border-radius:8px;width:min(700px,94%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:14px}
+  #play{font-family:Garamond,serif;font-size:14px;padding:6px 14px;cursor:pointer;background:#444;color:#fff;border:none;border-radius:4px;min-width:74px}
+  #play:hover{background:#222} #yr{font-size:30px;font-weight:bold;color:#333;min-width:78px;text-align:center}
+  #slider{flex:1}
+  #count{display:flex;justify-content:center;flex-wrap:wrap;gap:13px;margin-top:9px;font-size:12.5px}
+  #count b{font-size:15px} #count .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#333} #methods a{color:#1769aa}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px}
+  select{font-family:inherit;font-size:12.5px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>What Happened to Nashville's Foreclosed Homes?</h2>
+  <p>Each dot is a parcel sold by Trustee's Deed (foreclosure). Press Play to follow it from foreclosure to today.</p></div>
+<div id="legend"><b>Parcel status</b>
+  <div><i style="background:#d62728"></i>Foreclosed / bank-owned (REO)</div>
+  <div><i style="background:#1a9850"></i>Returned to owner-occupant</div>
+  <div><i style="background:#f59e0b"></i>Sold to non-owner / investor</div>
+  <div><i style="background:#9e9e9e"></i>Parcel retired (condo / re-plat)</div></div>
+<div id="ctrl">
+  <div class="row"><button id="play">▶ Play</button><span id="yr">2026</span>
+    <input id="slider" type="range" min="2001" max="2026" value="2026" step="1"></div>
+  <div class="row" style="justify-content:center;margin-top:7px">
+    <label>Show parcels that are, today: <select id="fFin">
+      <option value="ALL" selected>All foreclosed parcels</option>
+      <option value="1">Owner-occupied</option>
+      <option value="2">Non-owner occupied (investor)</option>
+      <option value="3">Parcel retired (rebuilt)</option>
+      <option value="0">Still foreclosed / bank-owned</option>
+    </select></label></div>
+  <div id="count">
+    <span><span class="sw" style="background:#d62728"></span>REO <b id="c0">0</b></span>
+    <span><span class="sw" style="background:#1a9850"></span>Owner-occupied <b id="c1">0</b></span>
+    <span><span class="sw" style="background:#f59e0b"></span>Investor <b id="c2">0</b></span>
+    <span><span class="sw" style="background:#9e9e9e"></span>Retired <b id="c3">0</b></span>
+    <span>&nbsp;Total <b id="ct">0</b></span>
+  </div>
+  <div id="methods"><b>Methodology.</b> Each dot is a Davidson County parcel conveyed by a <b>Trustee's Deed</b> (the instrument that completes a non-judicial foreclosure sale) at some point in its chain of title. The dot turns <b>red</b> in the year of the foreclosure; each later transfer recolors it by the new owner's occupancy &mdash; <b>green</b> if owner-occupied (owner mailing zip = property zip), <b>orange</b> if non-owner / investor &mdash; and <b>grey</b> when the parcel number ceased to exist (absorbed into a condo Master Deed or re-plat; shown at its successor parcel). The filter selects parcels by their status today. Source: ParcelHistory ownership (Layer&nbsp;2) + property history (Layer&nbsp;3) + Cadastral (Layer&nbsp;4). 2001&ndash;2026, Davidson County.</div>
+</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const Y0=2001,Y1=2026,NY=Y1-Y0+1;
+const COLOR=['match',['get','c'],0,'#d62728',1,'#1a9850',2,'#f59e0b',3,'#9e9e9e','#d62728'];
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let gj=null, COL=[], year=Y1, src=null, finSel='ALL';
+function applyFilter(){
+  const tf=['>=',['get','c'],0];
+  map.setFilter('dots', finSel==='ALL'? tf : ['all',tf,['==',['get','fin'],+finSel]]);
+}
+function setYear(y){
+  year=y; const idx=y-Y0; const cnt=[0,0,0,0];
+  const fs=gj.features;
+  for(let i=0;i<fs.length;i++){const c=COL[i][idx]; fs[i].properties.c=c;
+    if(c>=0 && (finSel==='ALL'|| fs[i].properties.fin==+finSel)) cnt[c]++;}
+  src.setData(gj);
+  document.getElementById('yr').textContent=y; document.getElementById('slider').value=y;
+  for(let k=0;k<4;k++) document.getElementById('c'+k).textContent=cnt[k].toLocaleString();
+  document.getElementById('ct').textContent=(cnt[0]+cnt[1]+cnt[2]+cnt[3]).toLocaleString();
+}
+map.on('load',()=>{
+  fetch('Davidson_Foreclosure_Timeline.geojson').then(r=>r.json()).then(g=>{
+    gj=g;
+    COL=gj.features.map(f=>{
+      const segs=f.properties.ev.split(';').filter(Boolean).map(s=>{const p=s.split(':');return [+p[0],+p[1]];});
+      const arr=new Int8Array(NY).fill(-1); let si=0,cur=-1;
+      for(let y=Y0;y<=Y1;y++){ while(si<segs.length&&segs[si][0]<=y){cur=segs[si][1];si++;} arr[y-Y0]=cur; }
+      return arr;
+    });
+    gj.features.forEach(f=>f.properties.c=-1);
+    map.addSource('f',{type:'geojson',data:gj}); src=map.getSource('f');
+    map.addLayer({id:'dots',type:'circle',source:'f',filter:['>=',['get','c'],0],paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2,12,3.4,16,6.5],'circle-color':COLOR,
+      'circle-stroke-width':0.3,'circle-stroke-color':'#fff','circle-opacity':0.85}});
+    map.on('click','dots',e=>{const p=e.features[0].properties;
+      const lbl={'-1':'not yet foreclosed','0':'Foreclosed / bank-owned','1':'Owner-occupied','2':'Non-owner / investor','3':'Parcel retired'}[p.c];
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>${p.a||'(address n/a)'}</b><br>First foreclosure: <b>${p.fc}</b><br>Status ${year}: <b>${lbl}</b><br>${p.nm? 'Current owner: '+p.nm:''}`).addTo(map);});
+    map.on('mouseenter','dots',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','dots',()=>map.getCanvas().style.cursor='');
+    setYear(Y1);
+  });
+});
+document.getElementById('slider').addEventListener('input',e=>setYear(+e.target.value));
+document.getElementById('fFin').addEventListener('change',e=>{finSel=e.target.value;applyFilter();setYear(year);});
+let timer=null;
+document.getElementById('play').addEventListener('click',function(){
+  if(timer){clearInterval(timer);timer=null;this.textContent='▶ Play';return;}
+  this.textContent='❚❚ Pause'; if(year>=Y1)setYear(Y0);
+  timer=setInterval(()=>{ if(year>=Y1){clearInterval(timer);timer=null;document.getElementById('play').textContent='▶ Play';return;} setYear(year+1); },420);
+});
+</script></body></html>

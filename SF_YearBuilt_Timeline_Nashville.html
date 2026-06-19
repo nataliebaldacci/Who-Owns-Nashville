@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>When Was Nashville's Single-Family Housing Built?</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:12px 20px;border-radius:8px;width:min(640px,92%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:14px}
+  #play{font-family:Garamond,serif;font-size:14px;padding:6px 14px;cursor:pointer;background:#9b5523;color:#fff;border:none;border-radius:4px;min-width:74px}
+  #play:hover{background:#b3683a} #yr{font-size:30px;font-weight:bold;color:#9b5523;min-width:78px;text-align:center}
+  #slider{flex:1} #count{text-align:center;font-size:13px;margin-top:7px} #count b{font-size:16px;color:#9b5523}
+  #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#9b5523} #methods a{color:#1769aa}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>When Was Nashville's Single-Family Housing Built?</h2>
+  <p>Each dot is a single-family home (1&ndash;2 dwelling units), placed in the year it was built. Drag the slider or press Play to watch the city grow.</p></div>
+<div id="legend"></div>
+<div id="ctrl">
+  <div class="row"><button id="play">▶ Play</button><span id="yr">2024</span>
+    <input id="slider" type="range" min="1900" max="2024" value="2024" step="1"></div>
+  <div class="row" style="justify-content:center;gap:14px;margin-top:7px;font-size:12.5px">
+    <label>Show: <select id="fType" style="font-family:inherit;font-size:12.5px">
+      <option value="ALL" selected>All single-family</option>
+      <option value="D">Single-family detached</option>
+      <option value="A">Single-family attached (condo / townhome)</option>
+      <option value="X">Duplex / 2-unit</option>
+    </select></label></div>
+  <div id="count"><b id="ctot">0</b> <span id="clabel">single-family</span> homes built through <span id="cyr">2024</span></div>
+  <div id="methods"><b>Methodology.</b> Each dot is a residential parcel with 1&ndash;2 dwelling units, placed by its assessor year-built, following the federal <b>single-family home</b> definition (<a href="https://www.govinfo.gov/content/pkg/BILLS-119hres1299ih/html/BILLS-119hres1299ih.htm" target="_blank" rel="noopener">H.&nbsp;Res.&nbsp;1299 &sect;&nbsp;1001(3)</a>): a structure with 2 or fewer dwelling units intended for residential occupancy. We <b>exclude</b>: (1)&nbsp;manufactured/mobile homes (per &sect;1001(3)(B)); (2)&nbsp;<b>multistory condo complexes</b> (18,069 parcels removed &mdash; only the smaller 1&ndash;2 unit homes are shown, not high-rise units); (3)&nbsp;non-residential structures (office, church, retail). <b>Type:</b> Detached = single-family on a lot · Attached = condo / zero-lot-line townhome · Duplex = 2 units. Year built &amp; characteristics from the Davidson cadastral / CAMA building-characteristics layer. Davidson County.</div>
+</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+const TYPECOLOR=['match',['get','t'],'D','#2166ac','A','#d95f0e','X','#6a51a3','#888'];
+let feats=[],year=2024,cum={ALL:{},D:{},A:{},X:{}};
+function precompute(){const per={ALL:{},D:{},A:{},X:{}};
+  for(const f of feats){const y=f.properties.y,t=f.properties.t;per.ALL[y]=(per.ALL[y]||0)+1;per[t][y]=(per[t][y]||0)+1;}
+  for(const k of ['ALL','D','A','X']){let c=0;for(let y=1800;y<=2026;y++){c+=(per[k][y]||0);cum[k][y]=c;}}}
+function build(){
+  const type=document.getElementById('fType').value;
+  const yf=['<=',['get','y'],year];
+  if(map.getLayer('dots')) map.setFilter('dots', type==='ALL'?yf:['all',yf,['==',['get','t'],type]]);
+  document.getElementById('ctot').textContent=(cum[type][year]||0).toLocaleString();
+  document.getElementById('clabel').textContent={ALL:'single-family',D:'single-family detached',A:'single-family attached',X:'duplex / 2-unit'}[type];
+}
+function applyYear(y){year=y;
+  document.getElementById('yr').textContent=y;document.getElementById('slider').value=y;document.getElementById('cyr').textContent=y;
+  build();
+}
+map.on('load',()=>{
+  fetch('Davidson_SF_YearBuilt_Timeline.geojson').then(r=>r.json()).then(g=>{
+    feats=g.features;precompute();map.addSource('t',{type:'geojson',data:g});
+    map.addLayer({id:'dots',type:'circle',source:'t',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,1.4,12,2.4,16,5],
+      'circle-color':TYPECOLOR,'circle-opacity':0.72}});
+    applyYear(2024);});
+  document.getElementById('legend').innerHTML='<b>Structure type</b><br><div><i style="background:#2166ac"></i>Detached</div><div><i style="background:#d95f0e"></i>Attached (condo / townhome)</div><div><i style="background:#6a51a3"></i>Duplex / 2-unit</div>';
+});
+document.getElementById('slider').addEventListener('input',e=>applyYear(+e.target.value));
+document.getElementById('fType').addEventListener('change',build);
+let timer=null;
+document.getElementById('play').addEventListener('click',function(){
+  if(timer){clearInterval(timer);timer=null;this.textContent='▶ Play';return;}
+  this.textContent='❚❚ Pause';if(year>=2024)applyYear(1900);
+  timer=setInterval(()=>{if(year>=2024){clearInterval(timer);timer=null;document.getElementById('play').textContent='▶ Play';return;}applyYear(year+1);},340);
+});
+</script></body></html>
