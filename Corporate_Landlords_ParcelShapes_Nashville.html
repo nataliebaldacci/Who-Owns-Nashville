@@ -1,0 +1,69 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<title>Corporate-Owned Residential Parcels — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:2;
+    background:rgba(255,255,255,.88);padding:8px 16px;border-radius:4px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #title h2{margin:0;font-size:17px} #title p{margin:3px 0 0;font-size:12px;color:#555}
+  #legend{position:absolute;bottom:18px;left:14px;z-index:2;background:rgba(255,255,255,.92);
+    padding:9px 12px;border-radius:4px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-height:46vh;overflow:auto}
+  #legend b{font-size:12.5px} .sw{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:-1px;border:.5px solid #999}
+  #count{position:absolute;bottom:18px;right:14px;z-index:2;background:rgba(255,255,255,.92);padding:6px 10px;border-radius:4px;font-size:12px}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px}
+</style></head><body>
+<div id="title"><h2>Who Owns Nashville? — Corporate-Owned Residential Parcels</h2>
+  <p>Each shape is one parcel currently owned by a corporate entity (single-family, 1–2 units). Colored by parent operator.</p></div>
+<div id="legend"></div>
+<div id="count">loading…</div>
+<div id="map"></div>
+<script>
+const COLORS=[
+ ['Progress Residential','#e6194b'],['American Homes 4 Rent','#3cb44b'],
+ ['Amherst (Main Street Renewal)','#4363d8'],['Invitation Homes','#f58231'],
+ ['Starwood','#911eb4'],['FirstKey Homes','#1696c8'],['VineBrook Homes','#f032e6'],
+ ['Tricon Residential','#9A6324'],['Regent Homes','#808000'],['Beazer Homes','#469990'],
+ ['NVR / Ryan Homes','#000075'],['Meritage Homes','#a9a9a9'],['Other','#c7b8aa']];
+const matchExpr=['match',['get','parent']];
+COLORS.forEach(([k,c])=>{ if(k!=='Other') matchExpr.push(k,c); });
+matchExpr.push('#c7b8aa'); // Other / default
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{
+    base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+      tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+map.on('load',()=>{
+  // Davidson boundary
+  map.addSource('cty',{type:'geojson',data:'Davidson_County_Boundary.geojson'});
+  map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[3,3]}});
+  fetch('Davidson_Corporate_Parcel_Shapes.geojson').then(r=>r.json()).then(gj=>{
+    map.addSource('p',{type:'geojson',data:gj});
+    // polygon fill colored by parent
+    map.addLayer({id:'fill',type:'fill',source:'p',
+      paint:{'fill-color':matchExpr,'fill-opacity':0.78}});
+    map.addLayer({id:'line',type:'line',source:'p',
+      paint:{'line-color':matchExpr,'line-width':['interpolate',['linear'],['zoom'],10,0.2,14,0.8]}});
+    // boost visibility at low zoom with a tiny circle on centroid-ish (use fill-extrusion? keep simple)
+    document.getElementById('count').textContent=gj.features.length.toLocaleString()+' parcels';
+    map.on('click','fill',e=>{
+      const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>${p.owner||''}</b><br>Parent: <b>${p.parent}</b><br>${p.address||''}<br>`+
+        `${p.ludesc||''} · Appraised $${Number(p.value||0).toLocaleString()}<br>APN ${p.apn||''}`).addTo(map);
+    });
+    map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
+  });
+  // legend
+  const counts={};  fetch('Davidson_Corporate_Parcel_Shapes.geojson').then(r=>r.json()).then(gj=>{
+    gj.features.forEach(f=>{const k=f.properties.parent; counts[k]=(counts[k]||0)+1;});
+    let html='<b>Parent operator</b><br>';
+    COLORS.forEach(([k,c])=>{ if(counts[k]) html+=`<span class="sw" style="background:${c}"></span>${k} (${counts[k].toLocaleString()})<br>`; });
+    document.getElementById('legend').innerHTML=html;
+  });
+});
+</script></body></html>

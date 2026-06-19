@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Who Owns Nashville? — Owner Portfolio Explorer</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<style>
+  html,body{height:100%;margin:0;font-family:Garamond,Georgia,serif;}
+  #app{display:flex;height:100%;}
+  #side{width:340px;min-width:340px;background:#fbf9f4;border-right:1px solid #e3dccd;display:flex;flex-direction:column;}
+  #side h1{font-size:18px;margin:14px 16px 2px;}
+  #side .sub{font-size:11.5px;color:#666;margin:0 16px 10px;line-height:1.4;}
+  #search{margin:0 16px 8px;display:flex;gap:6px;}
+  #q{flex:1;font-family:Garamond,serif;font-size:15px;padding:7px 9px;border:1px solid #999;border-radius:5px;}
+  #search button{font-family:Garamond,serif;font-size:13px;padding:7px 11px;border:none;border-radius:5px;cursor:pointer;background:#6e1b16;color:#fff;}
+  #reset{margin:0 16px 8px;font-size:12px;color:#6e1b16;background:none;border:none;cursor:pointer;text-align:left;padding:0 0 0 16px;}
+  #panel{flex:1;overflow:auto;padding:4px 16px 16px;font-size:13px;}
+  #panel .big{font-size:22px;font-weight:bold;color:#6e1b16;}
+  #panel .stat{margin:8px 0;} #panel .stat b{font-size:16px;}
+  #panel .alias{font-size:11.5px;color:#444;padding:1px 0;border-bottom:1px solid #efe9dc;}
+  #panel .hint{color:#888;font-size:12px;}
+  #legend{font-size:11px;padding:8px 16px;border-top:1px solid #e3dccd;}
+  #legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;}
+  #map{flex:1;} .maplibregl-popup-content{font-family:Garamond,serif;font-size:12.5px;max-width:300px;}
+  #cnt{position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,.92);padding:5px 10px;border-radius:5px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+</style></head><body>
+<div id="app">
+  <div id="side">
+    <h1>Who Owns Nashville?</h1>
+    <p class="sub">Search any owner. The map highlights every home in that owner's <b>portfolio</b> — all the LLCs and shells linked to the same entity by name + mailing address.</p>
+    <div id="search"><input id="q" placeholder="e.g. Progress, AMH, Barrett…" /><button id="go">Search</button></div>
+    <button id="reset">← show all 20,045</button>
+    <div id="panel"><p class="hint">20,045 corporate-owned homes · 5,131 owner portfolios (metacorps). Start typing an owner name.</p></div>
+    <div id="legend"></div>
+  </div>
+  <div id="map"></div>
+</div>
+<div id="cnt">loading…</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const COLOR=['match',['get','p'],
+ 'Progress Residential','#ffa4b1','American Homes 4 Rent','#2c719f','Amherst Residential','#8dcaf0',
+ 'Invitation Homes','#cf307a','Tricon Residential','#8ce38f','FirstKey Homes','#1f8166','#d5cc80'];
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{
+    base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+      tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    lbl:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'lbl',type:'raster',source:'lbl'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let SITES=[], META={}, feats=[];
+const fmt=n=>'$'+(n||0).toLocaleString();
+function panel(html){document.getElementById('panel').innerHTML=html;}
+
+map.on('load',()=>{
+  fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(geo=>{
+    map.addSource('cty',{type:'geojson',data:{type:'FeatureCollection',features:geo.features.filter(f=>f.properties.OBJECTID===4)}});
+    map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[2,2]}});});
+  Promise.all([fetch('WhoOwns_sites.json').then(r=>r.json()),fetch('WhoOwns_metacorps_index.json').then(r=>r.json())])
+  .then(([sites,meta])=>{
+    feats=sites.features; META=meta;
+    map.addSource('s',{type:'geojson',data:sites});
+    map.addLayer({id:'dots',type:'circle',source:'s',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2,13,4,16,6],
+      'circle-color':COLOR,'circle-opacity':0.82,'circle-stroke-width':0.4,'circle-stroke-color':'#fff'}});
+    document.getElementById('cnt').textContent='20,045 corporate-owned homes';
+    map.on('click','dots',e=>{const p=e.features[0].properties;const m=META[p.m]||{};
+      new maplibregl.Popup().setLngLat(e.features[0].geometry.coordinates.slice()).setHTML(
+        '<b>'+p.o+'</b><br>'+(p.a||'')+' '+(p.z||'')+'<br>Parent: '+p.p+
+        '<br>Appraised: '+fmt(p.v)+(p.y?' · acq '+p.y:'')+
+        '<br><i>Portfolio: '+(m.n||1)+' homes</i> '+
+        '<a href="#" onclick="showMeta('+p.m+');return false;">[show portfolio]</a>').addTo(map);});
+    map.on('mouseenter','dots',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','dots',()=>map.getCanvas().style.cursor='');
+  });
+  document.getElementById('legend').innerHTML=
+   '<div><i style="background:#ffa4b1"></i>Progress <i style="background:#2c719f;margin-left:8px"></i>AMH '+
+   '<i style="background:#8dcaf0;margin-left:8px"></i>Amherst</div>'+
+   '<div><i style="background:#cf307a"></i>Invitation <i style="background:#8ce38f;margin-left:8px"></i>Tricon '+
+   '<i style="background:#d5cc80;margin-left:8px"></i>Other</div>';
+});
+
+window.showMeta=function(m){
+  const d=META[m]; if(!d) return;
+  map.setFilter('dots',['==',['get','m'],m]);
+  const b=new maplibregl.LngLatBounds();
+  feats.filter(f=>f.properties.m===m).forEach(f=>b.extend(f.geometry.coordinates));
+  if(!b.isEmpty()) map.fitBounds(b,{padding:60,maxZoom:15});
+  document.getElementById('cnt').textContent=d.n.toLocaleString()+' homes in this portfolio';
+  panel('<div class="big">'+d.n.toLocaleString()+' homes</div>'+
+    '<div class="stat">Portfolio (metacorp #'+m+')</div>'+
+    '<div class="stat">Likely parent: <b>'+d.parent+'</b></div>'+
+    '<div class="stat">Total appraised value: <b>'+fmt(d.val)+'</b></div>'+
+    '<div class="stat">'+d.aliases.length+' linked owner name'+(d.aliases.length===1?'':'s')+':</div>'+
+    d.aliases.map(a=>'<div class="alias">'+a+'</div>').join(''));
+};
+function search(){
+  const q=(document.getElementById('q').value||'').trim().toUpperCase();
+  if(q.length<2){panel('<p class="hint">Type at least 2 characters.</p>');return;}
+  const ids=new Set();
+  Object.keys(META).forEach(m=>{ if(META[m].aliases.some(a=>a.toUpperCase().includes(q))) ids.add(+m); });
+  if(!ids.size){panel('<p class="hint">No owner matches "'+q+'".</p>');return;}
+  const idArr=[...ids];
+  map.setFilter('dots',['in',['get','m'],['literal',idArr]]);
+  const pts=feats.filter(f=>ids.has(f.properties.m));
+  const b=new maplibregl.LngLatBounds(); pts.forEach(f=>b.extend(f.geometry.coordinates));
+  if(!b.isEmpty()) map.fitBounds(b,{padding:60,maxZoom:15});
+  document.getElementById('cnt').textContent=pts.length.toLocaleString()+' homes · '+ids.size+' portfolio'+(ids.size===1?'':'s');
+  if(ids.size===1){ showMeta(idArr[0]); return; }
+  const top=idArr.map(m=>({m,...META[m]})).sort((a,b)=>b.n-a.n).slice(0,30);
+  panel('<div class="big">'+pts.length.toLocaleString()+' homes</div>'+
+    '<div class="stat">across <b>'+ids.size+'</b> portfolios matching "'+q+'". Click one:</div>'+
+    top.map(t=>'<div class="alias" style="cursor:pointer" onclick="showMeta('+t.m+')"><b>'+t.n+'</b> — '+t.parent+' <span style="color:#888">('+t.aliases[0]+')</span></div>').join(''));
+}
+document.getElementById('go').onclick=search;
+document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')search();});
+document.getElementById('reset').onclick=()=>{map.setFilter('dots',null);map.flyTo({center:[-86.784,36.166],zoom:10});
+  document.getElementById('cnt').textContent='20,045 corporate-owned homes';
+  panel('<p class="hint">20,045 corporate-owned homes · 5,131 owner portfolios. Start typing an owner name.</p>');};
+</script></body></html>

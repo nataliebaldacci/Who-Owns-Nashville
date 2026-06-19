@@ -1,0 +1,61 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"/>
+<title>Build-to-Rent in Davidson County — Current vs Pipeline</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:2;background:rgba(255,255,255,.9);
+    padding:8px 16px;border-radius:4px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  #title h2{margin:0;font-size:17px} #title p{margin:3px 0 0;font-size:12px;color:#555}
+  #legend{position:absolute;bottom:18px;left:14px;z-index:2;background:rgba(255,255,255,.93);padding:10px 13px;
+    border-radius:4px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+  .sw{display:inline-block;width:13px;height:13px;border-radius:2px;margin-right:7px;vertical-align:-2px;border:.5px solid #888}
+  .tog{cursor:pointer;display:block;margin:3px 0} .tog input{margin-right:5px}
+  #count{position:absolute;bottom:18px;right:14px;z-index:2;background:rgba(255,255,255,.93);padding:7px 11px;border-radius:4px;font-size:12.5px}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px}
+</style></head><body>
+<div id="title"><h2>Build-to-Rent in Nashville — Current vs. Pipeline</h2>
+  <p>Each shape is one BTR parcel. <b>Green</b> = built &amp; held home (current). <b>Orange</b> = vacant lot in development (pipeline).</p></div>
+<div id="legend"></div>
+<div id="count">loading…</div>
+<div id="map"></div>
+<script>
+const C_CUR='#1a9850', C_PIPE='#f16913';
+const colorExpr=['match',['get','status'],'Current (built home)',C_CUR,'#f16913'];
+const map=new maplibregl.Map({container:'map',center:[-86.75,36.10],zoom:9.6,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let showCur=true, showPipe=true;
+function filt(){
+  const f=['any'];
+  if(showCur) f.push(['==',['get','status'],'Current (built home)']);
+  if(showPipe) f.push(['!=',['get','status'],'Current (built home)']);
+  if(!showCur&&!showPipe) {map.setFilter('fill',['==',['get','status'],'__none__']);map.setFilter('line',['==',['get','status'],'__none__']);return;}
+  map.setFilter('fill',f); map.setFilter('line',f);
+}
+map.on('load',()=>{
+  fetch('BTR_Current_vs_Pipeline.geojson').then(r=>r.json()).then(gj=>{
+    map.addSource('btr',{type:'geojson',data:gj});
+    map.addLayer({id:'fill',type:'fill',source:'btr',paint:{'fill-color':colorExpr,'fill-opacity':0.7}});
+    map.addLayer({id:'line',type:'line',source:'btr',paint:{'line-color':colorExpr,'line-width':['interpolate',['linear'],['zoom'],10,0.3,14,1]}});
+    const cur=gj.features.filter(f=>f.properties.status.startsWith('Current')).length;
+    const pipe=gj.features.length-cur;
+    document.getElementById('count').innerHTML=`<b>${gj.features.length.toLocaleString()}</b> BTR parcels<br>${cur.toLocaleString()} current · ${pipe.toLocaleString()} pipeline`;
+    document.getElementById('legend').innerHTML=
+      `<b>Build-to-Rent status</b><br>`+
+      `<label class="tog"><input type="checkbox" id="cCur" checked><span class="sw" style="background:${C_CUR}"></span>Current — built &amp; held (${cur.toLocaleString()})</label>`+
+      `<label class="tog"><input type="checkbox" id="cPipe" checked><span class="sw" style="background:${C_PIPE}"></span>Pipeline — in development (${pipe.toLocaleString()})</label>`;
+    document.getElementById('cCur').onchange=e=>{showCur=e.target.checked;filt();};
+    document.getElementById('cPipe').onchange=e=>{showPipe=e.target.checked;filt();};
+    map.on('click','fill',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>${p.operator}</b><br>Status: <b>${p.status}</b><br>${p.PropAddr||''}<br>${p.LUDesc||''} · ${p.acres||'?'} ac<br>APN ${p.APN||''}`).addTo(map);});
+    map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
+  });
+});
+</script></body></html>

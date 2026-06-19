@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Where Corporate Landlords Cluster in Nashville</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<style>
+  html,body,#map{height:100%;margin:0;padding:0;font-family:Garamond,Georgia,serif;}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;
+    background:rgba(255,255,255,.95);padding:9px 18px;border-radius:6px;text-align:center;
+    box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%;}
+  #title h2{margin:0;font-size:16px;} #title p{margin:3px 0 0;font-size:11.5px;color:#555;}
+  #legend{position:absolute;bottom:16px;left:12px;z-index:5;background:rgba(255,255,255,.96);
+    padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 5px rgba(0,0,0,.2);}
+  #legend b{display:block;margin-bottom:5px;font-size:12px;}
+  #legend i{display:inline-block;width:14px;height:12px;margin-right:6px;vertical-align:middle;}
+  .maplibregl-popup-content{font-family:Garamond,serif;font-size:13px;}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="title">
+  <h2>Where Corporate Landlords Cluster in Nashville</h2>
+  <p>Each hexagon (0.2-mile) shades by the number of corporate-owned single-family homes inside it. Natural-breaks (ckmeans) classes, matching the "Security for Sale" method.</p>
+</div>
+<div id="legend"><b>Corporate-owned homes per hex</b><div id="legrows"></div></div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+// 7-class sequential — Security-for-Sale toolkit palette (warm tan->rose), keyed to ckmeans bin 0..6
+const RAMP=['#f3d9b0','#eecb9b','#e7b48f','#e09c85','#da867b','#cf7574','#c16677'];
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:10,
+  style:{version:8,sources:{
+    base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+      tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png',
+             'https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,
+      tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png',
+             'https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+
+map.on('load',()=>{
+  fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(geo=>{
+    map.addSource('cty',{type:'geojson',data:{type:'FeatureCollection',features:geo.features.filter(f=>f.properties.OBJECTID===4)}});
+    map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[2,2]}});
+  });
+  fetch('Davidson_Corporate_Hexbins_ckmeans.geojson').then(r=>r.json()).then(geo=>{
+    map.addSource('hex',{type:'geojson',data:geo});
+    map.addLayer({id:'hex',type:'fill',source:'hex',paint:{
+      'fill-color':['match',['get','bin'],0,RAMP[0],1,RAMP[1],2,RAMP[2],3,RAMP[3],4,RAMP[4],5,RAMP[5],6,RAMP[6],'#ccc'],
+      'fill-opacity':0.8,'fill-outline-color':'#fff'}},'labels');
+    // legend rows from the data's binVal ranges
+    const seen={}; geo.features.forEach(f=>{seen[f.properties.bin]=f.properties.binVal;});
+    document.getElementById('legrows').innerHTML=Object.keys(seen).sort().map(b=>{
+      const v=seen[b]; const lbl=v[0]===v[1]?v[0]:v[0]+'–'+v[1];
+      return '<div><i style="background:'+RAMP[b]+'"></i>'+lbl+'</div>';}).join('');
+    map.on('click','hex',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>'+p.count+'</b> corporate-owned homes in this 0.2-mile hex').addTo(map);});
+    map.on('mouseenter','hex',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','hex',()=>map.getCanvas().style.cursor='');
+  });
+});
+</script>
+</body>
+</html>
