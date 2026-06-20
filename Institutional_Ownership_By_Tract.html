@@ -14,8 +14,8 @@
   .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
 </style></head><body>
 <div id="map"></div>
-<div id="title"><h2>Institutional Ownership of Residential Housing, by Census Tract</h2>
-  <p>Share of residential parcels owned by corporate / institutional entities. Davidson County, Tennessee.</p></div>
+<div id="title"><h2>Institutional Ownership of Single-Family Homes, by Census Tract</h2>
+  <p>Share of single-family homes (≤2 units, ROAD Act definition) owned by corporate / institutional entities. Davidson County, Tennessee.</p></div>
 <div id="legend"><b>% institutional</b><br>
   <div><i style="background:#eff4fb"></i>0 – 4%</div>
   <div><i style="background:#bcd0e8"></i>4 – 8%</div>
@@ -44,7 +44,7 @@ map.on('load',()=>{
     map.on('click','fill',e=>{const p=e.features[0].properties;
       new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
         `<b>Tract ${p.GEOCODE||p.TRACTCE}</b><br><b>${(+p.pct_institutional).toFixed(1)}%</b> institutional<br>`+
-        `${p.inst_parcels} of ${p.total_residential} residential parcels`).addTo(map);});
+        `${p.inst_parcels} of ${p.total_residential} single-family homes`).addTo(map);});
     map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
     map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
     document.getElementById('status').textContent=`${g.features.length} census tracts`;
