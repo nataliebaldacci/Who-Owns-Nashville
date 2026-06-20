@@ -1,0 +1,51 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Big Institutional Operators — Parcel Shapes — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px;color:#13294b} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:78px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-height:70%;overflow:auto}
+  #legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:6px;vertical-align:middle}
+  #status{position:absolute;bottom:24px;right:12px;z-index:5;background:rgba(255,255,255,.92);padding:5px 10px;border-radius:5px;font-size:11.5px;color:#555}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>The Big Institutional Operators as Parcel Shapes</h2>
+  <p>Grey dots = all single-family homes. Colored lots = the actual parcels held by the major operators.</p></div>
+<div id="legend"><b>Operator</b><br><div><i style="background:#c8c8c8;border-radius:50%"></i>All single-family homes</div><div id="ops"></div></div>
+<div id="status">loading…</div>
+<script>
+const PAL={"Progress Residential":"#e6194b","American Homes 4 Rent":"#1f3a8a","Amherst":"#3cb44b","Tricon":"#f58231",
+  "Invitation Homes":"#911eb4","KKR / My Community":"#008080","FirstKey":"#9a6324","Starwood":"#1a3a5c",
+  "VineBrook":"#808000","Maymont/Brookfield":"#e377c2","Rithm":"#46c6c6","Home Partners":"#bcbd22"};
+const map=new maplibregl.Map({container:'map',center:[-86.72,36.06],zoom:10.4,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+const ce=['match',['get','op']]; Object.entries(PAL).forEach(([k,c])=>ce.push(k,c)); ce.push('#999');
+map.on('load',()=>{
+  fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(b=>{
+    map.addSource('cty',{type:'geojson',data:b});
+    map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[4,4]}});
+  }).catch(()=>{});
+  fetch('Davidson_AllSF_context.geojson').then(r=>r.json()).then(g=>{
+    map.addSource('ctx',{type:'geojson',data:g});
+    map.addLayer({id:'ctx',type:'circle',source:'ctx',paint:{'circle-color':'#cccccc','circle-opacity':0.4,
+      'circle-radius':['interpolate',['linear'],['zoom'],10,1,14,2]}});
+  });
+  fetch('Davidson_BigOperators_SF_Polys.geojson').then(r=>r.json()).then(g=>{
+    map.addSource('op',{type:'geojson',data:g});
+    map.addLayer({id:'opfill',type:'fill',source:'op',paint:{'fill-color':ce,'fill-opacity':0.85}});
+    map.addLayer({id:'opline',type:'line',source:'op',paint:{'line-color':'#333','line-width':0.3}});
+    map.on('click','opfill',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<b style="color:${PAL[p.op]||'#333'}">${p.op}</b>`).addTo(map);});
+    const c={}; g.features.forEach(x=>{c[x.properties.op]=(c[x.properties.op]||0)+1;});
+    document.getElementById('ops').innerHTML=Object.keys(PAL).filter(k=>c[k]).map(k=>`<div><i style="background:${PAL[k]}"></i>${k} (${c[k]})</div>`).join('');
+    document.getElementById('status').textContent=`${g.features.length.toLocaleString()} operator parcels`;
+  });
+});
+</script></body></html>
