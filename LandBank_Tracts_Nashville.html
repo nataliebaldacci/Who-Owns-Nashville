@@ -1,0 +1,79 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Who Land-Banks Nashville? — Out-of-State & Investor Land Tracts</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:5px;vertical-align:middle}
+  #ctrl{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:11px 20px;border-radius:8px;width:min(700px,94%);box-shadow:0 2px 8px rgba(0,0,0,.25);text-align:center}
+  #ctrl label{font-size:12.5px;margin:0 8px} #st{margin-top:8px;font-size:13px}
+  #st b{font-size:17px} #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#7a4a00} #methods a{color:#1769aa}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Who Land-Banks Nashville?</h2>
+  <p>Large vacant residential tracts held by out-of-state &amp; investor entities, dot size = acres.</p></div>
+<div id="legend"><b>What the tract became</b>
+  <div><i style="background:#d62728"></i>Still banking (vacant)</div>
+  <div><i style="background:#1a9850"></i>Built into homes</div>
+  <div><i style="background:#999"></i>Resold to another holder</div>
+  <div style="margin-top:4px;font-size:10.5px">ring = out-of-state owner</div></div>
+<div id="ctrl">
+  <label><input type="radio" name="f" value="ALL" checked> All</label>
+  <label><input type="radio" name="f" value="VAC"> Still banking</label>
+  <label><input type="radio" name="f" value="BUILT"> Built into homes</label>
+  <label><input type="radio" name="f" value="OOS"> Out-of-state</label>
+  <div id="st">loading…</div>
+  <div id="methods"><b>Land banker</b> = an entity (LLC/Inc/LP) that held a <b>vacant residential tract of 5+ acres</b> (assessment improvement value = $0, class Residential) acquired since 2000, kept by its longest-holding owner, and is <b>out-of-state or non-owner-occupied</b> (owner mailing address ≠ the property). Builders, farm families, churches, golf courses, landfills and government are excluded. Acres from ParcelHistory property layer (pre-subdivision tract size). Source: Assessment History + ParcelHistory (L2/L3) + Cadastral (L4). Davidson County.</div>
+</div>
+<script>
+const map=new maplibregl.Map({container:'map',center:[-86.75,36.07],zoom:9.6,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let feats=[],sel='ALL';
+const COLOR=['match',['get','status'],'Still banking (vacant)','#d62728','Built into homes','#1a9850','#999'];
+function match(f){return sel==='ALL'||(sel==='OOS'&&f.properties.oos)||(sel==='VAC'&&f.properties.status.startsWith('Still'))||(sel==='BUILT'&&f.properties.status==='Built into homes');}
+function stats(){
+  const sub=feats.filter(match);
+  const ac=sub.reduce((s,f)=>s+(f.properties.ac||0),0);
+  const oos=sub.filter(f=>f.properties.oos).length;
+  document.getElementById('st').innerHTML=`<b>${sub.length.toLocaleString()}</b> tracts &middot; <b>${Math.round(ac).toLocaleString()}</b> acres &middot; ${oos.toLocaleString()} out-of-state`;
+}
+function applyF(){
+  let flt=null;
+  if(sel==='OOS') flt=['==',['get','oos'],true];
+  if(sel==='VAC') flt=['==',['get','status'],'Still banking (vacant)'];
+  if(sel==='BUILT') flt=['==',['get','status'],'Built into homes'];
+  if(map.getLayer('dots')) map.setFilter('dots',flt); stats();
+}
+map.on('load',()=>{
+  fetch('Davidson_LandBank_Tracts.geojson').then(r=>r.json()).then(g=>{
+    feats=g.features; map.addSource('p',{type:'geojson',data:g});
+    map.addLayer({id:'dots',type:'circle',source:'p',paint:{
+      'circle-radius':['interpolate',['linear'],['get','ac'],3,4,50,11,200,22,600,34],
+      'circle-color':COLOR,'circle-opacity':0.62,
+      'circle-stroke-width':['case',['get','oos'],2,0.6],'circle-stroke-color':['case',['get','oos'],'#000','#fff']}});
+    map.on('click','dots',e=>{const p=e.features[0].properties;
+      const span = p.acq?(p.acq+' → '+(p.sold||'present')):'';
+      const yrs = (p.acq&&p.sold)?(' ('+(p.sold-p.acq)+' yr)'):(p.acq?(' ('+(2026-p.acq)+'+ yr)'):'');
+      new maplibregl.Popup({maxWidth:'300px'}).setLngLat(e.lngLat).setHTML(
+        `<b>${p.o}</b> (${p.st})<br>${p.a||''}<br><b>${p.ac} acres</b><br>`+
+        `<b>Held:</b> ${span}${yrs}<br>`+
+        (p.buyer?`<b>Sold to:</b> ${p.buyer}<br>`:'')+
+        `<b>Outcome:</b> <span style="color:${p.status.startsWith('Still')?'#d62728':(p.status==='Built into homes'?'#1a9850':'#666')}">${p.status}</span>`).addTo(map);});
+    map.on('mouseenter','dots',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','dots',()=>map.getCanvas().style.cursor='');
+    stats();
+  });
+});
+document.querySelectorAll('input[name=f]').forEach(r=>r.addEventListener('change',e=>{sel=e.target.value;applyF();}));
+</script></body></html>

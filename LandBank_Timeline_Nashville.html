@@ -1,0 +1,83 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Land Banking Over Time — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:12px 20px;border-radius:8px;width:min(680px,93%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:14px}
+  #play{font-family:Garamond,serif;font-size:14px;padding:6px 14px;cursor:pointer;background:#7a4a00;color:#fff;border:none;border-radius:4px;min-width:74px}
+  #play:hover{background:#9b5e00} #yr{font-size:30px;font-weight:bold;color:#7a4a00;min-width:78px;text-align:center}
+  #slider{flex:1} #count{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin-top:8px;font-size:12.5px}
+  #count b{font-size:15px} #count .sw{display:inline-block;width:11px;height:11px;border-radius:2px;margin-right:4px;vertical-align:middle}
+  #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#7a4a00}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>How Land Banking Unfolds in Davidson County</h2>
+  <p>Starts with the vacant land in 2000. Press Play to watch it get acquired, subdivided, and built.</p></div>
+<div id="legend"><b>Stage</b>
+  <div><i style="background:#cfc6b8"></i>Vacant land (improvement value $0)</div>
+  <div><i style="background:#d62728"></i>Acquired by land banker</div>
+  <div><i style="background:#f59e0b"></i>Subdivided (platted)</div>
+  <div><i style="background:#1a9850"></i>Built into homes</div></div>
+<div id="ctrl">
+  <div class="row"><button id="play">▶ Play</button><span id="yr">2000</span>
+    <input id="slider" type="range" min="2000" max="2026" value="2000" step="1"></div>
+  <div id="count">
+    <span><span class="sw" style="background:#cfc6b8"></span>Vacant <b id="c3">0</b></span>
+    <span><span class="sw" style="background:#d62728"></span>Land-banked <b id="c0">0</b></span>
+    <span><span class="sw" style="background:#f59e0b"></span>Subdivided <b id="c1">0</b></span>
+    <span><span class="sw" style="background:#1a9850"></span>Built <b id="c2">0</b></span>
+  </div>
+  <div id="methods"><b>Method.</b> Every polygon starts as <b>vacant land</b> (assessor improvement value $0) in 2000. It turns <b>red</b> the year a land-bank entity acquired it, <b>orange</b> the year it was subdivided by plat, and <b>green</b> the year a building first appears (improvement value rises above $0). Across these parcels the order is overwhelmingly acquire &rarr; subdivide &rarr; build (79% subdivide before any sale), median 2-year hold before the plat. Source: ParcelHistory ownership (Layer 2) + property history (Layer 3) + Cadastral polygons (Layer 4). Davidson County.</div>
+</div>
+<script>
+const Y0=2000,Y1=2026,NY=Y1-Y0+1;
+const COLOR=['match',['get','c'],0,'#d62728',1,'#f59e0b',2,'#1a9850',3,'#cfc6b8','#cfc6b8'];
+const map=new maplibregl.Map({container:'map',center:[-86.74,36.07],zoom:9.8,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let gj=null,COL=[],year=Y1,src=null;
+function setYear(y){
+  year=y; const idx=y-Y0; const cnt=[0,0,0,0];
+  const fs=gj.features;
+  for(let i=0;i<fs.length;i++){const c=COL[i][idx]; fs[i].properties.c=c; if(c>=0)cnt[c]++;}
+  src.setData(gj);
+  document.getElementById('yr').textContent=y; document.getElementById('slider').value=y;
+  for(let k=0;k<4;k++) document.getElementById('c'+k).textContent=cnt[k].toLocaleString();
+}
+map.on('load',()=>{
+  fetch('Davidson_LandBank_Timeline.geojson').then(r=>r.json()).then(g=>{
+    gj=g;
+    COL=gj.features.map(f=>{const p=f.properties; const arr=new Int8Array(NY).fill(3);
+      for(let y=Y0;y<=Y1;y++){let c=3;                       // 3 = vacant land (default from 2000)
+        if(p.acq!=null&&y>=p.acq) c=0;                       // acquired by land banker
+        if(p.split!=null&&y>=p.split) c=1;                   // subdivided
+        if(p.built!=null&&y>=p.built) c=2;                   // built (improvement value > $0)
+        arr[y-Y0]=c;}
+      return arr;});
+    gj.features.forEach(f=>f.properties.c=-1);
+    map.addSource('t',{type:'geojson',data:gj}); src=map.getSource('t');
+    map.addLayer({id:'fill',type:'fill',source:'t',filter:['>=',['get','c'],0],paint:{'fill-color':COLOR,'fill-opacity':0.6}});
+    map.addLayer({id:'line',type:'line',source:'t',filter:['>=',['get','c'],0],paint:{'line-color':COLOR,'line-width':0.5}});
+    setYear(Y0);
+  });
+});
+document.getElementById('slider').addEventListener('input',e=>setYear(+e.target.value));
+let timer=null;
+document.getElementById('play').addEventListener('click',function(){
+  if(timer){clearInterval(timer);timer=null;this.textContent='▶ Play';return;}
+  this.textContent='❚❚ Pause'; if(year>=Y1)setYear(Y0);
+  timer=setInterval(()=>{if(year>=Y1){clearInterval(timer);timer=null;document.getElementById('play').textContent='▶ Play';return;}setYear(year+1);},420);
+});
+</script></body></html>
