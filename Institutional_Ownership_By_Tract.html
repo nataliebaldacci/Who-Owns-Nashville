@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Institutional Ownership by Census Tract — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px;color:#13294b} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;bottom:24px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend b{color:#13294b} #legend i{display:inline-block;width:14px;height:14px;margin-right:6px;vertical-align:middle}
+  #status{position:absolute;bottom:24px;right:12px;z-index:5;background:rgba(255,255,255,.92);padding:5px 10px;border-radius:5px;font-size:11.5px;color:#555}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Institutional Ownership of Residential Housing, by Census Tract</h2>
+  <p>Share of residential parcels owned by corporate / institutional entities. Davidson County, Tennessee.</p></div>
+<div id="legend"><b>% institutional</b><br>
+  <div><i style="background:#eff4fb"></i>0 – 4%</div>
+  <div><i style="background:#bcd0e8"></i>4 – 8%</div>
+  <div><i style="background:#6f9bc7"></i>8 – 12%</div>
+  <div><i style="background:#3e6ea5"></i>12 – 18%</div>
+  <div><i style="background:#13294b"></i>18%+</div></div>
+<div id="status">loading…</div>
+<script>
+const COLOR=["step",["get","pct_institutional"],"#eff4fb",4,"#bcd0e8",8,"#6f9bc7",12,"#3e6ea5",18,"#13294b"];
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:9.9,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+map.on('load',()=>{
+  fetch('Davidson_Institutional_Pct_by_Tract.geojson').then(r=>r.json()).then(g=>{
+    map.addSource('t',{type:'geojson',data:g});
+    map.addLayer({id:'fill',type:'fill',source:'t',paint:{'fill-color':COLOR,'fill-opacity':0.78}});
+    map.addLayer({id:'line',type:'line',source:'t',paint:{'line-color':'#ffffff','line-width':0.6}});
+    // Davidson boundary
+    fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(b=>{
+      b.features=b.features.filter(f=>f.properties&&f.properties.OBJECTID===4||true);
+      map.addSource('cty',{type:'geojson',data:b});
+      map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[4,4]}});
+    }).catch(()=>{});
+    map.on('click','fill',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>Tract ${p.GEOCODE||p.TRACTCE}</b><br><b>${(+p.pct_institutional).toFixed(1)}%</b> institutional<br>`+
+        `${p.inst_parcels} of ${p.total_residential} residential parcels`).addTo(map);});
+    map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
+    document.getElementById('status').textContent=`${g.features.length} census tracts`;
+  });
+});
+</script></body></html>
