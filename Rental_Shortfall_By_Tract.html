@@ -1,0 +1,72 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Rental Housing Surplus/Deficit by Census Tract — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+ html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+ #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+   padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+ #title h2{margin:0;font-size:16px;color:#13294b} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+ #legend{position:absolute;bottom:24px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+ #legend b{color:#13294b} #legend i{display:inline-block;width:14px;height:14px;margin-right:6px;vertical-align:middle}
+ #status{position:absolute;bottom:24px;right:12px;z-index:5;background:rgba(255,255,255,.92);padding:5px 10px;border-radius:5px;font-size:11.5px;color:#555}
+ #methodBtn{position:absolute;top:12px;right:12px;z-index:6;background:#13294b;color:#fff;border:none;border-radius:5px;
+   padding:7px 12px;font-family:inherit;font-size:12px;cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.25)}
+ #method{position:absolute;top:48px;right:12px;z-index:6;display:none;background:rgba(255,255,255,.97);padding:14px 16px;
+   border-radius:6px;font-size:12px;line-height:1.5;max-width:360px;box-shadow:0 2px 8px rgba(0,0,0,.25);max-height:80vh;overflow:auto}
+ #method h3{margin:0 0 6px;font-size:13.5px;color:#13294b} #method a{color:#3e6ea5;word-break:break-all}
+ #method code{background:#f1f1f1;padding:1px 3px;border-radius:3px;font-size:11px}
+ .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Rental Housing Surplus / Deficit, by Census Tract</h2>
+ <p>Vacancy-rate method &middot; equilibrium = 2012–2018 county average &middot; current = 2020–2024 ACS &middot; Davidson County, Tennessee</p></div>
+<button id="methodBtn" onclick="var m=document.getElementById('method');m.style.display=m.style.display=='block'?'none':'block'">Methods &amp; sources</button>
+<div id="method">
+ <h3>How this is calculated</h3>
+ <p>For each tract, the <b>renter housing deficit</b> is the number of rental units it is short of a balanced market, as a share of its housing stock:</p>
+ <p><code>deficit = (equilibrium vacancy − current vacancy) × rental stock</code></p>
+ <p><b>Equilibrium</b> = Davidson County's average vacancy over 2012–2018 (rental 6.44%, owner 2.11%). <b>Current</b> = 2020–2024 ACS. Tracts ≥5% short are "substantially undersupplied," ±2% is "close to balance," ≥5% surplus is "oversupplied." Method follows Moody's Analytics, Reinvestment Fund &amp; PolicyMap, <i>Bringing the Housing Shortage Into Sharper Focus</i> (July 2025).</p>
+ <h3>Sources (replayable)</h3>
+ <p>Vacancy status (B25004), tenure (B25003), occupancy (B25002), U.S. Census Bureau ACS 5-Year:</p>
+ <p>Current (2020–2024), by tract:<br>
+ <a href="https://api.census.gov/data/2024/acs/acs5?get=NAME,B25004_002E,B25004_004E,B25003_002E,B25003_003E,B25002_001E&for=tract:*&in=state:47&in=county:037">api.census.gov/data/2024/acs/acs5 …for=tract:*&in=state:47&in=county:037</a></p>
+ <p>Equilibrium (each year 2012–2018), county:<br>
+ <a href="https://api.census.gov/data/2015/acs/acs5?get=B25004_002E,B25004_004E,B25003_002E,B25003_003E&for=county:037&in=state:47">api.census.gov/data/{2012…2018}/acs/acs5 …for=county:037&in=state:47</a></p>
+ <p>Institutional-ownership share per tract: Who Owns Nashville parcel dataset (primary Davidson County records).</p>
+</div>
+<div id="legend"><b>Renter deficit (% of stock)</b><br>
+ <div><i style="background:#b2182b"></i>Substantially undersupplied (≥5%)</div>
+ <div><i style="background:#ef8a62"></i>Modestly undersupplied (2–5%)</div>
+ <div><i style="background:#f7f7f7;border:1px solid #aaa"></i>Close to balance (±2%)</div>
+ <div><i style="background:#67a9cf"></i>Modestly oversupplied</div>
+ <div><i style="background:#2166ac"></i>Substantially oversupplied</div></div>
+<div id="status">loading…</div>
+<script>
+const COLOR=["step",["get","renter_def_pct"],"#b2182b",-5,"#ef8a62",-2,"#f7f7f7",2,"#67a9cf",5,"#2166ac"];
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:9.9,
+ style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+  tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+  layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+map.on('load',()=>{
+ fetch('Davidson_Tract_Shortfall.geojson').then(r=>r.json()).then(g=>{
+  map.addSource('t',{type:'geojson',data:g});
+  map.addLayer({id:'fill',type:'fill',source:'t',paint:{'fill-color':COLOR,'fill-opacity':0.78}});
+  map.addLayer({id:'line',type:'line',source:'t',paint:{'line-color':'#ffffff','line-width':0.6}});
+  fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(b=>{
+   map.addSource('cty',{type:'geojson',data:b});
+   map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[4,4]}});
+  }).catch(()=>{});
+  map.on('click','fill',e=>{const p=e.features[0].properties;
+   new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+    `<b>Tract ${p.TRACTCE||''}</b><br>Renter deficit: <b>${(+p.renter_def_pct).toFixed(1)}%</b> (${p.renter_cat||'n/a'})<br>`+
+    `Owner deficit: ${(+p.owner_def_pct).toFixed(1)}%<br>`+
+    `Institutional-owned: ${p.pct_institutional!=null?(+p.pct_institutional).toFixed(1)+'%':'n/a'}`).addTo(map);});
+  map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
+  map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
+  document.getElementById('status').textContent=`${g.features.length} census tracts`;
+ });
+});
+</script></body></html>
