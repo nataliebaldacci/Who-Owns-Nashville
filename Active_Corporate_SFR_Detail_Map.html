@@ -82,7 +82,7 @@ map.on('load',()=>{
     stats('ALL');
     map.on('click','dots',e=>{const p=e.features[0].properties;
       const bb=(p.beds||p.baths)?`${p.beds||'?'} bd / ${p.baths||'?'} ba`:'';
-      const html=`<div class="pp"><span class="nm">${p.owner||''}</span><br><span class="par">${LABEL[p.p]||p.p}</span><br>${p.addr||''} ${p.zip||''}
+      const html=`<div class="pp">${p.photo?`<img src="${p.photo}" loading="lazy" onerror="this.style.display='none'" style="width:100%;border-radius:5px;margin-bottom:7px;display:block">`:''}<span class="nm">${p.owner||''}</span><br><span class="par">${LABEL[p.p]||p.p}</span><br>${p.addr||''} ${p.zip||''}
         <table>${row('Bed / Bath',bb)}${row('Square Feet',p.sqft)}${row('Property Type',p.ptype)}${row('Year Built',p.ybuilt)}${row('Year Owner Purchased',p.acq)}
         ${row('Registration Years',p.nreg)}${row('Latest Expiration',p.exp)}</table>
         <div class="tk">${lnk('Parcel Viewer',p.pv)}${lnk('Property Card',p.card)}${lnk('Aerial Viewer',p.aerial)}
