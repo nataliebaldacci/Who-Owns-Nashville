@@ -1,0 +1,118 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>The Transaction History of Davidson County Single-Family Homes — 2013–2026</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px;color:#13294b} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:84px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:10px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend b{font-size:12.5px} #legend label{display:block;margin:5px 0;cursor:pointer;white-space:nowrap}
+  #legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  #legend .ct{color:#888;font-size:11px}
+  #panel{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.96);
+    padding:12px 20px 14px;border-radius:8px;box-shadow:0 1px 6px rgba(0,0,0,.25);text-align:center;width:560px;max-width:92%}
+  #yr{font-size:30px;font-weight:bold;color:#13294b;line-height:1}
+  #slider{width:100%;margin:9px 0 4px}
+  #ctrls{display:flex;align-items:center;justify-content:center;gap:14px;font-size:12.5px}
+  #play{cursor:pointer;background:#13294b;color:#fff;border:none;border-radius:5px;padding:5px 16px;font-family:inherit;font-size:13px}
+  #cumlbl{cursor:pointer} #cnt{color:#555;font-size:11.5px;margin-top:5px}
+  #status{position:absolute;top:84px;right:12px;z-index:5;background:rgba(255,255,255,.92);padding:5px 10px;border-radius:5px;font-size:11.5px;color:#555}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>The Transaction History of Davidson Single-Family Homes</h2>
+  <p>Every recorded arm's-length single-family sale, 2013–2026, placed in the year it was recorded and colored by who bought from whom.</p></div>
+<div id="legend"><b>Transaction type</b>
+  <label><input type="checkbox" id="base" checked><i style="background:#13294b"></i>Already company-owned in 2013 <span class="ct" id="cz"></span></label>
+  <div style="border-top:1px solid #ddd;margin:6px 0 4px"></div>
+  <label><input type="checkbox" data-s="a" checked><i style="background:#e6194b"></i>Company bought from a resident <span class="ct" id="ca"></span></label>
+  <label><input type="checkbox" data-s="d" checked><i style="background:#f58231"></i>Company to company <span class="ct" id="cd"></span></label>
+  <label><input type="checkbox" data-s="b" checked><i style="background:#3cb44b"></i>Company sold to a resident <span class="ct" id="cb"></span></label>
+  <label><input type="checkbox" data-s="c" checked><i style="background:#cccccc"></i>Resident to resident <span class="ct" id="cc"></span></label>
+</div>
+<div id="status">loading…</div>
+<div id="panel">
+  <div id="yr">2013</div>
+  <input id="slider" type="range" min="2013" max="2026" step="1" value="2013"/>
+  <div id="ctrls">
+    <button id="play">▶ Play</button>
+    <label id="cumlbl"><input type="checkbox" id="cum"> Show cumulative (all years up to)</label>
+  </div>
+  <div id="cnt"></div>
+</div>
+<script>
+const COL={a:"#e6194b",d:"#f58231",b:"#3cb44b",c:"#cccccc"};
+const LABEL={a:"Company bought from a resident",d:"Company to company",b:"Company sold to a resident",c:"Resident to resident"};
+const map=new maplibregl.Map({container:'map',center:[-86.74,36.13],zoom:9.9,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let DATA=null,timer=null;
+const colE=['match',['get','s'],'a',COL.a,'d',COL.d,'b',COL.b,'c',COL.c,'#999'];
+
+function activeTypes(){return [...document.querySelectorAll('#legend input[data-s]')].filter(c=>c.checked).map(c=>c.dataset.s);}
+function render(){
+  if(!map.getLayer('tx'))return;
+  const yr=+document.getElementById('slider').value;
+  const cum=document.getElementById('cum').checked;
+  const types=activeTypes();
+  const yf=cum?['<=',['get','y'],yr]:['==',['get','y'],yr];
+  map.setFilter('tx',['all',yf,['in',['get','s'],['literal',types]]]);
+  // counts
+  const c={a:0,b:0,c:0,d:0}; let tot=0;
+  for(const f of DATA.features){const p=f.properties; if(cum?p.y<=yr:p.y===yr){c[p.s]=(c[p.s]||0)+1;}}
+  ['a','b','c','d'].forEach(k=>{document.getElementById('c'+k).textContent='('+(c[k]||0).toLocaleString()+')';});
+  types.forEach(t=>tot+=c[t]||0);
+  document.getElementById('cnt').textContent=(cum?('through '+yr):('in '+yr))+': '+tot.toLocaleString()+' sales shown';
+}
+map.on('load',()=>{
+  fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(b=>{
+    map.addSource('cty',{type:'geojson',data:b});
+    map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[4,4]}});
+  }).catch(()=>{});
+  // starting stock: what companies already held entering 2013 — persistent baseline beneath the flow
+  fetch('Davidson_Corporate_Starting_Stock_2013.geojson').then(r=>r.json()).then(b=>{
+    map.addSource('base',{type:'geojson',data:b});
+    map.addLayer({id:'baselyr',type:'circle',source:'base',paint:{
+      'circle-color':'#13294b','circle-opacity':0.7,'circle-stroke-width':0.4,'circle-stroke-color':'#fff',
+      'circle-radius':['interpolate',['linear'],['zoom'],9,2.2,13,4,16,6.5]}});
+    map.on('click','baselyr',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b style="color:#13294b">Already company-owned in 2013</b><br>'+p.owner+'<br>Held since: '+p.since).addTo(map);});
+    document.getElementById('cz').textContent='('+b.features.length.toLocaleString()+')';
+  });
+  fetch('Davidson_Transaction_History_Timeline.geojson').then(r=>r.json()).then(g=>{
+    DATA=g;
+    map.addSource('tx',{type:'geojson',data:g});
+    // grey baseline drawn first (resident-to-resident), corporate types on top
+    map.addLayer({id:'tx',type:'circle',source:'tx',paint:{
+      'circle-color':colE,
+      'circle-opacity':['match',['get','s'],'c',0.35,0.82],
+      'circle-stroke-width':['match',['get','s'],'c',0,0.3],'circle-stroke-color':'#fff',
+      'circle-radius':['interpolate',['linear'],['zoom'],9,['match',['get','s'],'c',1.4,2.4],13,['match',['get','s'],'c',2.4,4.2],16,7]}});
+    map.on('click','tx',e=>{const p=e.features[0].properties;
+      let h='<b style="color:'+(COL[p.s]||'#333')+'">'+LABEL[p.s]+'</b><br>Year recorded: '+p.y;
+      if(p.p)h+='<br>Buyer: '+p.p;
+      if(p.pr)h+='<br>Price: $'+(+p.pr).toLocaleString();
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(h).addTo(map);});
+    document.getElementById('status').textContent=g.features.length.toLocaleString()+' total sales';
+    render();
+  });
+});
+document.getElementById('slider').addEventListener('input',e=>{document.getElementById('yr').textContent=e.target.value;render();});
+document.getElementById('cum').addEventListener('change',render);
+document.querySelectorAll('#legend input[data-s]').forEach(c=>c.addEventListener('change',render));
+document.getElementById('base').addEventListener('change',function(){
+  if(map.getLayer('baselyr'))map.setLayoutProperty('baselyr','visibility',this.checked?'visible':'none');});
+document.getElementById('play').addEventListener('click',function(){
+  if(timer){clearInterval(timer);timer=null;this.textContent='▶ Play';return;}
+  this.textContent='❚❚ Pause';const s=document.getElementById('slider');
+  if(+s.value>=2026)s.value=2013;
+  timer=setInterval(()=>{
+    let v=+s.value; if(v>=2026){clearInterval(timer);timer=null;document.getElementById('play').textContent='▶ Play';return;}
+    s.value=v+1;document.getElementById('yr').textContent=s.value;render();
+  },900);
+});
+</script></body></html>
