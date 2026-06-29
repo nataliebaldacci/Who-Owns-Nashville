@@ -1,0 +1,54 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Build-to-Rent: Exits vs. Pipeline — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:78px;left:12px;z-index:5;background:rgba(255,255,255,.96);padding:10px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:7px;vertical-align:middle}
+  #legend label{display:block;margin:4px 0;cursor:pointer} #legend .c{color:#777;font-size:10.5px}
+  #methods{position:absolute;bottom:14px;left:12px;z-index:5;background:rgba(255,255,255,.93);padding:8px 11px;border-radius:6px;font-size:9.5px;line-height:1.45;color:#666;max-width:340px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #methods b{color:#1a3a5c}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12px;max-width:300px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Build-to-Rent: Homes That Exited vs. Homes Being Built Now</h2>
+  <p>Where institutional operators are <i>selling out</i> finished rentals versus where they are <i>still building</i>.</p></div>
+<div id="legend"><b>Layer</b>
+  <label><input type="checkbox" id="ckPipe" checked><i style="background:#2c6b3f"></i>Pipeline &mdash; being permitted/built now <span class="c" id="nPipe"></span></label>
+  <label><input type="checkbox" id="ckExit" checked><i style="background:#d62728"></i>Exit &mdash; built-to-rent, then sold <span class="c" id="nExit"></span></label>
+</div>
+<div id="methods"><b>Method.</b> <b>Pipeline</b> = a parcel an institutional operator owns or owned that is currently vacant (assessor improvement value $0), has no land-use yet (NULL land-use = under development), or carries a new-construction permit issued 2023 or later. <b>Exit</b> = a home built while the operator held the land (improvement value rose from $0 at or after acquisition) that is <b>now owned by a non-institutional buyer</b> &mdash; the build-to-rent home sold back to the market. Source: Assessment History (improvement value), ParcelHistory ownership chain of title, Single-Family new-construction permits, Cadastral. Davidson County.</div>
+<script>
+const map=new maplibregl.Map({container:'map',center:[-86.75,36.1],zoom:9.6,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+function popup(p,kind){return `<b>${p.PropAddr||''}</b><br><b style="color:${kind=='exit'?'#d62728':'#2c6b3f'}">`+
+  `${kind=='exit'?'BTR EXIT (sold to market)':'PIPELINE (being built now)'}</b><br>`+
+  `Operator: ${p.operator||''}<br>`+
+  (p.build_year?`Built: ${p.build_year} &middot; acquired ${p.op_acq_year||'?'}<br>`:'')+
+  (p.last_new_permit_year?`New-construction permit: ${p.last_new_permit_year}<br>`:'')+
+  (kind=='exit'?`Now owned by: ${p.current_owner||''}`:`Status: ${(p.latest_imp&&+p.latest_imp>0)?'built, in service':'still vacant land'}`);}
+map.on('load',()=>{
+  Promise.all([fetch('Davidson_BTR_Pipeline.geojson').then(r=>r.json()),
+               fetch('Davidson_BTR_Exits.geojson').then(r=>r.json())]).then(([pipe,exit])=>{
+    map.addSource('pipe',{type:'geojson',data:pipe});
+    map.addSource('exit',{type:'geojson',data:exit});
+    map.addLayer({id:'pipe',type:'circle',source:'pipe',paint:{'circle-color':'#2c6b3f','circle-radius':4,'circle-opacity':0.8,'circle-stroke-width':0.4,'circle-stroke-color':'#fff'}});
+    map.addLayer({id:'exit',type:'circle',source:'exit',paint:{'circle-color':'#d62728','circle-radius':4.2,'circle-opacity':0.85,'circle-stroke-width':0.5,'circle-stroke-color':'#fff'}});
+    document.getElementById('nPipe').textContent=`(${pipe.features.length})`;
+    document.getElementById('nExit').textContent=`(${exit.features.length})`;
+    map.on('click','pipe',e=>new maplibregl.Popup().setLngLat(e.lngLat).setHTML(popup(e.features[0].properties,'pipe')).addTo(map));
+    map.on('click','exit',e=>new maplibregl.Popup().setLngLat(e.lngLat).setHTML(popup(e.features[0].properties,'exit')).addTo(map));
+    ['pipe','exit'].forEach(l=>{map.on('mouseenter',l,()=>map.getCanvas().style.cursor='pointer');map.on('mouseleave',l,()=>map.getCanvas().style.cursor='');});
+    document.getElementById('ckPipe').onchange=e=>map.setLayoutProperty('pipe','visibility',e.target.checked?'visible':'none');
+    document.getElementById('ckExit').onchange=e=>map.setLayoutProperty('exit','visibility',e.target.checked?'visible':'none');
+  });
+});
+</script></body></html>

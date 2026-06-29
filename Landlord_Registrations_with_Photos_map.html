@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Nashville Landlord Registrations — with property photos</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html, body { margin: 0; height: 100%; }
+  #map { position: absolute; inset: 0; }
+  .title-card {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    z-index: 1000; background: rgba(255,255,255,0.88); padding: 8px 18px;
+    border-radius: 6px; font-family: Garamond,'EB Garamond',serif; text-align: center;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.25); max-width: 90vw;
+  }
+  .title-card h1 { margin: 0; font-size: 17px; font-weight: 600; }
+  .title-card p { margin: 2px 0 0; font-size: 12px; color: #444; }
+  .legend, .status {
+    position: absolute; z-index: 1000; background: rgba(255,255,255,0.92);
+    padding: 6px 10px; border-radius: 4px; font-family: Garamond,'EB Garamond',serif;
+    font-size: 12px; color: #333; box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+  }
+  .legend { bottom: 10px; left: 10px; }
+  .status { bottom: 10px; right: 10px; }
+  .legend .dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px; vertical-align:middle; }
+  .leaflet-popup-content { font-family: Garamond,'EB Garamond',serif; font-size: 12px; max-width: 320px; }
+  .leaflet-popup-content h3 { margin: 0 0 4px; font-size: 14px; }
+  .leaflet-popup-content img.photo { width: 100%; border-radius: 4px; margin: 4px 0; background:#eee; }
+  .leaflet-popup-content table { border-collapse: collapse; margin-top: 3px; }
+  .leaflet-popup-content td { padding: 1px 6px 1px 0; vertical-align: top; }
+  .leaflet-popup-content td.k { color:#666; white-space:nowrap; }
+  .leaflet-popup-content .links a { font-size: 11px; margin-right: 8px; white-space: nowrap; }
+  .badge { display:inline-block; padding:1px 7px; border-radius:10px; color:#fff; font-size:11px; }
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="title-card">
+  <h1>Nashville Landlord Registrations</h1>
+  <p>36,897 registered rental properties · click any dot to see the house photo &amp; registration record</p>
+</div>
+<div class="legend">
+  <span class="dot" style="background:#2c8a3d"></span>Active registration&nbsp;&nbsp;
+  <span class="dot" style="background:#b03030"></span>Lapsed / expired
+</div>
+<div class="status" id="status">Loading registrations…</div>
+
+<script>
+  var map = L.map('map', { center: [36.166, -86.784], zoom: 10, preferCanvas: true });
+
+  var positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '© OpenStreetMap, © CARTO', subdomains: 'abcd', maxZoom: 20
+  }).addTo(map);
+
+  var aerial = L.tileLayer('https://maps.nashville.gov/arcgis/rest/services/Imagery/2023Imagery_WGS84/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 21, maxNativeZoom: 21, attribution: 'Metro Nashville GIS'
+  });
+  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution:'© OpenStreetMap', maxZoom:19 });
+
+  // Davidson County boundary
+  var boundary = L.geoJSON(null, { style:{ color:'#1a3a5c', weight:2.0, fillOpacity:0, dashArray:'4,4' } }).addTo(map);
+  fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>boundary.addData(g))
+    .catch(()=>fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>boundary.addData(g)).catch(()=>{}));
+
+  var IMG = 'https://image-api.spatialest.com/api/v1.2/tn-davidson-images/image?term=Images/';
+  function num(v){ return (v===null||v===undefined||v==='') ? '' : v; }
+  function yr(v){ v=num(v); return v===''?'':String(v).replace('.0',''); }
+
+  function popupHtml(p){
+    var apn = p.APN;
+    var active = p.any_active === true || p.any_active === 'True';
+    var badge = active
+      ? '<span class="badge" style="background:#2c8a3d">Active</span>'
+      : '<span class="badge" style="background:#b03030">Lapsed</span>';
+    var photo = IMG + apn;
+    var pv = 'https://maps.nashville.gov/ParcelViewer/?ParcelID=' + apn;
+    var comper = 'https://davidson-tn-citizen.comper.info/api/v1/info/get?subjID='+apn+'&propID='+apn;
+    var html = '<h3>'+ (num(p.PropAddr)||'(address n/a)') +'</h3>'+ badge +
+      '<img class="photo" src="'+photo+'" alt="property photo" '+
+        'onerror="this.style.display=\'none\'" referrerpolicy="no-referrer">'+
+      '<table>'+
+      '<tr><td class="k">Owner</td><td>'+num(p.reg_owner)+'</td></tr>'+
+      '<tr><td class="k">Type</td><td>'+num(p.property_type)+'</td></tr>'+
+      '<tr><td class="k">Year built</td><td>'+yr(p.YearBuilt_1)+'</td></tr>'+
+      '<tr><td class="k">Registrations</td><td>'+num(p.n_registrations)+' ('+yr(p.first_reg_year)+'–'+yr(p.last_reg_year)+')</td></tr>'+
+      '<tr><td class="k">Latest expires</td><td>'+yr(p.latest_expires)+'</td></tr>'+
+      '<tr><td class="k">Owner state</td><td>'+num(p.OwnState)+'</td></tr>'+
+      '<tr><td class="k">APN</td><td>'+apn+'</td></tr>'+
+      '</table>'+
+      '<div class="links" style="margin-top:5px">'+
+        '<a href="'+pv+'" target="_blank">Parcel Viewer</a>'+
+        '<a href="'+comper+'" target="_blank">Comper card</a>'+
+      '</div>';
+    return html;
+  }
+
+  var active = L.layerGroup(), lapsed = L.layerGroup();
+  function mk(latlng, p){
+    var act = (p.any_active===true || p.any_active==='True');
+    return L.circleMarker(latlng, {
+      radius:3, fillOpacity:0.75, opacity:1, weight:0.4,
+      color:'#333', fillColor: act ? '#2c8a3d' : '#b03030'
+    }).bindPopup(function(){ return popupHtml(p); }, { maxWidth:340 });
+  }
+
+  fetch('Landlord_Registered_with_Photos.geojson')
+    .then(r=>r.json())
+    .then(function(gj){
+      var na=0, nl=0;
+      gj.features.forEach(function(f){
+        var c=f.geometry.coordinates, p=f.properties;
+        var m=mk([c[1],c[0]], p);
+        if (p.any_active===true || p.any_active==='True'){ m.addTo(active); na++; }
+        else { m.addTo(lapsed); nl++; }
+      });
+      active.addTo(map); lapsed.addTo(map);
+      document.getElementById('status').textContent =
+        gj.features.length.toLocaleString()+' properties  ·  '+na.toLocaleString()+' active / '+nl.toLocaleString()+' lapsed';
+      try { map.fitBounds(L.geoJSON(gj).getBounds(), {padding:[20,20]}); } catch(e){}
+    })
+    .catch(function(e){ document.getElementById('status').textContent='Error loading data: '+e; });
+
+  L.control.layers(
+    { 'CARTO Positron': positron, 'Aerial 2023': aerial, 'OpenStreetMap': osm },
+    { 'Active registrations': active, 'Lapsed registrations': lapsed, 'County boundary': boundary },
+    { collapsed:false, position:'topright' }
+  ).addTo(map);
+</script>
+</body>
+</html>

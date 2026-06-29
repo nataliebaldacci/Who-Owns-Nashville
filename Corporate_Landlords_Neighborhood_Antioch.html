@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>One Antioch Subdivision, Bought by Wall Street</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
+<style>
+  html,body,#map{height:100%;margin:0;padding:0;font-family:Garamond,Georgia,serif;}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;
+    background:rgba(255,255,255,.95);padding:9px 18px;border-radius:6px;text-align:center;
+    box-shadow:0 1px 5px rgba(0,0,0,.25);max-width:92%;}
+  #title h2{margin:0;font-size:16px;} #title p{margin:3px 0 0;font-size:11.5px;color:#555;}
+  #legend{position:absolute;bottom:16px;left:12px;z-index:5;background:rgba(255,255,255,.95);
+    padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  #cnt{position:absolute;bottom:16px;right:12px;z-index:5;background:rgba(255,255,255,.95);padding:6px 12px;border-radius:5px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);}
+  .maplibregl-popup-content{font-family:Garamond,serif;font-size:12.5px;}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div id="title"><h2>One Antioch Subdivision, Bought by Wall Street</h2>
+  <p>Each dot is a single-family home owned by a corporate landlord, on the rooftop it sits on. Southeast Davidson County (Antioch) — the densest corporate cluster in Nashville.</p></div>
+<div id="legend"></div>
+<div id="cnt">loading…</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const COLOR=['match',['get','p'],
+ 'Tricon Residential','#8ce38f','American Homes 4 Rent','#2c719f','Progress Residential','#ffa4b1',
+ 'FirstKey Homes','#1f8166','Invitation Homes','#cf307a','Amherst Residential','#8dcaf0','#d5cc80'];
+// Antioch focus bbox (the Progress/Tricon clusters)
+const BBOX=[-86.685,36.035,-86.620,36.075];
+const map=new maplibregl.Map({container:'map',center:[-86.655,36.055],zoom:13.5,
+  style:{version:8,sources:{
+    aerial:{type:'raster',tileSize:256,attribution:'Esri World Imagery',
+      tiles:['https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}']},
+    labels:{type:'raster',tileSize:256,
+      tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'aerial',type:'raster',source:'aerial'},{id:'labels',type:'raster',source:'labels','paint':{'raster-opacity':0.5}}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+map.on('load',()=>{
+  fetch('Davidson_Corporate_Timeline.geojson').then(r=>r.json()).then(geo=>{
+    const inb=geo.features.filter(f=>{const c=f.geometry.coordinates;return c[0]>=BBOX[0]&&c[0]<=BBOX[2]&&c[1]>=BBOX[1]&&c[1]<=BBOX[3];});
+    map.addSource('h',{type:'geojson',data:{type:'FeatureCollection',features:inb}});
+    map.addLayer({id:'h',type:'circle',source:'h',paint:{
+      'circle-radius':['interpolate',['linear'],['zoom'],12,3,15,6,17,9],
+      'circle-color':COLOR,'circle-opacity':0.92,'circle-stroke-width':1,'circle-stroke-color':'#000'}});
+    document.getElementById('cnt').innerHTML='<b>'+inb.length.toLocaleString()+'</b> corporate-owned homes shown';
+    const b=new maplibregl.LngLatBounds(); inb.forEach(f=>b.extend(f.geometry.coordinates)); map.fitBounds(b,{padding:50});
+    map.on('click','h',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>'+p.p+'</b><br>acquired '+p.y).addTo(map);});
+    map.on('mouseenter','h',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','h',()=>map.getCanvas().style.cursor='');
+  });
+  document.getElementById('legend').innerHTML=
+   '<div><i style="background:#ffa4b1"></i>Progress</div><div><i style="background:#8ce38f"></i>Tricon</div>'+
+   '<div><i style="background:#2c719f"></i>AMH</div><div><i style="background:#8dcaf0"></i>Amherst</div>'+
+   '<div><i style="background:#1f8166"></i>FirstKey</div><div><i style="background:#cf307a"></i>Invitation</div>'+
+   '<div><i style="background:#d5cc80"></i>Other</div>';
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>The Securitization Shuffle — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:78px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:11px 18px;border-radius:8px;width:min(620px,93%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:12px}
+  #thr{font-size:18px;font-weight:bold;color:#7a1f6e;min-width:170px;text-align:center}
+  #slider{flex:1} #stat{text-align:center;margin-top:6px;font-size:12px;color:#333}
+  #methods{margin-top:8px;padding-top:7px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#7a1f6e}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12px;max-width:330px}
+  .chain{font-size:11px;line-height:1.5;margin-top:4px} .chain b{color:#7a1f6e}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>The Securitization Shuffle: Homes Moved Between a Parent's Own Shells</h2>
+  <p>Each home passed through two or more borrower entities of the <i>same</i> parent &mdash; mostly $0 quitclaim deeds. Click any dot for its full chain of title.</p></div>
+<div id="legend"></div>
+<div id="ctrl">
+  <div class="row"><span>Internal transfers &ge;</span><span id="thr">1</span>
+    <input id="slider" type="range" min="1" max="5" value="1" step="1"></div>
+  <div id="stat"></div>
+  <div id="methods"><b>Method.</b> Every point is a Davidson County home whose recorded chain of title shows it passing between two or more borrower SPVs of the <b>same parent operator</b> (e.g. FREO &rarr; Progress Residential 2015-2 Borrower &rarr; Progress Residential Borrower 5). 1,606 of these internal moves are <b>Quit Claim Deeds</b> and most are recorded at <b>$0</b> &mdash; paper transfers that repackage homes into successive securitizations rather than sell them. Color = parent; dot size = number of internal transfers. Source: ParcelHistory ownership (Layer 2), full chain of title; parents resolved by the operator name crosswalk. Davidson County.</div>
+</div>
+<script>
+const PAL={"Progress/Pretium":"#ff7f0e","Amherst":"#1f77b4","AMH":"#d62728","Tricon":"#2ca02c",
+  "Home Partners":"#9467bd","Maymont/Brookfield":"#8c564b","KKR/MCH":"#e377c2","Invitation/Colony-Starwood":"#17becf",
+  "Starwood":"#1a3a5c","FirstKey/Cerberus":"#bcbd22","Ribbon":"#7f7f7f"};
+const map=new maplibregl.Map({container:'map',center:[-86.75,36.12],zoom:9.7,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let GJ=null;
+const colorExpr=['match',['get','parent']]; Object.entries(PAL).forEach(([k,c])=>colorExpr.push(k,c)); colorExpr.push('#999');
+function fmtChain(s){return s.split(' -> ').map(p=>{
+  const inst=/BORROWER|PROPERTY|FREO|AMH|AH4R|SFR JV|TAH|PROGRESS|ALTO|BAF|HPA|RIBBON|YAMASA|OLYMPUS|MILE HIGH|TRUE NORTH|HOME SFR|PROPCO/i.test(p);
+  return inst?`<b>${p}</b>`:p;}).join(' &rarr; ');}
+function apply(thr){
+  const f=GJ.features.filter(x=>x.properties.n>=thr);
+  map.getSource('c').setData({type:'FeatureCollection',features:f});
+  document.getElementById('thr').textContent=thr+(thr==1?' (all)':'');
+  document.getElementById('stat').textContent=`${f.length.toLocaleString()} homes shown`;
+}
+map.on('load',()=>{
+  fetch('Davidson_WithinParent_Chains.geojson').then(r=>r.json()).then(g=>{
+    GJ=g; map.addSource('c',{type:'geojson',data:g});
+    map.addLayer({id:'pts',type:'circle',source:'c',paint:{
+      'circle-color':colorExpr,'circle-opacity':0.8,'circle-stroke-width':0.4,'circle-stroke-color':'#fff',
+      'circle-radius':['interpolate',['linear'],['get','n'],1,3.2,3,6,5,9]}});
+    map.on('click','pts',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup({maxWidth:'340px'}).setLngLat(e.lngLat).setHTML(
+        `<b>${p.addr||''}</b><br><b style="color:${PAL[p.parent]||'#333'}">${p.parent}</b> &middot; ${p.n} internal transfer${p.n>1?'s':''}`+
+        `<div class="chain">${fmtChain(p.chain)}</div>`).addTo(map);});
+    map.on('mouseenter','pts',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','pts',()=>map.getCanvas().style.cursor='');
+    const cnt={}; g.features.forEach(x=>{cnt[x.properties.parent]=(cnt[x.properties.parent]||0)+1;});
+    document.getElementById('legend').innerHTML='<b>Parent operator (homes)</b><br>'+
+      Object.keys(PAL).filter(k=>cnt[k]).sort((a,b)=>cnt[b]-cnt[a]).map(k=>
+        `<div><i style="background:${PAL[k]}"></i>${k} (${cnt[k]})</div>`).join('');
+    apply(1);
+  });
+});
+document.getElementById('slider').addEventListener('input',e=>apply(+e.target.value));
+</script></body></html>

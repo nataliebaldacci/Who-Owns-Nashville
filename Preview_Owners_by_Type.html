@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Preview — Who owns Davidson's corporate-held homes</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  body { font-family: Garamond,'EB Garamond',Georgia,serif; margin: 0; background:#fff; color:#1a1a1a; }
+  .wrap { max-width: 760px; margin: 28px auto; padding: 0 22px; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 2px; }
+  .sub { font-size: 14px; color:#555; margin: 0 0 18px; }
+  .src { font-size: 12px; color:#777; margin-top: 14px; border-top:1px solid #e3e3e3; padding-top:8px; }
+  .src b { color:#555; }
+  canvas { max-height: 420px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Who owns Davidson's corporate-held homes</h1>
+  <p class="sub">Entity-owned single-family parcels by owner type, 2026</p>
+  <canvas id="c"></canvas>
+  <p class="src"><b>Source:</b> Owners_By_Type_2026-06-23 (Davidson County primary parcel data). Local / small LLCs dominate by count; the named REIT + PE operators are a smaller but concentrated slice.</p>
+</div>
+<script>
+  // YOUR data — same shape that goes into Datawrapper
+  var labels = ["Local / small LLC","Private SFR operator (PE-backed)","Public SFR REIT","Homebuilder","iBuyer","Government / GSE"];
+  var values = [19984, 3049, 1192, 49, 23, 3];
+  // Brookings-ish palette
+  var colors = ["#1b3a5c","#f29222","#2c719f","#8dcaf0","#f4c542","#9aa0a6"];
+
+  new Chart(document.getElementById('c'), {
+    type: 'bar',
+    data: { labels: labels, datasets: [{ data: values, backgroundColor: colors, borderWidth: 0 }] },
+    options: {
+      indexAxis: 'y',                       // horizontal bars
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: function(ctx){ return ctx.parsed.x.toLocaleString() + ' parcels'; } } }
+      },
+      scales: {
+        x: { beginAtZero: true, grid: { color:'#eee' }, ticks: { font:{ family:'Garamond', size:13 }, callback:function(v){return v.toLocaleString();} } },
+        y: { grid: { display:false }, ticks: { font:{ family:'Garamond', size:13 } } }
+      }
+    }
+  });
+</script>
+</body>
+</html>

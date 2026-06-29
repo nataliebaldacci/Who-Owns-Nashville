@@ -1,0 +1,77 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Who Finances Nashville — Securitized Mortgages</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:78px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-height:60%;overflow:auto}
+  #legend i{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  #legend .amt{color:#777;font-size:10.5px}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:12px 20px;border-radius:8px;width:min(640px,93%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:14px}
+  #thr{font-size:22px;font-weight:bold;color:#1a3a5c;min-width:120px;text-align:center}
+  #slider{flex:1}
+  #stat{text-align:center;margin-top:7px;font-size:12.5px;color:#333}
+  #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#1a3a5c}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Who Finances Nashville: Securitized Mortgages on Institutional Homes</h2>
+  <p>Each home pledged as collateral on a Wall Street Deed of Trust. Slide to isolate the largest loans.</p></div>
+<div id="legend"></div>
+<div id="ctrl">
+  <div class="row"><span>Show loans &ge;</span><span id="thr">$0</span>
+    <input id="slider" type="range" min="0" max="75" value="0" step="1"></div>
+  <div id="stat"></div>
+  <div id="methods"><b>Method.</b> Every point is a Davidson County parcel pledged as collateral on a recorded <b>Deed of Trust</b> (mortgage) taken by an institutional single-family operator. Color = parent operator; dot size scales with the loan amount on that securitization. Loan amounts are the recorded consideration on the deed of trust; one securitized loan covers many homes, so the same amount attaches to every parcel in its pool. Borrowers resolved to parent via the operator name crosswalk (e.g. MILE HIGH / OLYMPUS / TRUE NORTH &rarr; Progress; STAR &rarr; Starwood; SWH / CSH &rarr; Colony-Starwood/Invitation; SFR JV / TENAX &rarr; Tricon). Source: Davidson County Register of Deeds (instrument type DOT) + ParcelHistory ownership (Layer 2) + Cadastral coordinates.</div>
+</div>
+<script>
+const PAL={"American Homes 4 Rent":"#d62728","Starwood":"#1f77b4","Invitation Homes (Colony/Starwood era)":"#17becf",
+  "Rithm Capital":"#9467bd","Tricon Residential":"#2ca02c","Progress Residential":"#ff7f0e",
+  "Offerpad":"#8c564b","SFR securitization (unattributed)":"#7f7f7f","Other":"#bbbbbb"};
+const fmt=n=>n>=1e6?'$'+(n/1e6).toFixed(1)+'M':'$'+(n/1e3).toFixed(0)+'k';
+const map=new maplibregl.Map({container:'map',center:[-86.75,36.12],zoom:9.7,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let GJ=null;
+const colorExpr=['match',['get','parent']]; Object.entries(PAL).forEach(([k,c])=>colorExpr.push(k,c)); colorExpr.push('#999');
+function apply(thr){
+  const f=GJ.features.filter(x=>(x.properties.loan||0)>=thr*1e6);
+  map.getSource('m').setData({type:'FeatureCollection',features:f});
+  const tot=f.reduce((s,x)=>s+(x.properties.loan?1:0),0);
+  document.getElementById('thr').textContent='$'+thr+'M';
+  document.getElementById('stat').textContent=`${f.length.toLocaleString()} homes shown across these loans`;
+}
+map.on('load',()=>{
+  fetch('Davidson_Financed_Mortgages.geojson').then(r=>r.json()).then(g=>{
+    GJ=g;
+    map.addSource('m',{type:'geojson',data:g});
+    map.addLayer({id:'pts',type:'circle',source:'m',paint:{
+      'circle-color':colorExpr,'circle-opacity':0.78,'circle-stroke-width':0.4,'circle-stroke-color':'#fff',
+      'circle-radius':['interpolate',['linear'],['sqrt',['/',['coalesce',['get','loan'],100000],1000000]],0,3,3,7,9,13]}});
+    map.on('click','pts',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>${p.addr||''}</b><br><b style="color:${PAL[p.parent]||'#333'}">${p.parent}</b><br>`+
+        `Borrower: ${p.borrower}<br>Lender/Trustee: ${p.lender}<br>`+
+        `<b>Loan: ${p.loan?fmt(p.loan):'n/a'}</b> &middot; recorded ${p.date}`).addTo(map);});
+    map.on('mouseenter','pts',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','pts',()=>map.getCanvas().style.cursor='');
+    // legend with total $ per parent
+    const tot={}; g.features.forEach(x=>{const k=x.properties.parent;tot[k]=(tot[k]||0)+1;});
+    const loanByParent={}; g.features.forEach(x=>{const k=x.properties.parent;loanByParent[k]=Math.max(loanByParent[k]||0,x.properties.loan||0);});
+    document.getElementById('legend').innerHTML='<b>Parent operator (homes)</b><br>'+
+      Object.keys(PAL).filter(k=>tot[k]).sort((a,b)=>tot[b]-tot[a]).map(k=>
+        `<div><i style="background:${PAL[k]}"></i>${k} <span class="amt">(${tot[k]})</span></div>`).join('');
+    apply(0);
+  });
+});
+document.getElementById('slider').addEventListener('input',e=>apply(+e.target.value));
+</script></body></html>
