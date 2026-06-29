@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<!-- saved from url=(0078)https://nataliebaldacci.github.io/SFR_Nashville/data/CALLR_violations_map.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    
+    <script src="./CALLR_violations_map_files/leaflet.js"></script>
+    <script src="./CALLR_violations_map_files/jquery-3.7.1.min.js"></script>
+    <script src="./CALLR_violations_map_files/bootstrap.bundle.min.js"></script>
+    <script src="./CALLR_violations_map_files/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="./CALLR_violations_map_files/leaflet.css">
+    <link rel="stylesheet" href="./CALLR_violations_map_files/bootstrap.min.css">
+    <link rel="stylesheet" href="./CALLR_violations_map_files/bootstrap-glyphicons.css">
+    <link rel="stylesheet" href="./CALLR_violations_map_files/all.min.css">
+    <link rel="stylesheet" href="./CALLR_violations_map_files/leaflet.awesome-markers.css">
+    <link rel="stylesheet" href="./CALLR_violations_map_files/leaflet.awesome.rotate.min.css">
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+            <style>
+                #map_a5ebdb997180e5ffec580e52089ad550 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    <div style="position:fixed;bottom:30px;left:30px;z-index:9999;background:white;padding:10px;border:2px solid grey;border-radius:5px;font-family:Arial;font-size:13px">
+<b>CALLR Landlord Registration Violations</b><br>
+<span style="color:red">●</span> Institutional landlord (4)<br>
+<span style="color:#2563eb">●</span> Individual landlord (13)<br>
+<small>Click a point for details</small>
+</div>
+    
+            <div class="folium-map leaflet-container leaflet-touch leaflet-retina leaflet-fade-anim leaflet-grab leaflet-touch-drag leaflet-touch-zoom" id="map_a5ebdb997180e5ffec580e52089ad550" tabindex="0" style=""><div class="leaflet-pane leaflet-map-pane" style="transform: translate3d(0px, 0px, 0px);"><div class="leaflet-pane leaflet-tile-pane"><div class="leaflet-layer " style="z-index: 1; opacity: 1;"><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 20; transform: translate3d(135px, 59px, 0px) scale(1);"><img alt="" src="./CALLR_violations_map_files/803@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(344px, 436px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/803@2x(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(600px, 436px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/802@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(344px, 180px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/802@2x(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(600px, 180px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/801@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(344px, -76px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/801@2x(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(600px, -76px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/802@2x(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(88px, 180px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/802@2x(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(856px, 180px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/801@2x(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(88px, -76px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/801@2x(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(856px, -76px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/803@2x(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(88px, 436px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/803@2x(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(856px, 436px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/804@2x.png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(344px, 692px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/804@2x(1).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(600px, 692px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/804@2x(2).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(88px, 692px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/804@2x(3).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(856px, 692px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/802@2x(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-168px, 180px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/802@2x(5).png" class="leaflet-tile" style="width: 256px; height: 256px; transform: translate3d(1112px, 180px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/803@2x(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-168px, 436px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/803@2x(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1112px, 436px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/801@2x(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-168px, -76px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/801@2x(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1112px, -76px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/804@2x(4).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(-168px, 692px, 0px); opacity: 1;"><img alt="" src="./CALLR_violations_map_files/804@2x(5).png" class="leaflet-tile leaflet-tile-loaded" style="width: 256px; height: 256px; transform: translate3d(1112px, 692px, 0px); opacity: 1;"></div><div class="leaflet-tile-container leaflet-zoom-animated" style="z-index: 19; transform: translate3d(0px, 0px, 0px) scale(0.5);"></div></div></div><div class="leaflet-pane leaflet-overlay-pane"><svg pointer-events="none" class="leaflet-zoom-animated" width="1619" height="1096" viewBox="-135 -91 1619 1096" style="transform: translate3d(-135px, -91px, 0px);"><g><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M984,527a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M1002,337a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M770,489a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M1050,663a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="red" fill-opacity="0.8" fill-rule="evenodd" d="M736,551a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 "></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="red" fill-opacity="0.8" fill-rule="evenodd" d="M736,551a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M852,328a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 " aria-describedby="leaflet-tooltip-175"></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M1016,532a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M937,487a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M848,425a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 " aria-describedby="leaflet-tooltip-330"></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="red" fill-opacity="0.8" fill-rule="evenodd" d="M869,775a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M872,773a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M870,774a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M871,773a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M870,771a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path><path class="leaflet-interactive" stroke="red" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="red" fill-opacity="0.8" fill-rule="evenodd" d="M987,680a9,9 0 1,0 18,0 a9,9 0 1,0 -18,0 "></path><path class="leaflet-interactive" stroke="#2563eb" stroke-opacity="1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="#2563eb" fill-opacity="0.8" fill-rule="evenodd" d="M905,618a6,6 0 1,0 12,0 a6,6 0 1,0 -12,0 "></path></g></svg></div><div class="leaflet-pane leaflet-shadow-pane"></div><div class="leaflet-pane leaflet-marker-pane"></div><div class="leaflet-pane leaflet-tooltip-pane"><div class="leaflet-tooltip leaflet-zoom-animated leaflet-tooltip-left" role="tooltip" id="leaflet-tooltip-330" style="opacity: 0.9; transform: translate3d(742px, 410px, 0px);"><div>
+                     2410 OAKWOOD AVE
+                 </div></div></div><div class="leaflet-pane leaflet-popup-pane"><div class="leaflet-popup  leaflet-zoom-animated" style="opacity: 1; transform: translate3d(854px, 425px, 0px); bottom: -7px; left: -172px;"><div class="leaflet-popup-content-wrapper"><div class="leaflet-popup-content" style="width: 297px;"><div id="html_25209ffee27981eacdf2b394f931e260" style="width: 100.0%; height: 100.0%;"><b>24-1406806</b><br>     <b>2410 OAKWOOD AVE</b><br>     NASHVILLE 37207<br>     <b>Owner:</b> JENSEN, WALTER LOUIS III &amp; COVINGTON, JUSTIN<br>     <b>APN:</b> 07104022300<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-04-03<br>     </div></div></div><div class="leaflet-popup-tip-container"><div class="leaflet-popup-tip"></div></div><a class="leaflet-popup-close-button" role="button" aria-label="Close popup" href="https://nataliebaldacci.github.io/SFR_Nashville/data/CALLR_violations_map.html#close"><span aria-hidden="true">×</span></a></div></div><div class="leaflet-proxy leaflet-zoom-animated" style="transform: translate3d(135619px, 205529px, 0px) scale(1024);"></div></div><div class="leaflet-control-container"><div class="leaflet-top leaflet-left"><div class="leaflet-control-zoom leaflet-bar leaflet-control"><a class="leaflet-control-zoom-in" href="https://nataliebaldacci.github.io/SFR_Nashville/data/CALLR_violations_map.html#" title="Zoom in" role="button" aria-label="Zoom in" aria-disabled="false"><span aria-hidden="true">+</span></a><a class="leaflet-control-zoom-out" href="https://nataliebaldacci.github.io/SFR_Nashville/data/CALLR_violations_map.html#" title="Zoom out" role="button" aria-label="Zoom out" aria-disabled="false"><span aria-hidden="true">−</span></a></div></div><div class="leaflet-top leaflet-right"></div><div class="leaflet-bottom leaflet-left"></div><div class="leaflet-bottom leaflet-right"><div class="leaflet-control-attribution leaflet-control"><a href="https://leafletjs.com/" title="A JavaScript library for interactive maps"><svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="12" height="8" viewBox="0 0 12 8" class="leaflet-attribution-flag"><path fill="#4C7BE1" d="M0 0h12v4H0z"></path><path fill="#FFD500" d="M0 4h12v3H0z"></path><path fill="#E0BC00" d="M0 7h12v1H0z"></path></svg> Leaflet</a> <span aria-hidden="true">|</span> © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors © <a href="https://carto.com/attributions">CARTO</a></div></div></div></div>
+        
+
+<script>
+    
+    
+            var map_a5ebdb997180e5ffec580e52089ad550 = L.map(
+                "map_a5ebdb997180e5ffec580e52089ad550",
+                {
+                    center: [36.162, -86.785],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 11,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a118af18f8683a744f3b8e42b76df934 = L.tileLayer(
+                "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 20,
+  "maxNativeZoom": 20,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors \u0026copy; \u003ca href=\"https://carto.com/attributions\"\u003eCARTO\u003c/a\u003e",
+  "subdomains": "abcd",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a118af18f8683a744f3b8e42b76df934.addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+            var circle_marker_4ac0beac835795b6f8ec05827ee332a5 = L.circleMarker(
+                [36.155641765619855, -86.66080309243864],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_7240f8b5ba6d1838cdcb61fd6150c213 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_95f617ac706c667dd23fe4909b527442 = $(`<div id="html_95f617ac706c667dd23fe4909b527442" style="width: 100.0%; height: 100.0%;"><b>24-1405764</b><br>     <b>2810 DUNMORE DR</b><br>     NASHVILLE 37214<br>     <b>Owner:</b> GHEORGHE, CONSTANTIN & ELISABETHA GABRIELA<br>     <b>APN:</b> 09609018300<br>     <b>Status:</b> Active Abate Violation Case<br>     <b>Modified:</b> 2024-09-10<br>     </div>`)[0];
+                popup_7240f8b5ba6d1838cdcb61fd6150c213.setContent(html_95f617ac706c667dd23fe4909b527442);
+            
+        
+
+        circle_marker_4ac0beac835795b6f8ec05827ee332a5.bindPopup(popup_7240f8b5ba6d1838cdcb61fd6150c213)
+        ;
+
+        
+    
+    
+            circle_marker_4ac0beac835795b6f8ec05827ee332a5.bindTooltip(
+                `<div>
+                     2810 DUNMORE DR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b078f86aa252a8c8aa67b4076d42c8ed = L.circleMarker(
+                [36.26111565115318, -86.64878543004099],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_410362513f41916799e468320f0c2bde = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_04e5f50bda14fed4da54e68bed689efa = $(`<div id="html_04e5f50bda14fed4da54e68bed689efa" style="width: 100.0%; height: 100.0%;"><b>24-1388586</b><br>     <b>913 DEBOW ST</b><br>     OLD HICKORY 37138<br>     <b>Owner:</b> DOKTER, DAVID & HEIDI<br>     <b>APN:</b> 04415011500<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2024-09-17<br>     </div>`)[0];
+                popup_410362513f41916799e468320f0c2bde.setContent(html_04e5f50bda14fed4da54e68bed689efa);
+            
+        
+
+        circle_marker_b078f86aa252a8c8aa67b4076d42c8ed.bindPopup(popup_410362513f41916799e468320f0c2bde)
+        ;
+
+        
+    
+    
+            circle_marker_b078f86aa252a8c8aa67b4076d42c8ed.bindTooltip(
+                `<div>
+                     913 DEBOW ST
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_34f9beb04cb6e937b2890918662a4463 = L.circleMarker(
+                [36.17693169375295, -86.80795485471128],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_c3bf6cc79a067f15a83d34225c3973f8 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_b7d4b908884b86a11054564b4de67884 = $(`<div id="html_b7d4b908884b86a11054564b4de67884" style="width: 100.0%; height: 100.0%;"><b>24-1387526</b><br>     <b>1610 WHELESS ST</b><br>     NASHVILLE 37208<br>     <b>Owner:</b> HENRY, EDDIE L.<br>     <b>APN:</b> 08111025400<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2024-09-17<br>     </div>`)[0];
+                popup_c3bf6cc79a067f15a83d34225c3973f8.setContent(html_b7d4b908884b86a11054564b4de67884);
+            
+        
+
+        circle_marker_34f9beb04cb6e937b2890918662a4463.bindPopup(popup_c3bf6cc79a067f15a83d34225c3973f8)
+        ;
+
+        
+    
+    
+            circle_marker_34f9beb04cb6e937b2890918662a4463.bindTooltip(
+                `<div>
+                     1610 WHELESS ST
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_d4b1db26b9712fdd42847eeaa70dbca6 = L.circleMarker(
+                [36.08002938376725, -86.61551707136734],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_37086ecd7f9f2748d2caa6eaee6b0844 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_ff4c8311548361e4e329f5d315ba2a5e = $(`<div id="html_ff4c8311548361e4e329f5d315ba2a5e" style="width: 100.0%; height: 100.0%;"><b>24-1390529</b><br>     <b>637 BLUEWATER DR</b><br>     NASHVILLE 37217<br>     <b>Owner:</b> CORNELL, TIAN ABENI KENU<br>     <b>APN:</b> 15002032600<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2024-09-28<br>     </div>`)[0];
+                popup_37086ecd7f9f2748d2caa6eaee6b0844.setContent(html_ff4c8311548361e4e329f5d315ba2a5e);
+            
+        
+
+        circle_marker_d4b1db26b9712fdd42847eeaa70dbca6.bindPopup(popup_37086ecd7f9f2748d2caa6eaee6b0844)
+        ;
+
+        
+    
+    
+            circle_marker_d4b1db26b9712fdd42847eeaa70dbca6.bindTooltip(
+                `<div>
+                     637 BLUEWATER DR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_eec5285e276a26eb8d3a22e70ece0291 = L.circleMarker(
+                [36.142555853333754, -86.82914810985008],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_1445899a8be703ab52bf557623d9b101 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_ae72e38e76685b0b673862c390f1003e = $(`<div id="html_ae72e38e76685b0b673862c390f1003e" style="width: 100.0%; height: 100.0%;"><b>24-1408734</b><br>     <b>127 A 37TH AVE N</b><br>     NASHVILLE 37209<br>     <b>Owner:</b> HULL HOOPER HOLDINGS, LLC<br>     <b>APN:</b> 104013D00100CO<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2024-10-02<br>     <b style=color:red>⚠ Institutional landlord</b></div>`)[0];
+                popup_1445899a8be703ab52bf557623d9b101.setContent(html_ae72e38e76685b0b673862c390f1003e);
+            
+        
+
+        circle_marker_eec5285e276a26eb8d3a22e70ece0291.bindPopup(popup_1445899a8be703ab52bf557623d9b101)
+        ;
+
+        
+    
+    
+            circle_marker_eec5285e276a26eb8d3a22e70ece0291.bindTooltip(
+                `<div>
+                     127 A 37TH AVE N
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5aa7fad5322b3b927022d97e565af1e2 = L.circleMarker(
+                [36.142555853333754, -86.82914810985008],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_2341999c5a0f2bd2235710448f17cdb1 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_e2d2f8d8f62f5450f86733ac3aa19057 = $(`<div id="html_e2d2f8d8f62f5450f86733ac3aa19057" style="width: 100.0%; height: 100.0%;"><b>24-1408735</b><br>     <b>127 A 37TH AVE N</b><br>     NASHVILLE 37209<br>     <b>Owner:</b> HULL HOOPER HOLDINGS, LLC<br>     <b>APN:</b> 104013D00100CO<br>     <b>Status:</b> Active Abate Violation Case<br>     <b>Modified:</b> 2024-10-02<br>     <b style=color:red>⚠ Institutional landlord</b></div>`)[0];
+                popup_2341999c5a0f2bd2235710448f17cdb1.setContent(html_e2d2f8d8f62f5450f86733ac3aa19057);
+            
+        
+
+        circle_marker_5aa7fad5322b3b927022d97e565af1e2.bindPopup(popup_2341999c5a0f2bd2235710448f17cdb1)
+        ;
+
+        
+    
+    
+            circle_marker_5aa7fad5322b3b927022d97e565af1e2.bindTooltip(
+                `<div>
+                     127 A 37TH AVE N
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_37cf715f288e0f473bc47f8c0edb84f4 = L.circleMarker(
+                [36.265793003247076, -86.75120844106209],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_1a00bd00d1432bcd441be0481a3d4196 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_762e3b1feb189df74ba202b452a0bcac = $(`<div id="html_762e3b1feb189df74ba202b452a0bcac" style="width: 100.0%; height: 100.0%;"><b>25-1422197</b><br>     <b>403 KEMPER DR N</b><br>     MADISON 37115<br>     <b>Owner:</b> BASTORY, MARMAR & YOUSIF, EMAD<br>     <b>APN:</b> 04209006100<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-02-21<br>     </div>`)[0];
+                popup_1a00bd00d1432bcd441be0481a3d4196.setContent(html_762e3b1feb189df74ba202b452a0bcac);
+            
+        
+
+        circle_marker_37cf715f288e0f473bc47f8c0edb84f4.bindPopup(popup_1a00bd00d1432bcd441be0481a3d4196)
+        ;
+
+        
+    
+    
+            circle_marker_37cf715f288e0f473bc47f8c0edb84f4.bindTooltip(
+                `<div>
+                     403 KEMPER DR N
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_4c35fa21e9e6059869432808c4b26d28 = L.circleMarker(
+                [36.15292600206038, -86.63866429128622],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_1fe0bfbe806705a992098e168e24b048 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_89a9b2c5ca76ae402809bdb5d5294e28 = $(`<div id="html_89a9b2c5ca76ae402809bdb5d5294e28" style="width: 100.0%; height: 100.0%;"><b>25-1422196</b><br>     <b>3307 FALLS CREEK DR</b><br>     NASHVILLE 37214<br>     <b>Owner:</b> SHAHRIARI, SHERVIN & SAJADI, SAYENA<br>     <b>APN:</b> 09616010600<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-04-03<br>     </div>`)[0];
+                popup_1fe0bfbe806705a992098e168e24b048.setContent(html_89a9b2c5ca76ae402809bdb5d5294e28);
+            
+        
+
+        circle_marker_4c35fa21e9e6059869432808c4b26d28.bindPopup(popup_1fe0bfbe806705a992098e168e24b048)
+        ;
+
+        
+    
+    
+            circle_marker_4c35fa21e9e6059869432808c4b26d28.bindTooltip(
+                `<div>
+                     3307 FALLS CREEK DR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_5a2fc28814cac868c6e8032bfe8c7d57 = L.circleMarker(
+                [36.17772465214332, -86.69314640342472],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_0b6eb3def683d70b43e4094d00f783f9 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_1603cc5767c36fdb33d0aaffd45e4e40 = $(`<div id="html_1603cc5767c36fdb33d0aaffd45e4e40" style="width: 100.0%; height: 100.0%;"><b>24-1418364</b><br>     <b>2221 MAPLECREST DR</b><br>     NASHVILLE 37214<br>     <b>Owner:</b> SKOLITS, KEVIN<br>     <b>APN:</b> 08410002700<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-04-03<br>     </div>`)[0];
+                popup_0b6eb3def683d70b43e4094d00f783f9.setContent(html_1603cc5767c36fdb33d0aaffd45e4e40);
+            
+        
+
+        circle_marker_5a2fc28814cac868c6e8032bfe8c7d57.bindPopup(popup_0b6eb3def683d70b43e4094d00f783f9)
+        ;
+
+        
+    
+    
+            circle_marker_5a2fc28814cac868c6e8032bfe8c7d57.bindTooltip(
+                `<div>
+                     2221 MAPLECREST DR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_f9273e77ccbe0a0f2ba8a03bb7af99f8 = L.circleMarker(
+                [36.211883931893446, -86.75395576433765],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_f4bed29bba729d900a44be17f81d8cc8 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_25209ffee27981eacdf2b394f931e260 = $(`<div id="html_25209ffee27981eacdf2b394f931e260" style="width: 100.0%; height: 100.0%;"><b>24-1406806</b><br>     <b>2410 OAKWOOD AVE</b><br>     NASHVILLE 37207<br>     <b>Owner:</b> JENSEN, WALTER LOUIS III & COVINGTON, JUSTIN<br>     <b>APN:</b> 07104022300<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-04-03<br>     </div>`)[0];
+                popup_f4bed29bba729d900a44be17f81d8cc8.setContent(html_25209ffee27981eacdf2b394f931e260);
+            
+        
+
+        circle_marker_f9273e77ccbe0a0f2ba8a03bb7af99f8.bindPopup(popup_f4bed29bba729d900a44be17f81d8cc8)
+        ;
+
+        
+    
+    
+            circle_marker_f9273e77ccbe0a0f2ba8a03bb7af99f8.bindTooltip(
+                `<div>
+                     2410 OAKWOOD AVE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_214c4118b4ed93939775f5578f853546 = L.circleMarker(
+                [36.01773053107587, -86.73753879614493],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_5d19241f26935e2ee8733ddac0a52338 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_a5e65b98a52f4124db3d267e65c22bbf = $(`<div id="html_a5e65b98a52f4124db3d267e65c22bbf" style="width: 100.0%; height: 100.0%;"><b>25-1422198</b><br>     <b>1008 HICKORY BARK CT</b><br>     NASHVILLE 37211<br>     <b>Owner:</b> SFR JV-1 2020-1 BORROWER, LLC<br>     <b>APN:</b> 172140A13100CO<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-04-24<br>     <b style=color:red>⚠ Institutional landlord</b></div>`)[0];
+                popup_5d19241f26935e2ee8733ddac0a52338.setContent(html_a5e65b98a52f4124db3d267e65c22bbf);
+            
+        
+
+        circle_marker_214c4118b4ed93939775f5578f853546.bindPopup(popup_5d19241f26935e2ee8733ddac0a52338)
+        ;
+
+        
+    
+    
+            circle_marker_214c4118b4ed93939775f5578f853546.bindTooltip(
+                `<div>
+                     1008 HICKORY BARK CT
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_c9bcc6785d88cd0042468784676f7501 = L.circleMarker(
+                [36.01885222901639, -86.73800470429944],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_a5d3882b47a47219eeb7f63208d3272a = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_de4de447535d3bb4e2469ec8b267d025 = $(`<div id="html_de4de447535d3bb4e2469ec8b267d025" style="width: 100.0%; height: 100.0%;"><b>25-1432873</b><br>     <b>905 BRANCASTER LN</b><br>     NASHVILLE 37211<br>     <b>Owner:</b> BRUNO, CASSINO<br>     <b>APN:</b> 172140A12300CO<br>     <b>Status:</b> Active Abate Violation Case<br>     <b>Modified:</b> 2025-04-25<br>     </div>`)[0];
+                popup_a5d3882b47a47219eeb7f63208d3272a.setContent(html_de4de447535d3bb4e2469ec8b267d025);
+            
+        
+
+        circle_marker_c9bcc6785d88cd0042468784676f7501.bindPopup(popup_a5d3882b47a47219eeb7f63208d3272a)
+        ;
+
+        
+    
+    
+            circle_marker_c9bcc6785d88cd0042468784676f7501.bindTooltip(
+                `<div>
+                     905 BRANCASTER LN
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_07ef1fcebdb1c4e93719754e8fd012c6 = L.circleMarker(
+                [36.01845030787478, -86.7389028338262],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_a25d68a833fe352415e14d7c0b3f434c = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_aa0d23096bf56d2fe8df4f017caa1aa3 = $(`<div id="html_aa0d23096bf56d2fe8df4f017caa1aa3" style="width: 100.0%; height: 100.0%;"><b>25-1432878</b><br>     <b>1712 HICKORY BARK LN</b><br>     NASHVILLE 37211<br>     <b>Owner:</b> HOLMES, DARON & TOMIKA<br>     <b>APN:</b> 172140A15000CO<br>     <b>Status:</b> Active Abate Violation Case<br>     <b>Modified:</b> 2025-04-25<br>     </div>`)[0];
+                popup_a25d68a833fe352415e14d7c0b3f434c.setContent(html_aa0d23096bf56d2fe8df4f017caa1aa3);
+            
+        
+
+        circle_marker_07ef1fcebdb1c4e93719754e8fd012c6.bindPopup(popup_a25d68a833fe352415e14d7c0b3f434c)
+        ;
+
+        
+    
+    
+            circle_marker_07ef1fcebdb1c4e93719754e8fd012c6.bindTooltip(
+                `<div>
+                     1712 HICKORY BARK LN
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_0717823b9f0f25385bcdf72f056b1382 = L.circleMarker(
+                [36.01916893343115, -86.73810148002907],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_ebfc5f7f041a861be0283f75f3bd24ce = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_2916202b355d9ca4e89a41855a1976b6 = $(`<div id="html_2916202b355d9ca4e89a41855a1976b6" style="width: 100.0%; height: 100.0%;"><b>25-1432879</b><br>     <b>1312 WEXFORD DOWNS LN</b><br>     NASHVILLE 37211<br>     <b>Owner:</b> BUI, TUYET HANG THI<br>     <b>APN:</b> 172140A12000CO<br>     <b>Status:</b> Active Abate Violation Case<br>     <b>Modified:</b> 2025-04-25<br>     </div>`)[0];
+                popup_ebfc5f7f041a861be0283f75f3bd24ce.setContent(html_2916202b355d9ca4e89a41855a1976b6);
+            
+        
+
+        circle_marker_0717823b9f0f25385bcdf72f056b1382.bindPopup(popup_ebfc5f7f041a861be0283f75f3bd24ce)
+        ;
+
+        
+    
+    
+            circle_marker_0717823b9f0f25385bcdf72f056b1382.bindTooltip(
+                `<div>
+                     1312 WEXFORD DOWNS LN
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_15c2ebaedac06e8314e2b118baaaf09b = L.circleMarker(
+                [36.02034594121257, -86.73893279470467],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_b38e36548e10566486b8060d6072ac98 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_4b0c117b1080c7824d3d2a70e7563f7d = $(`<div id="html_4b0c117b1080c7824d3d2a70e7563f7d" style="width: 100.0%; height: 100.0%;"><b>25-1432880</b><br>     <b>1613 BRAEBURY CIR</b><br>     NASHVILLE 37211<br>     <b>Owner:</b> KUMAR, RAJNEESH<br>     <b>APN:</b> 172140A08300CO<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-09-22<br>     </div>`)[0];
+                popup_b38e36548e10566486b8060d6072ac98.setContent(html_4b0c117b1080c7824d3d2a70e7563f7d);
+            
+        
+
+        circle_marker_15c2ebaedac06e8314e2b118baaaf09b.bindPopup(popup_b38e36548e10566486b8060d6072ac98)
+        ;
+
+        
+    
+    
+            circle_marker_15c2ebaedac06e8314e2b118baaaf09b.bindTooltip(
+                `<div>
+                     1613 BRAEBURY CIR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_e516f67a09ef83d5d98786449a76950d = L.circleMarker(
+                [36.070542096545935, -86.65655143981213],
+                {"bubblingMouseEvents": true, "color": "red", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "red", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 9, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_94a7fffdd14c770b9d644d1f83bacbe7 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_3c786ef74dc75698d267306c5f464790 = $(`<div id="html_3c786ef74dc75698d267306c5f464790" style="width: 100.0%; height: 100.0%;"><b>25-1449236</b><br>     <b>1765 BRIDGECREST DR</b><br>     ANTIOCH 37013<br>     <b>Owner:</b> SFVR JV-2 2023-1 BORROWER LLC<br>     <b>APN:</b> 149150A43400CO<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-11-13<br>     <b style=color:red>⚠ Institutional landlord</b></div>`)[0];
+                popup_94a7fffdd14c770b9d644d1f83bacbe7.setContent(html_3c786ef74dc75698d267306c5f464790);
+            
+        
+
+        circle_marker_e516f67a09ef83d5d98786449a76950d.bindPopup(popup_94a7fffdd14c770b9d644d1f83bacbe7)
+        ;
+
+        
+    
+    
+            circle_marker_e516f67a09ef83d5d98786449a76950d.bindTooltip(
+                `<div>
+                     1765 BRIDGECREST DR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+            var circle_marker_b5a3745fe61716bd7cabe5561fb13bbb = L.circleMarker(
+                [36.10490288018479, -86.71522697229646],
+                {"bubblingMouseEvents": true, "color": "#2563eb", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#2563eb", "fillOpacity": 0.8, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 6, "stroke": true, "weight": 2}
+            ).addTo(map_a5ebdb997180e5ffec580e52089ad550);
+        
+    
+        var popup_77f109dd27149195790ed82a41771010 = L.popup({
+  "maxWidth": 350,
+});
+
+        
+            
+                var html_0ca22d372b1567d02e615e84aed3df7c = $(`<div id="html_0ca22d372b1567d02e615e84aed3df7c" style="width: 100.0%; height: 100.0%;"><b>25-1447515</b><br>     <b>1028 DRUMMOND DR</b><br>     NASHVILLE 37211<br>     <b>Owner:</b> MILLER, DETRIA ANN<br>     <b>APN:</b> 11916006300<br>     <b>Status:</b> Done<br>     <b>Modified:</b> 2025-11-14<br>     </div>`)[0];
+                popup_77f109dd27149195790ed82a41771010.setContent(html_0ca22d372b1567d02e615e84aed3df7c);
+            
+        
+
+        circle_marker_b5a3745fe61716bd7cabe5561fb13bbb.bindPopup(popup_77f109dd27149195790ed82a41771010)
+        ;
+
+        
+    
+    
+            circle_marker_b5a3745fe61716bd7cabe5561fb13bbb.bindTooltip(
+                `<div>
+                     1028 DRUMMOND DR
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</body></html>

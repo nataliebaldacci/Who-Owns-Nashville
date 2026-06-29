@@ -1,0 +1,64 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Build-to-Rent Types — Davidson County</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #panel{position:absolute;top:80px;left:12px;z-index:5;background:rgba(255,255,255,.96);padding:10px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);width:288px;max-height:74%;overflow:auto}
+  #panel i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:7px;vertical-align:middle}
+  #panel label{display:block;margin:5px 0;cursor:pointer} #panel .c{color:#777;font-size:10.5px}
+  #panel select{width:100%;font-family:inherit;margin-top:5px;padding:3px}
+  #methods{position:absolute;bottom:14px;left:12px;z-index:5;background:rgba(255,255,255,.93);padding:8px 11px;border-radius:6px;font-size:9.5px;line-height:1.45;color:#666;max-width:350px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #methods b{color:#1a3a5c}
+  .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12px;max-width:300px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Three Ways to Build-to-Rent in Davidson County</h2>
+  <p>Who builds and keeps, who builds and sells, and who is still banking land.</p></div>
+<div id="panel"><b>Build-to-rent type</b>
+  <label><input type="checkbox" class="t" value="Vertically integrated (builds + holds)" checked><i style="background:#1f5fae"></i>Vertically integrated &mdash; builds + holds <span class="c" id="cV"></span></label>
+  <label><input type="checkbox" class="t" value="Merchant-build / forward-flow (builds, sells to operator)" checked><i style="background:#e07b00"></i>Merchant-build / forward-flow <span class="c" id="cM"></span></label>
+  <label><input type="checkbox" class="t" value="Land-bank / pre-development" checked><i style="background:#2c6b3f"></i>Land-bank / pre-development <span class="c" id="cL"></span></label>
+  <label><input type="checkbox" class="t" value="Production builder (BTR sections)" checked><i style="background:#7a1f6e"></i>Production builder (BTR sections) <span class="c" id="cP"></span></label>
+  <div style="margin-top:9px"><b>Operator</b><select id="op"><option value="">All operators</option></select></div>
+</div>
+<div id="methods"><b>Method.</b> Each polygon is a Davidson County parcel tied to a build-to-rent operator or community, classed by business model. <b>Vertically integrated</b>: the operator builds homes on land it owns and keeps them as rentals (AMH, Normandy, Tricon). <b>Merchant-build / forward-flow</b>: a builder constructs and sells finished homes to a rental operator (ECG/CRP, ResiBuilt&rarr;Invitation, VineBrook). <b>Land-bank / pre-development</b>: an investor holds entitled land ahead of vertical construction (Kennedy Lewis, TPG, Brookfield). <b>Production builder</b>: a national homebuilder running BTR sections (Pulte, Lennar). Source: per-operator parcel polygons + ParcelHistory chain of title + Assessment. Davidson County.</div>
+<script>
+const COL={"Vertically integrated (builds + holds)":"#1f5fae","Merchant-build / forward-flow (builds, sells to operator)":"#e07b00",
+  "Land-bank / pre-development":"#2c6b3f","Production builder (BTR sections)":"#7a1f6e","Other/unclassified":"#999"};
+const map=new maplibregl.Map({container:'map',center:[-86.74,36.05],zoom:9.5,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+const colorExpr=['match',['get','btr_type']]; Object.entries(COL).forEach(([k,c])=>colorExpr.push(k,c)); colorExpr.push('#999');
+function filt(){
+  const on=[...document.querySelectorAll('.t:checked')].map(x=>x.value);
+  const op=document.getElementById('op').value;
+  const f=['all',['in',['get','btr_type'],['literal',on]]]; if(op)f.push(['==',['get','operator'],op]);
+  map.setFilter('fill',f); map.setFilter('line',f);
+}
+document.querySelectorAll('.t').forEach(x=>x.onchange=filt);
+map.on('load',()=>{
+  fetch('BTR_Lifecycle_Polygons.geojson').then(r=>r.json()).then(g=>{
+    map.addSource('b',{type:'geojson',data:g});
+    map.addLayer({id:'fill',type:'fill',source:'b',paint:{'fill-color':colorExpr,'fill-opacity':0.58}});
+    map.addLayer({id:'line',type:'line',source:'b',paint:{'line-color':colorExpr,'line-width':['interpolate',['linear'],['zoom'],10,0.3,15,1.1]}});
+    const c={},ops={}; g.features.forEach(x=>{const p=x.properties;c[p.btr_type]=(c[p.btr_type]||0)+1;ops[p.operator]=(ops[p.operator]||0)+1;});
+    cV.textContent=`(${c["Vertically integrated (builds + holds)"]||0})`;cM.textContent=`(${c["Merchant-build / forward-flow (builds, sells to operator)"]||0})`;
+    cL.textContent=`(${c["Land-bank / pre-development"]||0})`;cP.textContent=`(${c["Production builder (BTR sections)"]||0})`;
+    const sel=document.getElementById('op'); Object.keys(ops).sort((a,b)=>ops[b]-ops[a]).forEach(o=>{const e=document.createElement('option');e.value=o;e.textContent=`${o} (${ops[o]})`;sel.appendChild(e);});
+    sel.onchange=filt;
+    map.on('click','fill',e=>{const p=e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+        `<b>${p.PropAddr||p.APN||''}</b><br><b style="color:${COL[p.btr_type]}">${p.btr_type}</b><br>`+
+        `Operator: ${p.operator}<br>Status: ${p.lifecycle||''}${p.current_owner?('<br>Owner: '+p.current_owner):''}`).addTo(map);});
+    map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
+    map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
+  });
+});
+</script></body></html>

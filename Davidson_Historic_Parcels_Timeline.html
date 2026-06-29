@@ -1,0 +1,56 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Davidson County Parcels Through Time</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/pmtiles@3.0.6/dist/pmtiles.js"></script>
+<style>
+ html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+ #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+  padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.25);max-width:92%}
+ #title h2{margin:0;font-size:16px}#title p{margin:3px 0 0;font-size:11.5px;color:#555}
+ #legend{position:absolute;top:78px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+ #legend i{width:12px;height:12px;display:inline-block;margin-right:6px;vertical-align:middle}
+ #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+  padding:12px 20px;border-radius:8px;width:min(720px,93%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+ #ctrl .row{display:flex;align-items:center;gap:14px}
+ #play{font-family:Garamond,serif;font-size:14px;padding:6px 14px;cursor:pointer;background:#1a3a5c;color:#fff;border:none;border-radius:4px;min-width:74px}
+ #yr{font-size:30px;font-weight:bold;color:#1a3a5c;min-width:78px;text-align:center}#slider{flex:1}
+ #status{position:absolute;bottom:6px;right:10px;z-index:5;background:rgba(0,0,0,.6);color:#fff;padding:3px 8px;border-radius:3px;font-size:11px}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Davidson County Parcels Through Time</h2>
+ <p>Each parcel drawn only during its real lifespan (established &rarr; retired). 306,809 parcels from deed, assessment &amp; genealogy records.</p></div>
+<div id="legend"><b>Parcel</b><div><i style="background:#2c7fb8;opacity:.6"></i>Active (still exists)</div><div><i style="background:#d62728;opacity:.6"></i>Retired (later subdivided / merged)</div></div>
+<div id="ctrl"><div class="row"><button id="play">&#9654; Play</button><span id="yr">1950</span>
+ <input id="slider" type="range" min="1950" max="2026" value="1950" step="1"></div></div>
+<div id="status">loading vector tiles…</div>
+<script>
+const Y0=1950,Y1=2026;
+let protocol=new pmtiles.Protocol(); maplibregl.addProtocol("pmtiles",protocol.tile);
+const map=new maplibregl.Map({container:'map',center:[-86.78,36.17],zoom:10,
+ style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+  tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
+  layers:[{id:'base',type:'raster',source:'base'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let year=Y0;
+function filt(y){return ['all',['<=',['coalesce',['get','appear_year'],0],y],['>=',['coalesce',['get','retire_year'],9999],y]];}
+map.on('load',()=>{
+ map.addSource('p',{type:'vector',url:'pmtiles://'+location.href.replace(/[^/]*$/,'')+'Davidson_Historic_Parcels.pmtiles'});
+ map.addLayer({id:'fill',type:'fill',source:'p','source-layer':'parcels',filter:filt(Y0),
+  paint:{'fill-color':['match',['get','kind'],'retired','#d62728','#2c7fb8'],'fill-opacity':0.55,'fill-outline-color':'rgba(255,255,255,0.3)'}});
+ fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(b=>{
+  map.addSource('co',{type:'geojson',data:b});
+  map.addLayer({id:'col',type:'line',source:'co',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[4,4]}});}).catch(()=>{});
+ map.on('sourcedata',e=>{if(e.sourceId==='p'&&map.isSourceLoaded('p'))document.getElementById('status').textContent='306,809 parcels (vector tiles)';});
+ setYear(Y0);
+});
+function setYear(y){year=y;if(map.getLayer('fill'))map.setFilter('fill',filt(y));
+ document.getElementById('yr').textContent=y;document.getElementById('slider').value=y;}
+document.getElementById('slider').addEventListener('input',e=>setYear(+e.target.value));
+let t=null;
+document.getElementById('play').addEventListener('click',function(){
+ if(t){clearInterval(t);t=null;this.innerHTML='&#9654; Play';return;}
+ this.innerHTML='&#10073;&#10073; Pause';if(year>=Y1)setYear(Y0);
+ t=setInterval(()=>{if(year>=Y1){clearInterval(t);t=null;document.getElementById('play').innerHTML='&#9654; Play';return;}setYear(year+1);},500);});
+</script></body></html>
