@@ -54,7 +54,7 @@ function links(r){
   h+=a(`https://davidson-tn-citizen.comper.info/template.aspx?propertyID=${A}`,'Comper');
   h+=a(photoURL(r.apn),'Full Photo');
   if(hasc) h+=a(`https://www.google.com/maps?q&layer=c&cbll=${L}`,'Street View');
-  if(hasc) h+=a(`https://www.google.com/maps/@${L},19z/data=!3m1!1e3`,'Aerial');
+  if(hasc) h+=a(`https://portal.patriotproperties.com/?APIKEY=5D050659143EB96630FB38B91DE12E40&SECRETKEY=A92169630C9BC3C00A1C0F9F140E6DAEC21C8E62DCFF9FC443FB1BE70DDF6AA4268527B9DDE2ECC2C7EE9BB5BF728C06F0DF4019BBECDEBD2A6DD0BBE28A419D8F929E1F3E8DF478E56619995BEFCA8E369276689D791197DC1284F14B3252DBFB2A19A2E451EEA832D6D96488DDC673EBA4B37BD741223B656A793D93209C0F&LAT=${r.lat}&LONG=${r.lon}`,'Aerial');
   h+=a(`https://epermits.nashville.gov/#/search?searchCode=APN&searchText=${A}`,'ePermit');
   h+=a('https://www.davidsonportal.com/','Land Records');
   // history APIs
