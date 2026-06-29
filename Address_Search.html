@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nashville Parcel Address Search — Who Owns Nashville?</title>
+<style>
+  :root{--ink:#1a3a5c;--accent:#9b2a23}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:Garamond,'EB Garamond',Georgia,serif;color:#222;background:#f7f5f1}
+  header{background:#fff;border-bottom:1px solid #e3ddd3;padding:22px 20px 16px;text-align:center}
+  header h1{margin:0 0 4px;font-size:24px;color:var(--ink)}
+  header p{margin:0;color:#666;font-size:13px}
+  .searchbar{position:sticky;top:0;background:#f7f5f1;padding:14px 20px;border-bottom:1px solid #e3ddd3;z-index:5}
+  #q{width:100%;max-width:620px;display:block;margin:0 auto;padding:12px 14px;font-size:16px;font-family:inherit;
+     border:1.5px solid #cdbfae;border-radius:8px;outline:none}
+  #q:focus{border-color:var(--ink)}
+  #status{text-align:center;color:#888;font-size:12.5px;margin:8px 0 0}
+  .wrap{max-width:980px;margin:18px auto;padding:0 18px;display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px}
+  .card{background:#fff;border:1px solid #e3ddd3;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .card img{width:100%;height:175px;object-fit:cover;background:#eee;display:block}
+  .card .body{padding:11px 13px}
+  .card .addr{font-size:15px;font-weight:700;color:var(--ink);margin:0 0 2px}
+  .card .meta{font-size:12.5px;color:#555;margin:0 0 8px;line-height:1.45}
+  .card .tk a{font-size:11.5px;color:var(--accent);text-decoration:none;margin-right:9px;white-space:nowrap}
+  .card .tk a:hover{text-decoration:underline}
+  footer{text-align:center;color:#999;font-size:11.5px;padding:24px}
+</style></head><body>
+<header>
+  <h1>Nashville Parcel Address Search</h1>
+  <p>Type any Davidson County address to see the assessor's photo and parcel record. 198,358 parcels · primary county data.</p>
+</header>
+<div class="searchbar">
+  <input id="q" type="search" placeholder="Start typing an address — e.g. 1008 HICKORY BARK" autocomplete="off" disabled />
+  <div id="status">Loading parcel index…</div>
+</div>
+<div class="wrap" id="results"></div>
+<footer>Natalie Baldacci · Vanderbilt Law School · Photos: Davidson County Assessor (Spatialest CDN). Parcel data: Metro Nashville primary records.</footer>
+<script>
+let ROWS=[];
+const q=document.getElementById('q'), status=document.getElementById('status'), results=document.getElementById('results');
+const photoURL=apn=>{const a=/^[0-9]+$/.test(apn)?apn.padStart(11,'0'):apn;
+  return `https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/${a}_1.jpg`;};
+const enc=encodeURIComponent;
+function links(r){
+  const addr=enc(r.address+', Nashville TN '+r.zip);
+  const sv=(r.lat&&r.lon)?`https://www.google.com/maps?q=&layer=c&cbll=${r.lat},${r.lon}`:`https://www.google.com/maps/search/?api=1&query=${addr}`;
+  return `<div class="tk">
+    <a href="https://maps.nashville.gov/ParcelViewer/?find=${enc(r.apn)}" target="_blank" rel="noopener">Parcel Viewer</a>
+    <a href="${photoURL(r.apn)}" target="_blank" rel="noopener">Full Photo</a>
+    <a href="${sv}" target="_blank" rel="noopener">Street View</a>
+    <a href="https://www.google.com/maps/search/?api=1&query=${addr}" target="_blank" rel="noopener">Map</a></div>`;
+}
+function render(list){
+  results.innerHTML=list.map(r=>`<div class="card">
+    <img loading="lazy" src="${photoURL(r.apn)}" onerror="this.style.visibility='hidden'">
+    <div class="body"><p class="addr">${r.address}</p>
+    <p class="meta">${r.owner||''}<br>APN ${r.apn} · ${r.zip}</p>${links(r)}</div></div>`).join('');
+}
+let t;
+function search(){
+  const v=q.value.trim().toUpperCase();
+  if(v.length<3){results.innerHTML='';status.textContent=ROWS.length.toLocaleString()+' parcels — type at least 3 characters';return;}
+  const out=[];
+  for(let i=0;i<ROWS.length&&out.length<60;i++){if(ROWS[i].address.toUpperCase().includes(v))out.push(ROWS[i]);}
+  status.textContent=out.length?`Showing ${out.length}${out.length===60?'+':''} matches`:'No matches';
+  render(out);
+}
+q.addEventListener('input',()=>{clearTimeout(t);t=setTimeout(search,140);});
+fetch('Parcel_Search.psv').then(r=>r.text()).then(txt=>{
+  const lines=txt.split('\n');
+  for(let i=1;i<lines.length;i++){const p=lines[i].split('|');if(p.length<3)continue;
+    ROWS.push({address:p[0],zip:p[1],apn:p[2],owner:p[3],lat:p[4],lon:p[5]});}
+  q.disabled=false;q.focus();
+  status.textContent=ROWS.length.toLocaleString()+' parcels — type at least 3 characters';
+}).catch(e=>{status.textContent='Failed to load parcel index.';});
+</script>
+</body></html>
