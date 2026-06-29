@@ -1,109 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Nashville Historical Aerial Imagery (1996–2023)</title>
-<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nashville Historical Aerial Imagery — Who Owns Nashville?</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js"></script>
 <style>
-  html, body { margin: 0; height: 100%; }
-  #map { position: absolute; top: 0; bottom: 0; left: 0; right: 0; }
-  .title-card {
-    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
-    z-index: 1000; background: rgba(255,255,255,0.85); padding: 8px 18px;
-    border-radius: 6px; font-family: Garamond, 'EB Garamond', serif;
-    text-align: center; box-shadow: 0 1px 6px rgba(0,0,0,0.25);
-  }
-  .title-card h1 { margin: 0; font-size: 18px; font-weight: 600; }
-  .title-card p  { margin: 2px 0 0; font-size: 12px; color: #444; }
-  .leaflet-control-layers { font-family: Garamond, 'EB Garamond', serif; font-size: 13px; }
-  .status {
-    position: absolute; bottom: 10px; right: 10px; z-index: 1000;
-    background: rgba(255,255,255,0.9); padding: 4px 10px; border-radius: 4px;
-    font-family: Garamond, 'EB Garamond', serif; font-size: 12px; color: #333;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.2);
-  }
-</style>
-</head>
-<body>
+  html,body{margin:0;height:100%}
+  #map{position:absolute;inset:0}
+  .title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:1000;
+    background:rgba(255,255,255,.88);font-family:Garamond,'EB Garamond',Georgia,serif;
+    padding:8px 16px;border-radius:6px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .title h1{margin:0;font-size:17px;color:#1a3a5c}
+  .title p{margin:2px 0 0;font-size:11.5px;color:#555}
+  .leaflet-control-layers{font-family:Garamond,'EB Garamond',Georgia,serif;font-size:13px;max-height:80vh;overflow:auto}
+</style></head><body>
+<div class="title"><h1>Nashville Through Time — Aerial Imagery, 1996–2025</h1>
+  <p>Davidson County. Switch the year in the layer control (top-right). Source: Metro Nashville / Pictometry.</p></div>
 <div id="map"></div>
-<div class="title-card">
-  <h1>Nashville Historical Aerial Imagery</h1>
-  <p>Davidson County · 1996–2023 · pick a year in the layer control (top-right)</p>
-</div>
-<div class="status" id="status">Ready — select an imagery year</div>
-
 <script>
-  var map = L.map('map', { center: [36.166, -86.784], zoom: 10 });
-
-  // --- Street base layers ---
-  var positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '© OpenStreetMap, © CARTO', subdomains: 'abcd', maxZoom: 20
-  }).addTo(map);
-  var osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '© OpenStreetMap', maxZoom: 19
-  });
-
-  // --- Historical imagery (Nashville ArcGIS MapServer dynamic layers) ---
-  var imageryYears = [
-    ['2023', 'Imagery/2023Imagery_WGS84'],
-    ['2022', 'Imagery/2022Imagery_WGS84'],
-    ['2020', 'Imagery/2020Imagery_WGS84'],
-    ['2018', 'Imagery/2018Imagery_WGS84'],
-    ['2017', 'Imagery/2017Imagery_WGS84'],
-    ['2016', 'Imagery/2016Imagery_WGS84'],
-    ['2014', 'Imagery/2014Imagery_WGS84'],
-    ['2013 (Pictometry)', 'Imagery/2013PictometryImagery_WGS84'],
-    ['2010', 'Imagery/2010Imagery_WGS84'],
-    ['2010 Flood', 'Imagery/May2010_FloodImagery_WGS84'],
-    ['2009', 'Imagery/2009Imagery_WGS84'],
-    ['2008', 'Imagery/2008Imagery_WGS84'],
-    ['2006', 'Imagery/2006Imagery_WGS84'],
-    ['2005', 'Imagery/2005Imagery_WGS84'],
-    ['2004', 'Imagery/2004Imagery_WGS84'],
-    ['2003', 'Imagery/2003Imagery_WGS84'],
-    ['2000', 'Imagery/2000Imagery_WGS84'],
-    ['1996', 'Imagery/1996Imagery_WGS84']
-  ];
-
-  var base = 'https://maps.nashville.gov/arcgis/rest/services/';
-  var imageryLayers = {};
-  imageryYears.forEach(function (y) {
-    // ArcGIS fused tile cache, standard Web Mercator XYZ scheme: /tile/{z}/{y}/{x}
-    var lyr = L.tileLayer(base + y[1] + '/MapServer/tile/{z}/{y}/{x}', {
-      maxZoom: 21, maxNativeZoom: 21, minZoom: 0,
-      attribution: 'Metro Nashville / Davidson County GIS',
-      errorTileUrl: 'data:image/gif;base64,R0lGODlhAQABAAAAACwAAAAAAQABAAA='
-    });
-    lyr.on('loading', function () { setStatus('Loading ' + y[0] + ' imagery…'); });
-    lyr.on('load',    function () { setStatus(y[0] + ' imagery loaded'); });
-    imageryLayers['Aerial ' + y[0]] = lyr;
-  });
-
-  function setStatus(t) { document.getElementById('status').textContent = t; }
-
-  // --- Davidson County boundary overlay (house style) ---
-  var boundary = L.geoJSON(null, {
-    style: { color: '#1a3a5c', weight: 2.0, fillOpacity: 0, dashArray: '4,4' }
-  }).addTo(map);
-  fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson')
-    .then(function (r) { return r.json(); })
-    .then(function (gj) { boundary.addData(gj); })
-    .catch(function () {
-      // fallback to local copy if served from this folder
-      fetch('Davidson_County_Boundary.geojson')
-        .then(function (r) { return r.json(); })
-        .then(function (gj) { boundary.addData(gj); })
-        .catch(function () {});
-    });
-
-  // --- Layer control: street bases + each imagery year as a switchable base ---
-  var baseLayers = { 'CARTO Positron (street)': positron, 'OpenStreetMap': osm };
-  Object.keys(imageryLayers).forEach(function (k) { baseLayers[k] = imageryLayers[k]; });
-
-  L.control.layers(baseLayers, { 'Davidson County boundary': boundary },
-    { collapsed: false, position: 'topright' }).addTo(map);
+const map=L.map('map',{center:[36.166,-86.784],zoom:11});
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© OpenStreetMap'});
+const PKEY="8872F04A-7C44-EB93-C2FB-EAA73C21DDF8";
+const wmts=(sub)=>L.tileLayer(
+  `https://svc.pictometry.com/Image/${PKEY}/wmts/${sub}/default/GoogleMapsCompatible/{z}/{y}/{x}.png`,
+  {maxZoom:21,attribution:'Pictometry'});
+const ms=(path)=>L.esri.dynamicMapLayer({url:`https://maps.nashville.gov/arcgis/rest/services/Imagery/${path}/MapServer`,opacity:1});
+// year -> layer  (path quirks preserved from Metro config: 2008/2009 swap)
+const bases={
+  "Street map (CARTO)":carto,
+  "OpenStreetMap":osm,
+  "2025 Aerial (Pictometry)":wmts("PICT-TNDAVI25-pUUnhZB3O8"),
+  "2024 Aerial (Pictometry)":wmts("PICT-TNDAVI24-xwN7kDO8hw"),
+  "2023 Aerial":ms("2023Imagery_WGS84"),
+  "2022 Aerial":ms("2022Imagery_WGS84"),
+  "2020 Aerial":ms("2020Imagery_WGS84"),
+  "2018 Aerial":ms("2018Imagery_WGS84"),
+  "2017 Aerial":ms("2017Imagery_WGS84"),
+  "2016 Aerial":ms("2016Imagery_WGS84"),
+  "2014 Aerial":ms("2014Imagery_WGS84"),
+  "2013 Aerial":ms("2013PictometryImagery_WGS84"),
+  "May 2010 Flood":ms("May2010_FloodImagery_WGS84"),
+  "2010 Aerial":ms("2010Imagery_WGS84"),
+  "2009 Aerial":ms("2008Imagery_WGS84"),
+  "2008 Aerial":ms("2009Imagery_WGS84"),
+  "2006 Aerial":ms("2006Imagery_WGS84"),
+  "2005 Aerial":ms("2005Imagery_WGS84"),
+  "2004 Aerial":ms("2004Imagery_WGS84"),
+  "2003 Aerial":ms("2003Imagery_WGS84"),
+  "2000 Aerial":ms("2000Imagery_WGS84"),
+  "1996 Aerial":ms("1996Imagery_WGS84")
+};
+L.control.layers(bases,null,{collapsed:false}).addTo(map);
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{
+  L.geoJSON(g,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+}).catch(()=>{});
 </script>
-</body>
-</html>
+</body></html>
