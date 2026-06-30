@@ -7,15 +7,20 @@
   header{background:#fff;border-bottom:1px solid #e3ddd3;padding:30px 22px 22px;text-align:center}
   header h1{margin:0 0 6px;font-size:28px;color:var(--ink)}
   header p{margin:0 auto;max-width:680px;color:#555;font-size:14px}
-  .part{max-width:980px;margin:26px auto 0;padding:0 20px}
+  .part{max-width:820px;margin:26px auto 0;padding:0 20px}
   .part h2{font-size:20px;color:var(--ink);border-bottom:2px solid #e3ddd3;padding-bottom:5px;margin:0 0 4px}
-  .part .lede{color:#777;font-size:12.5px;margin:0 0 12px}
-  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
-  a.doc{display:block;background:#fff;border:1px solid #e3ddd3;border-radius:8px;padding:14px 16px;text-decoration:none;color:inherit;
-    box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s}
-  a.doc:hover{transform:translateY(-2px);box-shadow:0 5px 14px rgba(0,0,0,.12)}
-  a.doc h3{margin:0 0 4px;font-size:15px;color:var(--accent)}
-  a.doc p{margin:0;font-size:12.5px;color:#555}
+  .part .lede{color:#777;font-size:12.5px;margin:0 0 10px}
+  /* list layout */
+  ul.docs{list-style:none;margin:0;padding:0;background:#fff;border:1px solid #e3ddd3;border-radius:8px;
+    box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden}
+  ul.docs li{border-top:1px solid #efe9df}
+  ul.docs li:first-child{border-top:none}
+  a.doc{display:flex;align-items:baseline;gap:14px;padding:11px 16px;text-decoration:none;color:inherit;transition:background .12s}
+  a.doc:hover{background:#faf7f1}
+  a.doc .t{flex:0 0 230px;font-size:14.5px;color:var(--accent);font-weight:600}
+  a.doc .d{flex:1;font-size:12.5px;color:#555}
+  a.doc .ext{flex:0 0 auto;font-size:11px;color:#aa9;align-self:center}
+  @media(max-width:560px){a.doc{flex-direction:column;gap:2px}a.doc .t{flex:none}}
   footer{text-align:center;color:#999;font-size:12px;padding:30px}
 </style></head><body>
 <header>
@@ -23,37 +28,44 @@
   <p>Every claim in this project traces to a primary government document. This hub routes you to the source records — property cards, deeds, deeds of trust, trustees' deeds, permit receipts, and zoning files — organized by the question each Part answers.</p>
 </header>
 
-<div class="part"><h2>Who Owns?</h2><p class="lede">Title, value, and the deeds behind every parcel.</p><div class="grid">
-  <a class="doc" href="Address_Search.html"><h3>Property Cards</h3><p>Search any address → the Assessor's property card (PADCTN), with the house photo and full parcel record.</p></a>
-  <a class="doc" href="Transaction_History_Timeline_Nashville.html"><h3>Ownership Deeds</h3><p>Every recorded single-family deed 2013–2026, mapped in time; each links to its scanned recording at davidsonportal.com.</p></a>
-</div></div>
+<div class="part"><h2>Who Owns?</h2><p class="lede">Title, value, and the deeds behind every parcel.</p>
+<ul class="docs">
+  <li><a class="doc" href="Address_Search.html"><span class="t">Property Cards</span><span class="d">Search any address → the Assessor's property card (PADCTN), with the house photo and full parcel record.</span></a></li>
+  <li><a class="doc" href="Transaction_History_Timeline_Nashville.html"><span class="t">Ownership Deeds</span><span class="d">Every recorded single-family deed 2013–2026, mapped in time; each links to its scanned recording at davidsonportal.com.</span></a></li>
+  <li><a class="doc" href="Davidson_ACS_TimeLapse.html"><span class="t">Neighborhood Change (ACS Time-Lapse)</span><span class="d">Animated tract map, 2011–2024: median home value, income, rent, and renter cost burden. Each tract popup features its ACS 2024 housing profile and deep links to data.census.gov.</span></a></li>
+</ul></div>
 
-<div class="part"><h2>Who Rents?</h2><p class="lede">Landlord registration and its paper trail.</p><div class="grid">
-  <a class="doc" href="Landlord_Registrations_with_Photos_map.html"><h3>Permit Receipts (Landlord Registrations)</h3><p>Registered rental homes with the LL permit receipt and the assessor photo in each popup.</p></a>
-  <a class="doc" href="Holdings_vs_Registration_Nashville.html"><h3>Holdings vs. Registration</h3><p>Which corporate homes are registered vs. not — the compliance gap.</p></a>
-</div></div>
+<div class="part"><h2>Who Rents?</h2><p class="lede">Landlord registration and its paper trail.</p>
+<ul class="docs">
+  <li><a class="doc" href="Landlord_Registrations_with_Photos_map.html"><span class="t">Permit Receipts (Landlord Registrations)</span><span class="d">Registered rental homes with the LL permit receipt and the assessor photo in each popup.</span></a></li>
+  <li><a class="doc" href="Holdings_vs_Registration_Nashville.html"><span class="t">Holdings vs. Registration</span><span class="d">Which corporate homes are registered vs. not — the compliance gap.</span></a></li>
+</ul></div>
 
-<div class="part"><h2>Who Builds?</h2><p class="lede">New-construction permits and the building record.</p><div class="grid">
-  <a class="doc" href="davidson_residential_construction_by_type_IF12988.html"><h3>Building Permits</h3><p>Residential construction permits by structure type, the Davidson record over time.</p></a>
-  <a class="doc" href="New_Construction_Permits_Timeline.html"><h3>New Construction Timeline</h3><p>Permits issued 2006–2026, the construction wave year by year.</p></a>
-</div></div>
+<div class="part"><h2>Who Builds?</h2><p class="lede">New-construction permits and the building record.</p>
+<ul class="docs">
+  <li><a class="doc" href="davidson_residential_construction_by_type_IF12988.html"><span class="t">Building Permits</span><span class="d">Residential construction permits by structure type, the Davidson record over time.</span></a></li>
+  <li><a class="doc" href="New_Construction_Permits_Timeline.html"><span class="t">New Construction Timeline</span><span class="d">Permits issued 2006–2026, the construction wave year by year.</span></a></li>
+</ul></div>
 
-<div class="part"><h2>Who Landbanks?</h2><p class="lede">Large vacant-land holdings and the entities behind them.</p><div class="grid">
-  <a class="doc" href="LandBank_Tracts_Nashville.html"><h3>Land-Bank Tracts</h3><p>Large vacant residential tracts held by investor entities — held-years, buyer, and outcome.</p></a>
-  <a class="doc" href="LP_Entity_Parcels_map.html"><h3>LP / Fund Land Holdings</h3><p>Parcels held by limited-partnership and investment-fund entities.</p></a>
-</div></div>
+<div class="part"><h2>Who Landbanks?</h2><p class="lede">Large vacant-land holdings and the entities behind them.</p>
+<ul class="docs">
+  <li><a class="doc" href="LandBank_Tracts_Nashville.html"><span class="t">Land-Bank Tracts</span><span class="d">Large vacant residential tracts held by investor entities — held-years, buyer, and outcome.</span></a></li>
+  <li><a class="doc" href="LP_Entity_Parcels_map.html"><span class="t">LP / Fund Land Holdings</span><span class="d">Parcels held by limited-partnership and investment-fund entities.</span></a></li>
+</ul></div>
 
-<div class="part"><h2>Who Finances?</h2><p class="lede">The debt instruments behind corporate ownership.</p><div class="grid">
-  <a class="doc" href="Securitization_Mortgages_map.html"><h3>Deeds of Trust</h3><p>Securitized mortgages on corporate-owned homes, by SFR bond deal.</p></a>
-  <a class="doc" href="Foreclosure_Timeline_Nashville.html"><h3>Trustees' Deeds (Foreclosures)</h3><p>Every parcel sold by Trustee's Deed, 2001–today, and what became of it.</p></a>
-</div></div>
+<div class="part"><h2>Who Finances?</h2><p class="lede">The debt instruments behind corporate ownership.</p>
+<ul class="docs">
+  <li><a class="doc" href="Securitization_Mortgages_map.html"><span class="t">Deeds of Trust</span><span class="d">Securitized mortgages on corporate-owned homes, by SFR bond deal.</span></a></li>
+  <li><a class="doc" href="Foreclosure_Timeline_Nashville.html"><span class="t">Trustees' Deeds (Foreclosures)</span><span class="d">Every parcel sold by Trustee's Deed, 2001–today, and what became of it.</span></a></li>
+</ul></div>
 
-<div class="part"><h2>Zoning Links</h2><p class="lede">Metro Nashville's official zoning and legislative record.</p><div class="grid">
-  <a class="doc" href="https://www.nashville.gov/departments/planning/land-development" target="_blank" rel="noopener"><h3>Specific Plans (SP)</h3><p>Metro Planning — land development &amp; Specific Plan (SP) zoning.</p></a>
-  <a class="doc" href="https://nashville.legistar.com/Legislation.aspx" target="_blank" rel="noopener"><h3>Legislation</h3><p>Metro Council bills and ordinances (Legistar).</p></a>
-  <a class="doc" href="https://documents.nashville.gov/" target="_blank" rel="noopener"><h3>Documents</h3><p>Metro's public document request and records portal.</p></a>
-  <a class="doc" href="https://maps.nashville.gov/ParcelViewer/" target="_blank" rel="noopener"><h3>Maps</h3><p>Metro Parcel Viewer — zoning overlays, base zoning, and parcel lookup.</p></a>
-</div></div>
+<div class="part"><h2>Zoning Links</h2><p class="lede">Metro Nashville's official zoning and legislative record.</p>
+<ul class="docs">
+  <li><a class="doc" href="https://www.nashville.gov/departments/planning/land-development" target="_blank" rel="noopener"><span class="t">Specific Plans (SP)</span><span class="d">Metro Planning — land development &amp; Specific Plan (SP) zoning.</span><span class="ext">↗</span></a></li>
+  <li><a class="doc" href="https://nashville.legistar.com/Legislation.aspx" target="_blank" rel="noopener"><span class="t">Legislation</span><span class="d">Metro Council bills and ordinances (Legistar).</span><span class="ext">↗</span></a></li>
+  <li><a class="doc" href="https://documents.nashville.gov/" target="_blank" rel="noopener"><span class="t">Documents</span><span class="d">Metro's public document request and records portal.</span><span class="ext">↗</span></a></li>
+  <li><a class="doc" href="https://maps.nashville.gov/ParcelViewer/" target="_blank" rel="noopener"><span class="t">Maps</span><span class="d">Metro Parcel Viewer — zoning overlays, base zoning, and parcel lookup.</span><span class="ext">↗</span></a></li>
+</ul></div>
 
 <footer>Natalie Baldacci · Vanderbilt Law School · Every link points to a primary Metro Nashville or Davidson County source.</footer>
 </body></html>
