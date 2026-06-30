@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Davidson ACS Time-Lapse 2011–2024</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c458c;--gold:#f0af1e;--lightblue:#4fa0bd;--ink:#1c458c;}
+  html,body,#map{height:100%;margin:0;font-family:'Montserrat',Helvetica,Arial,sans-serif;}
+  .title-card{position:absolute;top:0;left:0;right:0;z-index:1000;
+    background:var(--navy);color:#fff;padding:14px 22px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.3);border-bottom:4px solid var(--gold);}
+  .title-card .kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;}
+  .title-card .ttl{font-size:19px;font-weight:800;line-height:1.15;margin-top:2px;}
+  .title-card .ttl span{color:var(--gold);}
+  .panel{position:absolute;bottom:18px;left:50%;transform:translateX(-50%);z-index:1000;
+    background:#fff;padding:14px 18px;border-radius:8px;box-shadow:0 2px 12px rgba(28,69,140,0.35);
+    width:580px;max-width:92%;border-top:4px solid var(--gold);}
+  .row{display:flex;align-items:center;gap:12px;}
+  #yearLabel{font-size:30px;font-weight:800;min-width:74px;text-align:center;color:var(--navy);font-family:'Montserrat';}
+  input[type=range]{flex:1;accent-color:var(--navy);}
+  select,button{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;padding:6px 10px;border-radius:5px;}
+  select{border:1.5px solid var(--navy);color:var(--navy);background:#fff;}
+  button{cursor:pointer;border:none;background:var(--navy);color:#fff;}
+  button:hover{background:#16357a;}
+  .leaflet-popup-content{font-family:'Montserrat',sans-serif;font-size:12px;color:#222;}
+  .leaflet-popup-content b{color:var(--navy);}
+  .legend{position:absolute;top:78px;right:12px;z-index:1000;background:#fff;
+    padding:10px 12px;border-radius:8px;box-shadow:0 2px 8px rgba(28,69,140,0.3);font-size:11px;line-height:1.6;
+    border-left:4px solid var(--gold);}
+  .legend b{color:var(--navy);font-weight:700;font-size:12px;}
+  .sw{display:inline-block;width:13px;height:13px;margin-right:6px;border-radius:2px;vertical-align:middle;}
+  .caption{font-size:11px;color:#666;justify-content:center;}
+</style>
+</head>
+<body>
+<div class="title-card"><div class="kick">Davidson County Housing Monitor &middot; ACS 5-Year</div><div class="ttl">Neighborhood Change, 2011&ndash;2024 &middot; <span id="tcMetric">Median Home Value</span></div></div>
+<div id="map"></div>
+<div class="legend" id="legend"></div>
+<div class="panel">
+  <div class="row" style="margin-bottom:8px;">
+    <button id="play">&#9658; Play</button>
+    <span id="yearLabel">2011</span>
+    <input type="range" id="slider" min="0" max="4" step="1" value="0">
+    <select id="metric">
+      <option value="median_home_value">Median home value</option>
+      <option value="median_hh_income">Median household income</option>
+      <option value="median_gross_rent">Median gross rent</option>
+      <option value="pct_renter_occ">% renter-occupied</option>
+      <option value="pct_renter_cost_burdened">% renters cost-burdened</option>
+    </select>
+  </div>
+  <div class="row caption">5-year ACS vintages ending 2011 · 2015 · 2018 · 2021 · 2024 — 173 Davidson tracts (2020 boundaries). Source: U.S. Census Bureau ACS. Map: Natalie Baldacci.</div>
+</div>
+<script>
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19});
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,layers:[carto]});
+L.control.layers({'CARTO Positron':carto,'Aerial (Esri)':aerial},null,{position:'topright',collapsed:false}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(b=>{
+  L.geoJSON(b,{filter:f=>f.properties&&(f.properties.OBJECTID===4||f.properties.objectid===4),style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);}).catch(()=>{});
+
+var YEARS=[2011,2015,2018,2021,2024];
+var RAMP=['#e3eef4','#9ecbdb','#4fa0bd','#356d9f','#1c458c']; // Boston Foundation light-blue -> navy
+var LABELS={median_home_value:'Median Home Value',median_hh_income:'Median Household Income',median_gross_rent:'Median Gross Rent',pct_renter_occ:'% Renter-Occupied',pct_renter_cost_burdened:'% Renters Cost-Burdened'};
+var fmt={median_home_value:v=>'$'+Math.round(v).toLocaleString(),median_hh_income:v=>'$'+Math.round(v).toLocaleString(),median_gross_rent:v=>'$'+Math.round(v).toLocaleString(),pct_renter_occ:v=>v+'%',pct_renter_cost_burdened:v=>v+'%'};
+var META=null,GJ=null,layer=null,metric='median_home_value',yi=0,timer=null;
+
+function colorFor(v){ if(v===null||v===undefined) return '#e8e8e8'; var b=META.breaks[metric];
+  return v<b[0]?RAMP[0]:v<b[1]?RAMP[1]:v<b[2]?RAMP[2]:v<b[3]?RAMP[3]:RAMP[4]; }
+function styleFor(f){ var v=f.properties[metric+'_Y'+YEARS[yi]]; return {fillColor:colorFor(v),weight:0.7,color:'#fff',fillOpacity:0.82}; }
+function tractName(p){ var c=String(p.GEOCODE||''); var t=c.length>=11?c.slice(5):''; if(!t) return p.NAME||p.GEOCODE; var n=parseInt(t,10)/100; return 'Census Tract '+(Number.isInteger(n)?n:n.toFixed(2)); }
+function tip(p){ var v=p[metric+'_Y'+YEARS[yi]]; return '<b>'+tractName(p)+'</b><br>'+LABELS[metric]+' ('+YEARS[yi]+'): '+(v==null?'—':fmt[metric](v)); }
+function popup(p){
+  var geoid=String(p.GEOCODE), g='0400000US47_1400000US'+geoid, base='https://data.census.gov/table/ACSDP5Y2024.';
+  var prof=[['DP02','Social Characteristics','Education · Marital Status · Fertility · Language · Veterans'],
+            ['DP03','Economic Characteristics','Income · Employment · Occupation · Commuting · Insurance'],
+            ['DP04','Housing Characteristics','Occupancy · Structure · Value · Costs · Utilities'],
+            ['DP05','Demographic Characteristics','Sex · Age · Race · Hispanic Origin · Housing Units']];
+  var h='<div style="font-weight:700;color:var(--navy);font-size:13px;">'+tractName(p)+'</div>';
+  h+='<div style="font-size:10px;color:#666;margin-bottom:5px;">Davidson County, Tennessee &middot; GEOID '+geoid+'</div>';
+  // ---- Featured housing profile (ACS 2024 DP04) ----
+  var money=function(v){return v==null?'—':'$'+Math.round(v).toLocaleString();};
+  var pc=function(v){return v==null?'—':v+'%';};
+  if(p.h_total_units!==undefined){
+    var hr=[['Total housing units',p.h_total_units==null?'—':Math.round(p.h_total_units).toLocaleString()],
+            ['Owner / renter',pc(p.h_owner_pct)+' / '+pc(p.h_renter_pct)],
+            ['Vacancy rate',pc(p.h_vacant_pct)],
+            ['Median home value',money(p.h_median_value)],
+            ['Median gross rent',money(p.h_median_rent)],
+            ['Median year built',p.h_median_year_built==null?'—':p.h_median_year_built],
+            ['Single-family',pc(p.h_pct_single_family)],
+            ['Median rooms',p.h_median_rooms==null?'—':p.h_median_rooms],
+            ['Renters cost-burdened',pc(p.h_renter_cost_burden_pct)],
+            ['Median household income',money(p.h_median_hh_income)]];
+    h+='<div style="font-weight:700;color:#fff;background:var(--navy);font-size:11px;padding:3px 7px;border-radius:4px 4px 0 0;">HOUSING PROFILE &middot; ACS 2024</div>';
+    h+='<table style="border-collapse:collapse;width:100%;background:#f5f8fc;margin-bottom:7px;">';
+    hr.forEach(function(r,i){h+='<tr style="'+(i%2?'background:#eef4fb;':'')+'"><td style="padding:2px 6px;color:#333;">'+r[0]+'</td><td style="padding:2px 6px;text-align:right;font-weight:600;color:var(--navy);">'+r[1]+'</td></tr>';});
+    h+='</table>';
+  }
+  h+='<table style="margin-bottom:6px;border-collapse:collapse;"><tr><td colspan="2" style="font-weight:600;color:var(--navy);padding-bottom:2px;">'+LABELS[metric]+' over time</td></tr>';
+  YEARS.forEach(function(y){var v=p[metric+'_Y'+y];var cur=(y===YEARS[yi]);h+='<tr style="'+(cur?'background:#eef4fb;':'')+'"><td style="padding:1px 8px 1px 0;">'+y+'</td><td style="padding-left:8px;text-align:right;">'+(v==null?'—':fmt[metric](v))+'</td></tr>';});
+  h+='</table>';
+  h+='<div style="font-weight:700;color:var(--navy);font-size:11px;border-top:1px solid #ddd;padding-top:5px;margin-bottom:2px;">ACS 2020&ndash;2024 Data Profiles &#8599;</div>';
+  prof.forEach(function(d){ h+='<div style="margin-top:4px;"><a href="'+base+d[0]+'?g='+g+'" target="_blank" rel="noopener" style="color:#1c458c;font-weight:700;text-decoration:none;">'+d[0]+' &middot; '+d[1]+'</a><div style="font-size:9px;color:#777;">'+d[2]+'</div></div>'; });
+  h+='<div style="margin-top:5px;font-size:9px;color:#999;">Source: U.S. Census Bureau, data.census.gov</div>';
+  return h;
+}
+function redraw(){ if(layer) layer.setStyle(styleFor); }
+function legend(){ var b=META.breaks[metric],el=document.getElementById('legend');
+  var rows='<b>'+LABELS[metric]+'</b><br>';
+  var lo=['< '+fmt[metric](b[0]),fmt[metric](b[0])+'–'+fmt[metric](b[1]),fmt[metric](b[1])+'–'+fmt[metric](b[2]),fmt[metric](b[2])+'–'+fmt[metric](b[3]),'≥ '+fmt[metric](b[3])];
+  for(var i=0;i<5;i++) rows+='<span class="sw" style="background:'+RAMP[i]+'"></span>'+lo[i]+'<br>';
+  el.innerHTML=rows; document.getElementById('tcMetric').textContent=LABELS[metric]; }
+
+Promise.all([fetch('Davidson_Tract_ACS_TimeLapse.geojson?v=housing7').then(r=>r.json()),fetch('Davidson_Tract_ACS_TimeLapse_meta.json?v=housing7').then(r=>r.json())]).then(function(res){
+  GJ=res[0];META=res[1];
+  layer=L.geoJSON(GJ,{style:styleFor,onEachFeature:function(f,l){l.bindTooltip(function(){return tip(f.properties);},{sticky:true});l.on('click',function(e){L.popup({maxWidth:340,minWidth:240,autoPan:true}).setLatLng(e.latlng).setContent(popup(f.properties)).openOn(map);});}}).addTo(map);
+  try{map.fitBounds(layer.getBounds());}catch(e){}
+  legend();
+});
+
+var slider=document.getElementById('slider'),yl=document.getElementById('yearLabel');
+slider.oninput=function(){yi=+this.value;yl.textContent=YEARS[yi];redraw();};
+document.getElementById('metric').onchange=function(){metric=this.value;legend();redraw();};
+document.getElementById('play').onclick=function(){
+  var btn=this;
+  if(timer){clearInterval(timer);timer=null;btn.innerHTML='&#9658; Play';return;}
+  btn.innerHTML='&#10073;&#10073; Pause';
+  timer=setInterval(function(){yi=(yi+1)%YEARS.length;slider.value=yi;yl.textContent=YEARS[yi];redraw();},1100);
+};
+</script>
+</body>
+</html>
