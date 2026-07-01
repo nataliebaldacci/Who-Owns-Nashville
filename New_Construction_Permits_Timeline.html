@@ -32,9 +32,9 @@
 </div>
 
 <div class="legend">
-  <span><span class="sw" style="background:#378ADD;"></span>Single family residence</span>
-  <span><span class="sw" style="background:#1D9E75;"></span>Multifamily / townhome</span>
-  <span><span class="sw" style="background:#D85A30;"></span>Duplex</span>
+  <span><span class="sw" style="background:#66c2a5;"></span>Single family residence</span>
+  <span><span class="sw" style="background:#fc8d62;"></span>Multifamily / townhome</span>
+  <span><span class="sw" style="background:#8da0cb;"></span>Duplex</span>
 </div>
 
 <div class="wrap"><canvas id="permitChart" role="img" aria-label="Stacked bar chart of new residential construction permits per year in Davidson County, 2006 to 2026, by housing type."></canvas></div>
@@ -50,9 +50,9 @@ const du=[1,18,9,3,2,13,11,23,24,8,18,5,2,27,80,143,63,51,42,18,0];
 new Chart(document.getElementById('permitChart'),{
   type:'bar',
   data:{labels:years,datasets:[
-    {label:'Single family',data:sf,backgroundColor:'#378ADD',stack:'s'},
-    {label:'Townhome / MF',data:th,backgroundColor:'#1D9E75',stack:'s'},
-    {label:'Duplex',data:du,backgroundColor:'#D85A30',stack:'s'}
+    {label:'Single family',data:sf,backgroundColor:'#66c2a5',stack:'s'},
+    {label:'Townhome / MF',data:th,backgroundColor:'#fc8d62',stack:'s'},
+    {label:'Duplex',data:du,backgroundColor:'#8da0cb',stack:'s'}
   ]},
   options:{responsive:true,maintainAspectRatio:false,
     plugins:{legend:{display:false},tooltip:{callbacks:{footer:(i)=>'Total: '+i.reduce((a,b)=>a+b.parsed.y,0).toLocaleString()}}},

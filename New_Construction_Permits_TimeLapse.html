@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>New-Construction Permits Time-Lapse — Who Builds Nashville?</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.9.2/proj4.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  /* title card */
+  .titlecard{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:1000;
+    background:rgba(255,255,255,.86);border:1px solid #d9d2c5;border-radius:8px;
+    padding:8px 18px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.15);max-width:90vw}
+  .titlecard h1{margin:0;font-size:18px;color:#1a3a5c;font-weight:600}
+  .titlecard p{margin:2px 0 0;font-size:12px;color:#555}
+  /* status indicator */
+  #status{position:absolute;bottom:10px;right:10px;z-index:1000;background:rgba(255,255,255,.9);
+    border:1px solid #d9d2c5;border-radius:6px;padding:6px 10px;font-size:12px;color:#333;
+    box-shadow:0 1px 4px rgba(0,0,0,.15);min-width:150px}
+  #status b{color:#1a3a5c}
+  .bar{height:5px;background:#eee;border-radius:3px;margin-top:4px;overflow:hidden}
+  .bar>i{display:block;height:100%;width:0;background:#1f77b4;transition:width .2s}
+  /* combined control + chart panel */
+  #panel{position:absolute;bottom:10px;left:10px;z-index:1000;background:rgba(255,255,255,.93);
+    border:1px solid #d9d2c5;border-radius:8px;padding:7px 9px;box-shadow:0 1px 6px rgba(0,0,0,.18);
+    width:320px;box-sizing:border-box}
+  #panel .row{display:flex;align-items:center;gap:8px}
+  #playbtn{font-family:inherit;font-size:13px;cursor:pointer;border:1px solid #1a3a5c;background:#1a3a5c;
+    color:#fff;border-radius:5px;padding:2px 10px}
+  #playbtn:hover{background:#274d72}
+  #yearlbl{font-size:15px;color:#1a3a5c;font-weight:600;min-width:38px;text-align:center}
+  #yslider{flex:1}
+  #togglechart{font-family:inherit;font-size:12px;cursor:pointer;border:1px solid #c9c0b0;background:#fff;
+    color:#1a3a5c;border-radius:4px;padding:1px 7px}
+  #chartwrap{margin-top:5px}
+  #chartwrap.hidden{display:none}
+  #chartwrap .leg{font-size:10px;color:#444;margin:0 0 2px}
+  #chartwrap .leg i{display:inline-block;width:9px;height:9px;border-radius:2px;margin:0 3px 0 6px;vertical-align:-1px}
+  #chartwrap svg{display:block}
+  .ch-tip{position:absolute;pointer-events:none;background:#1a3a5c;color:#fff;font-size:11px;
+    padding:4px 7px;border-radius:4px;opacity:0;transition:opacity .1s;white-space:nowrap;z-index:1100}
+  .leaflet-popup-content{font-family:Garamond,'EB Garamond',Georgia,serif;font-size:12px;max-width:380px}
+  .leaflet-popup-content b{color:#1a3a5c}
+  .leaflet-popup-content a{color:#9b2a23;text-decoration:none}
+  .leaflet-popup-content .tk{margin-top:5px;font-size:11px;line-height:1.7}
+  .leaflet-popup-content .tk a{display:inline-block;margin-right:7px;border-bottom:1px dotted #c4b}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="titlecard">
+  <h1>Who Builds Nashville? — New-Construction Permits, 2006–2026</h1>
+  <p>Residential new-construction building permits, streamed live from Metro's ParcelHistory database. Press play to watch construction unfold.</p>
+</div>
+
+<div id="panel">
+  <div class="row">
+    <button id="playbtn">▶ Play</button>
+    <span id="yearlbl">2026</span>
+    <input id="yslider" type="range" min="2006" max="2026" value="2026" step="1"/>
+    <button id="togglechart" title="show/hide chart">▾</button>
+  </div>
+  <div id="chartwrap">
+    <p class="leg"><i style="background:#66c2a5"></i>Single Family &nbsp;<i style="background:#fc8d62"></i>Townhouse &nbsp;<i style="background:#8da0cb"></i>Duplex &nbsp;<i style="background:#e78ac3"></i>Other Multi</p>
+    <svg id="chart" width="300" height="118"></svg>
+  </div>
+</div>
+<div class="ch-tip" id="chtip"></div>
+
+<div id="status"><b>Loading permits…</b><div id="stxt">starting</div><div class="bar"><i id="pbar"></i></div></div>
+
+<script>
+// ---------- coordinate system: Tennessee State Plane NAD83 ftUS (EPSG:2274) ----------
+proj4.defs("EPSG:2274","+proj=lcc +lat_0=34.3333333333333 +lon_0=-86 +lat_1=36.4166666666667 +lat_2=35.25 +x_0=600000 +y_0=0 +datum=NAD83 +units=us-ft +no_defs");
+const toLL = (x,y)=>{ const p=proj4("EPSG:2274","EPSG:4326",[x,y]); return [p[1],p[0]]; };
+
+// ---------- base layers ----------
+const carto = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20});
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19});
+const aerial = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {attribution:'Esri World Imagery',maxZoom:19});
+
+const map = L.map('map',{preferCanvas:true,layers:[carto]}).setView([36.166,-86.784],10);
+L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{collapsed:false,position:'topright'}).addTo(map);
+const renderer = L.canvas({padding:0.5});
+
+// Davidson County boundary overlay (OBJECTID=4)
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson')
+  .then(r=>r.json()).then(gj=>{
+    L.geoJSON(gj,{filter:f=>f.properties && (f.properties.OBJECTID==4||f.properties.objectid==4),
+      style:{color:'#1a3a5c',weight:2.0,fillOpacity:0,dashArray:'4,4'}}).addTo(map);
+  }).catch(()=>{});
+
+// ---------- groups ----------
+const COLORS={SF:'#66c2a5',TH:'#fc8d62',DUP:'#8da0cb',OM:'#e78ac3'};  // ColorBrewer Set2, 4-class (soft)
+const GNAME={SF:'Single Family',TH:'Townhouse',DUP:'Duplex',OM:'Other Multi'};
+// SF | Townhouse (townhome) | Duplex | Other Multi = tri/quad, condos, 5+ unit apt, ADU, accessory apt
+function groupOf(st){ if(!st) return null;
+  if(st==='Single Family Residence') return 'SF';
+  if(st==='Multifamily, Townhome') return 'TH';
+  if(st.indexOf('Duplex')===0) return 'DUP';
+  if(st.indexOf('Multifamily')===0 || st.indexOf('Detached Accessory')===0
+     || st.indexOf('Accessory Apartment')===0) return 'OM';
+  return null; }
+
+const Y0=2006, Y1=2026;
+const yearLayers={}; for(let y=Y0;y<=Y1;y++) yearLayers[y]=L.layerGroup();
+const counts={}; for(let y=Y0;y<=Y1;y++) counts[y]={SF:0,TH:0,DUP:0,OM:0};
+let loaded=0, total=0, allBounds=[];
+
+// ---------- popup with Nashville toolkit ----------
+function popupHtml(a){
+  const apn=a.APN||'', addr=(a.ADDRESS||'').replace(/\s+/g,' ').trim();
+  const q=encodeURIComponent(addr+' Nashville TN');
+  const cv=a.CONSTVAL?('$'+Math.round(a.CONSTVAL).toLocaleString()):'n/a';
+  const dt=a.DATE_ACCEPTED?new Date(a.DATE_ACCEPTED).toLocaleDateString():'';
+  return `<b>${addr||'(no address)'}</b><br>
+    ${GNAME[groupOf(a.SUB_TYPE_DESC)]||a.SUB_TYPE_DESC} · permit accepted ${dt}<br>
+    Construction value: ${cv}${a.BLDG_SQ_FT?(' · '+Math.round(a.BLDG_SQ_FT).toLocaleString()+' sq ft'):''}<br>
+    APN ${apn} · Case ${a.CASE_NUMBER||''}
+    <div class="tk">
+      <a href="https://maps.nashville.gov/ParcelViewer/?find=${apn}" target="_blank">Parcel Viewer</a>
+      <a href="https://www.padctn.org/prc/property/${apn}" target="_blank">Property Card</a>
+      <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">Aerial</a>
+      <a href="https://www.google.com/maps?layer=c&cbll=${q}" target="_blank">Street View</a>
+      <a href="${a.epermits||('https://documents.nashville.gov/Request/Form/PermitCodes?permitnumber='+a.CASE_NUMBER)}" target="_blank">ePermit</a>
+    </div>`;
+}
+
+// ---------- live fetch ----------
+const BASE="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/4/query";
+const WHERE="CASE_TYPE_DESC='Building Residential - New' AND ("
+  +"SUB_TYPE_DESC='Single Family Residence' OR SUB_TYPE_DESC LIKE 'Multifamily%' OR SUB_TYPE_DESC LIKE 'Duplex%'"
+  +" OR SUB_TYPE_DESC='Detached Accessory Dwelling Unit' OR SUB_TYPE_DESC='Accessory Apartment')"
+  +" AND DATE_ACCEPTED >= timestamp '2006-01-01 00:00:00' AND DATE_ACCEPTED < timestamp '2027-01-01 00:00:00'";
+const OUTF="CA_OBJECT_ID,SUB_TYPE_DESC,DATE_ACCEPTED,CONSTVAL,BLDG_SQ_FT,CX,CY,APN,ADDRESS,CASE_NUMBER,epermits";
+
+function qurl(params){ return BASE+'?'+Object.entries(params).map(([k,v])=>k+'='+encodeURIComponent(v)).join('&'); }
+
+async function getCount(){
+  const r=await fetch(qurl({where:WHERE,returnCountOnly:'true',f:'json'}));
+  return (await r.json()).count;
+}
+async function fetchPage(offset){
+  const url=qurl({where:WHERE,outFields:OUTF,returnGeometry:'false',orderByFields:'CA_OBJECT_ID',
+    resultOffset:offset,resultRecordCount:100,f:'json'});
+  for(let attempt=0;attempt<3;attempt++){
+    try{ const r=await fetch(url); const j=await r.json(); if(j.features) return j.features; }catch(e){}
+    await new Promise(res=>setTimeout(res,500*(attempt+1)));
+  }
+  return [];
+}
+function addFeature(a){
+  const g=groupOf(a.SUB_TYPE_DESC); if(!g) return;
+  if(a.CX==null||a.CY==null) return;
+  const ll=toLL(a.CX,a.CY);
+  if(!isFinite(ll[0])||!isFinite(ll[1])||ll[0]<35||ll[0]>37) return;
+  const y=new Date(a.DATE_ACCEPTED).getFullYear(); if(y<Y0||y>Y1) return;
+  counts[y][g]++;
+  const m=L.circleMarker(ll,{renderer,radius:3,weight:0,fillColor:COLORS[g],fillOpacity:.75});
+  m.bindPopup(()=>popupHtml(a),{maxWidth:380});
+  yearLayers[y].addLayer(m);
+  allBounds.push(ll);
+}
+
+async function pool(tasks,size){
+  let i=0; const workers=[];
+  for(let w=0;w<size;w++){
+    workers.push((async()=>{ while(i<tasks.length){ const idx=i++; await tasks[idx](); } })());
+  }
+  await Promise.all(workers);
+}
+
+(async function run(){
+  const stxt=document.getElementById('stxt'), pbar=document.getElementById('pbar');
+  try{
+    total=await getCount();
+    document.querySelector('#status b').textContent='Streaming '+total.toLocaleString()+' permits…';
+    const offsets=[]; for(let o=0;o<total;o+=100) offsets.push(o);
+    let done=0;
+    const tasks=offsets.map(o=>async()=>{
+      const feats=await fetchPage(o);
+      feats.forEach(f=>{ addFeature(f.attributes); loaded++; });
+      done++;
+      pbar.style.width=(100*done/offsets.length)+'%';
+      stxt.textContent=loaded.toLocaleString()+' mapped';
+      if(done%6===0) drawChart();
+    });
+    await pool(tasks,6);
+    drawChart();
+    showUpTo(+slider.value);
+    if(allBounds.length) map.fitBounds(allBounds,{padding:[20,20]});
+    document.querySelector('#status b').textContent='✓ '+loaded.toLocaleString()+' permits loaded';
+    stxt.textContent='live from ParcelHistory layer 4';
+    pbar.style.width='100%';
+  }catch(e){
+    document.querySelector('#status b').textContent='Load error';
+    stxt.textContent=String(e).slice(0,40);
+  }
+})();
+
+// ---------- time-lapse ----------
+const slider=document.getElementById('yslider'), ylbl=document.getElementById('yearlbl'),
+      playbtn=document.getElementById('playbtn');
+let shown=new Set();
+function showUpTo(year){
+  for(let y=Y0;y<=Y1;y++){
+    if(y<=year){ if(!shown.has(y)){ yearLayers[y].addTo(map); shown.add(y); } }
+    else { if(shown.has(y)){ map.removeLayer(yearLayers[y]); shown.delete(y); } }
+  }
+  ylbl.textContent=year; slider.value=year; drawChart();
+}
+slider.addEventListener('input',()=>showUpTo(+slider.value));
+
+let playing=false, timer=null;
+function play(){
+  playing=true; playbtn.textContent='❚❚ Pause';
+  if(+slider.value>=Y1) showUpTo(Y0);
+  timer=setInterval(()=>{
+    let y=+slider.value;
+    if(y>=Y1){ stop(); return; }
+    showUpTo(y+1);
+  },650);
+}
+function stop(){ playing=false; playbtn.textContent='▶ Play'; clearInterval(timer); }
+playbtn.addEventListener('click',()=>playing?stop():play());
+
+// ---------- interactive stacked bar chart ----------
+const svg=document.getElementById('chart'), CW=300, CH=118,
+      M={t:6,r:6,b:15,l:26}, tip=document.getElementById('chtip');
+// collapse / expand chart
+const togglechart=document.getElementById('togglechart'), chartwrap=document.getElementById('chartwrap');
+togglechart.addEventListener('click',()=>{ chartwrap.classList.toggle('hidden');
+  togglechart.textContent=chartwrap.classList.contains('hidden')?'▸':'▾'; });
+const years=[]; for(let y=Y0;y<=Y1;y++) years.push(y);
+function drawChart(){
+  const innerW=CW-M.l-M.r, innerH=CH-M.t-M.b;
+  let maxTot=0; years.forEach(y=>{const c=counts[y];maxTot=Math.max(maxTot,c.SF+c.TH+c.DUP+c.OM);});
+  maxTot=Math.max(maxTot,1000); const ny=Math.ceil(maxTot/1000)*1000;
+  const bw=innerW/years.length, x=i=>M.l+i*bw, ys=v=>M.t+innerH-(v/ny)*innerH;
+  const cur=+slider.value;
+  let s='';
+  // y gridlines
+  for(let g=0;g<=ny;g+=1000){ const yy=ys(g);
+    s+=`<line x1="${M.l}" y1="${yy}" x2="${CW-M.r}" y2="${yy}" stroke="#e6e0d5" stroke-width="1"/>`;
+    s+=`<text x="${M.l-4}" y="${yy+3}" font-size="9" fill="#888" text-anchor="end" font-family="Garamond">${g}</text>`;
+  }
+  years.forEach((y,i)=>{
+    const c=counts[y]; let base=0; const segs=[['SF',c.SF],['TH',c.TH],['DUP',c.DUP],['OM',c.OM]];
+    segs.forEach(([k,v])=>{ if(v<=0) return; const h=(v/ny)*innerH; const yy=ys(base)-h;
+      s+=`<rect x="${x(i)+1}" y="${yy}" width="${bw-2}" height="${h}" fill="${COLORS[k]}"
+           data-y="${y}" data-k="${k}" data-v="${v}" style="cursor:pointer"/>`; base+=v; });
+    // current-year outline
+    if(y===cur){ const th=ys(0)-ys(c.SF+c.TH+c.DUP+c.OM);
+      s+=`<rect x="${x(i)+0.5}" y="${ys(c.SF+c.TH+c.DUP+c.OM)}" width="${bw-1}" height="${Math.max(th,2)}"
+           fill="none" stroke="#1a3a5c" stroke-width="1.5"/>`; }
+    if(i%3===0||y===Y1){ s+=`<text x="${x(i)+bw/2}" y="${CH-7}" font-size="9" fill="#555"
+        text-anchor="middle" font-family="Garamond" transform="rotate(0)">${("'"+String(y).slice(2))}</text>`; }
+  });
+  svg.innerHTML=s;
+  // interactions
+  svg.querySelectorAll('rect[data-y]').forEach(r=>{
+    r.addEventListener('click',()=>showUpTo(+r.dataset.y));
+    r.addEventListener('mousemove',ev=>{
+      tip.style.opacity=1; tip.style.left=(ev.pageX+10)+'px'; tip.style.top=(ev.pageY-10)+'px';
+      tip.textContent=`${r.dataset.y} · ${GNAME[r.dataset.k]}: ${(+r.dataset.v).toLocaleString()}`;
+    });
+    r.addEventListener('mouseleave',()=>tip.style.opacity=0);
+  });
+}
+drawChart();
+</script>
+</body>
+</html>
