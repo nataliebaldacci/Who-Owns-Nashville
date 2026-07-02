@@ -1,0 +1,117 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Davidson County Parcel Overview</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c458c;--navy-dk:#16357a;--gold:#f0af1e;--ink:#1c458c}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Montserrat','Helvetica Neue',Arial,sans-serif;color:#20303f;background:#eef4fb;line-height:1.5}
+  header{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold);padding:30px 22px 26px;text-align:center}
+  header .kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+  header h1{margin:0 0 8px;font-size:29px;font-weight:800;letter-spacing:-.4px;color:#fff}
+  header p{margin:0 auto;max-width:700px;color:#d6e2f3;font-size:14.5px}
+  .wrap{max-width:1040px;margin:26px auto;padding:0 20px}
+  h2.sec{font-size:14px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin:34px 0 14px;padding-bottom:7px;border-bottom:2px solid var(--gold)}
+  /* stat tiles */
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px}
+  .tile{background:#fff;border:1px solid #d6ddea;border-left:4px solid var(--gold);border-radius:8px;padding:16px 18px;box-shadow:0 2px 6px rgba(28,69,140,.10)}
+  .tile .n{font-size:26px;font-weight:800;color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+  .tile .l{font-size:12px;color:#4a5560;margin-top:5px}
+  .tile .s{font-size:10.5px;color:#8a94a0;margin-top:2px}
+  /* bar rows */
+  .bars{background:#fff;border:1px solid #d6ddea;border-radius:8px;padding:16px 18px;box-shadow:0 2px 6px rgba(28,69,140,.10)}
+  .row{display:grid;grid-template-columns:180px 1fr 118px;align-items:center;gap:12px;margin:7px 0;font-size:12.5px}
+  .row .lab{color:#20303f;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .row .track{background:#eef4fb;border-radius:4px;height:20px;overflow:hidden}
+  .row .fill{height:100%;background:var(--navy);border-radius:4px}
+  .row .fill.g{background:var(--gold)}
+  .row .val{text-align:right;font-variant-numeric:tabular-nums;color:#4a5560}
+  .row .val b{color:var(--navy)}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d6ddea;border-radius:8px;overflow:hidden;font-size:12.5px;box-shadow:0 2px 6px rgba(28,69,140,.10)}
+  th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+  td{padding:8px 12px;border-top:1px solid #eef0f3;font-variant-numeric:tabular-nums}
+  td.n{text-align:right}
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+  @media(max-width:720px){.two{grid-template-columns:1fr}.row{grid-template-columns:120px 1fr 90px}}
+  .note{font-size:11px;color:#7a8694;font-style:italic;margin-top:10px;line-height:1.45}
+  .note a{color:var(--navy)}
+  footer{text-align:center;color:#7a8694;font-size:12px;padding:26px}
+  .back{display:inline-block;margin:16px 0 0;color:var(--navy);font-weight:700;font-size:13px;text-decoration:none}
+</style></head><body>
+<header>
+  <div class="kick">Davidson County · Metro Nashville · Primary Government Data</div>
+  <h1>Parcel Overview</h1>
+  <p>A snapshot of every parcel in Davidson County from the Metro Nashville assessor's cadastral record: land use, housing type, value, and ownership.</p>
+</header>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
+
+  <h2 class="sec">The county at a glance</h2>
+  <div class="tiles">
+    <div class="tile"><div class="n">286,721</div><div class="l">Total parcels</div></div>
+    <div class="tile"><div class="n">$252.8B</div><div class="l">Total appraised value</div></div>
+    <div class="tile"><div class="n">355,677</div><div class="l">Dwelling units</div></div>
+    <div class="tile"><div class="n">287,773</div><div class="l">Acres</div></div>
+    <div class="tile"><div class="n">224,000</div><div class="l">Small residential parcels</div><div class="s">single-family, condo, duplex, ZLL (1&ndash;2 units)</div></div>
+    <div class="tile"><div class="n">23,326</div><div class="l">Owned out-of-state</div><div class="s">8.1% of all parcels</div></div>
+  </div>
+
+  <h2 class="sec">Land use — how the parcels are used</h2>
+  <div class="bars" id="landuse"></div>
+  <div class="note">Notes: Grouped by <code>LUDesc</code>, counts and appraised-value sums from <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&amp;groupByFieldsForStatistics=LUDesc&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22cnt%22%7D%5D&amp;f=json" target="_blank">Metro Nashville Cadastral, Ownership Parcels (MapServer/4)</a> (last accessed July 2, 2026).</div>
+
+  <div class="two">
+    <div>
+      <h2 class="sec">Physical feature type</h2>
+      <div class="bars" id="feature"></div>
+    </div>
+    <div>
+      <h2 class="sec">Owner's home state</h2>
+      <table id="states"><thead><tr><th>State</th><th style="text-align:right">Parcels</th></tr></thead><tbody></tbody></table>
+      <div class="note">Top states by owner mailing address. Tennessee owners hold 91.8% of parcels; the largest out-of-state holders are California, Arizona, Texas, and Florida.</div>
+    </div>
+  </div>
+
+  <h2 class="sec">Occupancy — owner-occupied vs. absentee</h2>
+  <div class="bars" id="occ"></div>
+  <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP. 194,152 parcels (67.7%) match; 92,302 (32.2%) are absentee-owned. Source: <code>OwnZip = PropZip</code> filter, Metro Nashville Cadastral (last accessed July 2, 2026).</div>
+
+  <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
+</div>
+<footer>Natalie Baldacci · Vanderbilt Law School · Source: Metro Nashville Cadastral (Ownership Parcels, MapServer/4). All figures are a live snapshot, July 2, 2026.</footer>
+
+<script>
+const fmt=n=>n.toLocaleString();
+const money=n=>'$'+(n/1e9).toFixed(2)+'B';
+// land use: [label, count, apprValue]
+const LAND=[
+ ["Single family",156840,97136998433],
+ ["Residential condo",55184,27856577430],
+ ["Vacant residential land",21392,4348168765],
+ ["Unclassified",15810,6663062559],
+ ["Duplex",7092,3515301869],
+ ["Zero lot line",5421,1467314800],
+ ["Vacant rural land",3210,535819021],
+ ["Vacant commercial land",2550,5456674525],
+ ["Office (1–2 story)",1804,6257297959],
+ ["Parking lot",1465,4458920377],
+ ["Church",889,3243425375]
+];
+const FEAT=[
+ ["Lot",156364],["Condo",48044],["Other",26756],["Multistory condo",21783],
+ ["Acreage tract",20507],["Common area",9128],["Open space",3438],["Cemetery",316]
+];
+const STATES=[["TN",263252],["CA",4989],["AZ",2668],["TX",2067],["FL",1969],["GA",1599],["NY",1141],["IL",1104]];
+function bars(el,data,max,useVal){
+  el.innerHTML=data.map(d=>{
+    const c=d[1], w=Math.max(1.5,100*c/max);
+    const right=useVal&&d[2]!=null?('<b>'+fmt(c)+'</b> · '+money(d[2])):('<b>'+fmt(c)+'</b>');
+    return `<div class="row"><div class="lab">${d[0]}</div><div class="track"><div class="fill${useVal?'':' g'}" style="width:${w}%"></div></div><div class="val">${right}</div></div>`;
+  }).join('');
+}
+bars(document.getElementById('landuse'),LAND,LAND[0][1],true);
+bars(document.getElementById('feature'),FEAT,FEAT[0][1],false);
+document.querySelector('#states tbody').innerHTML=STATES.map(s=>`<tr><td>${s[0]}</td><td class="n">${fmt(s[1])}</td></tr>`).join('');
+bars(document.getElementById('occ'),[["Owner-occupied (ZIP match)",194152],["Absentee / non-owner-occupied",92302]],194152,true);
+</script>
+</body></html>
