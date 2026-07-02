@@ -52,7 +52,7 @@
     <div class="tile"><div class="n">$252.8B</div><div class="l">Total appraised value</div></div>
     <div class="tile"><div class="n">355,677</div><div class="l">Dwelling units</div></div>
     <div class="tile"><div class="n">287,773</div><div class="l">Acres</div></div>
-    <div class="tile"><div class="n">224,000</div><div class="l">Small residential parcels</div><div class="s">single-family, condo, duplex, ZLL (1&ndash;2 units)</div></div>
+    <div class="tile"><div class="n">205,915</div><div class="l">Residential parcels</div><div class="s">single-family, condo, duplex, ZLL (1&ndash;2 units)</div></div>
     <div class="tile"><div class="n">23,326</div><div class="l">Owned out-of-state</div><div class="s">8.1% of all parcels</div></div>
   </div>
 
@@ -75,6 +75,29 @@
   <h2 class="sec">Occupancy — owner-occupied vs. absentee</h2>
   <div class="bars" id="occ"></div>
   <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP. 194,152 parcels (67.7%) match; 92,302 (32.2%) are absentee-owned. Source: <code>OwnZip = PropZip</code> filter, Metro Nashville Cadastral (last accessed July 2, 2026).</div>
+
+  <h2 class="sec">The residential housing universe</h2>
+  <div class="tiles">
+    <div class="tile"><div class="n">205,915</div><div class="l">Residential parcels</div><div class="s">1&ndash;2 unit SF, condo, duplex, ZLL</div></div>
+    <div class="tile"><div class="n">215,024</div><div class="l">Dwelling units</div></div>
+    <div class="tile"><div class="n">$121.6B</div><div class="l">Total appraised</div></div>
+    <div class="tile"><div class="n">$81.9B</div><div class="l">Improvement value</div></div>
+    <div class="tile"><div class="n">$39.7B</div><div class="l">Land value</div></div>
+    <div class="tile"><div class="n">412M</div><div class="l">Finished sq ft</div></div>
+  </div>
+  <table style="margin-top:16px"><thead><tr><th>Land use</th><th style="text-align:right">Parcels</th><th style="text-align:right">Dwelling units</th><th style="text-align:right">Total appraised</th></tr></thead>
+  <tbody>
+    <tr><td>Single family</td><td class="n">156,517</td><td class="n">158,443</td><td class="n">$96.76B</td></tr>
+    <tr><td>Residential condo</td><td class="n">36,931</td><td class="n">37,011</td><td class="n">$19.86B</td></tr>
+    <tr><td>Duplex</td><td class="n">7,048</td><td class="n">14,091</td><td class="n">$3.48B</td></tr>
+    <tr><td>Zero lot line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">$1.47B</td></tr>
+    <tr style="font-weight:800;background:#eef4fb"><td>TOTAL</td><td class="n">205,915</td><td class="n">215,024</td><td class="n">$121.57B</td></tr>
+  </tbody></table>
+  <div class="note">Notes: The non-owner-agnostic residential universe used throughout this project. Filter <code>(DUCount 1&ndash;2) AND LUDesc IN ('SINGLE FAMILY','ZERO LOT LINE','DUPLEX','RESIDENTIAL CONDO') AND FeatureType IN ('Lot','Condo','Acreage Tract','Other')</code>, statistics count(ParID) + sum(DUCount, Acres, FinishArea, LandAppr, ImprAppr, TotlAppr). <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query" target="_blank">Metro Nashville Cadastral, Ownership Parcels</a> (last accessed July 2, 2026).</div>
+
+  <h2 class="sec">Parcels by dwelling-unit count</h2>
+  <div class="bars" id="ducount"></div>
+  <div class="note">Notes: Grouped into <code>DUCount</code> buckets over all 286,721 parcels. One-unit parcels dominate (75%); 59,303 carry no dwelling unit (vacant land / common area); 1,921 parcels hold 3+ units. Source: Metro Nashville Cadastral (last accessed July 2, 2026).</div>
 
   <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
 </div>
@@ -113,5 +136,7 @@ bars(document.getElementById('landuse'),LAND,LAND[0][1],true);
 bars(document.getElementById('feature'),FEAT,FEAT[0][1],false);
 document.querySelector('#states tbody').innerHTML=STATES.map(s=>`<tr><td>${s[0]}</td><td class="n">${fmt(s[1])}</td></tr>`).join('');
 bars(document.getElementById('occ'),[["Owner-occupied (ZIP match)",194152],["Absentee / non-owner-occupied",92302]],194152,true);
+const DU=[["0 (vacant / no unit)",59303],["1 unit",216204],["2 units",9293],["3–4 units",835],["5–9 units",183],["10–49 units",317],["50+ units",586]];
+bars(document.getElementById('ducount'),DU,DU[1][1],false);
 </script>
 </body></html>
