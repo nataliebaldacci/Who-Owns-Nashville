@@ -1,0 +1,91 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Nashville's Vacant Land, 2000 to Today</title>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+    padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:8px 12px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend i{display:inline-block;width:12px;height:12px;border-radius:2px;margin-right:5px;vertical-align:middle}
+  #ctrl{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.97);
+    padding:12px 20px;border-radius:8px;width:min(680px,93%);box-shadow:0 2px 8px rgba(0,0,0,.25)}
+  #ctrl .row{display:flex;align-items:center;gap:14px}
+  #play{font-family:Garamond,serif;font-size:14px;padding:6px 14px;cursor:pointer;background:#2c6b3f;color:#fff;border:none;border-radius:4px;min-width:74px}
+  #play:hover{background:#3c8a52} #yr{font-size:30px;font-weight:bold;color:#2c6b3f;min-width:78px;text-align:center}
+  #slider{flex:1} #count{display:flex;justify-content:center;flex-wrap:wrap;gap:16px;margin-top:8px;font-size:12.5px}
+  #count b{font-size:15px} #count .sw{display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:4px;vertical-align:middle}
+  #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
+  #methods b{color:#2c6b3f}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Nashville's Vacant Land Fills In, 2000 &rarr; Today</h2>
+  <p>Every developable parcel with $0 improvement value in 2000. Press Play to watch it get built &mdash; or held by investors.</p></div>
+<div id="legend"><b>Status each year</b>
+  <div><i style="background:#bdbdbd"></i>Vacant &mdash; individually owned</div>
+  <div><i style="background:#d62728"></i>Vacant &mdash; corporate-entity owned</div>
+  <div><i style="background:#1a9850"></i>Built (improvement value &gt; $0)</div></div>
+<div id="ctrl">
+  <div class="row"><button id="play">▶ Play</button><span id="yr">2000</span>
+    <input id="slider" type="range" min="2000" max="2026" value="2000" step="1"></div>
+  <div id="count">
+    <span><span class="sw" style="background:#bdbdbd"></span>Vacant <b id="c0">0</b></span>
+    <span><span class="sw" style="background:#d62728"></span>Investor-held vacant <b id="c2">0</b></span>
+    <span><span class="sw" style="background:#1a9850"></span>Built <b id="c1">0</b></span>
+  </div>
+  <div id="methods"><b>Method.</b> Each shape is a Davidson County parcel whose assessor <b>improvement value was $0 in 2000</b> &mdash; vacant developable land of any class except Open-Space and Exempt (so residential <i>and</i> vacant-multifamily/commercial sites are included). It turns <b>green</b> the year a building first appears (improvement value rises above $0). It is <b>red</b> in the years it was owned by a corporate entity (LLC, LP, Inc, Trust&hellip;) and <b>grey</b> when individually owned &mdash; ownership taken from the recorded <b>deed history</b>, year by year, not the current owner. Source: Assessment History + ParcelHistory ownership (Layer 2) + Cadastral. Davidson County.</div>
+</div>
+<script>
+const Y0=2000,Y1=2026,NY=Y1-Y0+1;
+const COLOR=['match',['get','c'],0,'#bdbdbd',1,'#1a9850',2,'#d62728','#bdbdbd'];
+const map=new maplibregl.Map({container:'map',center:[-86.78,36.17],zoom:9.7,
+  style:{version:8,sources:{base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+    labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+    layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+let gj=null,COL=[],year=Y0,src=null;
+function setYear(y){
+  year=y; const idx=y-Y0; const cnt=[0,0,0];
+  const fs=gj.features;
+  for(let i=0;i<fs.length;i++){const c=COL[i][idx]; fs[i].properties.c=c; cnt[c]++;}
+  src.setData(gj);
+  document.getElementById('yr').textContent=y; document.getElementById('slider').value=y;
+  document.getElementById('c0').textContent=cnt[0].toLocaleString();
+  document.getElementById('c1').textContent=cnt[1].toLocaleString();
+  document.getElementById('c2').textContent=cnt[2].toLocaleString();
+}
+map.on('load',()=>{
+  fetch('Davidson_Vacant2000_Polys.geojson').then(r=>r.json()).then(g=>{
+    gj=g;
+    COL=gj.features.map(f=>{const p=f.properties;
+      const tr=(p.own||'').split(';').filter(Boolean).map(s=>{const x=s.split(':');return [+x[0],+x[1]];});
+      const arr=new Int8Array(NY);
+      for(let y=Y0;y<=Y1;y++){
+        let c;
+        if(p.dev!=null&&y>=p.dev) c=1;                          // built (improvement value > $0)
+        else { let e=0; for(let i=0;i<tr.length;i++){ if(tr[i][0]<=y) e=tr[i][1]; else break; } c=e?2:0; }
+        arr[y-Y0]=c;                                             // 2 = entity-held vacant (deed history), 0 = vacant
+      }
+      return arr;});
+    gj.features.forEach(f=>f.properties.c=0);
+    map.addSource('p',{type:'geojson',data:gj}); src=map.getSource('p');
+    map.addLayer({id:'fill',type:'fill',source:'p',paint:{'fill-color':COLOR,'fill-opacity':0.7}});
+    map.addLayer({id:'line',type:'line',source:'p',paint:{'line-color':COLOR,'line-width':['interpolate',['linear'],['zoom'],10,0.2,15,0.8]}});
+    map.on('click','fill',e=>{const p=e.features[0].properties;
+      const tr=(p.own||'').split(';').filter(Boolean).map(s=>{const x=s.split(':');return [+x[0],+x[1]];});
+      let e2=0; for(let i=0;i<tr.length;i++){ if(tr[i][0]<=year) e2=tr[i][1]; else break; }
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML(`<b>${p.a||''}</b><br>${p.cls||''} &middot; ${p.dev!=null?('built '+p.dev):'still vacant'}<br>${year}: ${e2?'corporate-entity owned':'individually owned'}`).addTo(map);});
+    setYear(Y0);
+  });
+});
+document.getElementById('slider').addEventListener('input',e=>setYear(+e.target.value));
+let timer=null;
+document.getElementById('play').addEventListener('click',function(){
+  if(timer){clearInterval(timer);timer=null;this.textContent='▶ Play';return;}
+  this.textContent='❚❚ Pause'; if(year>=Y1)setYear(Y0);
+  timer=setInterval(()=>{if(year>=Y1){clearInterval(timer);timer=null;document.getElementById('play').textContent='▶ Play';return;}setYear(year+1);},430);
+});
+</script></body></html>

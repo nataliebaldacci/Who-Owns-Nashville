@@ -3,14 +3,17 @@
 <style>
 html,body{margin:0;font-family:Garamond,Georgia,serif;background:#fff;color:#222}
 #head{text-align:center;padding:16px 12px 6px}#head h1{font-size:20px;margin:0}
-#head p{font-size:13px;color:#444;max-width:780px;margin:6px auto 0;line-height:1.5}
-#chart{width:100%;height:520px;border:0}
-.note{max-width:780px;margin:10px auto 24px;font-size:12px;color:#666;font-style:italic;line-height:1.5;padding:0 12px}
+#head p{font-size:13px;color:#444;max-width:820px;margin:6px auto 0;line-height:1.5}
+.frame{width:100%;border:0}.tl{height:520px}.bar{height:440px}
+h2{text-align:center;font-size:16px;margin:26px 0 2px}
+.note{max-width:820px;margin:8px auto 24px;font-size:12px;color:#666;font-style:italic;line-height:1.5;padding:0 12px}
 </style></head><body>
 <div id="head">
-<h1>Eviction filings keep climbing in Davidson County</h1>
-<p>Monthly eviction filings, January 2016 to May 2026. Filings fell during the 2020 to 2021 federal moratorium, then rose past their pre-pandemic level. February 2024 set the record at 1,478 filings in a single month. Landlords filed 115,703 evictions across the decade.</p>
+<h1>Eviction filings are climbing again</h1>
+<p>The top panel tracks every eviction filing in Davidson County by month. The bottom panel names who files them: how many detainer warrants each institutional operator brings for every 100 homes it holds.</p>
 </div>
-<iframe id="chart" src="https://datawrapper.dwcdn.net/rn893/" scrolling="no" frameborder="0"></iframe>
-<p class="note">Source: Eviction Lab, Eviction Tracking System (Davidson County, TN), https://evictionlab.org/eviction-tracking/ (last accessed July 1, 2026). This dataset counts filings by month for the whole county. It does not name the plaintiff or property owner behind each case, so it cannot be broken out by operator on its own.</p>
+<iframe class="frame tl" src="https://datawrapper.dwcdn.net/rn893/" scrolling="no" frameborder="0"></iframe>
+<h2>Who files them: evictions per 100 homes held</h2>
+<iframe class="frame bar" src="https://datawrapper.dwcdn.net/7EdbH/" scrolling="no" frameborder="0"></iframe>
+<p class="note">Sources: Eviction Lab, Eviction Tracking System (Davidson County, TN), https://evictionlab.org/eviction-tracking/ (top); Davidson County General Sessions Court detainer warrants, operator attribution via deed records (bottom). Both last accessed July 1, 2026. Charts: Natalie Baldacci.</p>
 </body></html>
