@@ -99,6 +99,10 @@
   <div class="bars" id="ducount"></div>
   <div class="note">Notes: Grouped into <code>DUCount</code> buckets over all 286,721 parcels. One-unit parcels dominate (75%); 59,303 carry no dwelling unit (vacant land / common area); 1,921 parcels hold 3+ units. Source: Metro Nashville Cadastral (last accessed July 2, 2026).</div>
 
+  <h2 class="sec">When the housing was built</h2>
+  <div class="bars" id="yearbuilt"></div>
+  <div class="note">Notes: Year the primary structure was built (<code>YearBuilt</code>), for the 224,060 residential parcels with a recorded build year (median 1985). Two building booms stand out: the postwar decades (1950s&ndash;60s) and the 2000s. Source: Metro Nashville assessor building characteristics (CAMA), paired to the cadastral by parcel ID (last accessed July 2, 2026).</div>
+
   <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
 </div>
 <footer>Natalie Baldacci · Vanderbilt Law School · Source: Metro Nashville Cadastral (Ownership Parcels, MapServer/4). All figures are a live snapshot, July 2, 2026.</footer>
@@ -138,5 +142,7 @@ document.querySelector('#states tbody').innerHTML=STATES.map(s=>`<tr><td>${s[0]}
 bars(document.getElementById('occ'),[["Owner-occupied (ZIP match)",194152],["Absentee / non-owner-occupied",92302]],194152,true);
 const DU=[["0 (vacant / no unit)",59303],["1 unit",216204],["2 units",9293],["3–4 units",835],["5–9 units",183],["10–49 units",317],["50+ units",586]];
 bars(document.getElementById('ducount'),DU,DU[1][1],false);
+const YB=[["<1940",16408],["1940–49",11144],["1950–59",25861],["1960–69",27313],["1970–79",20939],["1980–89",28073],["1990–99",20256],["2000–09",32899],["2010–19",25479],["2020+",15688]];
+bars(document.getElementById('yearbuilt'),YB,Math.max(...YB.map(y=>y[1])),true);
 </script>
 </body></html>
