@@ -1,25 +1,28 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Who Owns Nashville? — Interactive Maps</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  :root{--ink:#1a3a5c;--accent:#9b2a23}
-  body{margin:0;font-family:Garamond,'EB Garamond',Georgia,serif;color:#222;background:#f7f5f1;line-height:1.5}
-  header{background:#fff;border-bottom:1px solid #e3ddd3;padding:34px 22px 26px;text-align:center}
-  header h1{margin:0 0 6px;font-size:30px;color:var(--ink)}
-  header p{margin:0 auto;max-width:680px;color:#555;font-size:15px}
+  :root{--navy:#1c458c;--navy-dk:#16357a;--gold:#f0af1e;--ink:#1c458c;--accent:#1c458c}
+  body{margin:0;font-family:'Montserrat','Helvetica Neue',Arial,sans-serif;color:#20303f;background:#eef4fb;line-height:1.55}
+  header{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold);padding:34px 22px 28px;text-align:center}
+  header .kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+  header h1{margin:0 0 8px;font-size:31px;font-weight:800;letter-spacing:-.4px;color:#fff}
+  header p{margin:0 auto;max-width:690px;color:#d6e2f3;font-size:15px}
   .wrap{max-width:980px;margin:30px auto;padding:0 20px;display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
-  a.card{display:block;background:#fff;border:1px solid #e3ddd3;border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;
-    box-shadow:0 1px 3px rgba(0,0,0,.06);transition:transform .12s,box-shadow .12s}
-  a.card:hover{transform:translateY(-3px);box-shadow:0 6px 16px rgba(0,0,0,.12)}
-  a.card h2{margin:0 0 6px;font-size:18px;color:var(--accent)}
-  a.card p{margin:0;font-size:13.5px;color:#555}
-  footer{text-align:center;color:#888;font-size:12px;padding:26px;max-width:760px;margin:0 auto}
-  .navbtns{max-width:980px;margin:22px auto 0;padding:0 20px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-  .navbtns a{display:inline-block;background:var(--accent);color:#fff;text-decoration:none;font-size:15px;font-weight:600;
-    padding:12px 24px;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.18);transition:background .12s,transform .12s}
-  .navbtns a:hover{background:#7d2019;transform:translateY(-2px)}
+  a.card{display:block;background:#fff;border:1px solid #d6ddea;border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;
+    box-shadow:0 2px 6px rgba(28,69,140,.10);transition:transform .12s,box-shadow .12s}
+  a.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(28,69,140,.20)}
+  a.card h2{margin:0 0 6px;font-size:17px;font-weight:800;color:var(--navy)}
+  a.card p{margin:0;font-size:13.5px;color:#4a5560}
+  footer{text-align:center;color:#7a8694;font-size:12px;padding:26px;max-width:760px;margin:0 auto}
+  .navbtns{max-width:980px;margin:24px auto 0;padding:0 20px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .navbtns a{display:inline-block;background:var(--gold);color:var(--navy);text-decoration:none;font-size:15px;font-weight:800;
+    padding:13px 26px;border-radius:8px;box-shadow:0 2px 6px rgba(28,69,140,.22);transition:background .12s,transform .12s}
+  .navbtns a:hover{background:#d99a12;transform:translateY(-2px)}
 </style></head><body>
 <header>
+  <div class="kick">Davidson County · Primary Government Data</div>
   <h1>Who Owns Nashville?</h1>
   <p>Interactive maps of institutional and corporate ownership of residential housing in Davidson County, Tennessee. Built entirely from primary government data — every parcel traces to a live county record.</p>
 </header>
