@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Davidson Parcels by Neighborhood ACS Metric</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+ html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+ #map{position:absolute;inset:0}
+ .titlecard{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,.9);
+  border:1px solid #d9d2c5;border-radius:8px;padding:8px 18px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+ .titlecard h1{margin:0;font-size:16px;color:#1a3a5c;font-weight:600}
+ .titlecard p{margin:2px 0 0;font-size:12px;color:#555}
+ #ctl{position:absolute;top:12px;left:12px;z-index:1000;background:rgba(255,255,255,.95);border:1px solid #d9d2c5;
+  border-radius:7px;padding:9px 11px;box-shadow:0 2px 8px rgba(0,0,0,.15);font-size:12.5px}
+ #ctl select{font-family:inherit;font-size:12.5px;margin-top:4px;width:100%}
+ #leg{margin-top:8px}
+ #leg .row{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:11.5px}
+ #leg i{width:13px;height:13px;border-radius:2px;display:inline-block;flex:none}
+ #status{position:absolute;bottom:10px;right:10px;z-index:1000;background:rgba(255,255,255,.9);border:1px solid #d9d2c5;
+  border-radius:6px;padding:5px 10px;font-size:12px;color:#333}
+</style></head><body>
+<div id="map"></div>
+<div class="titlecard"><h1>Davidson County parcels by neighborhood</h1>
+ <p>Each parcel colored by its block group's ACS value (2020–2024)</p></div>
+<div id="ctl"><b>Color parcels by:</b><br>
+ <select id="metric">
+  <option value="cost_burden">Renter cost burden (%)</option>
+  <option value="homeownership">Homeownership rate (%)</option>
+  <option value="median_value">Median home value ($)</option>
+  <option value="median_rent">Median gross rent ($)</option>
+  <option value="poverty">Poverty rate (%)</option>
+ </select>
+ <div id="leg"></div></div>
+<div id="status">Loading…</div>
+<script>
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20});
+const map=L.map('map',{preferCanvas:true,layers:[carto]}).setView([36.166,-86.784],10);
+const rndr=L.canvas({padding:.5});
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json())
+ .then(gj=>L.geoJSON(gj,{filter:f=>f.properties&&(f.properties.OBJECTID==4||f.properties.objectid==4),style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map)).catch(()=>{});
+const RAMP=['#ffffcc','#fed976','#fd8d3c','#e31a1c','#800026']; // YlOrRd 5
+const status=document.getElementById('status');
+let DATA=null, COL=null, layer=null;
+function quantiles(vals){ // 5 quantile breaks
+ const v=vals.filter(x=>x!=null).sort((a,b)=>a-b); const q=[];
+ for(let i=1;i<5;i++) q.push(v[Math.floor(i*v.length/5)]);
+ return q;
+}
+function colorFor(x,breaks,reverse){
+ if(x==null) return '#d9d9d9';
+ let idx=0; for(let i=0;i<breaks.length;i++) if(x>=breaks[i]) idx=i+1;
+ return (reverse?RAMP.slice().reverse():RAMP)[idx];
+}
+function fmt(m,x){ if(x==null)return 'n/a'; return (m=='median_value'||m=='median_rent')?'$'+x.toLocaleString():x+'%'; }
+function draw(){
+ const m=document.getElementById('metric').value, ci=COL[m];
+ const reverse=(m=='homeownership'); // high homeownership = light? keep high=dark: no reverse
+ const vals=DATA.map(r=>r[ci]);
+ const breaks=quantiles(vals);
+ if(layer) map.removeLayer(layer);
+ const grp=L.layerGroup(); const li=COL.lat, lo=COL.lon;
+ for(const r of DATA){ const c=colorFor(r[ci],breaks,false);
+  L.circleMarker([r[li],r[lo]],{renderer:rndr,radius:2.3,weight:0,fillColor:c,fillOpacity:.75}).addTo(grp); }
+ grp.addTo(map); layer=grp;
+ // legend
+ const lg=document.getElementById('leg'); const bb=[-Infinity,...breaks,Infinity];
+ let h='';
+ for(let i=0;i<5;i++){ const lo2=(i==0?vals.filter(x=>x!=null).sort((a,b)=>a-b)[0]:breaks[i-1]); const hi=(i==4?'+':'– '+fmt(m,breaks[i]));
+  h+='<div class="row"><i style="background:'+RAMP[i]+'"></i>'+(i==0?'≤ '+fmt(m,breaks[0]):(i==4?'≥ '+fmt(m,breaks[3]):fmt(m,breaks[i-1])+' – '+fmt(m,breaks[i])))+'</div>'; }
+ h+='<div class="row"><i style="background:#d9d9d9"></i>no data</div>';
+ lg.innerHTML=h;
+}
+fetch('parcel_acs_points.json').then(r=>r.json()).then(j=>{
+ DATA=j.rows; COL={}; j.cols.forEach((c,i)=>COL[c]=i);
+ status.textContent=DATA.length.toLocaleString()+' parcels';
+ draw();
+}).catch(e=>status.textContent='load error');
+document.getElementById('metric').addEventListener('change',draw);
+</script></body></html>
