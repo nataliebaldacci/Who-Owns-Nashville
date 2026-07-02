@@ -1,0 +1,98 @@
+/* ============================================================
+   Who Owns Nashville — shared web theme (navy + gold, Montserrat)
+   Extracted from who-owns-nashville-app/web/frontend/map.html
+   Reuse: in <head> add the two lines in the USAGE block below,
+   then use the CSS variables + component classes here.
+   NOTE: this is the interactive/web theme. Print deliverables
+   still use the Garamond house style (see _HOUSE_STYLE.md).
+   ============================================================ */
+
+/* ---- USAGE (paste into any page's <head>) --------------------
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+--------------------------------------------------------------- */
+
+/* ---- Design tokens ---- */
+:root{
+  --navy:#1c458c;      /* primary brand */
+  --navy-dk:#16357a;
+  --gold:#f0af1e;      /* accent (a.k.a. --orange) */
+  --orange:#f0af1e;
+  --lightblue:#4fa0bd;
+  --panel:#eef4fb;     /* light panel fill */
+  --bd:#d6ddea;        /* borders */
+  --ink:#1c458c;
+  --text:#20303f;      /* body text */
+  --text-muted:#4a5560;
+  --text-faint:#8a94a0;
+  --hover-gold:#d99a12;
+  --accent-red:#d7263d;
+}
+
+/* Sequential ramps used for choropleths (tract / ZIP legends) */
+/* YlOrBr: #ffffd4 #fee391 #fec44f #fe9929 #cc4c02
+   Blues:  #eff3ff #bdd7e7 #6baed6 #3182bd #08519c   */
+
+/* ---- Base ---- */
+html,body{
+  height:100dvh;width:100vw;margin:0;padding:0;
+  font-family:'Montserrat','Helvetica Neue',Arial,sans-serif;
+  color:var(--text);
+}
+
+/* ---- Header bar (navy w/ gold underline) ---- */
+.won-header{
+  height:60px;display:flex;align-items:center;gap:16px;
+  background:var(--navy);color:#fff;padding:0 18px;
+  border-bottom:4px solid var(--gold);box-sizing:border-box;
+}
+.won-header .brand{font-size:20px;font-weight:800;white-space:nowrap;letter-spacing:-.2px}
+.won-header .brand small{
+  font-size:10px;font-weight:700;color:var(--gold);letter-spacing:2px;
+  text-transform:uppercase;display:block;
+}
+
+/* ---- Buttons + inputs ---- */
+.won-btn{
+  padding:8px 14px;border:none;border-radius:4px;
+  background:var(--gold);color:var(--navy);font-weight:800;cursor:pointer;
+}
+.won-btn:hover{background:var(--hover-gold)}
+.won-input{padding:8px 12px;border:none;border-radius:4px;font-size:13px}
+
+/* ---- Card (Security-for-Sale style: white, gold left-border) ---- */
+.won-card{
+  background:#fff;border:1px solid var(--bd);border-left:4px solid var(--gold);
+  border-radius:6px;box-shadow:0 4px 14px rgba(28,69,140,.28);padding:10px 12px 9px;
+}
+.won-card-title{font-weight:800;font-size:12.5px;color:var(--navy);margin:0 16px 8px 0;line-height:1.25}
+.won-card-title small{display:block;font-size:9.5px;font-weight:400}
+
+/* ---- Legend swatches (click-to-filter operator list) ---- */
+.won-legGroup{
+  font-size:9px;text-transform:uppercase;letter-spacing:.7px;color:var(--navy);
+  font-weight:700;margin:8px 0 2px;border-bottom:1px solid #eef0f3;padding-bottom:2px;
+}
+.won-sw{cursor:pointer;user-select:none;display:flex;align-items:center;gap:7px}
+.won-sw .bar{width:20px;height:11px;border-radius:2px;flex:0 0 auto}
+.won-sw .lab{font-size:10.5px;color:#3a4652;line-height:1.12}
+.won-sw.faded{opacity:.28}
+
+/* ---- Small floating controls (base toggle, status, zip box) ---- */
+.won-chip{
+  background:#fffe;border:1px solid var(--bd);border-radius:4px;
+  padding:5px 8px;font-size:11px;color:var(--text-muted);
+}
+.won-chip--gold-top{border-top:3px solid var(--gold);box-shadow:0 2px 8px rgba(28,69,140,.25)}
+
+/* ---- Map popup ---- */
+.won-pp{font-size:12px;line-height:1.45;max-width:360px}
+.won-pp .h{font-weight:700;color:var(--navy);font-size:13px}
+.won-pp .s{color:var(--text-muted);margin:2px 0 6px}
+.won-pp a{color:var(--navy);text-decoration:none;font-weight:600}
+.won-pp a:hover{color:var(--orange);text-decoration:underline}
+.won-pp .own{
+  display:block;margin-top:6px;background:var(--navy);color:#fff!important;
+  text-align:center;padding:6px;border-radius:3px;font-weight:700;text-decoration:none;
+}
+.won-pp .own:hover{background:var(--orange)}
