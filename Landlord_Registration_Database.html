@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nashville Landlord Registration Database</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lato:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#000; --ink2:#5c5859; --line:#d5d5d4; --bg:#fff; --card:#fff;
+    --blue:#1696d2; --navy:#12719e; --green:#55b748; --red:#db2b27; --yellow:#fdbf11;
+    --shadow:0 1px 3px rgba(0,0,0,.10);
+    --f:'Lato',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f);line-height:1.5}
+  header{background:var(--card);border-bottom:2px solid var(--ink);padding:24px 22px 14px}
+  .wrap{max-width:1300px;margin:0 auto;padding:0 18px}
+  h1{font-weight:900;font-size:29px;margin:0 0 4px;letter-spacing:-.2px}
+  h1::after{content:"";display:block;width:52px;height:5px;background:var(--yellow);margin-top:8px;border-radius:1px}
+  .sub{color:var(--ink2);font-size:14.5px;max-width:840px;margin-top:10px}
+  .meta{margin-top:8px;font-size:12px;color:#7c8b9a}
+  .stats{display:flex;gap:24px;flex-wrap:wrap;margin:16px 0 4px}
+  .stat .v{font-weight:900;font-size:24px}
+  .stat .k{font-size:11px;color:#7c8b9a;text-transform:uppercase;letter-spacing:.4px}
+  .stat.a .v{color:var(--green)} .stat.e .v{color:var(--red)} .stat.i .v{color:var(--blue)}
+  /* segmented view toggle */
+  .views{display:inline-flex;border:1.5px solid var(--ink);border-radius:9px;overflow:hidden;margin:14px 0 2px}
+  .view{font-size:14px;font-weight:700;padding:9px 18px;cursor:pointer;background:#fff;color:var(--ink);border-right:1.5px solid var(--ink)}
+  .view:last-child{border-right:none}
+  .view.on{background:var(--blue);color:#fff}
+  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:12px 0 6px}
+  input[type=search],select{font-family:var(--f);font-size:14px;border:1px solid var(--line);border-radius:7px;padding:9px 12px;background:#fff;color:var(--ink)}
+  input[type=search]{flex:1;min-width:260px}
+  .chips{display:flex;gap:7px;flex-wrap:wrap}
+  .chip{font-size:12.5px;border:1px solid var(--line);background:#fff;color:var(--ink2);padding:6px 12px;border-radius:20px;cursor:pointer}
+  .chip.on{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .rescount{font-size:13px;color:var(--ink2);margin:8px 0}
+  .tbl-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px;box-shadow:var(--shadow);margin-bottom:14px}
+  table{border-collapse:collapse;width:100%;font-size:13px}
+  th,td{text-align:left;padding:7px 11px;border-bottom:1px solid #eef2f6;white-space:nowrap}
+  th{position:sticky;top:0;background:#f5f5f5;border-bottom:2px solid var(--ink);font-size:11px;text-transform:uppercase;letter-spacing:.3px;color:var(--ink2);z-index:2}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:hover td{background:#f9fcff}
+  td a{color:var(--navy);text-decoration:none} td a:hover{text-decoration:underline}
+  .thumb{width:66px;height:50px;object-fit:cover;border-radius:5px;border:1px solid var(--line);background:#eef2f6;display:block}
+  .noimg{width:66px;height:50px;border-radius:5px;border:1px dashed #cdd8e2;background:#f4f7fa;color:#9aa8b6;font-size:9px;display:flex;align-items:center;justify-content:center}
+  .pill{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:20px}
+  .s-Active{background:#e5f4de;color:#3a7a1e} .s-Expired{background:#fbe3e2;color:var(--red)}
+  .s-Done{background:#cfe8f3;color:var(--navy)} .s-Other{background:#eee;color:#666}
+  .lk{font-size:11.5px}
+  button.more{font-family:var(--f);font-size:13px;font-weight:700;border:1px solid var(--navy);background:var(--blue);color:#fff;padding:9px 18px;border-radius:7px;cursor:pointer;margin:0 0 40px}
+  .loading{padding:40px 20px;color:var(--ink2)}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Nashville Landlord Registration Database</h1>
+    <div class="sub">Metro Codes landlord-registration records for Davidson County, joined to the parcel record, the parent operator, and the people named on each case. Toggle between addresses, registrations, and people; search any field.</div>
+    <div class="stats" id="stats"></div>
+    <div class="views" id="views">
+      <div class="view on" data-v="addr">Addresses</div>
+      <div class="view" data-v="reg">Registrations</div>
+      <div class="view" data-v="ppl">People</div>
+    </div>
+    <div class="controls">
+      <input type="search" id="q" placeholder="Search…" autocomplete="off">
+      <select id="sel2"></select>
+    </div>
+    <div class="chips" id="chips"></div>
+    <div class="meta">Source: Metro Nashville ePermits landlord-registration cases (caseTypeID 176) × Davidson cadastral × Comper × CasePeople. “Active” = currently issued.</div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="rescount" id="rescount"></div>
+  <div id="tableHost"><div class="loading">Loading…</div></div>
+</div>
+
+<script src="registrations_data.js"></script>
+<script>
+const A=0,ADDR=1,OWN=2,PAR=3,ST=4,ISS=5,EXP=6,MKT=7,YR=8,LU=9,CID=10,CNUM=11;
+const ENT=12,SQFT=13,ACRE=14,COND=15,CONSTR=16,FOUND=17,GAR=18,GRADE=19,HEAT=20,ROOF=21,BLDG=22,LAND=23,CSF=24;
+const PV=a=>`https://maps.nashville.gov/ParcelViewer/?parcelID=${encodeURIComponent(a)}`;
+const COMPER=a=>`https://davidson-tn-citizen.comper.info/template.aspx?propertyID=${encodeURIComponent(a)}`;
+const IMG=a=>`https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/${a}_1.jpg`;
+const PORTAL=id=>`https://epermits.nashville.gov/#/permit/${id}`;
+const RECEIPT=(id,n)=>`https://epermits.nashville.gov/PrintViewer.aspx?report=LL+PERMIT+RECEIPT&module=epermit&Permitid=${id}&caseNumber=${encodeURIComponent(n)}`;
+const DEED=f=>`https://davidsonportal.com/gis/file.php?file=${encodeURIComponent(f)}`;
+const usd=n=>n?("$"+n.toLocaleString()):"";
+const REG=window.REG||[], PARENTS=window.REG_PARENTS||[];
+const PAGE=250;
+let view="addr", statusFilter="", roleFilter="", entityFilter="", filtered=[], shown=0;
+
+// ---- derived datasets ----
+const nAct=REG.filter(r=>r[ST]==="Active").length, nExp=REG.filter(r=>r[ST]==="Expired").length;
+const nInst=REG.filter(r=>r[PAR]).length, nEnt=REG.filter(r=>r[ENT]===1).length;
+// registrations = one row per caseID (first occurrence), with address count
+const REGBYCASE=(()=>{
+  const m=new Map(), cnt=new Map();
+  for(const r of REG){ const c=r[CID]; cnt.set(c,(cnt.get(c)||0)+1); if(!m.has(c)) m.set(c,r); }
+  return [...m.values()].map(r=>({r,addrN:cnt.get(r[CID])}));
+})();
+document.getElementById("stats").innerHTML=
+  `<div class="stat"><div class="v">${REG.length.toLocaleString()}</div><div class="k">Addresses registered</div></div>`+
+  `<div class="stat"><div class="v">${REGBYCASE.length.toLocaleString()}</div><div class="k">Registrations (cases)</div></div>`+
+  `<div class="stat a"><div class="v">${nAct.toLocaleString()}</div><div class="k">Active</div></div>`+
+  `<div class="stat e"><div class="v">${nExp.toLocaleString()}</div><div class="k">Expired</div></div>`+
+  `<div class="stat"><div class="v">${nEnt.toLocaleString()}</div><div class="k">Entity-owned</div></div>`+
+  `<div class="stat i"><div class="v">${nInst.toLocaleString()}</div><div class="k">Named operator</div></div>`;
+
+// People lazy-load
+let PEOPLE=null, PERCASE={}, ROLES=[];
+function loadPeople(cb){
+  if(PEOPLE){cb();return;}
+  document.getElementById("tableHost").innerHTML='<div class="loading">Loading people…</div>';
+  const s=document.createElement("script"); s.src="people_data.js";
+  s.onload=()=>{ PEOPLE=window.PEOPLE||[]; PERCASE=window.PEOPLE_PERCASE||{};
+    ROLES=window.PEOPLE_ROLES||[]; cb(); };
+  s.onerror=()=>{document.getElementById("tableHost").innerHTML='<div class="loading">Could not load people_data.js (make sure it sits next to this page).</div>';};
+  document.head.appendChild(s);
+}
+
+// ---- controls ----
+const sel2=document.getElementById("sel2"), chips=document.getElementById("chips");
+function buildControls(){
+  chips.innerHTML=""; sel2.innerHTML="";
+  if(view==="ppl"){
+    document.getElementById("q").placeholder="Search person, company, operator, or case…";
+    const o=document.createElement("option");o.value="";o.textContent="All operators";sel2.appendChild(o);
+    PARENTS.forEach(p=>{const e=document.createElement("option");e.value=p;e.textContent=p;sel2.appendChild(e);});
+    [["","All roles"]].concat(ROLES.map(r=>[r,r])).forEach(([k,lab])=>{
+      const c=document.createElement("div");c.className="chip"+(k===roleFilter?" on":"");c.textContent=lab;
+      c.onclick=()=>{roleFilter=k;buildControls();apply();};chips.appendChild(c);
+    });
+  } else {
+    document.getElementById("q").placeholder="Search address, owner, operator, or APN…";
+    const o=document.createElement("option");o.value="";o.textContent="All operators";sel2.appendChild(o);
+    PARENTS.forEach(p=>{const e=document.createElement("option");e.value=p;e.textContent=p;sel2.appendChild(e);});
+    [["","All statuses"],["Active","Active"],["Expired","Expired"],["Done","Done"],["Other","Other"]].forEach(([k,lab])=>{
+      const c=document.createElement("div");c.className="chip"+(k===statusFilter?" on":"");c.textContent=lab;
+      c.onclick=()=>{statusFilter=k;buildControls();apply();};chips.appendChild(c);
+    });
+    const sep=document.createElement("span");sep.style.cssText="width:1px;background:var(--line);margin:0 4px";chips.appendChild(sep);
+    [["","Any owner"],["Y","Entity-owned"],["N","Individual"]].forEach(([k,lab])=>{
+      const c=document.createElement("div");c.className="chip"+(k===entityFilter?" on":"");c.textContent=lab;
+      c.onclick=()=>{entityFilter=k;buildControls();apply();};chips.appendChild(c);
+    });
+  }
+}
+
+// ---- filtering + render ----
+function apply(){
+  const q=document.getElementById("q").value.trim().toLowerCase();
+  const sv=sel2.value;
+  if(view==="ppl"){
+    filtered=PEOPLE.filter(p=>{
+      if(sv && p[11]!==sv) return false;
+      if(roleFilter && !(p[3]||"").includes(roleFilter)) return false;
+      if(q){ if(!((p[2]||"").toLowerCase().includes(q)||(p[4]||"").toLowerCase().includes(q)||(p[11]||"").toLowerCase().includes(q)||(p[5]||"").toLowerCase().includes(q)||(p[7]||"").toLowerCase().includes(q)||(p[9]||"").includes(q)||(p[1]||"").includes(q))) return false; }
+      return true;
+    });
+  } else {
+    const base = view==="reg" ? REGBYCASE : REG.map(r=>({r,addrN:0}));
+    filtered=base.filter(o=>{
+      const r=o.r;
+      if(statusFilter && r[ST]!==statusFilter) return false;
+      if(entityFilter==="Y" && r[ENT]!==1) return false;
+      if(entityFilter==="N" && r[ENT]!==0) return false;
+      if(sv && r[PAR]!==sv) return false;
+      if(q){ if(!(r[ADDR].toLowerCase().includes(q)||r[OWN].toLowerCase().includes(q)||(r[PAR]||"").toLowerCase().includes(q)||r[A].includes(q))) return false; }
+      return true;
+    });
+  }
+  shown=0; render(true);
+}
+
+function addrRow(o){
+  const r=o.r, a=r[A];
+  const img=a?`<a href="${IMG(a)}" target="_blank"><img class="thumb" loading="lazy" src="${IMG(a)}" onerror="this.outerHTML='&lt;div class=&quot;noimg&quot;&gt;none&lt;/div&gt;'"></a>`:`<div class="noimg">–</div>`;
+  const ent=r[ENT]?`<span class="pill s-Active">Entity</span>`:`<span class="pill s-Other">Indiv.</span>`;
+  return `<tr><td style="padding:4px 8px">${img}</td>
+    <td><a href="${PV(a)}" target="_blank">${r[ADDR]||a}</a></td>
+    <td>${r[OWN]||""}</td><td>${r[PAR]||"<span style='color:#9aa8b6'>—</span>"}</td>
+    <td>${ent}</td>
+    <td><span class="pill s-${r[ST]}">${r[ST]}</span></td>
+    <td>${r[ISS]||""}</td><td>${r[EXP]||""}</td><td>${r[LU]||""}</td>
+    <td class="num">${r[YR]||""}</td><td class="num">${r[SQFT]?r[SQFT].toLocaleString():""}</td>
+    <td class="num">${r[ACRE]||""}</td><td>${r[COND]||""}</td><td>${r[CONSTR]||""}</td>
+    <td>${r[FOUND]||""}</td><td>${r[GAR]||""}</td><td>${r[GRADE]||""}</td><td>${r[HEAT]||""}</td><td>${r[ROOF]||""}</td>
+    <td class="num">${usd(r[MKT])}</td><td class="num">${usd(r[BLDG])}</td><td class="num">${usd(r[LAND])}</td>
+    <td class="num">${r[CSF]?("$"+r[CSF]):""}</td>
+    <td class="lk">${r[CID]?`<a href="${PORTAL(r[CID])}" target="_blank">case</a> · <a href="${RECEIPT(r[CID],r[CNUM])}" target="_blank">receipt</a> · `:""}<a href="${COMPER(a)}" target="_blank">card</a></td></tr>`;
+}
+function regRow(o){
+  const r=o.r;
+  const ent=r[ENT]?`<span class="pill s-Active">Entity</span>`:`<span class="pill s-Other">Indiv.</span>`;
+  return `<tr><td>${r[CNUM]||r[CID]}</td>
+    <td><a href="${PV(r[A])}" target="_blank">${r[ADDR]||r[A]}</a></td>
+    <td class="num">${o.addrN}</td>
+    <td>${r[OWN]||""}</td><td>${r[PAR]||"<span style='color:#9aa8b6'>—</span>"}</td>
+    <td>${ent}</td>
+    <td><span class="pill s-${r[ST]}">${r[ST]}</span></td>
+    <td>${r[ISS]||""}</td><td>${r[EXP]||""}</td>
+    <td class="num">${PERCASE[String(r[CID])]||""}</td>
+    <td class="lk">${r[CID]?`<a href="${PORTAL(r[CID])}" target="_blank">case</a> · <a href="${RECEIPT(r[CID],r[CNUM])}" target="_blank">receipt</a>`:""}</td></tr>`;
+}
+function pplRow(p){
+  const addr=[p[5],p[6]].filter(Boolean).join(" ");
+  return `<tr><td>${p[2]||""}</td><td>${p[3]||""}</td><td>${p[4]||""}</td>
+    <td>${addr}</td><td>${p[7]||""}</td><td>${p[8]||""}</td><td>${p[9]||""}</td>
+    <td>${p[11]||"<span style='color:#9aa8b6'>—</span>"}</td>
+    <td>${p[1]||p[0]}</td>
+    <td class="lk"><a href="${PORTAL(p[0])}" target="_blank">case</a>${p[10]?` · <a href="${DEED(p[10])}" target="_blank">deed</a>`:""}</td></tr>`;
+}
+const HEADS={
+  addr:`<th>Photo</th><th>Address</th><th>Owner</th><th>Operator</th><th>Entity?</th><th>Status</th><th>Issued</th><th>Expires</th><th>Use</th><th>Yr built</th><th>Sq ft</th><th>Acres</th><th>Condition</th><th>Constr</th><th>Foundation</th><th>Garage</th><th>Grade</th><th>Heat</th><th>Roof</th><th>Mkt value</th><th>Bldg $</th><th>Land $</th><th>$/sqft</th><th>ePermits</th>`,
+  reg:`<th>Case #</th><th>Primary address</th><th># Addr</th><th>Owner</th><th>Operator</th><th>Entity?</th><th>Status</th><th>Issued</th><th>Expires</th><th># People</th><th>ePermits</th>`,
+  ppl:`<th>Name</th><th>Role(s)</th><th>Company</th><th>Address</th><th>City</th><th>State</th><th>Zip</th><th>Operator</th><th>Case #</th><th>Links</th>`
+};
+function render(fresh){
+  const host=document.getElementById("tableHost");
+  if(fresh) host.innerHTML=`<div class="tbl-wrap"><table><thead><tr>${HEADS[view]}</tr></thead><tbody id="tb"></tbody></table></div><div id="moreHost"></div>`;
+  const tb=document.getElementById("tb");
+  const slice=filtered.slice(shown,shown+PAGE);
+  const fn = view==="ppl"?pplRow : view==="reg"?regRow : addrRow;
+  tb.insertAdjacentHTML("beforeend",slice.map(fn).join(""));
+  shown+=slice.length;
+  const noun = view==="ppl"?"people" : view==="reg"?"registrations" : "addresses";
+  const total = view==="ppl"?(PEOPLE?PEOPLE.length:0) : view==="reg"?REGBYCASE.length : REG.length;
+  document.getElementById("rescount").textContent=`Showing ${shown.toLocaleString()} of ${filtered.length.toLocaleString()} ${noun}`+(filtered.length!==total?` (filtered from ${total.toLocaleString()})`:"");
+  const mh=document.getElementById("moreHost");
+  mh.innerHTML = shown<filtered.length ? `<button class="more" id="moreBtn">Load ${Math.min(PAGE,filtered.length-shown)} more</button>` : "";
+  if(shown<filtered.length) document.getElementById("moreBtn").onclick=()=>render(false);
+}
+
+// ---- view switching ----
+document.querySelectorAll(".view").forEach(v=>{
+  v.onclick=()=>{
+    document.querySelectorAll(".view").forEach(x=>x.classList.remove("on")); v.classList.add("on");
+    view=v.dataset.v;
+    const go=()=>{buildControls();apply();};
+    if(view==="ppl") loadPeople(go); else go();
+  };
+});
+let t; document.getElementById("q").addEventListener("input",()=>{clearTimeout(t);t=setTimeout(apply,180);});
+sel2.addEventListener("change",apply);
+buildControls(); apply();
+</script>
+</body>
+</html>
