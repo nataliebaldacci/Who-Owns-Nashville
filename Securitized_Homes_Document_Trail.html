@@ -1,0 +1,90 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>The Document Trail — Securitized Homes in Davidson County</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6 L26 14 L23 14 L23 25 L18 25 L18 18 L14 18 L14 25 L9 25 L9 14 L6 14 Z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .legend{position:absolute;bottom:16px;left:12px;z-index:1000;background:rgba(255,255,255,.96);padding:11px 13px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);font-size:13px;line-height:1.7;max-width:270px}
+ .legend .row{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+ .legend .row.off{opacity:.38}
+ .legend .dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.25)}
+ .legend b{font-family:'Montserrat',sans-serif;font-size:12.5px}
+ .legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto}
+ .legend .hint{font-size:11px;color:#777;margin-top:6px;font-style:italic;font-family:'EB Garamond',serif}
+ .status{position:absolute;bottom:16px;right:12px;z-index:1000;background:rgba(255,255,255,.92);padding:5px 11px;border-radius:5px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+ .pp{font-family:'EB Garamond',Garamond,serif;font-size:13px;max-width:330px}
+ .pp .a{font-family:'Montserrat',sans-serif;font-weight:800;font-size:14px;color:#1c458c}
+ .pp .sub{color:#555;margin:1px 0 7px;font-size:12px}
+ .pp img{width:100%;max-height:130px;object-fit:cover;border-radius:4px;margin:2px 0 7px;border:1px solid #d6ddea}
+ .pp .doc{display:block;margin:4px 0;padding:6px 9px;border-radius:5px;text-decoration:none;border:1px solid #d6ddea;color:#20303f}
+ .pp .doc b{font-family:'Montserrat',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#1c458c;display:block}
+ .pp .doc.qc{background:#eef4fb}.pp .doc.dt{background:#fff6e6}.pp .doc.sec{background:#fdeef0}
+ .pp .doc:hover{border-color:#1c458c}
+ .pp .doc .meta{font-size:11px;color:#666}
+ .pp .none{color:#999;font-style:italic;font-size:12px}
+ .pp .tk{margin-top:6px;font-size:11.5px;border-top:1px solid #eef0f3;padding-top:5px}
+ .pp .tk a{color:#1c458c;text-decoration:none;font-weight:600}.pp .tk a:hover{text-decoration:underline}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">The Document Trail · Securitized Homes</div></div>
+<div id="map"></div>
+<div class="legend" id="legend">
+  <div class="row" data-k="sec"><span class="dot" style="background:#d7263d"></span><b>Full trail (on an SEC disclosure)</b><span class="n" id="nsec">—</span></div>
+  <div class="row" data-k="doc"><span class="dot" style="background:#1c458c"></span><b>Quitclaim + Deed of Trust</b><span class="n" id="ndoc">—</span></div>
+  <div class="row" data-k="none"><span class="dot" style="background:#b8c2d0"></span><b>Securitized (no linked docs)</b><span class="n" id="nnone">—</span></div>
+  <div class="hint">Click a home to open its Quitclaim Deed, Deed of Trust, and the SEC exhibit that disclosed it.</div>
+</div>
+<div class="status" id="status">loading…</div>
+<script>
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":carto,"Aerial":aerial},{},{position:'topright'}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
+  var f=(b.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);
+  L.geoJSON(f.length?{type:'FeatureCollection',features:f}:b,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+}).catch(function(){});
+function esc(s){return String(s==null?'':s);}
+function cls(p){return (p.sec&&p.sec.length)?'sec':(p.qc_url||p.dot_url)?'doc':'none';}
+var STY={sec:{c:'#d7263d',r:3.4,o:.92},doc:{c:'#1c458c',r:2.8,o:.85},none:{c:'#b8c2d0',r:1.8,o:.5}};
+function popup(p){
+  var apn=esc(p.apn), h='<div class="pp"><div class="a">'+esc(p.addr||apn)+'</div>';
+  h+='<div class="sub">'+esc(p.op)+(p.deal?(' · '+esc(p.deal)):'')+(p.dep?('<br>Disclosed by '+esc(p.dep)):'')+'</div>';
+  if(apn) h+='<img src="https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+apn+'_1.jpg" onerror="this.style.display=\'none\'" loading="lazy"/>';
+  var any=false;
+  if(p.qc_url){any=true;h+='<a class="doc qc" target="_blank" href="'+p.qc_url+'"><b>Quitclaim Deed &#8599;</b><span class="meta">Instrument '+esc(p.qc_inst)+' &middot; assembled into the portfolio</span></a>';}
+  if(p.dot_url){any=true;var m=[];if(p.lender)m.push('Lender: '+esc(p.lender));if(p.loan&&+p.loan>0)m.push('$'+Number(p.loan).toLocaleString());if(p.dot_status)m.push(esc(p.dot_status));
+    h+='<a class="doc dt" target="_blank" href="'+p.dot_url+'"><b>Deed of Trust &#8599;</b><span class="meta">Instrument '+esc(p.dot_inst)+(m.length?(' &middot; '+m.join(' &middot; ')):'')+'</span></a>';}
+  if(p.sec&&p.sec.length){any=true;p.sec.forEach(function(u,i){h+='<a class="doc sec" target="_blank" href="'+u+'"><b>SEC Disclosure'+(p.sec.length>1?(' '+(i+1)):'')+' &#8599;</b><span class="meta">'+esc(p.dep||'ABS-15G property schedule')+'</span></a>';});}
+  if(!any) h+='<div class="none">No linked source documents for this parcel yet.</div>';
+  h+='<div class="tk"><a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a> &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+apn+'">Property Card</a> &middot; <a target="_blank" href="https://davidsonportal.com/landrecords/">Land Records</a></div>';
+  return h+'</div>';
+}
+var layers={sec:L.layerGroup(),doc:L.layerGroup(),none:L.layerGroup()},vis={sec:true,doc:true,none:true},cnt={sec:0,doc:0,none:0};
+fetch('securitized_docs_points.json').then(r=>r.json()).then(function(d){
+  var P=d.points;
+  // draw none first (bottom), then doc, then sec (top)
+  ['none','doc','sec'].forEach(function(k){});
+  P.forEach(function(p){var k=cls(p),s=STY[k];cnt[k]++;
+    L.circleMarker([p.lat,p.lon],{radius:s.r,fillColor:s.c,color:s.c,weight:0,fillOpacity:s.o})
+      .on('click',function(e){this.bindPopup(popup(p),{maxWidth:360}).openPopup();}).addTo(layers[k]);});
+  ['none','doc','sec'].forEach(k=>layers[k].addTo(map));
+  document.getElementById('nsec').textContent=cnt.sec.toLocaleString();
+  document.getElementById('ndoc').textContent=cnt.doc.toLocaleString();
+  document.getElementById('nnone').textContent=cnt.none.toLocaleString();
+  document.getElementById('status').textContent=P.length.toLocaleString()+' securitized homes';
+}).catch(function(e){document.getElementById('status').textContent='load error: '+e;});
+document.querySelectorAll('#legend .row').forEach(function(row){
+  row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];row.classList.toggle('off',!vis[k]);
+    vis[k]?layers[k].addTo(map):map.removeLayer(layers[k]);};
+});
+</script></body></html>

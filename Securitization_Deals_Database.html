@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Securitization Deals — Document Database</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6 L26 14 L23 14 L23 25 L18 25 L18 18 L14 18 L14 25 L9 25 L9 14 L6 14 Z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1080px;margin:0 auto;padding:20px 18px 60px}
+ .intro{font-size:15px;line-height:1.5;color:#33404e;margin:6px 0 16px}
+ .intro b{color:#1c458c}
+ .bar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px;position:sticky;top:56px;background:#f4f6fa;padding:8px 0;z-index:10}
+ #q{flex:1;min-width:240px;padding:9px 13px;border:1px solid #c9d3e2;border-radius:7px;font-size:14px;font-family:'EB Garamond',serif}
+ .bar .cnt{font-family:'Montserrat',sans-serif;font-size:12px;color:#5a6572;font-weight:700}
+ .deal{background:#fff;border:1px solid #e2e8f1;border-radius:10px;box-shadow:0 1px 4px #0001;margin-bottom:12px;overflow:hidden}
+ .dhead{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-left:5px solid #1c458c}
+ .dhead .name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:#1c458c}
+ .dhead .op{font-size:12.5px;color:#5a6572}
+ .dhead .dep{font-size:12px;color:#8a94a0;font-style:italic}
+ .dhead .pill{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700}
+ .pill span{padding:3px 8px;border-radius:20px;white-space:nowrap}
+ .pill .p{background:#eef4fb;color:#1c458c}.pill .qc{background:#e9f0f9;color:#28518f}.pill .dt{background:#fff4e0;color:#a06a00}.pill .sec{background:#fde8ec;color:#b01e37}
+ .dbody{display:none;padding:0 16px 14px;grid-template-columns:1fr 1fr 1fr;gap:16px}
+ .deal.open .dbody{display:grid}
+ .deal.open .dhead{border-bottom:1px solid #eef0f3}
+ .col h4{font-family:'Montserrat',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px;padding-bottom:3px;border-bottom:2px solid}
+ .col.qc h4{color:#28518f;border-color:#cfe0f4}.col.dt h4{color:#a06a00;border-color:#f4e0b8}.col.sec h4{color:#b01e37;border-color:#f4c9d3}
+ .col a{display:block;font-size:12.5px;padding:4px 7px;margin:3px 0;border-radius:5px;text-decoration:none;color:#20303f;background:#f7f9fc;border:1px solid #edf1f7;word-break:break-all}
+ .col a:hover{border-color:#1c458c;color:#1c458c}
+ .col a .m{color:#8a94a0;font-size:11px}
+ .col .empty{font-size:12px;color:#b3bcc7;font-style:italic;padding:4px 0}
+ @media(max-width:760px){.dbody{grid-template-columns:1fr}}
+ .foot{font-size:12px;color:#8a94a0;margin-top:18px;line-height:1.5}
+ .foot a{color:#1c458c}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">Securitization Deals · Document Database</div></div>
+<div class="wrap">
+  <div class="intro">Every Davidson County single-family securitization deal, with its source documents. For each deal: the <b>Quitclaim Deeds</b> that assembled the homes into the borrower entity, the <b>Deed of Trust</b> that pledged them as collateral, and the <b>SEC document</b> that disclosed the portfolio to investors. Companion to the <a href="Securitized_Homes_Document_Trail.html">Document Trail map</a>.</div>
+  <div class="bar"><input id="q" placeholder="Search deal, operator, or depositor…" autocomplete="off"/><span class="cnt" id="cnt">—</span></div>
+  <div id="list"></div>
+  <div class="foot">Sources: Quitclaim &amp; Deed-of-Trust instruments from Davidson County Register of Deeds (<a href="https://davidsonportal.com/landrecords/" target="_blank">davidsonportal.com</a>, image builder <code>gis/file.php?file=&lt;instrument&gt;</code>); SEC exhibits from EDGAR ABS-15G property schedules (2013&ndash;2026). Deals grouped from the aggregated quitclaim bundles.</div>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+var DEALS=[];
+fetch('deals_docs.json').then(r=>r.json()).then(function(d){DEALS=d.deals;render('');});
+function docLink(u,label,meta){return '<a target="_blank" href="'+u+'">'+label+(meta?(' <span class="m">'+meta+'</span>'):'')+'</a>';}
+function render(f){
+  f=f.toLowerCase();
+  var list=document.getElementById('list'), html='', shown=0;
+  DEALS.forEach(function(D,idx){
+    var hay=(D.deal+' '+D.op+' '+D.dep).toLowerCase();
+    if(f&&hay.indexOf(f)<0) return; shown++;
+    var qc=D.qc.map((x,i)=>docLink(x.u,'Quitclaim #'+(i+1),esc(x.i))).join('')||'<div class="empty">none linked</div>';
+    var dt=D.dt.map((x,i)=>docLink(x.u,'Deed of Trust #'+(i+1),esc(x.i)+(x.loan&&+x.loan>0?(' &middot; $'+Number(x.loan).toLocaleString()):''))).join('')||'<div class="empty">none linked</div>';
+    var seca=D.sec.slice(0,8).map((u,i)=>docLink(u,'SEC exhibit #'+(i+1),'')).join('')+(D.sec.length>8?('<div class="empty">+'+(D.sec.length-8)+' more exhibits</div>'):'');
+    if(!D.sec.length) seca='<div class="empty">none linked</div>';
+    html+='<div class="deal" data-i="'+idx+'"><div class="dhead">'
+      +'<div><div class="name">'+esc(D.deal)+'</div><div class="op">'+esc(D.op||'—')+'</div>'+(D.dep?'<div class="dep">disclosed by '+esc(D.dep)+'</div>':'')+'</div>'
+      +'<div class="pill"><span class="p">'+D.n+' homes</span><span class="qc">'+D.qc.length+' QC</span><span class="dt">'+D.dt.length+' DOT</span><span class="sec">'+D.sec.length+' SEC</span></div>'
+      +'</div><div class="dbody">'
+      +'<div class="col qc"><h4>Quitclaim Deeds</h4>'+qc+'</div>'
+      +'<div class="col dt"><h4>Deed of Trust</h4>'+dt+'</div>'
+      +'<div class="col sec"><h4>SEC Document</h4>'+seca+'</div>'
+      +'</div></div>';
+  });
+  list.innerHTML=html;
+  document.getElementById('cnt').textContent=shown+' deals';
+  list.querySelectorAll('.deal').forEach(function(el){el.querySelector('.dhead').onclick=()=>el.classList.toggle('open');});
+}
+document.getElementById('q').addEventListener('input',e=>render(e.target.value));
+</script></body></html>
