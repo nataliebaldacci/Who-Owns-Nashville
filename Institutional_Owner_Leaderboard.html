@@ -42,41 +42,48 @@
   <div class="lead">Every identified institutional operator in Davidson County, with shell entities consolidated to their parent (Yamasa &rarr; Progress, the AMH development LLCs &rarr; American Homes 4 Rent, and so on). Ranked by parcels held or total appraised value. Filter by operator type; click a column to sort.</div>
   <div class="cards" id="stats"></div>
   <div class="controls">
-    <div class="grp" id="metric"><span class="chip on" data-m="n">By parcels</span><span class="chip" data-m="val">By appraised value</span></div>
+    <div class="grp" id="metric"><span class="chip on" data-m="n">Parcels</span><span class="chip" data-m="du">Dwelling units</span><span class="chip" data-m="acres">Acres</span><span class="chip" data-m="val">Appraised value</span></div>
+  </div>
+  <div class="controls">
+    <div class="grp" id="states"><span class="chip on" data-s="all">All locations</span><span class="chip" data-s="TN">In-state (TN)</span><span class="chip" data-s="OOS">Out-of-state</span></div>
     <div class="grp" id="types"></div>
   </div>
   <div class="chart" id="chart"></div>
-  <table id="tbl"><thead><tr><th>#</th><th data-k="nm">Operator</th><th data-k="parent">Parent / ultimate owner</th><th data-k="type">Type</th><th class="num" data-k="n">Parcels</th><th class="num" data-k="val">Total appraised</th><th class="num" data-k="avg">Avg / home</th></tr></thead><tbody id="tb"></tbody></table>
+  <table id="tbl"><thead><tr><th>#</th><th data-k="nm">Operator</th><th data-k="parent">Parent / ultimate owner</th><th data-k="type">Type</th><th data-k="state">Owner</th><th class="num" data-k="n">Parcels</th><th class="num" data-k="du">Dwelling units</th><th class="num" data-k="acres">Acres</th><th class="num" data-k="val">Total appraised</th></tr></thead><tbody id="tb"></tbody></table>
   <div class="note">Source: consolidated current-holdings dataset behind the <a href="Cadastral_Holdings_Explorer.html">Holdings Explorer</a> (owner names clustered and rolled to parent by name, shared mailing address, and TN Secretary of State registered agent). Totals cover identified operators only; unbranded one-off LLCs are excluded. Appraised value is the Davidson County Assessor total appraised value, which lags market price.</div>
 </div>
 <script>
 var TYPE={land:{l:'Rental landlord',c:'#1c458c'},btr:{l:'Build-to-Rent',c:'#f0af1e'},build:{l:'Homebuilder',c:'#4fa0bd'},landbank:{l:'Landbanker',c:'#8c564b'},ibuyer:{l:'iBuyer',c:'#d7263d'}};
 function usd(v){v=+v||0;return v>=1e9?'$'+(v/1e9).toFixed(2)+'B':v>=1e6?'$'+(v/1e6).toFixed(1)+'M':'$'+v.toLocaleString();}
-var ROWS=[],metric='n',tfilter='all',sortK='n',sortDir=-1;
+function fmt(m,r){if(m==='val')return usd(r.val);if(m==='acres')return (r.acres||0).toLocaleString()+' ac';return (r[m]||0).toLocaleString();}
+var ROWS=[],metric='n',tfilter='all',sfilter='all',sortK='n',sortDir=-1;
 fetch('owner_leaderboard.json').then(r=>r.json()).then(function(d){
   ROWS=d.rows.map(r=>({...r,avg:r.n?Math.round(r.val/r.n):0}));
-  var types=[...new Set(ROWS.map(r=>r.type))];
+  var T=d.total,types=[...new Set(ROWS.map(r=>r.type))];
   document.getElementById('types').innerHTML='<span class="chip on" data-t="all">All types</span>'+types.map(t=>'<span class="chip" data-t="'+t+'">'+(TYPE[t]?TYPE[t].l:t)+'</span>').join('');
   document.getElementById('stats').innerHTML=
     '<div class="card"><div class="v">'+ROWS.length+'</div><div class="l">identified operators</div></div>'+
-    '<div class="card"><div class="v">'+d.total_n.toLocaleString()+'</div><div class="l">parcels held</div></div>'+
-    '<div class="card"><div class="v">'+usd(d.total_val)+'</div><div class="l">total appraised value</div></div>'+
-    '<div class="card"><div class="v">'+ROWS[0].nm+'</div><div class="l">largest operator ('+ROWS[0].n.toLocaleString()+' homes)</div></div>';
+    '<div class="card"><div class="v">'+T.n.toLocaleString()+'</div><div class="l">parcels held</div></div>'+
+    '<div class="card"><div class="v">'+T.du.toLocaleString()+'</div><div class="l">dwelling units</div></div>'+
+    '<div class="card"><div class="v">'+T.acres.toLocaleString()+'</div><div class="l">acres held</div></div>'+
+    '<div class="card"><div class="v">'+usd(T.val)+'</div><div class="l">total appraised value</div></div>';
   bind(); draw();
 });
 function bind(){
   document.querySelectorAll('#metric .chip').forEach(c=>c.onclick=function(){metric=this.getAttribute('data-m');sortK=metric;sortDir=-1;sel('#metric',this);draw();});
   document.querySelectorAll('#types .chip').forEach(c=>c.onclick=function(){tfilter=this.getAttribute('data-t');sel('#types',this);draw();});
-  document.querySelectorAll('#tbl th[data-k]').forEach(th=>th.onclick=function(){var k=th.getAttribute('data-k');if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==='nm'||k==='parent'||k==='type')?1:-1;}draw();});
+  document.querySelectorAll('#states .chip').forEach(c=>c.onclick=function(){sfilter=this.getAttribute('data-s');sel('#states',this);draw();});
+  document.querySelectorAll('#tbl th[data-k]').forEach(th=>th.onclick=function(){var k=th.getAttribute('data-k');if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==='nm'||k==='parent'||k==='type'||k==='state')?1:-1;}draw();});
 }
 function sel(grp,el){document.querySelectorAll(grp+' .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}
 function draw(){
-  var rows=ROWS.filter(r=>tfilter==='all'||r.type===tfilter);
+  var rows=ROWS.filter(r=>(tfilter==='all'||r.type===tfilter)&&(sfilter==='all'||r.state===sfilter));
   rows.sort(function(a,b){var x=a[sortK],y=b[sortK];if(typeof x==='string'){x=x.toLowerCase();y=(''+y).toLowerCase();}else{x=+x||0;y=+y||0;}return x<y?-sortDir:x>y?sortDir:0;});
-  var top=rows.slice().sort((a,b)=>b[metric]-a[metric]).slice(0,15),mx=Math.max.apply(null,top.map(r=>r[metric]))||1;
+  var top=rows.slice().sort((a,b)=>(b[metric]||0)-(a[metric]||0)).slice(0,15),mx=Math.max.apply(null,top.map(r=>r[metric]||0))||1;
   document.getElementById('chart').innerHTML=top.map(function(r){var c=(TYPE[r.type]||{}).c||'#1c458c';
-    return '<div class="bar"><div class="nm" title="'+r.nm+'">'+r.nm+'</div><div class="track"><div class="fill" style="width:'+(r[metric]/mx*100).toFixed(1)+'%;background:'+c+'"></div></div><div class="val">'+(metric==='n'?r.n.toLocaleString():usd(r.val))+'</div></div>';}).join('');
+    return '<div class="bar"><div class="nm" title="'+r.nm+'">'+r.nm+'</div><div class="track"><div class="fill" style="width:'+((r[metric]||0)/mx*100).toFixed(1)+'%;background:'+c+'"></div></div><div class="val">'+fmt(metric,r)+'</div></div>';}).join('');
   document.getElementById('tb').innerHTML=rows.map(function(r,i){var t=TYPE[r.type]||{l:r.type,c:'#889'};
-    return '<tr><td>'+(i+1)+'</td><td><b>'+r.nm+'</b></td><td>'+(r.parent||'—')+'</td><td><span class="badge" style="background:'+t.c+'">'+t.l+'</span></td><td class="num">'+r.n.toLocaleString()+'</td><td class="num">'+usd(r.val)+'</td><td class="num">'+usd(r.avg)+'</td></tr>';}).join('');
+    var loc=r.state==='TN'?'<span class="badge" style="background:#2e7d54">In-state</span>':'<span class="badge" style="background:#b06a1e">Out-of-state</span>';
+    return '<tr><td>'+(i+1)+'</td><td><b>'+r.nm+'</b></td><td>'+(r.parent||'—')+'</td><td><span class="badge" style="background:'+t.c+'">'+t.l+'</span></td><td>'+loc+'</td><td class="num">'+r.n.toLocaleString()+'</td><td class="num">'+(r.du||0).toLocaleString()+'</td><td class="num">'+(r.acres||0).toLocaleString()+'</td><td class="num">'+usd(r.val)+'</td></tr>';}).join('');
 }
 </script></body></html>
