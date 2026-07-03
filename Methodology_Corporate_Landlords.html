@@ -1,0 +1,75 @@
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+  body{max-width:820px;margin:0 auto;padding:0 22px 60px;color:#20303f;line-height:1.55}
+  h1{font-family:'Montserrat',sans-serif;font-weight:800;color:var(--navy);font-size:26px;margin:26px 0 4px}
+  h2{font-family:'Montserrat',sans-serif;font-weight:700;color:var(--navy);font-size:17px;margin:28px 0 6px;border-bottom:2px solid var(--gold);padding-bottom:3px}
+  h3{font-family:'Montserrat',sans-serif;font-weight:700;color:#2a4b7c;font-size:14px;margin:16px 0 2px}
+  p,li{font-family:'Montserrat',sans-serif;font-size:14px}
+  .sub{color:#6b7683;font-size:13px;margin-top:0}
+  code{background:#eef2f8;padding:1px 5px;border-radius:3px;font-size:12.5px}
+  .note{background:#fffbe9;border-left:4px solid var(--gold);padding:8px 12px;font-size:13px;margin:14px 0}
+  ol.steps>li{margin:8px 0}
+  .refs li{font-size:12.5px;color:#3a4652;margin:7px 0}
+  a{color:var(--navy)}
+</style>
+
+<h1>Identifying Corporate Landlords in Nashville</h1>
+<p class="sub">Methodology &middot; Davidson County &middot; built entirely from primary government records</p>
+
+<p>Large residential owners rarely hold property under one name. They register, buy, and evict through
+networks of single-purpose LLCs, borrower entities, and management companies designed to obscure the scale
+of common ownership. To measure that concentration, the individual shells have to be linked back to the
+operator that controls them. This page documents how we do that for Nashville's landlord-registration record.</p>
+
+<h2>1. Data sources (all primary, all replayable)</h2>
+<ul>
+  <li><b>Metro ePermits</b> landlord registrations — case type <code>176 (PSLANDLORD)</code>, joined to each case's address (APN), people (owners, managers, applicants), and fee ledger.</li>
+  <li><b>Metro ParcelHistory</b> deed records — 1,641,434 ownership events (current owner, mailing address, acquisition date, recorded deed URL).</li>
+  <li><b>MASTER parcels crosswalk</b> — APN &harr; internal ParID, for joining registrations to deeds and holdings.</li>
+  <li><b>Davidson Circuit Court (CaseLink)</b> — detainer warrants, for the eviction layer.</li>
+</ul>
+
+<h2>2. Linking shells to operators</h2>
+<p>Our approach is a hybrid of the deductive and inductive strategies described by Shelton and Seymour (2024):
+start from a known operator and find its shells, and start from an unattributed shell and resolve who controls it.
+Each registered owner name passes through the following resolution chain.</p>
+<ol class="steps">
+  <li><b>Name normalization.</b> Upper-cased, punctuation stripped to spaces, space-padded, so <code>L.L.C.</code>, <code>L L C</code>, and <code>LLC</code> collapse to one token and <code>CO</code> no longer matches "COURT."</li>
+  <li><b>Entity flag.</b> A name is treated as a business entity if it carries a legal-form token (LLC, LP, INC, LTD, CORP, COMPANY, ASSOCIATION, and so on).</li>
+  <li><b>Shell &rarr; parent resolution</b>, in order of confidence:
+    <ul>
+      <li><b>Known-shell patterns</b> — deterministic name rules for documented shell families (for example, <code>MCH SFR&rarr;</code> My Community Homes; <code>AH4R&rarr;</code> American Homes 4 Rent).</li>
+      <li><b>Security-for-Sale crosswalk</b> — the McClatchy entity&rarr;parent table, matched on normalized name, for national operators.</li>
+      <li><b>Canonical owner&rarr;operator crosswalk</b> — a curated table built from Nashville's current cadastral holdings, mapping each owner name to its operator and ultimate parent.</li>
+      <li><b>Operator name-pattern rules</b> — explicit, auditable filters for operators whose shells share a naming series or a registered address. Example: Invitation Homes is matched on its borrower series (<code>SFR XII</code>, <code>SFR CB</code>, <code>SN TENNESSEE</code>, <code>SWH</code>, <code>CSH</code>, <code>INVITATION HOMES</code>) together with its corporate address at 3630 Peachtree Road, Suite 500, Atlanta.</li>
+    </ul>
+  </li>
+  <li><b>Address clustering.</b> Registrations are grouped by owner mailing address and ZIP to surface shells that share a single mailbox &mdash; the highest-yield linkage step in Shelton and Seymour's account. Counting the distinct shells behind one address is itself a measure of ownership fragmentation.</li>
+  <li><b>Officer layer.</b> Every registration's associated people (owners, managers, applicants) are captured, preserving the raw material for principal/agent network linkage.</li>
+</ol>
+
+<div class="note"><b>What this method is, and is not.</b> This is a curated-crosswalk and rule-based resolution,
+cross-checked against current holdings and validated case by case. It is <i>not</i> an automated
+name-similarity or officer-network community-detection pipeline of the kind implemented in
+Hangen and O'Brien (2024) and the MIT Spatial Action Lab's <code>whoownsmass-processing</code> project.
+We draw on that literature and share its goal; we do not run its clustering code. Where the rule-based
+approach and the holdings record disagree, the disagreement is resolved by hand and recorded.</div>
+
+<h2>3. Validation and corrections</h2>
+<ul>
+  <li><b>Shared tax-agent mailboxes are not, by themselves, an ownership signal.</b> A single Scottsdale post-office box (care of a tax-agent firm) is used by several unrelated single-family operators, so address alone is not sufficient to merge entities there.</li>
+  <li><b>Securitization names are checked against the sponsor, not the servicer.</b> The <code>STAR 20XX-SFR</code> borrower series is Starwood Capital's own program and is attributed to Starwood, not to Invitation Homes.</li>
+  <li><b>Servicers are kept distinct from principals.</b> RESICAP, an independent single-family servicer/operator, is not folded into Invitation Homes. Corporate relocation companies (which hold homes only transiently) are excluded from operator counts entirely.</li>
+</ul>
+
+<h2>References</h2>
+<ul class="refs">
+  <li>Henry Gomory. 2022. "The Social and Institutional Contexts Underlying Landlords' Eviction Practices." <i>Social Forces</i> 100 (4): 1774&ndash;1805. <a href="https://doi.org/10.1093/sf/soab063">doi:10.1093/sf/soab063</a>.</li>
+  <li>Forrest Hangen and Daniel T. O'Brien. 2024. "Linking Landlords to Uncover Ownership Obscurity." <i>Housing Studies</i>: 1&ndash;26. <a href="https://doi.org/10.1080/02673037.2024.2325508">doi:10.1080/02673037.2024.2325508</a>.</li>
+  <li>Dan Immergluck, Jeff Ernsthausen, Stephanie Earl, and Allison Powell. 2020. "Evictions, Large Owners, and Serial Filings: Findings from Atlanta." <i>Housing Studies</i> 35 (5): 903&ndash;924. <a href="https://doi.org/10.1080/02673037.2019.1639635">doi:10.1080/02673037.2019.1639635</a>.</li>
+  <li>Erin McElroy and Azad Amir-Ghassemi. 2020. "Evictor Structures." <i>Logic Magazine</i>. <a href="https://logicmag.io/commons/evictor-structures-erin-mcelroy-and-azad-amir-ghassemi-on-fighting/">logicmag.io</a>.</li>
+  <li>Benjamin Preis. 2024. "Where the Landlords Are: A Network Approach to Landlord-Rental Locations." <i>Annals of the American Association of Geographers</i> 114 (8): 1757&ndash;1768. <a href="https://doi.org/10.1080/24694452.2023.2277810">doi:10.1080/24694452.2023.2277810</a>.</li>
+  <li>Taylor Shelton and Eric Seymour. 2024. "Horizontal Holdings: Untangling the Networks of Corporate Landlords." <i>Annals of the American Association of Geographers</i> 114 (8): 1819&ndash;1831. <a href="https://doi.org/10.1080/24694452.2023.2278690">doi:10.1080/24694452.2023.2278690</a>.</li>
+  <li>MIT Spatial Action Lab. <i>whoownsmass-processing</i>. <a href="https://github.com/mit-spatial-action/whoownsmass-processing">github.com/mit-spatial-action/whoownsmass-processing</a>.</li>
+</ul>
