@@ -1,0 +1,49 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>How Long Land Sat Before It Was Built - Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1c458c;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--line:#e4e9f0}
+*{box-sizing:border-box}body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 22px 70px}
+a.back{color:var(--navy);text-decoration:none;font-weight:600;font-size:13px}a.back:hover{text-decoration:underline}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:12px 0 3px}
+h1{font-size:25px;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.3px}
+.sub{font-size:14.5px;color:var(--mut);margin:0 0 18px;max-width:800px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px 10px;box-shadow:0 2px 8px rgba(20,50,90,.05)}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 14px}
+.ctrls button{font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;border:1.5px solid var(--navy);background:#fff;color:var(--navy)}
+.ctrls button.on{background:var(--navy);color:#fff}
+.chwrap{position:relative;height:470px}
+.note{font-size:11.5px;color:var(--mut);font-style:italic;margin:16px 0 0;border-top:1px solid var(--line);padding-top:12px}
+.k{display:flex;gap:22px;flex-wrap:wrap;margin:6px 0 16px;font-size:13px}
+.k b{color:var(--navy);font-size:18px;display:block}
+</style></head><body><div class="wrap">
+<a class="back" href="index.html">&larr; Who Owns Nashville</a>
+<p class="kick">Land banking</p><h1>How long land sat vacant before it was built on</h1>
+<p class="sub">For every home in Davidson County, the years the owner held the lot as vacant land before construction, reconstructed from the chain of title and the year built. The pattern flips the usual assumption: individuals sit on lots longest, national builders build within a year, and hold times are lengthening for everyone since 2020.</p>
+<div class="k"><div><b id="k1">2.6 yr</b>individual mean hold</div><div><b id="k2">1.0 yr</b>institutional / builder mean hold</div><div><b id="k3">15%</b>of individual lots held 5+ years first</div></div>
+<div class="card"><div class="ctrls"><button id="bT" class="on">Over time</button><button id="bO">By builder</button></div><div class="chwrap"><canvas id="ch"></canvas></div></div>
+<p class="note">Notes: Years-held-before-build = year built minus the year the building owner acquired the parcel, for the owner whose acquisition preceded construction. Ownership from Davidson County Parcel History MapServer Layer 2 with the owner-to-operator crosswalk; year built from the assessor build record (last accessed 2026). Owner type: named operator via the crosswalk (mostly national homebuilders plus AMH build-to-rent), any other business entity, or individual. Recent build years have thinner samples.</p></div>
+<script>
+const D={"years": [1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025], "series": {"Individual": [3.11, 3.12, 2.44, 2.61, 3.26, 3.06, 3.35, 3.08, 2.92, 2.55, 2.39, 2.13, 2.02, 1.74, 1.78, 1.45, 1.29, 1.81, 2.98, 3.51, 2.97, 3.31, 2.63, 2.75, 2.33, 2.27, 2.29, 2.45, 2.23, 2.9, 2.22, 2.88, 2.72, 6.4, 7.33, 6.8], "Other corporate": [1.39, 2.44, 3.36, 2.55, 2.78, 1.95, 1.7, 1.43, 1.32, 1.47, 1.34, 1.53, 1.09, 1.16, 0.97, 1.19, 0.66, 0.89, 1.17, 1.53, 1.62, 1.13, 0.89, 2.08, 1.4, 1.07, 1.1, 1.76, 0.73, 1.02, 1.13, 1.13, 1.16, 0.91, 1.04, 0.7], "Institutional / named operator": [1.57, 1.19, 0.96, 1.44, 0.85, 1.14, 1.35, 0.22, 0.43, 0.52, 0.92, 0.66, 0.48, 0.44, 0.38, 0.56, 0.71, 0.96, 0.69, 1.26, 2.17, 2.76, 2.18, 0.77, 0.59, 1.39, 1.51, 0.9, 0.73, 1.18, 1.29, 1.56, 1.48, 0.33, 0.0, 0.0]}, "ops": [{"op": "Meritage Homes", "n": 329, "median": 2.0, "mean": 1.82}, {"op": "Beazer Homes", "n": 1036, "median": 1.0, "mean": 1.59}, {"op": "Drees Homes", "n": 308, "median": 0.0, "mean": 1.32}, {"op": "Regent Homes", "n": 894, "median": 1.0, "mean": 1.31}, {"op": "PulteGroup", "n": 785, "median": 1.0, "mean": 1.28}, {"op": "D.R. Horton", "n": 270, "median": 1.0, "mean": 1.14}, {"op": "The Jones Co.", "n": 364, "median": 0.0, "mean": 0.96}, {"op": "American Homes 4 Rent", "n": 444, "median": 0.0, "mean": 0.77}, {"op": "Ole South Properties", "n": 587, "median": 0.0, "mean": 0.44}, {"op": "NVR / Ryan Homes", "n": 1441, "median": 0.0, "mean": 0.37}, {"op": "Greenvale Construction", "n": 287, "median": 0.0, "mean": 0.13}]};let view='time',chart;
+const T=[['Individual','#14315f'],['Other corporate','#3f7cc0'],['Institutional / named operator','#b3282d']];
+function timeCfg(){return{type:'line',data:{labels:D.years,datasets:T.map(([t,c])=>({label:t,borderColor:c,backgroundColor:c,
+  data:D.series[t],pointRadius:0,pointHoverRadius:4,borderWidth:2.2,tension:.3,spanGaps:true}))},
+ options:{responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+  plugins:{legend:{position:'top',labels:{font:{family:'Montserrat',size:12},usePointStyle:true,pointStyle:'line'}},
+    tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+(c.parsed.y==null?'-':c.parsed.y.toFixed(1)+' yr')}}},
+  scales:{x:{grid:{display:false},title:{display:true,text:'Year built',font:{family:'Montserrat',size:12,weight:'600'}}},
+    y:{title:{display:true,text:'Mean years held vacant before building',font:{family:'Montserrat',size:12,weight:'600'}},beginAtZero:true}}}};}
+function opCfg(){const o=[...D.ops].sort((a,b)=>b.mean-a.mean);
+ return{type:'bar',data:{labels:o.map(x=>x.op),datasets:[{label:'Mean years held before building',data:o.map(x=>x.mean),
+   backgroundColor:o.map(x=>x.mean>=1.5?'#b3282d':x.mean>=0.7?'#e0952a':'#3f7cc0')}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>{const x=o[c.dataIndex];return[' Mean hold: '+x.mean+' yr',' Median: '+x.median+' yr',' '+x.n.toLocaleString()+' homes built'];}}}},
+  scales:{x:{title:{display:true,text:'Mean years held vacant before building',font:{family:'Montserrat',size:12,weight:'600'}},beginAtZero:true},y:{ticks:{font:{size:11}}}}}};}
+function render(){if(chart)chart.destroy();chart=new Chart(document.getElementById('ch'),view==='time'?timeCfg():opCfg());}
+bT.onclick=()=>{view='time';bT.classList.add('on');bO.classList.remove('on');render();};
+bO.onclick=()=>{view='op';bO.classList.add('on');bT.classList.remove('on');render();};
+render();</script></body></html>
