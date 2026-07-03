@@ -1,0 +1,105 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Who Owns the Vacant Land in Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.92);
+    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.22);max-width:92%}
+  #title h2{margin:0;font-size:17px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:78px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend b{display:block;margin-bottom:5px;font-size:12.5px}
+  #legend .r{cursor:pointer;padding:2px 0;user-select:none;opacity:1;transition:opacity .15s}
+  #legend .r.off{opacity:.32}
+  #legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:middle;border:1px solid rgba(0,0,0,.25)}
+  #legend .c{color:#666;font-size:11px;float:right;margin-left:14px}
+  #stats{position:absolute;bottom:16px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-width:250px;line-height:1.5}
+  #stats b{color:#1a3a5c}
+  #count{position:absolute;bottom:16px;right:12px;z-index:600;background:rgba(255,255,255,.94);padding:6px 12px;border-radius:5px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .leaflet-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:380px;line-height:1.5}
+  .pp .nm{font-size:13.5px;font-weight:bold;color:#1a3a5c} .pp .ot{font-weight:bold}
+  .pp table{border-collapse:collapse;margin:5px 0} .pp td{padding:1px 7px 1px 0;vertical-align:top}
+  .pp .tk a{display:inline-block;margin:2px 7px 0 0;font-size:11.5px;color:#1769aa;text-decoration:none;border-bottom:1px solid #cfe0ee}
+  .pp .tk a:hover{border-color:#1769aa}
+</style></head><body>
+<div id="title"><h2>Who Owns the Vacant Land in Nashville?</h2>
+  <p>Every genuinely vacant parcel in Davidson County, no building, no year built, no dwelling units, as its real lot shape. Click any parcel for the county record.</p></div>
+<div id="legend"></div>
+<div id="stats">loading&hellip;</div>
+<div id="count">loading vacant parcels&hellip;</div>
+<div id="map"></div>
+<script>
+const COLORS={'Corporate/Business':'#b3282d','Individual':'#26456b','Government/Institutional':'#8a8f98','Trust':'#e0952a'};
+const ORDER=['Corporate/Business','Individual','Government/Institutional','Trust'];
+const off={};
+const map=L.map('map',{preferCanvas:true,center:[36.166,-86.784],zoom:10});
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:20}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'&copy; Esri',maxZoom:20});
+L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{position:'topright',collapsed:false}).addTo(map);
+
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{
+  L.geoJSON({type:'FeatureCollection',features:g.features.filter(f=>f.properties.OBJECTID===4)},
+    {style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);
+});
+
+const dollars=n=>n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':'$'+n.toLocaleString();
+let layer, feats=[];
+function style(f){const t=f.properties.otype;return{color:'#333',weight:0.5,fillColor:COLORS[t]||'#999',fillOpacity:off[t]?0:0.7,opacity:off[t]?0:0.9};}
+function popup(f){
+  const p=f.properties, A=p.apn;
+  // centroid for street view
+  let cx=0,cy=0,n=0;(function walk(c){if(typeof c[0]==='number'){cx+=c[0];cy+=c[1];n++;}else c.forEach(walk);})(f.geometry.coordinates);
+  cx/=n;cy/=n;
+  const lnk=(l,u)=>`<a href="${u}" target="_blank" rel="noopener">${l}</a>`;
+  return `<div class="pp"><span class="nm">${p.owner||'(unknown owner)'}</span><br>
+    <span class="ot" style="color:${COLORS[p.otype]}">${p.otype}</span>${p.ostate&&p.ostate!=='TN'?' &middot; owner in '+p.ostate:''}<br>
+    <table>
+    <tr><td><b>Land use</b></td><td>${p.lu||'(null)'}</td></tr>
+    <tr><td><b>Land value</b></td><td>${p.land?('$'+p.land.toLocaleString()):'&ndash;'}</td></tr>
+    <tr><td><b>Acreage</b></td><td>${p.acres||'&ndash;'}</td></tr>
+    <tr><td><b>Zoning</b></td><td>${p.zoning||'&ndash;'}</td></tr>
+    <tr><td><b>APN</b></td><td>${A}</td></tr></table>
+    <div class="tk">
+    ${lnk('Parcel Viewer','https://maps.nashville.gov/ParcelViewer/?parcelID='+A)}
+    ${lnk('Property Card','https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+A)}
+    ${lnk('Comper','https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+A)}
+    ${lnk('Aerial','https://www.google.com/maps/search/?api=1&query='+cy+','+cx)}
+    ${lnk('Street View','https://www.google.com/maps?q&layer=c&cbll='+cy+','+cx)}
+    ${lnk('Land Records','https://davidsonportal.com/landrecords/')}
+    ${lnk('Owner History','https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+A)}
+    ${lnk('Property History','https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+A)}
+    ${lnk('Zoning History','https://maps.nashville.gov/ParcelService/Search.asmx/GetZoningHistory?onlyactive=false&pin='+A)}
+    ${lnk('Assessment History','https://maps.nashville.gov/ParcelService/Search.asmx/GetAssessmentHistory?onlyactive=false&pin='+A)}
+    ${lnk('ePermits','https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+A)}
+    </div></div>`;
+}
+function draw(){
+  if(layer)layer.remove();
+  layer=L.geoJSON({type:'FeatureCollection',features:feats},{style,onEachFeature:(f,l)=>l.bindPopup(()=>popup(f),{maxWidth:390})}).addTo(map);
+}
+function refreshLegend(){
+  const cnt={},val={};ORDER.forEach(t=>{cnt[t]=0;val[t]=0;});
+  feats.forEach(f=>{const t=f.properties.otype;if(cnt[t]!==undefined){cnt[t]++;val[t]+=f.properties.land||0;}});
+  const shown=feats.filter(f=>!off[f.properties.otype]).length;
+  document.getElementById('count').innerHTML='<b>'+shown.toLocaleString()+'</b> vacant parcels shown';
+  const total=feats.length, totVal=feats.reduce((s,f)=>s+(f.properties.land||0),0);
+  const corp=cnt['Corporate/Business']||0;
+  document.getElementById('stats').innerHTML=
+    `<b>${total.toLocaleString()}</b> genuinely vacant parcels<br>`+
+    `Total land value <b>${dollars(totVal)}</b><br>`+
+    `<b>${(100*corp/total).toFixed(0)}%</b> corporate / business owned`;
+  document.getElementById('legend').innerHTML='<b>Owner of the vacant land</b>'+
+    ORDER.map(t=>`<div class="r ${off[t]?'off':''}" data-t="${t}"><i style="background:${COLORS[t]}"></i>${t}<span class="c">${(cnt[t]||0).toLocaleString()}</span></div>`).join('')+
+    '<div style="font-size:10.5px;color:#888;margin-top:5px">click a row to toggle</div>';
+  document.querySelectorAll('#legend .r').forEach(r=>r.onclick=()=>{const t=r.dataset.t;off[t]=!off[t];draw();refreshLegend();});
+}
+document.getElementById('count').textContent='loading 33,000 parcel shapes…';
+fetch('Davidson_Vacant_Land.geojson').then(r=>r.json()).then(g=>{
+  feats=g.features; draw(); refreshLegend();
+  try{map.fitBounds(layer.getBounds(),{padding:[20,20]});}catch(e){}
+});
+</script></body></html>
