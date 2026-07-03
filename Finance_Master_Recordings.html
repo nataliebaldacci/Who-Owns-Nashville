@@ -1,0 +1,145 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Who Finances Nashville — Master Recordings Database</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M6 20h4v6H6zm7-8h4v14h-4zm7-6h4v20h-4z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa;line-height:1.45}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1200px;margin:0 auto;padding:18px 18px 70px}
+ h1{font-family:'Montserrat',sans-serif;font-size:23px;color:#1c458c;margin:6px 0 2px}
+ .lead{font-size:14px;color:#33404e;margin-bottom:12px;max-width:900px}.lead b{color:#1c458c}
+ .tabs{display:flex;gap:8px;margin:12px 0;flex-wrap:wrap}
+ .tab{font-family:'Montserrat',sans-serif;font-weight:700;font-size:12.5px;padding:8px 15px;border-radius:8px;border:1px solid #c9d3e2;background:#fff;color:#5a6572;cursor:pointer}
+ .tab.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:12px 0}
+ .card{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:11px 14px}
+ .card .v{font-family:'Montserrat',sans-serif;font-weight:800;font-size:19px;color:#1c458c}
+ .card .l{font-size:11px;color:#5a6572;margin-top:3px}
+ .bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;position:sticky;top:56px;background:#f4f6fa;padding:9px 0;z-index:10}
+ #q{flex:1;min-width:220px;max-width:420px;padding:9px 13px;border:1px solid #c9d3e2;border-radius:7px;font-size:14px;font-family:'EB Garamond',serif}
+ select{padding:8px 10px;border:1px solid #c9d3e2;border-radius:7px;font-family:'EB Garamond',serif;font-size:13.5px;background:#fff}
+ table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid #e2e8f1;border-radius:10px;overflow:hidden}
+ thead th{font-family:'Montserrat',sans-serif;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;text-align:left;padding:9px 9px;border-bottom:1.5px solid #e2e8f1;cursor:pointer;white-space:nowrap}
+ tbody td{padding:6px 9px;border-bottom:1px solid #eef0f3;vertical-align:top}
+ tbody tr:hover{background:#f8fafd}
+ td.amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:#1c458c;font-weight:600}
+ .inst{font-family:'Montserrat',sans-serif;font-size:10.5px;color:#33404e}
+ .tier{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;padding:1px 5px;border-radius:9px;white-space:nowrap;background:#eef0f3;color:#6a7684}
+ .tier.t1{background:#fde8ec;color:#b01e37}.tier.t2{background:#fff4e0;color:#a06a00}.tier.t3{background:#eef4fb;color:#28518f}
+ .lnk{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-decoration:none;padding:3px 8px;border-radius:6px;white-space:nowrap;background:#eef4fb;color:#1c458c}
+ .lnk:hover{text-decoration:underline}.none{color:#c2c9d2}
+ .flt{font-size:12px;color:#8a94a0;margin:6px 2px}
+ .pane{display:none}.pane.on{display:block}
+ .bars{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:14px 16px;margin-top:10px}
+ .brow{display:flex;align-items:center;gap:10px;margin:5px 0;font-size:13px}
+ .brow .nm{width:250px;flex:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .brow .track{flex:1;background:#eef2f8;border-radius:5px;height:16px;position:relative}
+ .brow .fill{background:#1c458c;height:100%;border-radius:5px}
+ .brow .val{width:150px;flex:none;text-align:right;font-variant-numeric:tabular-nums;color:#1c458c;font-weight:600}
+ .note{font-size:12px;color:#8a94a0;margin-top:16px;line-height:1.5}
+ h3{font-family:'Montserrat',sans-serif;font-size:15px;color:#1c458c;margin:18px 0 4px}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">Master Recordings Database</div></div>
+<div class="wrap">
+  <h1>Who finances Nashville</h1>
+  <div class="lead">The consolidated Register-of-Deeds record behind the institutional single-family machine: every recorded deed of trust, assignment, and related instrument pulled from Davidson County land records, with the loans, lenders, and borrower shells that carry the debt. <b>$17.7 billion</b> in Wall Street pool loans runs through a handful of borrower SPVs and seven investment banks. Every row links to the recorded county image. Companion to the <a href="Deeds_of_Trust_Database.html">Deeds of Trust database</a> and <a href="Financed_Mortgages_Nashville.html">Financed Mortgages map</a>.</div>
+  <div class="tabs">
+    <div class="tab on" data-p="rec">All Recordings</div>
+    <div class="tab" data-p="loans">Loans ≥ $10M</div>
+    <div class="tab" data-p="lend">Top Lenders</div>
+    <div class="tab" data-p="borr">Top Borrowers</div>
+    <div class="tab" data-p="year">By Year</div>
+  </div>
+
+  <div class="pane on" id="p-rec">
+    <div class="cards" id="rec-stats"></div>
+    <div class="bar"><input id="q" placeholder="Search grantor, grantee, instrument, property, source…" autocomplete="off"/>
+      <select id="tier"><option value="">All tiers</option></select>
+      <select id="type"><option value="">All types</option></select></div>
+    <div class="flt" id="rec-cnt"></div>
+    <table><thead><tr><th data-k="date">Date</th><th data-k="type">Type</th><th data-k="grantor">Grantor &rarr; Grantee</th><th data-k="cons">Consideration</th><th data-k="tier">Tier</th><th data-k="inst">Instrument</th><th>Image</th></tr></thead><tbody id="rec-body"></tbody></table>
+  </div>
+
+  <div class="pane" id="p-loans">
+    <div class="cards" id="loan-stats"></div>
+    <div class="bar"><input id="lq" placeholder="Search borrower, lender, trustee…" autocomplete="off"/></div>
+    <table><thead><tr><th>Rec. Date</th><th>Loan Amount</th><th>Borrower (SPV)</th><th>Lender</th><th>Family</th><th>Tier</th><th>Image</th></tr></thead><tbody id="loan-body"></tbody></table>
+  </div>
+
+  <div class="pane" id="p-lend"><div class="bars" id="lend-bars"></div></div>
+  <div class="pane" id="p-borr"><div class="bars" id="borr-bars"></div></div>
+  <div class="pane" id="p-year"><div class="bars" id="year-bars"></div></div>
+
+  <div class="note">Source: Davidson County Register of Deeds land records (image builder <code>davidsonportal.com/gis/file.php?file=&lt;instrument&gt;</code> and <code>view_image.php</code>). Compiled from portal searches across institutional single-family borrower, lender, and trustee names. Loan tiers: Tier 1 = Wall Street securitization warehouse, Tier 2 = iBuyer / bridge, Tier 3 = other. ATTOM-derived cross-state volume tables are omitted here; this database is primary county records only.</div>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+function usd(v){v=+v||0;return v?'$'+Math.round(v).toLocaleString():'';}
+function bn(v){v=+v||0;return v>=1e9?'$'+(v/1e9).toFixed(2)+'B':v>=1e6?'$'+(v/1e6).toFixed(1)+'M':usd(v);}
+function tclass(t){t=(t||'').toLowerCase();return t.indexOf('tier 1')>=0?'t1':t.indexOf('tier 2')>=0?'t2':t.indexOf('tier 3')>=0?'t3':'';}
+var D={},recSort='date',recD=1;
+fetch('finance_master.json').then(r=>r.json()).then(d=>{D=d;init();});
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));t.classList.add('on');document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));document.getElementById('p-'+t.dataset.p).classList.add('on');});
+function opts(id,vals){document.getElementById(id).insertAdjacentHTML('beforeend',vals.map(v=>'<option>'+esc(v)+'</option>').join(''));}
+function init(){
+  opts('tier',[...new Set(D.rec.map(r=>r.tier).filter(Boolean))].sort());
+  opts('type',[...new Set(D.rec.map(r=>r.type).filter(Boolean))].sort());
+  document.getElementById('q').addEventListener('input',renderRec);
+  document.getElementById('tier').addEventListener('change',renderRec);
+  document.getElementById('type').addEventListener('change',renderRec);
+  document.getElementById('lq').addEventListener('input',renderLoans);
+  document.querySelectorAll('#p-rec thead th[data-k]').forEach(th=>th.onclick=()=>{var k=th.dataset.k;if(recSort===k)recD=-recD;else{recSort=k;recD=1;}renderRec();});
+  renderRec();renderLoans();bars();
+}
+function renderRec(){
+  var f=document.getElementById('q').value.toLowerCase().trim();
+  var tv=document.getElementById('tier').value,yv=document.getElementById('type').value;
+  var list=D.rec.filter(r=>{if(tv&&r.tier!==tv)return false;if(yv&&r.type!==yv)return false;
+    if(f&&(r.grantor+' '+r.grantee+' '+r.inst+' '+r.desc+' '+r.src).toLowerCase().indexOf(f)<0)return false;return true;});
+  list.sort((a,b)=>{var x=a[recSort],y=b[recSort];if(recSort==='cons'){x=+x||0;y=+y||0;}else{x=String(x);y=String(y);}return x<y?-recD:x>y?recD:0;});
+  var linked=D.rec.filter(r=>r.url).length,cons=D.rec.reduce((s,r)=>s+(+r.cons||0),0);
+  document.getElementById('rec-stats').innerHTML=
+    '<div class="card"><div class="v">'+D.rec.length.toLocaleString()+'</div><div class="l">recorded instruments</div></div>'+
+    '<div class="card"><div class="v">'+linked.toLocaleString()+'</div><div class="l">linked to county image</div></div>'+
+    '<div class="card"><div class="v">$17.7B</div><div class="l">Tier 1 Wall Street pool loans</div></div>'+
+    '<div class="card"><div class="v">'+[...new Set(D.rec.map(r=>r.tier).filter(Boolean))].length+'</div><div class="l">lender tiers</div></div>';
+  document.getElementById('rec-cnt').textContent=list.length.toLocaleString()+' of '+D.rec.length.toLocaleString()+' shown';
+  document.getElementById('rec-body').innerHTML=list.slice(0,1200).map(r=>
+    '<tr><td>'+esc(r.date||'—')+'</td><td><span class="tier '+tclass(r.tier)+'">'+esc(r.type||'—')+'</span></td>'+
+    '<td>'+esc(r.grantor||'?')+' <span class="none">&rarr;</span> '+esc(r.grantee||'?')+(r.desc?'<br><span class="none">'+esc(r.desc)+'</span>':'')+'</td>'+
+    '<td class="amt">'+usd(r.cons)+'</td><td>'+(r.tier?'<span class="tier '+tclass(r.tier)+'">'+esc(r.tier)+'</span>':'<span class="none">—</span>')+'</td>'+
+    '<td class="inst">'+esc(r.inst)+'</td><td>'+(r.url?'<a class="lnk" href="'+esc(r.url)+'" target="_blank">Deed &#8599;</a>':'<span class="none">—</span>')+'</td></tr>').join('')+
+    (list.length>1200?'<tr><td colspan="7" class="flt">Showing first 1,200 — narrow the search to see the rest.</td></tr>':'');
+}
+function renderLoans(){
+  var f=document.getElementById('lq').value.toLowerCase().trim();
+  var list=D.loans10.filter(r=>!f||(r.borrower+' '+r.lender+' '+r.trustee+' '+r.family).toLowerCase().indexOf(f)>=0).slice().sort((a,b)=>b.amt-a.amt);
+  var tot=D.loans10.reduce((s,r)=>s+r.amt,0),t1=D.loans10.filter(r=>tclass(r.tier)==='t1').length;
+  document.getElementById('loan-stats').innerHTML=
+    '<div class="card"><div class="v">'+D.loans10.length+'</div><div class="l">loans ≥ $10M</div></div>'+
+    '<div class="card"><div class="v">'+bn(tot)+'</div><div class="l">aggregate face amount</div></div>'+
+    '<div class="card"><div class="v">'+bn(D.loans10[0].amt)+'</div><div class="l">largest single loan</div></div>'+
+    '<div class="card"><div class="v">'+t1+'</div><div class="l">Tier 1 Wall Street loans</div></div>';
+  document.getElementById('loan-body').innerHTML=list.map(r=>
+    '<tr><td>'+esc(r.date)+'</td><td class="amt">'+usd(r.amt)+'</td><td>'+esc(r.borrower)+'</td><td>'+esc(r.lender)+'</td>'+
+    '<td>'+esc(r.family)+'</td><td><span class="tier '+tclass(r.tier)+'">'+esc(r.tier)+'</span></td>'+
+    '<td>'+(r.url?'<a class="lnk" href="'+esc(r.url)+'" target="_blank">Deed &#8599;</a>':'<span class="none">—</span>')+'</td></tr>').join('');
+}
+function barChart(el,rows,valf,lblf,fmt){
+  var mx=Math.max.apply(null,rows.map(valf));
+  el.innerHTML=rows.map(r=>{var v=valf(r);return '<div class="brow"><div class="nm">'+esc(lblf(r))+'</div><div class="track"><div class="fill" style="width:'+(100*v/mx).toFixed(1)+'%"></div></div><div class="val">'+fmt(v)+(r.n?' <span class="none">· '+r.n+'</span>':'')+'</div></div>';}).join('');
+}
+function bars(){
+  document.getElementById('lend-bars').innerHTML='<h3>Top lenders by total deed-of-trust consideration</h3>';
+  barChart(document.getElementById('lend-bars'),D.topLenders.slice(0,16),r=>r.total,r=>r.name,bn);
+  document.getElementById('borr-bars').innerHTML='<h3>Top borrower families by total debt recorded</h3>';
+  barChart(document.getElementById('borr-bars'),D.topBorrowers.slice(0,16),r=>r.total,r=>r.name,bn);
+  document.getElementById('year-bars').innerHTML='<h3>Deed-of-trust activity by year</h3>';
+  barChart(document.getElementById('year-bars'),D.byyear,r=>r.total,r=>r.year,bn);
+}
+</script></body></html>
