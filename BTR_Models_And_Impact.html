@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Build-to-Rent: Five Models and Their Impact - Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1c458c;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--line:#e4e9f0;--green:#1f8166;--red:#b3282d}
+*{box-sizing:border-box}body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 22px 70px}
+a.back{color:var(--navy);text-decoration:none;font-weight:600;font-size:13px}a.back:hover{text-decoration:underline}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:12px 0 3px}
+h1{font-size:25px;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.3px}
+h2{font-size:16px;font-weight:800;color:var(--navy);margin:26px 0 10px;text-transform:uppercase;letter-spacing:.5px;border-bottom:2px solid var(--gold);padding-bottom:6px}
+.sub{font-size:14.5px;color:var(--mut);margin:0 0 8px;max-width:820px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(20,50,90,.05);margin-bottom:16px}
+.chwrap{position:relative;height:360px}
+.models{display:grid;gap:10px}
+.m{display:grid;grid-template-columns:210px 1fr;gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.m:first-child{border-top:none}
+.m .nm{font-weight:800;color:var(--navy);font-size:14.5px}
+.m .n{font-size:20px;font-weight:800}
+.m .d{font-size:12px;color:var(--mut);margin-top:2px}
+.m .ops{font-size:11.5px;color:#33414f;margin-top:4px}
+.bar{height:20px;border-radius:5px;overflow:hidden;display:flex;margin-top:6px}
+.bar i{display:block;height:100%}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px}
+.kpi{background:#fff;border:1px solid var(--line);border-radius:10px;padding:16px 18px;box-shadow:0 2px 6px rgba(20,50,90,.05)}
+.kpi b{display:block;font-size:30px;font-weight:800;color:var(--navy);line-height:1.05}
+.kpi.red b{color:var(--red)} .kpi .l{font-size:12.5px;color:var(--mut);margin-top:5px}
+.leg{font-size:12px;color:var(--mut);display:flex;gap:16px;margin:4px 0 0}
+.leg i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:5px;vertical-align:middle}
+p.n{font-size:13.5px;color:#33414f;max-width:820px}
+.note{font-size:11.5px;color:var(--mut);font-style:italic;margin-top:8px;border-top:1px solid var(--line);padding-top:10px}
+</style></head><body><div class="wrap">
+<a class="back" href="index.html">&larr; Who Owns Nashville</a>
+<p class="kick">Build-to-rent</p><h1>Five models of build-to-rent, and their impact</h1>
+<p class="sub">Every build-to-rent parcel in Davidson County sorts into one of five models by who builds and who holds. The categories decide the housing impact: whether a home is added to the stock or diverted from ownership, and whether it ever reaches a homebuyer at all.</p>
+
+<h2>The five models</h2>
+<div class="card"><div class="models" id="models"></div>
+<div class="leg"><span><i style="background:#1c458c"></i>Held (built, still owned by operator)</span><span><i style="background:#f0af1e"></i>Pipeline (being built)</span><span><i style="background:#1f8166"></i>Exit (sold to a homebuyer)</span></div></div>
+
+<h2>The impact</h2>
+<div class="kpis" id="kpis"></div>
+<div class="card" style="margin-top:16px">
+<p class="n"><b>Homes diverted from ownership.</b> Of the 3,478 build-to-rent parcels, <b>3,227 (92.8 percent) are held or still in the pipeline</b>, and only <b>251 (7.2 percent) ever exited to a homebuyer</b>. A build-to-rent home is a home a family cannot buy.</p>
+<p class="n"><b>Addition versus substitution.</b> The vertically integrated model on greenfield land (about 691 parcels, led by American Homes 4 Rent) adds homes that likely would not otherwise exist. The one-off-sale model (216 parcels, VineBrook and Starwood) removes homes a builder had platted for sale. The partnership and contractor models sit between: most are new supply, but the home still reaches an operator rather than an owner.</p>
+<p class="n"><b>The federal exemption.</b> The 21st Century ROAD to Housing Act would bar the acquisition channel that built the first institutional wave, but its build-to-rent exception (Section 1001(a)(2)(B)) reaches <b>none of these 3,478 parcels</b>. Every model here is exempt.</p>
+<p class="n"><b>Value capture and yield.</b> The pre-development land bank captures value before a foundation is laid: Ava Madison's 199 Tessa Madison lots gained a 4.2-times appraisal lift from rezoning and platting alone. On the built product, Nashville commands the highest per-foot rent in the operators' Southeast book at 1,826 dollars a month and 0.86 dollars per square foot.</p>
+<div class="note">Build-to-rent parcels classified by business model and lifecycle from the Davidson cadastral, permit, and deed record (3,478 parcels). Diversion counts from parcel lifecycle status; 2025 permit share and rent figures from the Findings section. Last accessed July 3, 2026.</div>
+</div>
+</div>
+<script>
+const D={"cats": [{"name": "Vertically integrated", "desc": "Builds and holds its own homes; developer and landlord are one firm.", "n": 691, "held": 474, "pipeline": 217, "exit": 0, "ops": ["AMH Development (integrated BTR)", "AHV Communities", "AHV Crestbrook"]}, {"name": "Contractor", "desc": "Investor owns the land and hires a builder to construct on it.", "n": 1063, "held": 290, "pipeline": 664, "exit": 109, "ops": ["Normandy (local BTR)", "RSD West Trinity", "ACPF Spring Path", "KSSK"]}, {"name": "Partnership / forward-flow", "desc": "A builder presells the finished community to the investor at a preset price.", "n": 1308, "held": 55, "pipeline": 1182, "exit": 71, "ops": ["CRP / ECG", "Crescent BTR", "TPG / Angelo Gordon", "Kennedy Lewis (KLLB)"]}, {"name": "One-off sale", "desc": "Investor buys finished homes a builder platted for sale, in bulk.", "n": 216, "held": 98, "pipeline": 47, "exit": 71, "ops": ["VineBrook (VB TAH)", "Starwood", "ARRIVED"]}, {"name": "Pre-development land bank", "desc": "Holds entitled, platted land with no construction yet.", "n": 200, "held": 0, "pipeline": 200, "exit": 0, "ops": ["Ava Madison (Tessa Madison)"]}], "impact": {"total": 3478, "held": 917, "pipeline": 2310, "exit": 251, "removed": 3227, "removed_pct": 92.8, "exit_pct": 7.2}};
+// models list
+const mm=document.getElementById('models');
+D.cats.forEach(c=>{
+  const t=c.n; const ph=100*c.held/t,pp=100*c.pipeline/t,pe=100*c.exit/t;
+  mm.insertAdjacentHTML('beforeend',`<div class="m">
+    <div><div class="nm">${c.name}</div><div class="n">${c.n.toLocaleString()}</div><div class="d">${c.desc}</div></div>
+    <div><div class="bar"><i style="width:${ph}%;background:#1c458c"></i><i style="width:${pp}%;background:#f0af1e"></i><i style="width:${pe}%;background:#1f8166"></i></div>
+    <div class="ops"><b>${c.held} held · ${c.pipeline} pipeline · ${c.exit} exited.</b> ${c.ops.join(' · ')}</div></div></div>`);
+});
+// kpis
+const k=D.impact;
+const kpis=[["92.8%","of build-to-rent homes are held or in pipeline, not for sale","red"],
+ ["7.2%","ever exited to a homebuyer (251 of 3,478)",""],
+ ["48.6%","of 2025 new single-family permits went to rental","red"],
+ ["0","of these 3,478 parcels barred by the ROAD Act","red"],
+ ["4.2×","land-value lift at Tessa Madison before any construction",""],
+ ["$1,826","average Nashville build-to-rent rent, highest in the Southeast",""]];
+document.getElementById('kpis').innerHTML=kpis.map(([v,l,c])=>`<div class="kpi ${c}"><b>${v}</b><div class="l">${l}</div></div>`).join('');
+</script></body></html>
