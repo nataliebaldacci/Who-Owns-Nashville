@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Operator Cumulative Holdings Over Time - Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1c458c;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--line:#e4e9f0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 22px 70px}
+a.back{color:var(--navy);text-decoration:none;font-weight:600;font-size:13px}
+a.back:hover{text-decoration:underline}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:12px 0 3px}
+h1{font-size:26px;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.3px}
+.sub{font-size:14.5px;color:var(--mut);margin:0 0 18px;max-width:760px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px 10px;box-shadow:0 2px 8px rgba(20,50,90,.05)}
+.chwrap{position:relative;height:470px}
+.note{font-size:11.5px;color:var(--mut);font-style:italic;margin:16px 0 0;border-top:1px solid var(--line);padding-top:12px}
+.note a{color:var(--navy);word-break:break-all}
+</style></head><body>
+<div class="wrap">
+<a class="back" href="index.html">&larr; Who Owns Nashville</a>
+<p class="kick">Ownership over time</p>
+<h1>Operator cumulative holdings in Davidson County, 2000&ndash;2026</h1>
+<p class="sub">Year-end Davidson County parcel counts for each institutional operator, reconstructed from the chain of title. Click any operator in the legend to hide or isolate it. Progress Residential and American Homes 4 Rent dominate; the 2021&ndash;2023 surge is the whole story.</p>
+<div class="card"><div class="chwrap"><canvas id="ch"></canvas></div></div>
+<p class="note">Notes: Year-end holdings reconstructed from Davidson County Parcel History MapServer Layer 2 (Ownership History), <a href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2">maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2</a> (last accessed May 22, 2026). Each parcel is attributed to its ultimate operator via the owner-to-operator crosswalk. 2026 is a partial year.</p>
+</div>
+<script>
+const D={"years": [2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026], "series": [{"name": "Progress Residential", "data": [30, 31, 31, 31, 17, 43, 40, 25, 26, 25, 24, 28, 25, 163, 141, 187, 384, 672, 967, 1081, 1316, 2263, 2317, 2524, 2284, 2242, 2195], "peak": 2524, "now": 2195}, {"name": "American Homes 4 Rent", "data": [0, 0, 0, 1, 1, 1, 3, 3, 3, 3, 5, 4, 82, 189, 394, 465, 488, 534, 699, 928, 1219, 1225, 1215, 1193, 1175, 1154, 1151], "peak": 1225, "now": 1151}, {"name": "Invitation Homes", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 86, 102, 159, 350, 363, 363, 366, 366], "peak": 366, "now": 366}, {"name": "Opendoor (iBuyer)", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 97, 44, 31, 129, 100, 39, 58, 22, 28], "peak": 129, "now": 28}, {"name": "VineBrook Homes", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 106, 106], "peak": 106, "now": 106}, {"name": "FirstKey Homes (Cerberus)", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 29, 61, 61, 61, 63, 68], "peak": 68, "now": 68}, {"name": "Main Street Renewal (Amherst)", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 42, 42, 42, 42, 39, 54, 27, 37, 37, 37, 37, 37, 37], "peak": 54, "now": 37}, {"name": "Zillow Homes (iBuyer)", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 34, 0, 0, 0, 0, 0], "peak": 34, "now": 0}, {"name": "Conrex / Connorex-Lucinda", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 16, 18, 21, 22, 22, 4, 21, 21, 23, 25, 21, 21, 18, 18], "peak": 25, "now": 18}, {"name": "Offerpad (iBuyer)", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 18, 10, 3, 0, 0, 0], "peak": 18, "now": 0}, {"name": "Harbour Portfolio", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 5, 5, 4, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "peak": 5, "now": 0}, {"name": "Home Partners of America", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 4, 1, 1, 2, 3, 3, 3], "peak": 4, "now": 3}, {"name": "Tricon American Homes", "data": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 2], "peak": 2, "now": 2}, {"name": "Front Yard Residential", "data": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], "peak": 1, "now": 0}]};
+const PAL=['#1c458c','#b3282d','#cf307a','#e0952a','#1f8166','#8dcaf0','#7a2222','#2c719f','#8ce38f','#6a4c93','#e8971a','#3f7cc0','#5aa84f','#999'];
+const ds=D.series.map((s,i)=>({label:s.name,data:s.data,borderColor:PAL[i%PAL.length],backgroundColor:PAL[i%PAL.length],
+  borderWidth:s.peak>=300?2.6:1.6,pointRadius:0,pointHoverRadius:4,tension:.25,fill:false,hidden:s.peak<30}));
+new Chart(document.getElementById('ch'),{type:'line',data:{labels:D.years,datasets:ds},options:{
+  responsive:true,maintainAspectRatio:false,interaction:{mode:'nearest',intersect:false},
+  plugins:{legend:{position:'right',labels:{font:{family:'Montserrat',size:11},boxWidth:12,padding:6,usePointStyle:true,pointStyle:'line'}},
+    tooltip:{callbacks:{label:c=>` ${c.dataset.label}: ${c.parsed.y.toLocaleString()} parcels`}}},
+  scales:{x:{grid:{display:false},ticks:{font:{size:11}}},
+    y:{title:{display:true,text:'Davidson parcels held (year-end)',font:{family:'Montserrat',size:12,weight:'600'}},ticks:{font:{size:11}}}}}});
+</script></body></html>
