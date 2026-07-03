@@ -31,6 +31,7 @@
   Notice the gradient: the more units in the structure, the fewer are owner-occupied.</p>
   <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied</span><span><span class="ln"></span>Homeownership rate (%)</span></div>
 
+  <div class="mini"><h2>All Single-Family (1-unit: detached + attached, combined)</h2><div class="tk">The full single-family stock — ~80% owner-occupied in 2024, down from 83.5% in 2010; renter one-unit homes grew from 26,485 to 38,835.</div><svg class="c" data-key="all" viewBox="0 0 840 240" width="100%"></svg></div>
   <div class="mini"><h2>1-Unit, Detached (standalone houses)</h2><div class="tk">Overwhelmingly owner-occupied — but the ownership rate slipped from 85.6% to 82.2%.</div><svg class="c" data-key="det" viewBox="0 0 840 240" width="100%"></svg></div>
   <div class="mini"><h2>1-Unit, Attached (townhomes, rowhouses)</h2><div class="tk">A more even split — around 68–70% owner-occupied.</div><svg class="c" data-key="att" viewBox="0 0 840 240" width="100%"></svg></div>
   <div class="mini"><h2>2-Unit (duplexes)</h2><div class="tk">Almost entirely rental — only ~13% owner-occupied. (ACS 5-year periods; 2-unit is not published as a stable 1-year county series.)</div><svg class="c" data-key="two" viewBox="0 0 840 240" width="100%"></svg></div>
@@ -40,6 +41,7 @@
 <div id="tip"></div>
 <script>
 var DATA={
+ all:[{y:2010,own:134085,rent:26485},{y:2011,own:133025,rent:28588},{y:2012,own:130992,rent:31261},{y:2013,own:129704,rent:32304},{y:2014,own:129427,rent:34532},{y:2015,own:131035,rent:34086},{y:2016,own:132751,rent:33870},{y:2017,own:135757,rent:32817},{y:2018,own:137715,rent:33538},{y:2019,own:140519,rent:33728},{y:2020,own:144601,rent:36133},{y:2021,own:148037,rent:36037},{y:2022,own:152004,rent:37023},{y:2023,own:155821,rent:37186},{y:2024,own:158588,rent:38835}],
  det:[{y:2010,own:120956,rent:20286},{y:2011,own:119603,rent:21399},{y:2012,own:117923,rent:23645},{y:2013,own:116756,rent:24669},{y:2014,own:116298,rent:26387},{y:2015,own:118049,rent:26094},{y:2016,own:119977,rent:26397},{y:2017,own:122830,rent:25882},{y:2018,own:124100,rent:26172},{y:2019,own:126135,rent:26367},{y:2020,own:128772,rent:27993},{y:2021,own:131238,rent:27771},{y:2022,own:133575,rent:28403},{y:2023,own:135433,rent:28566},{y:2024,own:137091,rent:29634}],
  att:[{y:2010,own:13129,rent:6199},{y:2011,own:13422,rent:7189},{y:2012,own:13069,rent:7616},{y:2013,own:12948,rent:7635},{y:2014,own:13129,rent:8145},{y:2015,own:12986,rent:7992},{y:2016,own:12774,rent:7473},{y:2017,own:12927,rent:6935},{y:2018,own:13615,rent:7366},{y:2019,own:14384,rent:7361},{y:2020,own:15829,rent:8140},{y:2021,own:16799,rent:8266},{y:2022,own:18429,rent:8620},{y:2023,own:20388,rent:8620},{y:2024,own:21497,rent:9201}],
  two:[{y:2019,own:1571,rent:10194},{y:2024,own:1459,rent:9534}]
