@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Who Lives Here Now — Davidson County Current Ownership</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<style>
+ html,body,#map{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ .titlecard{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,.93);
+   padding:9px 18px;border-radius:6px;box-shadow:0 1px 5px rgba(0,0,0,.3);text-align:center;max-width:90%}
+ .titlecard b{font-family:'Montserrat',sans-serif;font-size:15px;color:#1a3a5c}
+ .titlecard .sub{font-size:13px;color:#444}
+ .legend{position:absolute;bottom:14px;left:12px;z-index:1000;background:rgba(255,255,255,.95);padding:11px 13px;
+   border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);font-size:13px;line-height:1.7;max-width:250px}
+ .legend .row{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none}
+ .legend .row.off{opacity:.38}
+ .legend .dot{width:13px;height:13px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.25)}
+ .legend b{font-family:'Montserrat',sans-serif;font-size:13px}
+ .legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto}
+ .legend .hint{font-size:11px;color:#777;margin-top:6px;font-style:italic}
+ .status{position:absolute;bottom:14px;right:12px;z-index:1000;background:rgba(255,255,255,.92);padding:5px 11px;
+   border-radius:5px;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+</style></head><body>
+<div id="map"></div>
+<div class="titlecard"><b>Who Owns Davidson County's Homes Now (2026)</b><br>
+  <span class="sub">Every residential parcel, colored by where its current owner receives mail</span></div>
+<div class="legend" id="legend">
+  <div class="row" data-k="H"><span class="dot" style="background:#8fb0d6"></span><b>Owner-occupant</b><span class="n" id="nH">—</span></div>
+  <div class="row" data-k="A"><span class="dot" style="background:#f0af1e"></span><b>In-state absentee</b><span class="n" id="nA">—</span></div>
+  <div class="row" data-k="O"><span class="dot" style="background:#d7263d"></span><b>Out-of-state owner</b><span class="n" id="nO">—</span></div>
+  <div class="hint">Click a row to show / hide it. Owner-occupant = owner's mailing zip matches the home's zip.</div>
+</div>
+<div class="status" id="status">loading…</div>
+<script>
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":carto,"Aerial":aerial},{},{position:'topright'}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(function(r){return r.json();}).then(function(b){
+  var f=(b.features||[]).filter(function(x){return x.properties&&x.properties.OBJECTID===4;});
+  L.geoJSON(f.length?{type:'FeatureCollection',features:f}:b,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+}).catch(function(){});
+var STY={H:{c:'#8fb0d6',r:1.6,o:.55},A:{c:'#f0af1e',r:2.2,o:.8},O:{c:'#d7263d',r:2.6,o:.9}};
+var LAB={H:'nH',A:'nA',O:'nO'};
+var layers={},vis={H:true,A:true,O:true};
+fetch('current_ownership_points.json').then(function(r){return r.json();}).then(function(d){
+  var tot=0;['H','A','O'].forEach(function(k){tot+=d[k].length;document.getElementById(LAB[k]).textContent=d[k].length.toLocaleString();});
+  document.getElementById('status').textContent=tot.toLocaleString()+' homes mapped';
+  // draw bottom-to-top: owner-occ, absentee, out-of-state
+  ['H','A','O'].forEach(function(k){
+    var g=L.layerGroup(),s=STY[k],arr=d[k];
+    for(var i=0;i<arr.length;i++){L.circleMarker([arr[i][1],arr[i][0]],{radius:s.r,fillColor:s.c,color:s.c,weight:0,fillOpacity:s.o,interactive:false}).addTo(g);}
+    layers[k]=g;g.addTo(map);
+  });
+}).catch(function(e){document.getElementById('status').textContent='load error: '+e;});
+document.querySelectorAll('#legend .row').forEach(function(row){
+  row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];
+    row.classList.toggle('off',!vis[k]);
+    if(layers[k]){vis[k]?layers[k].addTo(map):map.removeLayer(layers[k]);}};
+});
+</script></body></html>
