@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Institutional Owner Leaderboard — Davidson County</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6 L26 14 L23 14 L23 25 L18 25 L18 18 L14 18 L14 25 L9 25 L9 14 L6 14 Z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa;line-height:1.45}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1000px;margin:0 auto;padding:22px 18px 70px}
+ h1{font-family:'Montserrat',sans-serif;font-size:25px;color:#1c458c;margin:6px 0 2px}
+ .lead{color:#4a5560;font-size:14.5px;margin-bottom:16px}
+ .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:14px 0}
+ .card{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:13px 16px}
+ .card .v{font-family:'Montserrat',sans-serif;font-weight:800;font-size:22px;color:#1c458c}
+ .card .l{font-size:12px;color:#5a6572;margin-top:4px}
+ .controls{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0 6px}
+ .controls .grp{display:flex;gap:5px;flex-wrap:wrap}
+ .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:6px 12px;border-radius:18px;cursor:pointer}
+ .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ .chart{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:15px 16px;margin:8px 0 14px}
+ .bar{display:flex;align-items:center;gap:9px;margin:5px 0;font-size:12.5px}
+ .bar .nm{width:190px;flex:0 0 auto;text-align:right;color:#33404e;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+ .bar .track{flex:1;background:#eef2f7;border-radius:4px;height:18px}
+ .bar .fill{height:100%;border-radius:4px}
+ .bar .val{width:92px;flex:0 0 auto;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11.5px;color:#1c458c;text-align:right}
+ table{width:100%;border-collapse:collapse;font-size:13px;background:#fff;border-radius:9px;overflow:hidden}
+ th,td{padding:7px 10px;border-bottom:1px solid #eef0f3;text-align:left}
+ th{font-family:'Montserrat',sans-serif;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:#1c458c;cursor:pointer;background:#eef4fb}
+ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+ .badge{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:10px;color:#fff;white-space:nowrap}
+ tr:hover td{background:#f7f9fc}
+ .note{font-size:12px;color:#8a94a0;margin-top:14px;line-height:1.5}
+ .note a{color:#1c458c}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO OWNS</small></a><div class="htitle">Institutional Owner Leaderboard</div></div>
+<div class="wrap">
+  <h1>Who Owns Nashville's Institutional Homes</h1>
+  <div class="lead">Every identified institutional operator in Davidson County, with shell entities consolidated to their parent (Yamasa &rarr; Progress, the AMH development LLCs &rarr; American Homes 4 Rent, and so on). Ranked by parcels held or total appraised value. Filter by operator type; click a column to sort.</div>
+  <div class="cards" id="stats"></div>
+  <div class="controls">
+    <div class="grp" id="metric"><span class="chip on" data-m="n">By parcels</span><span class="chip" data-m="val">By appraised value</span></div>
+    <div class="grp" id="types"></div>
+  </div>
+  <div class="chart" id="chart"></div>
+  <table id="tbl"><thead><tr><th>#</th><th data-k="nm">Operator</th><th data-k="parent">Parent / ultimate owner</th><th data-k="type">Type</th><th class="num" data-k="n">Parcels</th><th class="num" data-k="val">Total appraised</th><th class="num" data-k="avg">Avg / home</th></tr></thead><tbody id="tb"></tbody></table>
+  <div class="note">Source: consolidated current-holdings dataset behind the <a href="Cadastral_Holdings_Explorer.html">Holdings Explorer</a> (owner names clustered and rolled to parent by name, shared mailing address, and TN Secretary of State registered agent). Totals cover identified operators only; unbranded one-off LLCs are excluded. Appraised value is the Davidson County Assessor total appraised value, which lags market price.</div>
+</div>
+<script>
+var TYPE={land:{l:'Rental landlord',c:'#1c458c'},btr:{l:'Build-to-Rent',c:'#f0af1e'},build:{l:'Homebuilder',c:'#4fa0bd'},landbank:{l:'Landbanker',c:'#8c564b'},ibuyer:{l:'iBuyer',c:'#d7263d'}};
+function usd(v){v=+v||0;return v>=1e9?'$'+(v/1e9).toFixed(2)+'B':v>=1e6?'$'+(v/1e6).toFixed(1)+'M':'$'+v.toLocaleString();}
+var ROWS=[],metric='n',tfilter='all',sortK='n',sortDir=-1;
+fetch('owner_leaderboard.json').then(r=>r.json()).then(function(d){
+  ROWS=d.rows.map(r=>({...r,avg:r.n?Math.round(r.val/r.n):0}));
+  var types=[...new Set(ROWS.map(r=>r.type))];
+  document.getElementById('types').innerHTML='<span class="chip on" data-t="all">All types</span>'+types.map(t=>'<span class="chip" data-t="'+t+'">'+(TYPE[t]?TYPE[t].l:t)+'</span>').join('');
+  document.getElementById('stats').innerHTML=
+    '<div class="card"><div class="v">'+ROWS.length+'</div><div class="l">identified operators</div></div>'+
+    '<div class="card"><div class="v">'+d.total_n.toLocaleString()+'</div><div class="l">parcels held</div></div>'+
+    '<div class="card"><div class="v">'+usd(d.total_val)+'</div><div class="l">total appraised value</div></div>'+
+    '<div class="card"><div class="v">'+ROWS[0].nm+'</div><div class="l">largest operator ('+ROWS[0].n.toLocaleString()+' homes)</div></div>';
+  bind(); draw();
+});
+function bind(){
+  document.querySelectorAll('#metric .chip').forEach(c=>c.onclick=function(){metric=this.getAttribute('data-m');sortK=metric;sortDir=-1;sel('#metric',this);draw();});
+  document.querySelectorAll('#types .chip').forEach(c=>c.onclick=function(){tfilter=this.getAttribute('data-t');sel('#types',this);draw();});
+  document.querySelectorAll('#tbl th[data-k]').forEach(th=>th.onclick=function(){var k=th.getAttribute('data-k');if(sortK===k)sortDir=-sortDir;else{sortK=k;sortDir=(k==='nm'||k==='parent'||k==='type')?1:-1;}draw();});
+}
+function sel(grp,el){document.querySelectorAll(grp+' .chip').forEach(c=>c.classList.remove('on'));el.classList.add('on');}
+function draw(){
+  var rows=ROWS.filter(r=>tfilter==='all'||r.type===tfilter);
+  rows.sort(function(a,b){var x=a[sortK],y=b[sortK];if(typeof x==='string'){x=x.toLowerCase();y=(''+y).toLowerCase();}else{x=+x||0;y=+y||0;}return x<y?-sortDir:x>y?sortDir:0;});
+  var top=rows.slice().sort((a,b)=>b[metric]-a[metric]).slice(0,15),mx=Math.max.apply(null,top.map(r=>r[metric]))||1;
+  document.getElementById('chart').innerHTML=top.map(function(r){var c=(TYPE[r.type]||{}).c||'#1c458c';
+    return '<div class="bar"><div class="nm" title="'+r.nm+'">'+r.nm+'</div><div class="track"><div class="fill" style="width:'+(r[metric]/mx*100).toFixed(1)+'%;background:'+c+'"></div></div><div class="val">'+(metric==='n'?r.n.toLocaleString():usd(r.val))+'</div></div>';}).join('');
+  document.getElementById('tb').innerHTML=rows.map(function(r,i){var t=TYPE[r.type]||{l:r.type,c:'#889'};
+    return '<tr><td>'+(i+1)+'</td><td><b>'+r.nm+'</b></td><td>'+(r.parent||'—')+'</td><td><span class="badge" style="background:'+t.c+'">'+t.l+'</span></td><td class="num">'+r.n.toLocaleString()+'</td><td class="num">'+usd(r.val)+'</td><td class="num">'+usd(r.avg)+'</td></tr>';}).join('');
+}
+</script></body></html>
