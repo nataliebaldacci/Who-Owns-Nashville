@@ -1,0 +1,362 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.66080309243864,
+          36.155641765619855
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1405764",
+        "address": "2810 DUNMORE DR",
+        "city": "NASHVILLE",
+        "zip": "37214",
+        "owner": "GHEORGHE, CONSTANTIN & ELISABETHA GABRIELA",
+        "apn": "09609018300",
+        "status": "Active Abate Violation Case",
+        "modified": "2024-09-10T01:59:34Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.64878543004099,
+          36.26111565115318
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1388586",
+        "address": "913 DEBOW ST",
+        "city": "OLD HICKORY",
+        "zip": "37138",
+        "owner": "DOKTER, DAVID & HEIDI",
+        "apn": "04415011500",
+        "status": "Done",
+        "modified": "2024-09-17T00:07:11Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.80795485471128,
+          36.17693169375295
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1387526",
+        "address": "1610 WHELESS ST",
+        "city": "NASHVILLE",
+        "zip": "37208",
+        "owner": "HENRY, EDDIE L.",
+        "apn": "08111025400",
+        "status": "Done",
+        "modified": "2024-09-17T19:00:39Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.61551707136734,
+          36.08002938376725
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1390529",
+        "address": "637 BLUEWATER DR",
+        "city": "NASHVILLE",
+        "zip": "37217",
+        "owner": "CORNELL, TIAN ABENI KENU",
+        "apn": "15002032600",
+        "status": "Done",
+        "modified": "2024-09-28T23:03:21Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.82914810985008,
+          36.142555853333754
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1408734",
+        "address": "127 A 37TH AVE N",
+        "city": "NASHVILLE",
+        "zip": "37209",
+        "owner": "HULL HOOPER HOLDINGS, LLC",
+        "apn": "104013D00100CO",
+        "status": "Done",
+        "modified": "2024-10-02T01:50:21Z",
+        "institutional": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.82914810985008,
+          36.142555853333754
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1408735",
+        "address": "127 A 37TH AVE N",
+        "city": "NASHVILLE",
+        "zip": "37209",
+        "owner": "HULL HOOPER HOLDINGS, LLC",
+        "apn": "104013D00100CO",
+        "status": "Active Abate Violation Case",
+        "modified": "2024-10-02T01:53:01Z",
+        "institutional": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.75120844106209,
+          36.265793003247076
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1422197",
+        "address": "403 KEMPER DR N",
+        "city": "MADISON",
+        "zip": "37115",
+        "owner": "BASTORY, MARMAR & YOUSIF, EMAD",
+        "apn": "04209006100",
+        "status": "Done",
+        "modified": "2025-02-21T17:30:08Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.63866429128622,
+          36.15292600206038
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1422196",
+        "address": "3307 FALLS CREEK DR",
+        "city": "NASHVILLE",
+        "zip": "37214",
+        "owner": "SHAHRIARI, SHERVIN & SAJADI, SAYENA",
+        "apn": "09616010600",
+        "status": "Done",
+        "modified": "2025-04-03T15:34:02Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.69314640342472,
+          36.17772465214332
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1418364",
+        "address": "2221 MAPLECREST DR",
+        "city": "NASHVILLE",
+        "zip": "37214",
+        "owner": "SKOLITS, KEVIN",
+        "apn": "08410002700",
+        "status": "Done",
+        "modified": "2025-04-03T15:35:59Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.75395576433765,
+          36.211883931893446
+        ]
+      },
+      "properties": {
+        "caseNumber": "24-1406806",
+        "address": "2410 OAKWOOD AVE",
+        "city": "NASHVILLE",
+        "zip": "37207",
+        "owner": "JENSEN, WALTER LOUIS III & COVINGTON, JUSTIN",
+        "apn": "07104022300",
+        "status": "Done",
+        "modified": "2025-04-03T15:40:31Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.73753879614493,
+          36.01773053107587
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1422198",
+        "address": "1008 HICKORY BARK CT",
+        "city": "NASHVILLE",
+        "zip": "37211",
+        "owner": "SFR JV-1 2020-1 BORROWER, LLC",
+        "apn": "172140A13100CO",
+        "status": "Done",
+        "modified": "2025-04-24T12:55:42Z",
+        "institutional": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.73800470429944,
+          36.01885222901639
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1432873",
+        "address": "905 BRANCASTER LN",
+        "city": "NASHVILLE",
+        "zip": "37211",
+        "owner": "BRUNO, CASSINO",
+        "apn": "172140A12300CO",
+        "status": "Active Abate Violation Case",
+        "modified": "2025-04-25T19:57:40Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.7389028338262,
+          36.01845030787478
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1432878",
+        "address": "1712 HICKORY BARK LN",
+        "city": "NASHVILLE",
+        "zip": "37211",
+        "owner": "HOLMES, DARON & TOMIKA",
+        "apn": "172140A15000CO",
+        "status": "Active Abate Violation Case",
+        "modified": "2025-04-25T20:11:06Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.73810148002907,
+          36.01916893343115
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1432879",
+        "address": "1312 WEXFORD DOWNS LN",
+        "city": "NASHVILLE",
+        "zip": "37211",
+        "owner": "BUI, TUYET HANG THI",
+        "apn": "172140A12000CO",
+        "status": "Active Abate Violation Case",
+        "modified": "2025-04-25T20:19:57Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.73893279470467,
+          36.02034594121257
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1432880",
+        "address": "1613 BRAEBURY CIR",
+        "city": "NASHVILLE",
+        "zip": "37211",
+        "owner": "KUMAR, RAJNEESH",
+        "apn": "172140A08300CO",
+        "status": "Done",
+        "modified": "2025-09-22T16:27:43Z",
+        "institutional": false
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.65655143981213,
+          36.070542096545935
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1449236",
+        "address": "1765 BRIDGECREST DR",
+        "city": "ANTIOCH",
+        "zip": "37013",
+        "owner": "SFVR JV-2 2023-1 BORROWER LLC",
+        "apn": "149150A43400CO",
+        "status": "Done",
+        "modified": "2025-11-13T16:53:20Z",
+        "institutional": true
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [
+          -86.71522697229646,
+          36.10490288018479
+        ]
+      },
+      "properties": {
+        "caseNumber": "25-1447515",
+        "address": "1028 DRUMMOND DR",
+        "city": "NASHVILLE",
+        "zip": "37211",
+        "owner": "MILLER, DETRIA ANN",
+        "apn": "11916006300",
+        "status": "Done",
+        "modified": "2025-11-14T15:12:19Z",
+        "institutional": false
+      }
+    }
+  ]
+}
