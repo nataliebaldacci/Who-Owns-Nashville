@@ -1,0 +1,66 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Watch Nashville Get Built: Build-to-Rent on Historical Aerials</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0;background:#111}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.93);
+    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.3);max-width:92%}
+  #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #jump{position:absolute;top:70px;left:12px;z-index:600;background:rgba(255,255,255,.95);padding:8px 10px;border-radius:6px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+  #jump select{font-family:inherit;font-size:12.5px;padding:3px;max-width:220px}
+  #slider{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.96);
+    padding:10px 20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);text-align:center;width:min(620px,72%)}
+  #slider .yr{font-size:30px;font-weight:bold;color:#1a3a5c;line-height:1}
+  #slider .lab{font-size:11px;color:#666}
+  #slider input{width:100%;margin-top:4px}
+  #play{font-family:inherit;font-size:13px;padding:3px 16px;margin-top:6px;cursor:pointer;border:1px solid #1a3a5c;background:#fff;color:#1a3a5c;border-radius:5px}
+  #legend{position:absolute;bottom:20px;right:12px;z-index:600;background:rgba(255,255,255,.94);padding:8px 12px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
+  #legend i{display:inline-block;width:12px;height:12px;border:2px solid;border-radius:2px;margin-right:5px;vertical-align:middle;background:transparent}
+</style></head><body>
+<div id="title"><h2>Watch Nashville Get Built</h2>
+  <p>Build-to-rent parcels on Metro's historical aerial photography. Slide the year to see the land go from field to subdivision. Jump to a community, then press play.</p></div>
+<div id="jump">Jump to community:<br><select id="c"></select></div>
+<div id="legend"><b>Build-to-rent parcels</b><br><i style="border-color:#00e0ff"></i>Pipeline<br><i style="border-color:#ffd21e"></i>Built</div>
+<div id="slider"><div class="lab">Aerial imagery</div><div class="yr" id="yr">2000</div>
+  <input type="range" id="rng" min="0" max="0" step="1" value="0"/>
+  <div><button id="play">&#9654; Play through the years</button></div></div>
+<div id="map"></div>
+<script>
+const YEARS=[1996, 2000, 2003, 2004, 2005, 2006, 2008, 2009, 2010, 2013, 2014, 2016, 2017, 2018, 2020, 2022, 2023], SVC={"1996": "1996Imagery_WGS84", "2000": "2000Imagery_WGS84", "2003": "2003Imagery_WGS84", "2004": "2004Imagery_WGS84", "2005": "2005Imagery_WGS84", "2006": "2006Imagery_WGS84", "2008": "2008Imagery_WGS84", "2009": "2009Imagery_WGS84", "2010": "2010Imagery_WGS84", "2013": "2013PictometryImagery_WGS84", "2014": "2014Imagery_WGS84", "2016": "2016Imagery_WGS84", "2017": "2017Imagery_WGS84", "2018": "2018Imagery_WGS84", "2020": "2020Imagery_WGS84", "2022": "2022Imagery_WGS84", "2023": "2023Imagery_WGS84"}, COMMS=[{"op": "AMH Development (integrated BTR)", "n": 474, "lat": 36.07859, "lon": -86.61059}, {"op": "Normandy (local BTR)", "n": 348, "lat": 36.07075, "lon": -86.64222}, {"op": "CRP / ECG", "n": 303, "lat": 36.07506, "lon": -86.67536}, {"op": "RSD West Trinity", "n": 264, "lat": 36.18622, "lon": -86.76548}, {"op": "Ava Madison (Tessa Madison)", "n": 200, "lat": 36.31412, "lon": -86.68708}, {"op": "Crescent BTR", "n": 175, "lat": 36.10897, "lon": -86.91962}, {"op": "TPG / Angelo Gordon", "n": 169, "lat": 36.04271, "lon": -86.69978}, {"op": "AHV Communities", "n": 161, "lat": 36.09334, "lon": -87.01994}, {"op": "Kennedy Lewis (KLLB)", "n": 137, "lat": 36.19877, "lon": -86.77452}, {"op": "ACPF Spring Path", "n": 107, "lat": 36.02462, "lon": -86.64318}, {"op": "VineBrook (VB TAH)", "n": 106, "lat": 36.06362, "lon": -86.63211}, {"op": "KSSK", "n": 104, "lat": 36.21763, "lon": -86.76413}, {"op": "Pulte", "n": 99, "lat": 36.19818, "lon": -86.83164}, {"op": "Lennar", "n": 98, "lat": 36.17577, "lon": -86.66779}, {"op": "Starwood", "n": 97, "lat": 36.16081, "lon": -86.85654}, {"op": "Core", "n": 96, "lat": 36.13405, "lon": -86.75638}, {"op": "Madison Nashville Trinity", "n": 81, "lat": 36.20558, "lon": -86.78114}, {"op": "Brookfield (Cane Ridge)", "n": 72, "lat": 36.02552, "lon": -86.68265}, {"op": "Porchlight / Landeavor", "n": 63, "lat": 36.20727, "lon": -86.74295}, {"op": "Century Communities", "n": 62, "lat": 36.19365, "lon": -86.79109}, {"op": "Invitation / ResiBuilt", "n": 59, "lat": 36.26029, "lon": -86.68658}, {"op": "AHV Crestbrook", "n": 56, "lat": 36.28432, "lon": -86.7034}, {"op": "Invitation BTR (Orchards/Larkin/State St)", "n": 52, "lat": 36.26041, "lon": -86.68656}, {"op": "Tricon", "n": 51, "lat": 36.13403, "lon": -86.88342}, {"op": "Domain Timberlake", "n": 30, "lat": 36.28383, "lon": -86.7622}];
+const map=L.map('map',{center:[36.07859,-86.61059],zoom:15,zoomControl:true});
+const AER='https://maps.nashville.gov/arcgis/rest/services/Imagery/';
+let aerial=null;
+function showYear(i){const y=YEARS[i];document.getElementById('yr').textContent=y;document.getElementById('rng').value=i;
+  const url=AER+SVC[y]+'/MapServer/tile/{z}/{y}/{x}';
+  const nl=L.tileLayer(url,{maxZoom:20,maxNativeZoom:19,attribution:'Aerial: Metro Nashville '+y});
+  nl.addTo(map); if(aerial){const old=aerial;setTimeout(()=>map.removeLayer(old),350);} aerial=nl;}
+document.getElementById('rng').max=YEARS.length-1;
+// BTR overlay
+let btr;
+fetch('BTR_Machine.geojson').then(r=>r.json()).then(g=>{
+  const feats=g.features.filter(f=>f.geometry&&String(f.geometry.type).indexOf('Polygon')>=0);
+  btr=L.geoJSON({type:'FeatureCollection',features:feats},{style:f=>{
+    const built=String(f.properties.st||'').indexOf('Current')>=0;
+    return{color:built?'#ffd21e':'#00e0ff',weight:1.5,fillOpacity:0,opacity:0.95};},
+    onEachFeature:(f,l)=>l.bindPopup('<b>'+(f.properties.op||'')+'</b><br>'+(f.properties.st||'')+'<br>'+(f.properties.mo||'')+'<br>'+(f.properties.addr||''))
+  }).addTo(map);
+});
+// jump dropdown
+const sel=document.getElementById('c');
+COMMS.forEach((c,i)=>{const o=document.createElement('option');o.value=i;o.textContent=c.op+' ('+c.n+')';sel.appendChild(o);});
+sel.addEventListener('change',e=>{const c=COMMS[e.target.value];map.setView([c.lat,c.lon],16);});
+// slider + play
+document.getElementById('rng').addEventListener('input',e=>showYear(+e.target.value));
+let playing=null;
+document.getElementById('play').addEventListener('click',function(){
+  if(playing){clearInterval(playing);playing=null;this.innerHTML='&#9654; Play through the years';return;}
+  this.innerHTML='&#10073;&#10073; Pause';let i=+document.getElementById('rng').value;
+  if(i>=YEARS.length-1)i=0;
+  playing=setInterval(()=>{if(i>=YEARS.length-1){clearInterval(playing);playing=null;document.getElementById('play').innerHTML='&#9654; Play through the years';return;}i++;showYear(i);},1400);});
+// start at 2000 (index of 2000)
+showYear(YEARS.indexOf(2000));
+</script></body></html>
