@@ -1,0 +1,42 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Who Bought Nashville's Homes, 2010-2024 - Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1c458c;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--line:#e4e9f0}
+*{box-sizing:border-box}body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 22px 70px}
+a.back{color:var(--navy);text-decoration:none;font-weight:600;font-size:13px}a.back:hover{text-decoration:underline}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:12px 0 3px}
+h1{font-size:25px;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.3px}
+.sub{font-size:14.5px;color:var(--mut);margin:0 0 18px;max-width:780px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px 10px;box-shadow:0 2px 8px rgba(20,50,90,.05)}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 14px}
+.ctrls button{font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;border:1.5px solid var(--navy);background:#fff;color:var(--navy)}
+.ctrls button.on{background:var(--navy);color:#fff}
+.chwrap{position:relative;height:460px}
+.note{font-size:11.5px;color:var(--mut);font-style:italic;margin:16px 0 0;border-top:1px solid var(--line);padding-top:12px}
+</style></head><body><div class="wrap">
+<a class="back" href="index.html">&larr; Who Owns Nashville</a>
+<p class="kick">Who is buying</p><h1>Who bought Nashville's homes, 2010&ndash;2024</h1>
+<p class="sub">Every single-family home sale in Davidson County each year, split by who bought it: an owner-occupant, a small non-owner investor, or a named institutional operator. Toggle counts or share, and click a group to hide it.</p>
+<div class="card"><div class="ctrls"><button id="bC" class="on">Counts</button><button id="bS">Share (%)</button></div><div class="chwrap"><canvas id="ch"></canvas></div></div>
+<p class="note">Notes: Single-family sales classified by purchaser mailing (owner-occupant = owner ZIP equals property ZIP) and the owner-to-operator crosswalk (institutional = named national operator). Davidson County Parcel History and Recent Sales (last accessed May 28, 2026). Institutional here is the narrow, named-operator definition.</p></div>
+<script>
+const D=[{"year": 2010, "oo": 7306, "small": 4718, "inst": 1311}, {"year": 2011, "oo": 6959, "small": 4359, "inst": 1850}, {"year": 2012, "oo": 9113, "small": 4520, "inst": 2017}, {"year": 2013, "oo": 10776, "small": 4130, "inst": 2584}, {"year": 2014, "oo": 12034, "small": 4323, "inst": 3606}, {"year": 2015, "oo": 13715, "small": 5142, "inst": 3720}, {"year": 2016, "oo": 14275, "small": 4074, "inst": 3436}, {"year": 2017, "oo": 14244, "small": 4027, "inst": 3459}, {"year": 2018, "oo": 13418, "small": 3467, "inst": 4195}, {"year": 2019, "oo": 14327, "small": 3013, "inst": 4445}, {"year": 2020, "oo": 15096, "small": 3559, "inst": 3486}, {"year": 2021, "oo": 15762, "small": 3222, "inst": 5737}, {"year": 2022, "oo": 12212, "small": 2575, "inst": 3884}, {"year": 2023, "oo": 9674, "small": 1448, "inst": 2114}, {"year": 2024, "oo": 8246, "small": 1069, "inst": 2191}];let mode='count';
+const T=[['oo','Owner-occupant','#14315f'],['small','Small / other investor','#3f7cc0'],['inst','Institutional operator','#b3282d']];
+let chart;
+function build(){const tot=D.map(r=>r.oo+r.small+r.inst);
+ return{labels:D.map(r=>r.year),datasets:T.map(([k,lab,c])=>({label:lab,backgroundColor:c,
+   data:D.map((r,i)=>mode==='count'?r[k]:100*r[k]/tot[i])}))};}
+function render(){if(chart)chart.destroy();chart=new Chart(document.getElementById('ch'),{type:'bar',data:build(),options:{
+ responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},
+ plugins:{legend:{position:'top',labels:{font:{family:'Montserrat',size:12},boxWidth:14,usePointStyle:true,pointStyle:'rectRounded'}},
+   tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+(mode==='count'?c.parsed.y.toLocaleString():c.parsed.y.toFixed(1)+'%')}}},
+ scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true,max:mode==='share'?100:undefined,
+   title:{display:true,text:mode==='count'?'Home sales':'Share of sales',font:{family:'Montserrat',size:12,weight:'600'}}}}}});}
+bC.onclick=()=>{mode='count';bC.classList.add('on');bS.classList.remove('on');render();};
+bS.onclick=()=>{mode='share';bS.classList.add('on');bC.classList.remove('on');render();};
+render();</script></body></html>
