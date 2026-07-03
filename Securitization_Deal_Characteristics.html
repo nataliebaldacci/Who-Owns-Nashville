@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Securitization Deals — Neighborhood Characteristics</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6 L26 14 L23 14 L23 25 L18 25 L18 18 L14 18 L14 25 L9 25 L9 14 L6 14 Z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa;line-height:1.4}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1120px;margin:0 auto;padding:20px 18px 70px}
+ h1{font-family:'Montserrat',sans-serif;font-size:24px;color:#1c458c;margin:6px 0 2px}
+ .lead{color:#4a5560;font-size:14.5px;margin-bottom:14px}
+ .lead b{color:#1c458c}
+ .tablewrap{overflow-x:auto;border:1px solid #e2e8f1;border-radius:9px}
+ table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;min-width:960px}
+ th,td{padding:7px 9px;border-bottom:1px solid #eef0f3;white-space:nowrap}
+ th{font-family:'Montserrat',sans-serif;font-size:10.5px;text-transform:uppercase;letter-spacing:.3px;color:#1c458c;cursor:pointer;background:#eef4fb;position:sticky;top:56px}
+ td.num,th.num{text-align:right;font-variant-numeric:tabular-nums}
+ td.deal{font-family:'Montserrat',sans-serif;font-weight:700;color:#1c458c;white-space:normal;min-width:150px}
+ td .op{display:block;font-family:'EB Garamond',serif;font-weight:400;font-size:11px;color:#8a94a0}
+ tr:hover td{background:#f7f9fc}
+ .heat{padding:2px 6px;border-radius:4px;font-weight:700;font-family:'Montserrat',sans-serif;font-size:11.5px}
+ .note{font-size:12px;color:#8a94a0;margin-top:14px;line-height:1.5}
+ .note a{color:#1c458c}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">Deal Neighborhood Characteristics</div></div>
+<div class="wrap">
+  <h1>What neighborhoods each securitization bundles</h1>
+  <div class="lead">Every securitized home joined to its census-tract demographics (ACS 2020&ndash;2024), then grouped by deal. Each row is the <b>median neighborhood profile of one deal's collateral</b> &mdash; the kind of place its homes actually sit. Sort any column; darker red = higher share Black residents, poverty, or burdened tracts. Companion to the <a href="Securitization_Deals_Database.html">deals document database</a>.</div>
+  <div class="tablewrap"><table id="tbl"><thead><tr>
+    <th data-k="deal">Deal</th>
+    <th class="num" data-k="n">Homes</th>
+    <th class="num" data-k="inc">Median HH income</th>
+    <th class="num" data-k="val">Median home value</th>
+    <th class="num" data-k="rent">Median rent</th>
+    <th class="num" data-k="pct_black">% Black</th>
+    <th class="num" data-k="pct_white">% White</th>
+    <th class="num" data-k="pct_hisp">% Hispanic</th>
+    <th class="num" data-k="pov">Poverty %</th>
+    <th class="num" data-k="renter">Renter %</th>
+    <th class="num" data-k="burdened_share">Burdened-tract %</th>
+    <th class="num" data-k="yrbuilt">Median yr built</th>
+  </tr></thead><tbody id="tb"></tbody></table></div>
+  <div class="note">Source: securitized parcels (from the quitclaim bundles) joined by parcel to tract-level ACS 5-year 2020&ndash;2024 (Census Bureau), then aggregated to the deal as the median across the deal's homes. Burdened-tract share = the percent of a deal's homes sitting in a tract flagged burdened (3+ of: poverty &gt;8.6%, cost burden &gt;45.7%, renter &gt;40.4%, income &lt;$77,569). 1,726 of 1,837 bundle parcels carried ACS.</div>
+</div>
+<script>
+function esc(s){return String(s==null?'':s);}
+function n0(v){return v==null?'—':Number(v).toLocaleString();}
+function usd(v){return v==null?'—':'$'+Number(v).toLocaleString();}
+function pc(v){return v==null?'—':v+'%';}
+function heat(v,lo,hi){if(v==null)return '';var t=Math.max(0,Math.min(1,(v-lo)/(hi-lo)));var a=(0.12+t*0.55).toFixed(2);return 'background:rgba(215,38,61,'+a+')';}
+var D=[],sortK='n',dir=-1;
+fetch('deal_characteristics.json').then(r=>r.json()).then(function(j){D=j.deals;render();});
+function render(){
+  D.sort(function(a,b){var x=a[sortK],y=b[sortK];if(sortK==='deal'){x=(''+x).toLowerCase();y=(''+y).toLowerCase();}else{x=x==null?-1:+x;y=y==null?-1:+y;}return x<y?-dir:x>y?dir:0;});
+  document.getElementById('tb').innerHTML=D.map(function(d){return '<tr>'+
+    '<td class="deal">'+esc(d.deal)+(d.op?'<span class="op">'+esc(d.op)+'</span>':'')+'</td>'+
+    '<td class="num">'+n0(d.n)+'</td>'+
+    '<td class="num">'+usd(d.inc)+'</td>'+
+    '<td class="num">'+usd(d.val)+'</td>'+
+    '<td class="num">'+usd(d.rent)+'</td>'+
+    '<td class="num"><span class="heat" style="'+heat(d.pct_black,5,55)+'">'+pc(d.pct_black)+'</span></td>'+
+    '<td class="num">'+pc(d.pct_white)+'</td>'+
+    '<td class="num">'+pc(d.pct_hisp)+'</td>'+
+    '<td class="num"><span class="heat" style="'+heat(d.pov,3,18)+'">'+pc(d.pov)+'</span></td>'+
+    '<td class="num">'+pc(d.renter)+'</td>'+
+    '<td class="num"><span class="heat" style="'+heat(d.burdened_share,0,60)+'">'+(d.burdened_share==null?'—':d.burdened_share+'%')+'</span></td>'+
+    '<td class="num">'+(d.yrbuilt||'—')+'</td>'+
+    '</tr>';}).join('');
+}
+document.querySelectorAll('#tbl th').forEach(function(th){th.onclick=function(){var k=th.getAttribute('data-k');if(sortK===k)dir=-dir;else{sortK=k;dir=k==='deal'?1:-1;}render();};});
+</script></body></html>
