@@ -1,0 +1,113 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Build-to-Rent Operators — Parcel Map — Who Owns Nashville</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6l10 8h-3v12h-14V14H6z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:'EB Garamond','Garamond',serif}
+  #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;font-family:'Montserrat',sans-serif;position:relative;z-index:1200}
+  #won-header .brand{font-size:18px;font-weight:800;color:#fff;text-decoration:none;line-height:1}
+  #won-header .brand small{display:block;font-size:9px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+  #won-header .htitle{font-size:12.5px;font-weight:600;color:#dbe6f5;margin-left:auto}
+  #map{width:100%;height:calc(100vh - 56px)}
+  .title-card{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:9px 18px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;text-align:center;max-width:92%}
+  .title-card h1{margin:0;font-size:16px;font-weight:bold;color:#1a3a5c}
+  .title-card p{margin:4px 0 0;font-size:12px;color:#555;font-style:italic}
+  #search{position:absolute;top:70px;left:12px;z-index:1000}
+  #search input{width:210px;padding:8px 11px;border:1px solid #c9d3e2;border-radius:6px;font-family:'EB Garamond',serif;font-size:13px;box-shadow:0 1px 3px rgba(0,0,0,0.15)}
+  .legend{position:absolute;bottom:26px;left:14px;background:rgba(255,255,255,0.96);padding:10px 13px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12.5px;max-width:250px;max-height:52vh;overflow:auto}
+  .legend h3{margin:0 0 4px;font-size:13px;font-weight:bold;color:#1a3a5c}
+  .legend .hint{font-size:10.5px;color:#888;font-style:italic;margin-bottom:6px}
+  .legend-item{display:flex;align-items:center;margin:2px 0;cursor:pointer;padding:1px 3px;border-radius:4px}
+  .legend-item:hover{background:#eef2f8}
+  .legend-item.off{opacity:0.35}
+  .legend-swatch{width:14px;height:12px;border-radius:2px;margin-right:8px;border:1px solid #666;flex:none}
+  .legend-item .n{margin-left:auto;color:#8a94a0;font-size:11px;padding-left:8px}
+  .legend .all{font-size:11px;color:#1c458c;cursor:pointer;margin-top:5px;font-family:'Montserrat',sans-serif;font-weight:700}
+  .leaflet-popup-content{font-family:'EB Garamond','Garamond',serif;font-size:12.5px;max-width:320px}
+  .leaflet-popup-content .hd{color:#1a3a5c;font-weight:bold;font-size:13.5px}
+  .leaflet-popup-content table{margin:4px 0}
+  .leaflet-popup-content td{padding:1px 6px;vertical-align:top}
+  .leaflet-popup-content td:first-child{color:#666;font-style:italic;white-space:nowrap}
+  .tk{margin-top:6px;font-size:11px;line-height:1.7}
+  .tk a{color:#1c458c;text-decoration:none;font-weight:600;margin-right:7px}.tk a:hover{text-decoration:underline}
+  #status{position:absolute;bottom:26px;right:14px;background:rgba(255,255,255,0.95);padding:6px 12px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12px;color:#555}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO BUILDS</small></a><div class="htitle">Build-to-Rent Operators · Parcels</div></div>
+<div id="map"></div>
+<div class="title-card">
+  <h1>Build-to-rent operators, by parcel</h1>
+  <p>Every parcel held by a build-to-rent operator in Davidson County, drawn as its real lot shape and colored by operator.</p>
+</div>
+<div id="search"><input id="q" placeholder="Search operator, address, owner, APN…" autocomplete="off"/></div>
+<div id="legend" class="legend"></div>
+<div id="status">Loading…</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+const positron=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO',maxZoom:19}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":positron,"OpenStreetMap":osm,"Aerial (Esri)":aerial},null,{position:'topright',collapsed:true}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{var fs=(g.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);L.geoJSON(fs.length?{type:'FeatureCollection',features:fs}:g,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);}).catch(()=>{});
+
+const COLORS={'VB TAH (NexPoint)':'#1f77b4','Resibuilt (Invitation)':'#ff7f0e','Pulte Homes':'#2ca02c','KLLB (Kennedy Lewis)':'#d62728','Lennar Homes':'#9467bd','TPG AG EHC':'#8c564b','ava madison':'#e377c2','Madison Nashville Trinity':'#7f7f7f','RSD':'#bcbd22','AHV':'#17becf','KSSK':'#3182bd','ACPF':'#ff9896','Brookfield':'#98df8a','Crescent':'#c49c94','CrescentBTR':'#c5b0d5'};
+function col(o){return COLORS[o]||'#888';}
+function esc(s){return String(s==null?'':s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+const off={};   // operator -> hidden
+let allData=null,layer=null,q='';
+function apnClean(a){return String(a||'').replace(/[^0-9A-Za-z]/g,'');}
+function toolkit(p){
+  const apn=apnClean(p.APN||p.ParID), addr=encodeURIComponent((p.PropAddr||'')+' Nashville TN');
+  return '<div class="tk">'+
+    '<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcel='+esc(apn)+'">Parcel Viewer</a>'+
+    '<a target="_blank" href="https://www.padctn.org/prc/property/'+esc(apn)+'">Property Card</a>'+
+    '<a target="_blank" href="https://www.google.com/maps/search/?api=1&query='+addr+'">Aerial</a>'+
+    '<a target="_blank" href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint='+addr+'">Street View</a>'+
+    '</div>';
+}
+function popup(p){
+  let r='';
+  const add=(k,v)=>{if(v!=null&&v!=='')r+='<tr><td>'+k+'</td><td>'+esc(v)+'</td></tr>';};
+  add('Operator','<b style="color:'+col(p.operator)+'">'+esc(p.operator)+'</b>');
+  add('Owner',p.Owner); add('Address',p.PropAddr?(p.PropAddr+', '+(p.PropCity||'')+' '+(p.PropZip||'')):'');
+  add('APN',p.APN||p.ParID); add('Land use',p.LUDesc); add('Type',p.FeatureType);
+  add('Dwelling units',p.DUCount); add('Finished area',p.FinishArea?Number(p.FinishArea).toLocaleString()+' sf':''); add('Acreage',p.DeededAcreage);
+  add('Year built',p.YearBuilt||p.YrBlt);
+  return '<span class="hd">'+esc(p.PropAddr||p.operator)+'</span><table>'+r+'</table>'+toolkit(p);
+}
+function style(f){return {fillColor:col(f.properties.operator),weight:0.7,color:'#fff',fillOpacity:0.72,opacity:1};}
+function visible(f){
+  const p=f.properties;
+  if(off[p.operator])return false;
+  if(q){const hay=(p.operator+' '+(p.PropAddr||'')+' '+(p.Owner||'')+' '+(p.APN||'')+' '+(p.ParID||'')).toLowerCase();if(hay.indexOf(q)<0)return false;}
+  return true;
+}
+function draw(){
+  if(layer)map.removeLayer(layer);
+  layer=L.geoJSON(allData,{filter:visible,style,onEachFeature:(f,l)=>{l.bindPopup(popup(f.properties),{maxWidth:340});l.on('mouseover',()=>l.setStyle({weight:2,color:'#222'}));l.on('mouseout',()=>l.setStyle({weight:0.7,color:'#fff'}));}}).addTo(map);
+  let shown=0;allData.features.forEach(f=>{if(visible(f))shown++;});
+  document.getElementById('status').textContent=shown.toLocaleString()+' of '+allData.features.length.toLocaleString()+' parcels';
+}
+function legend(){
+  const cnt={};allData.features.forEach(f=>{const o=f.properties.operator;cnt[o]=(cnt[o]||0)+1;});
+  const ops=Object.keys(cnt).sort((a,b)=>cnt[b]-cnt[a]);
+  const el=document.getElementById('legend');
+  el.innerHTML='<h3>Operator</h3><div class="hint">Click to isolate; click again to restore.</div>'+
+    ops.map(o=>`<div class="legend-item" data-op="${esc(o)}"><span class="legend-swatch" style="background:${col(o)}"></span>${esc(o)}<span class="n">${cnt[o]}</span></div>`).join('')+
+    '<div class="all" id="showall">Show all</div>';
+  el.querySelectorAll('.legend-item').forEach(it=>it.onclick=()=>{
+    const o=it.getAttribute('data-op');
+    const others=ops.filter(x=>x!==o);
+    const isolated=others.every(x=>off[x])&&!off[o];
+    ops.forEach(x=>off[x]=isolated?false:(x!==o));
+    syncLegend();draw();
+  });
+  document.getElementById('showall').onclick=()=>{ops.forEach(x=>off[x]=false);syncLegend();draw();};
+}
+function syncLegend(){document.querySelectorAll('.legend-item').forEach(it=>it.classList.toggle('off',!!off[it.getAttribute('data-op')]));}
+document.getElementById('q').addEventListener('input',e=>{q=e.target.value.toLowerCase().trim();draw();});
+fetch('btr_operator_parcels.geojson').then(r=>r.json()).then(d=>{allData=d;legend();draw();try{map.fitBounds(layer.getBounds(),{padding:[30,30]});}catch(e){}}).catch(()=>{document.getElementById('status').textContent='Error loading data';});
+</script>
+</body></html>
