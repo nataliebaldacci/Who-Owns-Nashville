@@ -1,0 +1,100 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Detached-Rental Conversion — Who Owns Nashville</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6l10 8h-3v12h-14V14H6z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:'EB Garamond','Garamond',serif}
+  #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;font-family:'Montserrat',sans-serif;position:relative;z-index:1200}
+  #won-header .brand{font-size:18px;font-weight:800;color:#fff;text-decoration:none;line-height:1}
+  #won-header .brand small{display:block;font-size:9px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+  #won-header .htitle{font-size:12.5px;font-weight:600;color:#dbe6f5;margin-left:auto}
+  #map{width:100%;height:calc(100vh - 56px)}
+  .title-card{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:9px 18px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;text-align:center;max-width:92%}
+  .title-card h1{margin:0;font-size:16px;font-weight:bold;color:#1a3a5c}
+  .title-card p{margin:4px 0 0;font-size:12px;color:#555;font-style:italic}
+  .panel{position:absolute;top:70px;right:12px;background:rgba(255,255,255,0.96);padding:11px 13px;border-radius:5px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:13px;max-width:230px}
+  .panel .lbl{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin:2px 0 4px}
+  .panel button{display:block;width:100%;text-align:left;font-family:'EB Garamond',serif;font-size:13px;padding:5px 9px;margin:2px 0;border:1px solid #d0d8e4;background:#fff;border-radius:5px;cursor:pointer}
+  .panel button.on{background:#1c458c;color:#fff;border-color:#1c458c;font-weight:600}
+  .legend{position:absolute;bottom:28px;left:14px;background:rgba(255,255,255,0.95);padding:11px 15px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12.5px;max-width:260px}
+  .legend h3{margin:0 0 7px;font-size:13px;font-weight:bold;color:#1a3a5c}
+  .legend-item{display:flex;align-items:center;margin:3px 0}
+  .legend-swatch{width:16px;height:14px;margin-right:9px;border:1px solid #999;flex:none}
+  .legend .sub{font-size:11px;color:#777;font-style:italic;margin-top:6px}
+  .leaflet-popup-content{font-family:'EB Garamond','Garamond',serif;font-size:12.5px;max-width:300px}
+  .leaflet-popup-content table td{padding:1px 6px;vertical-align:top}
+  .leaflet-popup-content table td:first-child{color:#666;font-style:italic;white-space:nowrap}
+  .leaflet-popup-content b.hd{color:#1a3a5c;font-size:13px}
+  #status{position:absolute;bottom:28px;right:14px;background:rgba(255,255,255,0.95);padding:6px 12px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12px;color:#555}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO RENTS</small></a><div class="htitle">Detached-Rental Conversion</div></div>
+<div id="map"></div>
+<div class="title-card">
+  <h1>The conversion of single-family homes to rentals</h1>
+  <p>Change in the share of detached houses that are renter-occupied. Red = rising rental share; blue = falling.</p>
+</div>
+<div class="panel">
+  <div class="lbl">Geography</div>
+  <button id="g-tract" class="on" onclick="setGeo('tract')">Census tract · 2010→2024</button>
+  <button id="g-bg" onclick="setGeo('bg')">Block group · 2013→2024</button>
+  <div class="lbl" style="margin-top:9px">Color by</div>
+  <button id="m-chg" class="on" onclick="setMetric('chg')">Change in rented-detached share</button>
+  <button id="m-lvl" onclick="setMetric('lvl')">Rented-detached share, 2024</button>
+</div>
+<div id="legend" class="legend"></div>
+<div id="status">Loading…</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+const positron=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO',maxZoom:19}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":positron,"OpenStreetMap":osm,"Aerial (Esri)":aerial},null,{position:'topright',collapsed:true}).addTo(map);
+// Davidson boundary
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{var fs=(g.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);L.geoJSON(fs.length?{type:'FeatureCollection',features:fs}:g,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);}).catch(()=>{});
+
+// diverging (change) + sequential (level) scales
+const DIV=[{t:-15,c:'#2166ac',l:'Fell &gt; 15 pts'},{t:-5,c:'#92c5de',l:'Fell 5–15'},{t:5,c:'#f7f7f7',l:'±5 (little change)'},{t:15,c:'#f4a582',l:'Rose 5–15'},{t:1e9,c:'#b2182b',l:'Rose &gt; 15 pts'}];
+const SEQ=[{t:5,c:'#eff3ff',l:'0–5%'},{t:15,c:'#bdd7e7',l:'5–15%'},{t:30,c:'#6baed6',l:'15–30%'},{t:50,c:'#3182bd',l:'30–50%'},{t:1e9,c:'#08519c',l:'50%+'}];
+function pick(scale,v){for(const s of scale){if(v<=s.t)return s.c;}return scale[scale.length-1].c;}
+function colorOf(p){
+  if(metric==='chg'){const v=p.detached_chg_pp;return (v==null||isNaN(v))?'#e6e6e6':pick(DIV,v);}
+  const v=p.pct_rented_detached_2024;return (v==null||isNaN(v))?'#e6e6e6':pick(SEQ,v);
+}
+function fnum(v,d){return (v==null||isNaN(v))?'—':(d?(+v).toFixed(1):(+v).toLocaleString());}
+const store={},files={tract:'Davidson_Rented_Detached_Change_2010_2024.geojson',bg:'Davidson_Rented_Detached_BlockGroup_2013_2024.geojson'};
+let geo='tract',metric='chg',layer=null;
+function style(f){return {fillColor:colorOf(f.properties),weight:0.6,color:'#fff',fillOpacity:0.78,opacity:1};}
+function popup(p){
+  const isBg=geo==='bg';const id=isBg?('Block group '+p.GEOCODE):('Tract '+(p.TRACTCE||p.GEOCODE));
+  const y0=isBg?'2013':'2010';
+  let rows=`<tr><td>Rented-detached ${y0}</td><td>${fnum(isBg?p.pct_rented_detached_2013:p.pct_rented_detached_2010,1)}%</td></tr>`+
+    `<tr><td>Rented-detached 2024</td><td><b>${fnum(p.pct_rented_detached_2024,1)}%</b></td></tr>`+
+    `<tr><td>Change</td><td><b>${p.detached_chg_pp>0?'+':''}${fnum(p.detached_chg_pp,1)} pts</b></td></tr>`;
+  if(isBg) rows+=`<tr><td>Detached homes 2024</td><td>${fnum(p.detached_total_2024)}</td></tr>`+
+    `<tr><td>Renter-detached change</td><td>${p.renter_detached_n_chg>0?'+':''}${fnum(p.renter_detached_n_chg)} homes</td></tr>`;
+  return `<b class="hd">${id}</b><table>${rows}</table>`;
+}
+function draw(){
+  if(layer) map.removeLayer(layer);
+  const gj=store[geo];
+  layer=L.geoJSON(gj,{style,onEachFeature:(f,l)=>{l.bindPopup(popup(f.properties));l.on('mouseover',()=>l.setStyle({weight:2,color:'#333'}));l.on('mouseout',()=>l.setStyle({weight:0.6,color:'#fff'}));}}).addTo(map);
+  drawLegend();
+  document.getElementById('status').textContent=gj.features.length+(geo==='bg'?' block groups':' tracts');
+}
+function drawLegend(){
+  const scale=metric==='chg'?DIV:SEQ;
+  const title=metric==='chg'?'Change in rented-detached share':'Rented-detached share, 2024';
+  document.getElementById('legend').innerHTML='<h3>'+title+'</h3>'+
+    scale.map(s=>`<div class="legend-item"><span class="legend-swatch" style="background:${s.c}"></span>${s.l}</div>`).join('')+
+    '<div class="legend-item"><span class="legend-swatch" style="background:#e6e6e6"></span>No data</div>'+
+    '<div class="sub">'+(metric==='chg'?'Percentage-point change in the share of detached (single-family) houses that are renter-occupied.':'Share of detached houses that are renter-occupied in 2024.')+'</div>';
+}
+function ensure(g,cb){if(store[g])return cb();document.getElementById('status').textContent='Loading…';fetch(files[g]).then(r=>r.json()).then(d=>{store[g]=d;cb();});}
+function setGeo(g){geo=g;document.getElementById('g-tract').classList.toggle('on',g==='tract');document.getElementById('g-bg').classList.toggle('on',g==='bg');ensure(g,draw);}
+function setMetric(m){metric=m;document.getElementById('m-chg').classList.toggle('on',m==='chg');document.getElementById('m-lvl').classList.toggle('on',m==='lvl');draw();}
+ensure('tract',draw);
+</script>
+</body></html>
