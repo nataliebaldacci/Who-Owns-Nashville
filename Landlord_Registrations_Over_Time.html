@@ -1,0 +1,108 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Landlord Registrations Over Time, by Property Type — Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.93);
+    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.22);max-width:92%}
+  #title h2{margin:0;font-size:16.5px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;top:74px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  #legend b{display:block;margin-bottom:5px}
+  #legend .r{cursor:pointer;padding:2px 0;user-select:none;opacity:1}
+  #legend .r.off{opacity:.32}
+  #legend i{display:inline-block;width:13px;height:13px;border-radius:50%;margin-right:6px;vertical-align:middle}
+  #legend .c{color:#666;font-size:11px;margin-left:8px}
+  #chartbox{position:absolute;top:12px;right:12px;z-index:600;background:rgba(255,255,255,.96);padding:8px 10px 4px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.2);width:330px}
+  #chartbox .h{font-size:11.5px;color:#444;margin:0 0 3px;font-weight:bold;text-align:center}
+  #slider{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.96);
+    padding:10px 18px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25);text-align:center;width:min(560px,60%)}
+  #slider .yr{font-size:26px;font-weight:bold;color:#26456b;line-height:1}
+  #slider .lab{font-size:11px;color:#666;margin-bottom:6px}
+  #slider input{width:100%}
+  #play{font-family:inherit;font-size:13px;padding:3px 14px;margin-top:6px;cursor:pointer;border:1px solid #26456b;background:#fff;color:#26456b;border-radius:5px}
+  #play:hover{background:#26456b;color:#fff}
+  #count{position:absolute;bottom:16px;right:12px;z-index:600;background:rgba(255,255,255,.94);padding:6px 12px;border-radius:5px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+</style></head><body>
+<div id="title"><h2>Landlord Registrations Over Time, by Property Type</h2>
+  <p>Every landlord-registered single-family home, condo, and duplex in Davidson County, placed in the year it was first registered. Drag the slider or press play.</p></div>
+<div id="legend"></div>
+<div id="chartbox"><div class="h">New registrations per year</div><canvas id="chart" height="150"></canvas></div>
+<div id="slider"><div class="lab">Registered by</div><div class="yr" id="yr">2026</div>
+  <input type="range" id="rng" min="2008" max="2026" step="1" value="2026"/>
+  <div><button id="play">&#9654; Play</button></div></div>
+<div id="count">loading&hellip;</div>
+<div id="map"></div>
+<script>
+const TYPES=[['Single Family','#26456b'],['Residential Condo','#b3282d'],['Duplex','#e0952a']];
+const CMAP={'Single Family':'#26456b','Residential Condo':'#b3282d','Duplex':'#e0952a'};
+const TL=[[2008, 1077, 358, 259], [2009, 3700, 1355, 1139], [2010, 1193, 541, 212], [2011, 1135, 428, 273], [2012, 1543, 574, 260], [2013, 1193, 490, 255], [2014, 1014, 500, 164], [2015, 823, 381, 148], [2016, 630, 253, 107], [2017, 1171, 839, 174], [2018, 640, 410, 84], [2019, 472, 295, 61], [2020, 376, 266, 46], [2021, 788, 490, 197], [2022, 1686, 832, 463], [2023, 1363, 985, 255], [2024, 2412, 1125, 262], [2025, 3000, 1147, 242], [2026, 679, 385, 82]];                      // [[year,SF,Condo,Duplex],...]
+const off={};
+let year=2026, feats=[], layer, playing=null;
+const map=L.map('map',{preferCanvas:true,center:[36.166,-86.784],zoom:10});
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:20}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'&copy; Esri',maxZoom:20});
+L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{position:'bottomright',collapsed:true}).addTo(map);
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{
+  L.geoJSON({type:'FeatureCollection',features:g.features.filter(f=>f.properties.OBJECTID===4)},
+    {style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);
+});
+const canvasR=L.canvas({padding:0.5});
+function visible(f){const p=f.properties;return p.y<=year && !off[p.t];}
+function draw(){
+  if(layer)layer.remove();
+  const sub=feats.filter(visible);
+  layer=L.geoJSON({type:'FeatureCollection',features:sub},{renderer:canvasR,
+    pointToLayer:(f,ll)=>L.circleMarker(ll,{radius:2.7,fillColor:CMAP[f.properties.t],color:'#fff',weight:0.25,fillOpacity:.8}),
+    onEachFeature:(f,l)=>l.bindPopup(`<b>${f.properties.o||''}</b><br>${f.properties.t}<br>APN ${f.properties.a}<br>first registered ${f.properties.y}`)
+  }).addTo(map);
+  document.getElementById('count').innerHTML='<b>'+sub.length.toLocaleString()+'</b> registered by '+year;
+}
+// chart
+let chart;
+function buildChart(){
+  const labels=TL.map(r=>r[0]);
+  const ds=[{label:'Single Family',data:TL.map(r=>r[1]),backgroundColor:'#26456b'},
+            {label:'Residential Condo',data:TL.map(r=>r[2]),backgroundColor:'#b3282d'},
+            {label:'Duplex',data:TL.map(r=>r[3]),backgroundColor:'#e0952a'}];
+  chart=new Chart(document.getElementById('chart'),{type:'bar',data:{labels,datasets:ds},
+    options:{animation:false,plugins:{legend:{display:false},tooltip:{mode:'index'}},
+      scales:{x:{stacked:true,ticks:{font:{size:8},maxRotation:90,minRotation:90,autoSkip:false}},
+              y:{stacked:true,ticks:{font:{size:8}}}},
+      onClick:(e,els)=>{if(els.length){setYear(labels[els[0].index]);}}}});
+}
+function highlightChart(){
+  const idx=TL.findIndex(r=>r[0]===year);
+  chart.data.datasets.forEach((d,di)=>{
+    const base=['#26456b','#b3282d','#e0952a'][di];
+    d.backgroundColor=TL.map((r,i)=>i<=idx?base:base+'33');
+  });
+  chart.update();
+}
+function legend(){
+  const cnt={};TYPES.forEach(([t])=>cnt[t]=feats.filter(f=>f.properties.t===t && f.properties.y<=year).length);
+  document.getElementById('legend').innerHTML='<b>Property type</b>'+
+    TYPES.map(([t,c])=>`<div class="r ${off[t]?'off':''}" data-t="${t}"><i style="background:${c}"></i>${t}<span class="c">${cnt[t].toLocaleString()}</span></div>`).join('')+
+    '<div style="font-size:10.5px;color:#888;margin-top:4px">click to toggle</div>';
+  document.querySelectorAll('#legend .r').forEach(r=>r.onclick=()=>{off[r.dataset.t]=!off[r.dataset.t];draw();legend();});
+}
+function setYear(y){year=+y;document.getElementById('yr').textContent=y;document.getElementById('rng').value=y;draw();legend();highlightChart();}
+document.getElementById('rng').addEventListener('input',e=>setYear(e.target.value));
+document.getElementById('play').addEventListener('click',function(){
+  if(playing){clearInterval(playing);playing=null;this.innerHTML='&#9654; Play';return;}
+  this.innerHTML='&#10073;&#10073; Pause';
+  if(year>=2026)setYear(2008);
+  playing=setInterval(()=>{if(year>=2026){clearInterval(playing);playing=null;document.getElementById('play').innerHTML='&#9654; Play';return;}setYear(year+1);},700);
+});
+document.getElementById('count').textContent='loading 33,000 registrations…';
+buildChart();
+fetch('Landlord_Registered_Points.geojson').then(r=>r.json()).then(g=>{
+  feats=g.features; setYear(2026);
+  try{map.fitBounds(layer.getBounds(),{padding:[20,20]});}catch(e){}
+});
+</script></body></html>
