@@ -1,0 +1,98 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Who Owns the Vacant Land in Nashville?</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.96);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+ #legend{bottom:16px;left:12px;padding:11px 13px;font-size:13px;max-width:260px}
+ #legend .row{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;line-height:1.8}
+ #legend .row.off{opacity:.35}
+ #legend .sw{width:15px;height:12px;border-radius:2px;flex:0 0 auto;border:1px solid rgba(0,0,0,.3)}
+ #legend b{font-family:'Montserrat',sans-serif;font-size:12.5px}
+ #legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto;font-size:12px}
+ #legend .hint{font-size:11px;color:#777;font-style:italic;margin-top:6px}
+ #owners{top:70px;right:10px;width:250px;max-height:calc(100% - 120px);overflow:auto;padding:10px 12px}
+ #owners h3{font-family:'Montserrat',sans-serif;font-size:12.5px;color:#1c458c;margin:0 0 3px}
+ #owners .sub{font-size:11px;color:#8a94a0;margin-bottom:7px}
+ #owners .o{display:flex;gap:7px;font-size:12px;padding:3px 0;border-bottom:1px solid #eef0f3;cursor:pointer}
+ #owners .o:hover{background:#f2f6fc}
+ #owners .o .rk{color:#b9c2cf;font-family:'Montserrat',sans-serif;font-weight:700;width:16px}
+ #owners .o .nm{flex:1;line-height:1.15}
+ #owners .o .ct{font-family:'Montserrat',sans-serif;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums}
+ #owners .o .dot{width:8px;height:8px;border-radius:2px;flex:0 0 auto;margin-top:4px}
+ .titlecard{top:66px;left:50%;transform:translateX(-50%);padding:7px 16px;text-align:center;max-width:80%}
+ .titlecard b{font-family:'Montserrat',sans-serif;font-size:14px;color:#1a3a5c}
+ .titlecard span{font-size:12px;color:#555}
+ #status{bottom:16px;right:12px;padding:5px 11px;font-size:12px;color:#333}
+ .lp{font-family:'EB Garamond',serif;font-size:13px;max-width:280px}
+ .lp b{font-family:'Montserrat',sans-serif;color:#1c458c;font-size:13px}
+ .lp .g{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:5px 0;font-size:12px}
+ .lp .g span:nth-child(odd){color:#8a94a0}
+ .lp a{color:#1c458c}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO OWNS THE LAND</small></a><div class="htitle">Vacant Land · Davidson County</div></div>
+<div id="map"></div>
+<div class="panel titlecard"><b>Who Owns the Vacant Land in Nashville?</b><br><span id="tc">15,358 genuinely vacant parcels · 76,036 acres</span></div>
+<div class="panel" id="legend">
+  <div class="row" data-k="gov"><span class="sw" style="background:#7a8794"></span><b>Government / public</b><span class="n" id="ngov">—</span></div>
+  <div class="row" data-k="corp"><span class="sw" style="background:#d7263d"></span><b>Corporate / entity</b><span class="n" id="ncorp">—</span></div>
+  <div class="row" data-k="indiv"><span class="sw" style="background:#4fa0bd"></span><b>Individual</b><span class="n" id="nindiv">—</span></div>
+  <div class="hint">Actual parcel shapes. No structure value, no dwelling unit, common-area parcels excluded. Click a shape for details.</div>
+</div>
+<div class="panel" id="owners"><h3>Top vacant-land owners</h3><div class="sub">by parcel count</div><div id="olist"></div></div>
+<div class="panel" id="status">loading…</div>
+<script>
+var CAT={gov:{c:'#7a8794',l:'Government / public'},corp:{c:'#d7263d',l:'Corporate / entity'},indiv:{c:'#4fa0bd',l:'Individual'}};
+var vis={gov:true,corp:true,indiv:true};
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":carto,"Aerial":aerial},{},{position:'topright'}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
+  var f=(b.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);
+  L.geoJSON(f.length?{type:'FeatureCollection',features:f}:b,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+}).catch(function(){});
+function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+function popup(p){
+  var h='<div class="lp"><b>'+esc(p.own)+'</b>'+(p.op?'<br><span style="color:#d7263d;font-weight:600">'+esc(p.op)+'</span>':'');
+  h+='<div class="g"><span>Land use</span><span>'+esc(p.lu||'—')+'</span><span>Acres</span><span>'+(p.ac||0).toLocaleString()+'</span><span>Assess. class</span><span>'+esc(p.cls||'—')+'</span><span>Owner</span><span>'+({gov:'Government / public',corp:'Corporate / entity',indiv:'Individual'}[p.cat])+(p.oos?' · out-of-state':'')+'</span></div>';
+  h+='<div style="font-size:11.5px"><a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+esc(p.pid)+'">Owner history</a> · <a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+esc(p.pid)+'">Property history</a></div>';
+  return h+'</div>';
+}
+var layer=L.geoJSON(null,{
+  renderer:L.canvas(),
+  style:function(f){var c=CAT[f.properties.cat]||{c:'#999'};return {color:c.c,weight:.4,fillColor:c.c,fillOpacity:.5};},
+  filter:function(f){return vis[f.properties.cat];},
+  onEachFeature:function(f,l){l.on('click',function(){l.bindPopup(popup(f.properties),{maxWidth:300}).openPopup();});}
+});
+var DATA=null;
+fetch('vacant_land.geojson').then(r=>r.json()).then(function(gj){
+  DATA=gj; layer.addData(gj).addTo(map);
+  var cc={gov:0,corp:0,indiv:0};
+  gj.features.forEach(f=>cc[f.properties.cat]++);
+  document.getElementById('ngov').textContent=cc.gov.toLocaleString();
+  document.getElementById('ncorp').textContent=cc.corp.toLocaleString();
+  document.getElementById('nindiv').textContent=cc.indiv.toLocaleString();
+  document.getElementById('status').textContent=gj.features.length.toLocaleString()+' vacant parcels';
+}).catch(function(e){document.getElementById('status').textContent='load error: '+e;});
+fetch('vacant_owners.json').then(r=>r.json()).then(function(d){
+  document.getElementById('olist').innerHTML=d.owners.slice(0,25).map(function(o,i){
+    var c=(CAT[o.cat]||{}).c||'#999';
+    return '<div class="o" title="'+esc(o.nm)+'"><span class="rk">'+(i+1)+'</span><span class="dot" style="background:'+c+'"></span><span class="nm">'+esc(o.op||o.nm)+'<br><span style="color:#9aa4b0;font-size:10.5px">'+Math.round(o.ac).toLocaleString()+' ac'+(o.oos>o.n/2?' · OOS':'')+'</span></span><span class="ct">'+o.n+'</span></div>';
+  }).join('');
+});
+document.querySelectorAll('#legend .row').forEach(function(row){
+  row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];row.classList.toggle('off',!vis[k]);
+    layer.clearLayers();layer.addData(DATA);};
+});
+</script></body></html>
