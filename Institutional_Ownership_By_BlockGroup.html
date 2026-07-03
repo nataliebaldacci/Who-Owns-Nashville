@@ -1,0 +1,67 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Institutional Ownership by Block Group — Davidson County</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.96);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+ .titlecard{top:66px;left:50%;transform:translateX(-50%);padding:7px 16px;text-align:center;max-width:82%}
+ .titlecard b{font-family:'Montserrat',sans-serif;font-size:14px;color:#1a3a5c}
+ .titlecard span{font-size:12px;color:#555}
+ #legend{bottom:16px;left:12px;padding:11px 13px;font-size:12.5px}
+ #legend h4{font-family:'Montserrat',sans-serif;font-size:11px;margin:0 0 6px;color:#1c458c;text-transform:uppercase;letter-spacing:.4px}
+ #legend .row{display:flex;align-items:center;gap:7px;line-height:1.7}
+ #legend i{width:16px;height:12px;border-radius:2px;flex:0 0 auto;border:1px solid rgba(0,0,0,.2)}
+ .lp{font-family:'EB Garamond',serif;font-size:13px;max-width:250px}
+ .lp b{font-family:'Montserrat',sans-serif;color:#1c458c;font-size:14px}
+ .lp .rate{font-family:'Montserrat',sans-serif;font-weight:800;font-size:20px;color:#bd0026}
+ .lp .g{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:5px 0;font-size:12px}
+ .lp .g span:nth-child(odd){color:#8a94a0}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO OWNS</small></a><div class="htitle">Institutional Ownership by Block Group</div></div>
+<div id="map"></div>
+<div class="panel titlecard"><b>Institutional Ownership by Census Block Group</b><br><span>Share of each block group's homes held by a named institutional operator</span></div>
+<div class="panel" id="legend"><h4>Institutional share</h4><div id="legrows"></div></div>
+<script>
+var BR=[1,3,6,12,20],COL=['#ffffcc','#fed976','#feb24c','#fd8d3c','#f03b20','#bd0026'],LAB=['<1%','1–3%','3–6%','6–12%','12–20%','20%+'];
+function color(v){var i=0;while(i<BR.length&&v>=BR[i])i++;return COL[i];}
+document.getElementById('legrows').innerHTML=COL.map((c,i)=>'<div class="row"><i style="background:'+c+'"></i>'+LAB[i]+'</div>').join('');
+var map=L.map('map',{center:[36.166,-86.784],zoom:10});
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":carto,"Aerial":aerial},{},{position:'topright'}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
+  var f=(b.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);
+  L.geoJSON(f.length?{type:'FeatureCollection',features:f}:b,{style:{color:"#1a3a5c",weight:2.2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+}).catch(function(){});
+function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+function popup(p){
+  return '<div class="lp"><b>Block group '+esc(p.bg.slice(-7))+'</b><br>'+
+    '<span class="rate">'+p.rate+'%</span> institutional<div class="g">'+
+    '<span>Residential homes</span><span>'+p.res.toLocaleString()+'</span>'+
+    '<span>Institutional</span><span>'+p.inst.toLocaleString()+'</span>'+
+    '<span>Leading operator</span><span>'+esc(p.top)+' ('+p.topn+')</span>'+
+    '<span>Inst. appraised</span><span>$'+Math.round(p.val/1e6)+'M</span>'+
+    (p.inc?'<span>Tract median income</span><span>$'+p.inc.toLocaleString()+'</span>':'')+
+    (p.blk!=null?'<span>Tract % Black</span><span>'+p.blk+'%</span>':'')+
+    (p.pov!=null?'<span>Tract poverty</span><span>'+p.pov+'%</span>':'')+
+    '</div></div>';
+}
+fetch('institutional_by_blockgroup.geojson').then(r=>r.json()).then(function(gj){
+  L.geoJSON(gj,{style:function(f){return {color:'#fff',weight:.4,fillColor:color(f.properties.rate),fillOpacity:.8};},
+    onEachFeature:function(f,l){l.bindTooltip('Block group: '+f.properties.rate+'%',{sticky:true});
+      l.on('click',function(){l.bindPopup(popup(f.properties),{maxWidth:280}).openPopup();});
+      l.on('mouseover',function(){l.setStyle({weight:2,color:'#1c458c'});});
+      l.on('mouseout',function(){l.setStyle({weight:.4,color:'#fff'});});}
+  }).addTo(map);
+}).catch(function(e){document.querySelector('.titlecard span').textContent='load error: '+e;});
+</script></body></html>
