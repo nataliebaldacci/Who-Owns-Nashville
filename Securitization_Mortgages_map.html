@@ -53,14 +53,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/leaflet.markercluster.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.css"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.1.0/MarkerCluster.Default.css"/>
-</head>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet"><style>body,.leaflet-container,.leaflet-popup-content,.leaflet-control{font-family:"EB Garamond",Garamond,Georgia,serif !important}</style></head>
 <body>
     
     <div style='position:fixed;top:10px;left:50%;transform:translateX(-50%);z-index:9999;background:white;padding:10px 20px;border:2px solid grey;border-radius:5px;font-family:Arial'><b style='font-size:16px'>Davidson Institutional Borrower Deed Records</b><br><small>2269 deeds &middot; 1571 linked to mortgages &middot; joined via parcelid↔ParID</small></div>
     
             <div class="folium-map" id="map_8c2e24e003a69ef559e6660906fc7831" ></div>
         
-</body>
+<script>fetch("Davidson_County_Boundary.geojson").then(r=>r.json()).then(d=>{L.geoJSON(d,{style:{color:"#1a3a5c",weight:2.0,fillOpacity:0,dashArray:"4,4"},interactive:false}).addTo(map_8c2e24e003a69ef559e6660906fc7831);});</script></body>
 <script>
     
     
