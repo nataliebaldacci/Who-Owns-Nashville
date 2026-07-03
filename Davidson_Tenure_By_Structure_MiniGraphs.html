@@ -1,0 +1,82 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Owner vs Renter by Structure Type — Davidson County</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c458c;--gold:#f0af1e;--red:#d7263d;--bd:#d6ddea;--ink:#20303f;--muted:#6b7683}
+  body{margin:0;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);background:#eef4fb;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:24px 22px;border-bottom:5px solid var(--gold);text-align:center}
+  header h1{margin:0;font-size:22px;font-weight:800}
+  header p{margin:6px 0 0;font-size:13px;opacity:.9}
+  .wrap{max-width:900px;margin:0 auto;padding:24px 20px 60px}
+  .lead{font-size:14px;color:#33414f;margin:0 0 6px}
+  .legend{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;font-size:12.5px;font-weight:600;margin:8px 0 16px}
+  .legend .sw{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .legend .ln{display:inline-block;width:16px;height:0;border-top:3px solid var(--red);margin-right:6px;vertical-align:3px}
+  .mini{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:16px 18px 12px;margin:16px 0;box-shadow:0 2px 8px rgba(28,69,140,.07)}
+  .mini h2{margin:0;font-size:16px;color:var(--navy);font-weight:800}
+  .mini .tk{margin:2px 0 6px;font-size:12.5px;color:var(--muted)}
+  #tip{position:fixed;pointer-events:none;background:#fff;border:1px solid var(--bd);border-radius:6px;padding:7px 10px;font-size:12px;box-shadow:0 3px 10px rgba(0,0,0,.15);display:none;z-index:10}
+  #tip b{color:var(--navy)}
+  .note{font-size:11.5px;color:var(--muted);margin-top:16px;font-style:italic}
+  .note a{color:var(--navy)}
+</style></head><body>
+<header>
+  <h1>Owner vs Renter by Structure Type</h1>
+  <p>Davidson County — detached, attached, and two-unit homes, with the homeownership rate across each</p>
+</header>
+<div class="wrap">
+  <p class="lead">The same tenure question, split by how many units are in the building. Bars are the
+  <b>count</b> of occupied homes each year (owner + renter); the red line is the <b>homeownership rate</b> (owner share).
+  Notice the gradient: the more units in the structure, the fewer are owner-occupied.</p>
+  <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied</span><span><span class="ln"></span>Homeownership rate (%)</span></div>
+
+  <div class="mini"><h2>1-Unit, Detached (standalone houses)</h2><div class="tk">Overwhelmingly owner-occupied — but the ownership rate slipped from 85.6% to 82.2%.</div><svg class="c" data-key="det" viewBox="0 0 840 240" width="100%"></svg></div>
+  <div class="mini"><h2>1-Unit, Attached (townhomes, rowhouses)</h2><div class="tk">A more even split — around 68–70% owner-occupied.</div><svg class="c" data-key="att" viewBox="0 0 840 240" width="100%"></svg></div>
+  <div class="mini"><h2>2-Unit (duplexes)</h2><div class="tk">Almost entirely rental — only ~13% owner-occupied. (ACS 5-year periods; 2-unit is not published as a stable 1-year county series.)</div><svg class="c" data-key="two" viewBox="0 0 840 240" width="100%"></svg></div>
+
+  <p class="note"><b>Source.</b> U.S. Census Bureau, American Community Survey, <a href="https://data.census.gov/table/ACSDT5Y2024.B25032?g=050XX00US47037" target="_blank" rel="noopener">Table B25032 (Tenure by Units in Structure), Davidson County</a>. Detached &amp; attached: annual 2010–2024; 2-unit: end-year of the 2015–2019 and 2020–2024 5-year releases. Homeownership rate = owner-occupied &divide; (owner + renter) occupied units of that structure type.</p>
+</div>
+<div id="tip"></div>
+<script>
+var DATA={
+ det:[{y:2010,own:120956,rent:20286},{y:2011,own:119603,rent:21399},{y:2012,own:117923,rent:23645},{y:2013,own:116756,rent:24669},{y:2014,own:116298,rent:26387},{y:2015,own:118049,rent:26094},{y:2016,own:119977,rent:26397},{y:2017,own:122830,rent:25882},{y:2018,own:124100,rent:26172},{y:2019,own:126135,rent:26367},{y:2020,own:128772,rent:27993},{y:2021,own:131238,rent:27771},{y:2022,own:133575,rent:28403},{y:2023,own:135433,rent:28566},{y:2024,own:137091,rent:29634}],
+ att:[{y:2010,own:13129,rent:6199},{y:2011,own:13422,rent:7189},{y:2012,own:13069,rent:7616},{y:2013,own:12948,rent:7635},{y:2014,own:13129,rent:8145},{y:2015,own:12986,rent:7992},{y:2016,own:12774,rent:7473},{y:2017,own:12927,rent:6935},{y:2018,own:13615,rent:7366},{y:2019,own:14384,rent:7361},{y:2020,own:15829,rent:8140},{y:2021,own:16799,rent:8266},{y:2022,own:18429,rent:8620},{y:2023,own:20388,rent:8620},{y:2024,own:21497,rent:9201}],
+ two:[{y:2019,own:1571,rent:10194},{y:2024,own:1459,rent:9534}]
+};
+var tip=document.getElementById('tip');
+function ns(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+function niceMax(v){var p=Math.pow(10,Math.floor(Math.log10(v)));var m=v/p;m=m<=1?1:m<=2?2:m<=5?5:10;return m*p;}
+function drawMini(svg,rows){
+  var W=840,H=240,padL=52,padR=44,padT=14,padB=34,plot=H-padT-padB;
+  var maxCount=niceMax(Math.max.apply(null,rows.map(function(r){return r.own+r.rent;})));
+  var n=rows.length, gap=n>3?7:60, bw=(W-padL-padR-gap*(n-1))/n;
+  // count gridlines (left)
+  for(var g=0;g<=4;g++){var v=maxCount*g/4, yy=padT+plot*(1-g/4);
+    svg.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3','stroke-width':1}));
+    var t=ns('text',{x:padL-7,y:yy+4,fill:'#8a94a0','text-anchor':'end','font-family':'Montserrat','font-size':10});t.textContent=(v>=1000?(v/1000)+'k':v);svg.appendChild(t);}
+  // right axis 0-100%
+  [0,50,100].forEach(function(p){var yy=padT+plot*(1-p/100);var t=ns('text',{x:W-padR+7,y:yy+4,fill:'#d7263d','text-anchor':'start','font-family':'Montserrat','font-size':10,'font-weight':700});t.textContent=p+'%';svg.appendChild(t);});
+  var pts=[];
+  rows.forEach(function(d,i){
+    var x=padL+i*(bw+gap), tot=d.own+d.rent;
+    var ownH=plot*d.own/maxCount, rentH=plot*d.rent/maxCount;
+    var grp=ns('g',{});
+    grp.appendChild(ns('rect',{x:x,y:padT+plot-ownH,width:bw,height:ownH,fill:'#1c458c'}));
+    grp.appendChild(ns('rect',{x:x,y:padT+plot-ownH-rentH,width:bw,height:rentH,fill:'#f0af1e'}));
+    var yr=ns('text',{x:x+bw/2,y:H-16,fill:'#5a6673','text-anchor':'middle','font-family':'Montserrat','font-size':10,'font-weight':700});yr.textContent="'"+String(d.y).slice(2);svg.appendChild(yr);
+    var op=100*d.own/tot; pts.push([x+bw/2, padT+plot*(1-op/100), op, d]);
+    grp.style.cursor='pointer';
+    grp.addEventListener('mousemove',function(e){tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';
+      tip.innerHTML='<b>'+d.y+'</b><br>Owner: '+d.own.toLocaleString()+'<br>Renter: '+d.rent.toLocaleString()+'<br>Homeownership: '+op.toFixed(1)+'%';});
+    grp.addEventListener('mouseleave',function(){tip.style.display='none';});
+    svg.appendChild(grp);
+  });
+  // ownership % line
+  if(pts.length>1){var dstr=pts.map(function(p,i){return (i?'L':'M')+p[0]+' '+p[1];}).join(' ');
+    svg.appendChild(ns('path',{d:dstr,fill:'none',stroke:'#d7263d','stroke-width':2.5}));}
+  pts.forEach(function(p){svg.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3.5,fill:'#d7263d'}));
+    var t=ns('text',{x:p[0],y:p[1]-7,fill:'#d7263d','text-anchor':'middle','font-family':'Montserrat','font-size':9.5,'font-weight':800});t.textContent=p[2].toFixed(0)+'%';svg.appendChild(t);});
+}
+[].forEach.call(document.querySelectorAll('svg.c'),function(svg){drawMini(svg,DATA[svg.getAttribute('data-key')]);});
+</script></body></html>
