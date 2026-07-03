@@ -7,7 +7,7 @@
   body{margin:0;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);background:#eef4fb;line-height:1.5}
   header{background:var(--navy);color:#fff;padding:26px 22px;border-bottom:5px solid var(--gold);text-align:center}
   header h1{margin:0;font-size:23px;font-weight:800}
-  header p{margin:6px 0 0;font-size:13px;opacity:.9;max-width:720px;margin-left:auto;margin-right:auto}
+  header p{margin:6px auto 0;font-size:13px;opacity:.9;max-width:720px}
   .wrap{max-width:940px;margin:0 auto;padding:22px 20px 60px}
   .sec{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:18px 20px 12px;margin:18px 0;box-shadow:0 2px 8px rgba(28,69,140,.07)}
   .sec h2{margin:0 0 3px;font-size:17px;font-weight:800;color:var(--navy)}
@@ -30,105 +30,109 @@
 </style></head><body>
 <header>
   <h1>Davidson Residential Ownership &amp; Sales</h1>
-  <p>Every chart below is built from one per-parcel master — the flattened chain of title joined to the year-by-year assessment record. Class-R = Residential; arms-length = sale price &gt; $1,000.</p>
+  <p>Every chart below is built from one per-parcel master — the flattened chain of title joined to the year-by-year assessment record. Class-R = Residential; arms-length = sale price &gt; $1,000, <b>excluding foreclosure trustee's deeds</b>.</p>
 </header>
 <div class="wrap">
 
   <div class="sec">
-    <h2>1. Class-R sales volume by year, 2001–2025</h2>
-    <p class="sub">Every arms-length residential sale, split by whether a structure already stood at the time of sale (improvement value &gt; 0) vs. vacant-land / new-construction sales.</p>
+    <h2>1. Class-R arms-length sales volume, 2001–2025</h2>
+    <p class="sub">Arms-length residential sales (trustee's / foreclosure deeds excluded), split by whether a structure already stood at the time of sale (improvement value &gt; 0) vs. vacant-land / new-construction sales.</p>
     <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Existing home (structure stood)</span><span><span class="sw" style="background:#f0af1e"></span>Vacant land / new construction</span></div>
     <svg id="c1" viewBox="0 0 900 320" width="100%"></svg>
-    <div class="cap"><b>Two cycles.</b> Volume peaked in 2005–2006, collapsed in 2008–2010, recovered to a 2021 peak, then fell again. Existing-home resales are ~90% of all sales; vacant-land / new-construction is the smaller gold band.</div>
+    <div class="cap"><b>Two cycles.</b> Volume peaked in 2005–2006, collapsed 2008–2010, recovered to a 2021 peak, then fell again. Existing-home resales are ~90% of arms-length sales.</div>
   </div>
 
   <div class="sec">
-    <h2>2. Out-of-state buyers of existing homes, 2001–2025</h2>
-    <p class="sub">Existing residential homes (structure already standing) bought by an owner mailing to an address outside Tennessee — the clearest investor / institutional-buyer signal in the deed record.</p>
-    <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Out-of-state buyers of existing homes (count)</span><span><span class="ln"></span>Share of existing-home sales (%)</span></div>
+    <h2>2. Out-of-state buyers of existing homes, 2001–2025 <span style="font-size:12px;font-weight:600;color:var(--muted)">(arms-length only)</span></h2>
+    <p class="sub">Existing residential homes bought <b>arms-length</b> (trustee's deeds excluded) by an owner mailing outside Tennessee — the true investor / institutional-buyer signal.</p>
+    <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Out-of-state arms-length buyers (count)</span><span><span class="ln"></span>Share of arms-length existing-home sales (%)</span></div>
     <svg id="c2" viewBox="0 0 900 320" width="100%"></svg>
-    <div class="cap"><b>Two investor waves.</b> Out-of-state buying of existing homes surged to <b>20% of sales in 2011</b> (the post-foreclosure distressed-buying wave), eased mid-decade, then spiked again in <b>2021 (13%)</b> — the pandemic single-family-rental push.</div>
+    <div class="cap"><b>The correction.</b> Once foreclosure trustee's deeds are removed, out-of-state buying of existing homes was only <b>~5–6% through the crash years</b> (not the 20% the raw deeds imply) — the real investor surge is <b>2021–2022 at ~13%</b>, the pandemic single-family-rental push.</div>
   </div>
 
   <div class="sec">
-    <h2>3. Absentee &amp; out-of-state ownership, by reappraisal year</h2>
+    <h2>3. Foreclosures — Class-R trustee's deeds, 2001–2025</h2>
+    <p class="sub">The trustee's deeds we excluded above, charted on their own: homes taken at foreclosure each year, and the share whose grantee (usually a bank or servicer) was out of state.</p>
+    <div class="legend"><span><span class="sw" style="background:#8c564b"></span>Foreclosure trustee's deeds (count)</span><span><span class="ln"></span>Share going to an out-of-state grantee (%)</span></div>
+    <svg id="c3" viewBox="0 0 900 320" width="100%"></svg>
+    <div class="cap"><b>The foreclosure crisis, then the moratorium.</b> Residential foreclosures peaked at <b>2,779 in 2009</b> and stayed above 2,000 through 2012 — <b>and 75–83% went to out-of-state grantees</b> (banks/servicers). They then collapsed, bottoming at <b>43 in 2021</b> under the pandemic moratorium.</div>
+  </div>
+
+  <div class="sec">
+    <h2>4. Absentee &amp; out-of-state ownership, by reappraisal year</h2>
     <p class="sub">A stock (not flow) view: of all Class-R homes standing at each reappraisal year, how many were not owner-occupied. Toggle the measure.</p>
     <div class="toggle"><button id="bOOS" class="on">Out-of-state owner (state ≠ TN)</button><button id="bABS">Absentee (owner zip ≠ property zip)</button></div>
-    <div class="legend"><span><span class="sw" style="background:#1c458c"></span><span id="l3b">Out-of-state homes (count)</span></span><span><span class="ln"></span><span id="l3l">Out-of-state share (%)</span></span></div>
-    <svg id="c3" viewBox="0 0 900 320" width="100%"></svg>
-    <div class="cap" id="cap3"></div>
+    <div class="legend"><span><span class="sw" style="background:#1c458c"></span><span id="l4b">Out-of-state homes (count)</span></span><span><span class="ln"></span><span id="l4l">Out-of-state share (%)</span></span></div>
+    <svg id="c4" viewBox="0 0 900 320" width="100%"></svg>
+    <div class="cap" id="cap4"></div>
   </div>
 
   <div class="method">
     <h2>Methodology &amp; data</h2>
-    <p>All three charts come from a single per-parcel master (<code>Parcel_Ownership_Assessment_ACS_FULL_FLATTENED_DEDUP</code>) that joins three primary Davidson County / Metro Nashville government datasets, one row per parcel, keyed on the internal ParcelID.</p>
+    <p>All charts come from one per-parcel master (<code>Parcel_Ownership_Assessment_ACS_FULL_FLATTENED_DEDUP</code>) joining three primary Davidson County / Metro Nashville government datasets, one row per parcel, keyed on the internal ParcelID.</p>
     <h3>Datasets combined</h3>
     <ol>
-      <li><b>Ownership history (chain of title)</b> — the recorded deed record, flattened to up to 20 owners per parcel, each with acquisition date, sale price, and the owner's mailing zip &amp; state. Source: <a href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2" target="_blank" rel="noopener">Metro ParcelHistory, MapServer Layer 2</a>.</li>
+      <li><b>Ownership history (chain of title)</b> — the recorded deed record, flattened to up to 20 owners per parcel, each with acquisition date, sale price, <b>instrument type</b>, and the owner's mailing zip &amp; state. Source: <a href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2" target="_blank" rel="noopener">Metro ParcelHistory, MapServer Layer 2</a>.</li>
       <li><b>Assessment history</b> — assessment class (R = Residential) and improvement (structure) value for every reappraisal year. Source: <a href="https://www.padctn.org/" target="_blank" rel="noopener">Property Assessor of Davidson County (PADCTN)</a> via the <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4" target="_blank" rel="noopener">Cadastral MapServer, Layer 4</a>.</li>
       <li><b>Property location</b> — the current property zip, from the <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4" target="_blank" rel="noopener">current cadastral</a>.</li>
     </ol>
     <h3>How each chart is filtered</h3>
     <ul>
-      <li><b>Charts 1 &amp; 2 (transactions).</b> The chain of title is exploded back into individual sale events; each owner is one purchase. We keep events where <b>sale price &gt; $1,000</b> (arms-length proxy) and the parcel's assessment <b>class was R</b> at the reappraisal year in effect at the sale. A sale is an <b>existing home</b> if the parcel's <b>improvement value was &gt; 0</b> at that reappraisal (a structure stood) — <i>not</i> year built, which is only ~42% populated. <b>Out-of-state buyer</b> = the buyer's mailing state ≠ TN.</li>
-      <li><b>Chart 3 (ownership stock).</b> At each <b>reappraisal year</b> (Davidson reassesses on a 4-year cycle: 1993, 1997, 2001, 2005, 2009, 2013, 2017, 2021, 2025), we keep Class-R parcels with improvement value &gt; 0, identify the owner in place as of that year (most recent owner acquired on or before it), and flag <b>absentee</b> (owner zip ≠ property zip) and <b>out-of-state</b> (owner state ≠ TN).</li>
+      <li><b>Charts 1 &amp; 2 (arms-length sales).</b> The chain of title is exploded into individual sale events. We keep events with <b>sale price &gt; $1,000</b>, parcel <b>class = R</b> at the reappraisal in effect at the sale, and <b>instrument type ≠ "Trustee's Deed"</b> (foreclosure deeds are removed, because they are not arms-length purchases and would otherwise inflate the out-of-state count during the crash years). A sale is an <b>existing home</b> if the parcel's <b>improvement value was &gt; 0</b> at that reappraisal — <i>not</i> year built. <b>Out-of-state buyer</b> = buyer mailing state ≠ TN.</li>
+      <li><b>Chart 3 (foreclosures).</b> Exactly the Class-R events whose instrument type <b>is</b> "Trustee's Deed" — the foreclosure conveyances excluded from Charts 1–2.</li>
+      <li><b>Chart 4 (ownership stock).</b> At each <b>reappraisal year</b> (Davidson reassesses every 4 years: 1993, 1997, 2001, 2005, 2009, 2013, 2017, 2021, 2025), we keep Class-R parcels with improvement value &gt; 0, take the owner in place as of that year, and flag <b>absentee</b> (owner zip ≠ property zip) and <b>out-of-state</b> (owner state ≠ TN).</li>
     </ul>
-    <p class="cav"><b>Caveats.</b> Only reappraisal years have full county-wide assessment coverage; off-cycle years capture only transacting parcels and are excluded from the stock view. Property zip is the current cadastral zip (parcel location is stable). Buyer state/zip is the mailing address on the deed. Underlying figures: <code>ClassR_Transactions_By_Year_2001_2025.csv</code> and <code>Absentee_and_OOS_Residential_By_Reappraisal_Year.csv</code>; master documented in <code>_METHODOLOGY_Parcel_Ownership_Assessment_ACS_DEDUP_2026-07-02.md</code>.</p>
+    <p class="cav"><b>Caveats.</b> Only reappraisal years have full county-wide assessment coverage; off-cycle years capture only transacting parcels and are excluded from the stock view. Property zip is the current cadastral zip. Quit-claim deeds (often intra-family) are retained in arms-length counts but flagged in the underlying data. Figures: <code>ClassR_Transactions_NoTrustee_By_Year.csv</code>, <code>Absentee_and_OOS_Residential_By_Reappraisal_Year.csv</code>; master documented in <code>_METHODOLOGY_Parcel_Ownership_Assessment_ACS_DEDUP_2026-07-02.md</code>.</p>
   </div>
 </div>
 <div id="tip"></div>
 <script>
-var TX=[{y:2001,t:14333,e:12111,n:2222,eo:799,po:6.6},{y:2002,t:14436,e:12363,n:2073,eo:1144,po:9.3},{y:2003,t:14946,e:13310,n:1636,eo:1340,po:10.1},{y:2004,t:15790,e:14225,n:1565,eo:1326,po:9.3},{y:2005,t:19657,e:17034,n:2623,eo:1319,po:7.7},{y:2006,t:17724,e:16092,n:1632,eo:1535,po:9.5},{y:2007,t:14949,e:13814,n:1135,eo:1397,po:10.1},{y:2008,t:11312,e:10495,n:817,eo:1473,po:14.0},{y:2009,t:12646,e:11605,n:1041,eo:1687,po:14.5},{y:2010,t:11304,e:10063,n:1241,eo:1768,po:17.6},{y:2011,t:11242,e:10320,n:922,eo:2080,po:20.2},{y:2012,t:13653,e:12703,n:950,eo:2362,po:18.6},{y:2013,t:15519,e:14088,n:1431,eo:1822,po:12.9},{y:2014,t:15866,e:14574,n:1292,eo:1608,po:11.0},{y:2015,t:16560,e:15319,n:1241,eo:1314,po:8.6},{y:2016,t:16121,e:14578,n:1543,eo:961,po:6.6},{y:2017,t:18143,e:16090,n:2053,eo:1048,po:6.5},{y:2018,t:15526,e:13942,n:1584,eo:1075,po:7.7},{y:2019,t:15421,e:14325,n:1096,eo:1280,po:8.9},{y:2020,t:15151,e:14116,n:1035,eo:915,po:6.5},{y:2021,t:21153,e:19106,n:2047,eo:2517,po:13.2},{y:2022,t:15306,e:13667,n:1639,eo:1852,po:13.6},{y:2023,t:10938,e:10121,n:817,eo:807,po:8.0},{y:2024,t:10642,e:9985,n:657,eo:765,po:7.7},{y:2025,t:12894,e:12162,n:732,eo:860,po:7.1}];
+var TX=[{y:2001,t:13520,e:11311,n:2209,eo:262,po:2.3,fc:861,fco:548},{y:2002,t:13269,e:11225,n:2044,eo:322,po:2.9,fc:1231,fco:851},{y:2003,t:13617,e:12014,n:1603,eo:397,po:3.3,fc:1382,fco:980},{y:2004,t:14512,e:12999,n:1513,eo:433,po:3.3,fc:1316,fco:938},{y:2005,t:18451,e:15837,n:2614,eo:664,po:4.2,fc:1237,fco:664},{y:2006,t:16445,e:14836,n:1609,eo:768,po:5.2,fc:1303,fco:791},{y:2007,t:13530,e:12460,n:1070,eo:530,po:4.3,fc:1445,fco:913},{y:2008,t:9645,e:8956,n:689,eo:401,po:4.5,fc:1717,fco:1177},{y:2009,t:10503,e:9536,n:967,eo:338,po:3.5,fc:2779,fco:1523},{y:2010,t:9435,e:8249,n:1186,eo:424,po:5.1,fc:2608,fco:1381},{y:2011,t:9230,e:8353,n:877,eo:482,po:5.8,fc:2597,fco:1990},{y:2012,t:11536,e:10607,n:929,eo:620,po:5.8,fc:2287,fco:1886},{y:2013,t:14106,e:12698,n:1408,eo:749,po:5.9,fc:1462,fco:1102},{y:2014,t:14856,e:13573,n:1283,eo:902,po:6.6,fc:1145,fco:835},{y:2015,t:15808,e:14574,n:1234,eo:890,po:6.1,fc:779,fco:439},{y:2016,t:15778,e:14240,n:1538,eo:845,po:5.9,fc:358,fco:118},{y:2017,t:17993,e:15943,n:2050,eo:1013,po:6.4,fc:166,fco:37},{y:2018,t:15390,e:13807,n:1583,eo:1057,po:7.7,fc:149,fco:19},{y:2019,t:15296,e:14203,n:1093,eo:1258,po:8.9,fc:134,fco:23},{y:2020,t:15107,e:14075,n:1032,eo:902,po:6.4,fc:98,fco:14},{y:2021,t:21121,e:19074,n:2047,eo:2510,po:13.2,fc:43,fco:9},{y:2022,t:15233,e:13594,n:1639,eo:1841,po:13.5,fc:77,fco:11},{y:2023,t:10866,e:10054,n:812,eo:786,po:7.8,fc:108,fco:25},{y:2024,t:10567,e:9917,n:650,eo:745,po:7.5,fc:78,fco:22},{y:2025,t:12785,e:12061,n:724,eo:814,po:6.7,fc:241,fco:58}];
 var RE=[{y:1993,abs:24915,pa:19.0,oos:3381,po:2.4},{y:1997,abs:24090,pa:17.4,oos:3325,po:2.2},{y:2001,abs:23240,pa:15.8,oos:3614,po:2.3},{y:2005,abs:25313,pa:15.9,oos:4104,po:2.4},{y:2009,abs:31038,pa:17.7,oos:6332,po:3.4},{y:2013,abs:31751,pa:17.8,oos:6429,po:3.5},{y:2017,abs:34480,pa:18.2,oos:7339,po:3.8},{y:2021,abs:37363,pa:18.4,oos:10319,po:5.0},{y:2025,abs:39191,pa:18.7,oos:12395,po:5.7}];
 var tip=document.getElementById('tip');
 function ns(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
 function tx(sv,x,y,s,f,anc,sz,w){var t=ns('text',{x:x,y:y,fill:f||'#20303f','text-anchor':anc||'middle','font-family':'Montserrat','font-size':sz||10,'font-weight':w||600});t.textContent=s;sv.appendChild(t);}
 function niceMax(v){var p=Math.pow(10,Math.floor(Math.log10(v)));var m=v/p;m=m<=1?1:m<=1.5?1.5:m<=2?2:m<=2.5?2.5:m<=5?5:10;return m*p;}
 var W=900,H=320,padL=52,padR=44,padT=16,padB=40,plot=H-padT-padB;
-// Chart 1 — stacked existing+new counts
-(function(){var sv=document.getElementById('c1'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n;
- var mx=niceMax(Math.max.apply(null,d.map(x=>x.t)));
+function hover(gp,html){gp.style.cursor='pointer';gp.addEventListener('mousemove',function(e){tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';tip.innerHTML=html;});gp.addEventListener('mouseleave',function(){tip.style.display='none';});}
+// C1 stacked existing/new
+(function(){var sv=document.getElementById('c1'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n,mx=niceMax(Math.max.apply(null,d.map(x=>x.t)));
  for(var g=0;g<=4;g++){var v=mx*g/4,yy=padT+plot*(1-g/4);sv.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3'}));tx(sv,padL-6,yy+4,(v/1000)+'k','#8a94a0','end');}
  d.forEach(function(r,i){var x=padL+i*(bw+gap),eh=plot*r.e/mx,nh=plot*r.n/mx,gp=ns('g',{});
-   gp.appendChild(ns('rect',{x:x,y:padT+plot-eh,width:bw,height:eh,fill:'#1c458c'}));
-   gp.appendChild(ns('rect',{x:x,y:padT+plot-eh-nh,width:bw,height:nh,fill:'#f0af1e'}));
+   gp.appendChild(ns('rect',{x:x,y:padT+plot-eh,width:bw,height:eh,fill:'#1c458c'}));gp.appendChild(ns('rect',{x:x,y:padT+plot-eh-nh,width:bw,height:nh,fill:'#f0af1e'}));
    if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);
-   gp.style.cursor='pointer';gp.addEventListener('mousemove',function(e){tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';tip.innerHTML='<b>'+r.y+'</b><br>Total sales: '+r.t.toLocaleString()+'<br>Existing: '+r.e.toLocaleString()+'<br>Land/new: '+r.n.toLocaleString();});
-   gp.addEventListener('mouseleave',function(){tip.style.display='none';});sv.appendChild(gp);});
+   hover(gp,'<b>'+r.y+'</b><br>Arms-length sales: '+r.t.toLocaleString()+'<br>Existing: '+r.e.toLocaleString()+'<br>Land/new: '+r.n.toLocaleString());sv.appendChild(gp);});
 })();
-// Chart 2 — OOS existing buyers count + %
-(function(){var sv=document.getElementById('c2'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n;
- var mx=niceMax(Math.max.apply(null,d.map(x=>x.eo))),pm=25;
+// C2 OOS arms-length buyers
+(function(){var sv=document.getElementById('c2'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n,mx=niceMax(Math.max.apply(null,d.map(x=>x.eo))),pm=15;
  for(var g=0;g<=4;g++){var v=mx*g/4,yy=padT+plot*(1-g/4);sv.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3'}));tx(sv,padL-6,yy+4,(v/1000).toFixed(1)+'k','#8a94a0','end');}
- [0,10,20].forEach(function(p){tx(sv,W-8,padT+plot*(1-p/pm)+4,p+'%','#d7263d','end',9.5,700);});
- var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),bh=plot*r.eo/mx,gp=ns('g',{});
-   gp.appendChild(ns('rect',{x:x,y:padT+plot-bh,width:bw,height:bh,fill:'#1c458c'}));
-   if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);
-   pts.push([x+bw/2,padT+plot*(1-r.po/pm)]);
-   gp.style.cursor='pointer';gp.addEventListener('mousemove',function(e){tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';tip.innerHTML='<b>'+r.y+'</b><br>OOS buyers (existing): '+r.eo.toLocaleString()+'<br>Share: '+r.po+'%';});
-   gp.addEventListener('mouseleave',function(){tip.style.display='none';});sv.appendChild(gp);});
- sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));
- pts.forEach(p=>sv.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3,fill:'#d7263d'})));
+ [0,5,10,15].forEach(function(p){tx(sv,W-8,padT+plot*(1-p/pm)+4,p+'%','#d7263d','end',9.5,700);});
+ var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),bh=plot*r.eo/mx,gp=ns('g',{});gp.appendChild(ns('rect',{x:x,y:padT+plot-bh,width:bw,height:bh,fill:'#1c458c'}));
+   if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);pts.push([x+bw/2,padT+plot*(1-r.po/pm)]);
+   hover(gp,'<b>'+r.y+'</b><br>OOS arms-length buyers: '+r.eo.toLocaleString()+'<br>Share: '+r.po+'%');sv.appendChild(gp);});
+ sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));pts.forEach(p=>sv.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3,fill:'#d7263d'})));
 })();
-// Chart 3 — toggle stock
-var M3='oos';
-function c3(){var sv=document.getElementById('c3');sv.innerHTML='';var d=RE,n=d.length,gap=12,bw=(W-padL-padR-gap*(n-1))/n;
- var oos=M3==='oos';var nk=oos?'oos':'abs',pk=oos?'po':'pa',mx=oos?15000:45000,pm=oos?8:25;
- document.getElementById('l3b').textContent=oos?'Out-of-state homes (count)':'Absentee homes (count)';
- document.getElementById('l3l').textContent=oos?'Out-of-state share (%)':'Absentee share (%)';
+// C3 foreclosures
+(function(){var sv=document.getElementById('c3'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n,mx=niceMax(Math.max.apply(null,d.map(x=>x.fc))),pm=100;
+ for(var g=0;g<=4;g++){var v=mx*g/4,yy=padT+plot*(1-g/4);sv.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3'}));tx(sv,padL-6,yy+4,(v/1000).toFixed(1)+'k','#8a94a0','end');}
+ [0,50,100].forEach(function(p){tx(sv,W-8,padT+plot*(1-p/pm)+4,p+'%','#d7263d','end',9.5,700);});
+ var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),bh=plot*r.fc/mx,gp=ns('g',{});gp.appendChild(ns('rect',{x:x,y:padT+plot-bh,width:bw,height:bh,fill:'#8c564b'}));
+   if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);var pct=r.fc?100*r.fco/r.fc:0;pts.push([x+bw/2,padT+plot*(1-pct/pm)]);
+   hover(gp,'<b>'+r.y+'</b><br>Foreclosures: '+r.fc.toLocaleString()+'<br>Out-of-state grantee: '+r.fco.toLocaleString()+' ('+pct.toFixed(0)+'%)');sv.appendChild(gp);});
+ sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));pts.forEach(p=>sv.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3,fill:'#d7263d'})));
+})();
+// C4 toggle stock
+var M4='oos';
+function c4(){var sv=document.getElementById('c4');sv.innerHTML='';var d=RE,n=d.length,gap=12,bw=(W-padL-padR-gap*(n-1))/n,oos=M4==='oos',nk=oos?'oos':'abs',pk=oos?'po':'pa',mx=oos?15000:45000,pm=oos?8:25;
+ document.getElementById('l4b').textContent=oos?'Out-of-state homes (count)':'Absentee homes (count)';document.getElementById('l4l').textContent=oos?'Out-of-state share (%)':'Absentee share (%)';
  for(var g=0;g<=3;g++){var v=mx*g/3,yy=padT+plot*(1-g/3);sv.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3'}));tx(sv,padL-6,yy+4,(v/1000).toFixed(0)+'k','#8a94a0','end');}
  [0,pm/2,pm].forEach(function(p){tx(sv,W-8,padT+plot*(1-p/pm)+4,p+'%','#d7263d','end',9.5,700);});
- var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),bh=plot*r[nk]/mx,gp=ns('g',{});
-   gp.appendChild(ns('rect',{x:x,y:padT+plot-bh,width:bw,height:bh,fill:'#1c458c'}));
-   tx(sv,x+bw/2,padT+plot-bh-3,(r[nk]/1000).toFixed(1)+'k','#1c458c','middle',9,800);
-   tx(sv,x+bw/2,H-14,r.y,'#5a6673','middle',9.5,700);pts.push([x+bw/2,padT+plot*(1-r[pk]/pm),r[pk]]);
-   gp.style.cursor='pointer';gp.addEventListener('mousemove',function(e){tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';tip.innerHTML='<b>'+r.y+'</b><br>'+(oos?'Out-of-state':'Absentee')+': '+r[nk].toLocaleString()+' ('+r[pk]+'%)';});
-   gp.addEventListener('mouseleave',function(){tip.style.display='none';});sv.appendChild(gp);});
- sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));
- pts.forEach(p=>{sv.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3,fill:'#d7263d'}));tx(sv,p[0],p[1]-7,p[2]+'%','#d7263d','middle',9,800);});
- document.getElementById('cap3').innerHTML=oos?'<b>Out-of-state ownership tripled</b> — 3,614 homes (2001) → 12,395 (2025), +243%, sharpest 2017→2021.':'<b>The U-shape</b> — absentee ownership fell to a 15.8% low around 2001–2005, then climbed to 18.7% by 2025 (23,240 → 39,191 homes, +69%).';
-}
-document.getElementById('bOOS').onclick=function(){M3='oos';this.classList.add('on');document.getElementById('bABS').classList.remove('on');c3();};
-document.getElementById('bABS').onclick=function(){M3='abs';this.classList.add('on');document.getElementById('bOOS').classList.remove('on');c3();};
-c3();
+ var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),bh=plot*r[nk]/mx,gp=ns('g',{});gp.appendChild(ns('rect',{x:x,y:padT+plot-bh,width:bw,height:bh,fill:'#1c458c'}));
+   tx(sv,x+bw/2,padT+plot-bh-3,(r[nk]/1000).toFixed(1)+'k','#1c458c','middle',9,800);tx(sv,x+bw/2,H-14,r.y,'#5a6673','middle',9.5,700);pts.push([x+bw/2,padT+plot*(1-r[pk]/pm),r[pk]]);
+   hover(gp,'<b>'+r.y+'</b><br>'+(oos?'Out-of-state':'Absentee')+': '+r[nk].toLocaleString()+' ('+r[pk]+'%)');sv.appendChild(gp);});
+ sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));pts.forEach(p=>{sv.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3,fill:'#d7263d'}));tx(sv,p[0],p[1]-7,p[2]+'%','#d7263d','middle',9,800);});
+ document.getElementById('cap4').innerHTML=oos?'<b>Out-of-state ownership tripled</b> — 3,614 homes (2001) → 12,395 (2025), +243%, sharpest 2017→2021.':'<b>The U-shape</b> — absentee ownership fell to a 15.8% low around 2001–2005, then climbed to 18.7% by 2025 (23,240 → 39,191 homes, +69%).';}
+document.getElementById('bOOS').onclick=function(){M4='oos';this.classList.add('on');document.getElementById('bABS').classList.remove('on');c4();};
+document.getElementById('bABS').onclick=function(){M4='abs';this.classList.add('on');document.getElementById('bOOS').classList.remove('on');c4();};
+c4();
 </script></body></html>
