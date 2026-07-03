@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Davidson County Housing Indicators Over Time, 2010–2024</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c458c;--gold:#f0af1e;--bd:#d6ddea;--ink:#20303f;--muted:#6b7683}
+  body{margin:0;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);background:#eef4fb;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:24px 22px;border-bottom:5px solid var(--gold);text-align:center}
+  header h1{margin:0;font-size:23px;font-weight:800}
+  header p{margin:6px 0 0;font-size:13px;opacity:.9}
+  .wrap{max-width:1100px;margin:0 auto;padding:22px 18px 60px}
+  .lead{font-size:14px;color:#33414f;margin:0 0 16px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+  .card{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:14px 16px 8px;box-shadow:0 2px 8px rgba(28,69,140,.07)}
+  .card h2{margin:0 0 2px;font-size:15px;font-weight:800;color:var(--navy)}
+  .card .delta{font-size:12px;color:var(--muted);margin:0 0 4px}
+  #tip{position:fixed;pointer-events:none;background:#fff;border:1px solid var(--bd);border-radius:6px;padding:6px 9px;font-size:12px;box-shadow:0 3px 10px rgba(0,0,0,.15);display:none;z-index:10}
+  #tip b{color:var(--navy)}
+  .note{font-size:11.5px;color:var(--muted);margin-top:18px;font-style:italic}
+  .note a{color:var(--navy)}
+</style></head><body>
+<header>
+  <h1>Davidson County Housing Indicators Over Time</h1>
+  <p>2010–2024 &middot; population, homeownership, values, rents, and the growth of the rental stock</p>
+</header>
+<div class="wrap">
+  <p class="lead">Six housing indicators for Nashville–Davidson County, year by year. The through-line: population,
+  home values, rents, and rental units all climbed steeply — while the <b>homeownership rate fell</b> from 60% to 55.5%.</p>
+  <div class="grid" id="grid"></div>
+  <p class="note"><b>Sources.</b> U.S. Census Bureau ACS 5-Year: <a href="https://data.census.gov/table/ACSDT5Y2024.B25077?g=050XX00US47037" target="_blank" rel="noopener">B25077 (median value)</a>, <a href="https://data.census.gov/table/ACSDT5Y2024.B25032?g=050XX00US47037" target="_blank" rel="noopener">B25032 (tenure by units)</a>, CP04 (median gross rent); FRED <a href="https://fred.stlouisfed.org/series/TNDAVI5POP" target="_blank" rel="noopener">TNDAVI5POP (population)</a> and <a href="https://fred.stlouisfed.org/series/HOWNRATEACS047037" target="_blank" rel="noopener">HOWNRATEACS047037 (homeownership rate)</a>. Davidson County; median gross rent available 2015–2024.</p>
+</div>
+<div id="tip"></div>
+<script>
+var PANELS=[
+ {t:"Population",c:"#1c458c",fmt:function(v){return v.toLocaleString();},d:[[2010,627794],[2011,636083],[2012,649619],[2013,660560],[2014,670102],[2015,680397],[2016,686420],[2017,687808],[2018,691298],[2019,692999],[2020,716153],[2021,701450],[2022,712156],[2023,720989],[2024,736623]]},
+ {t:"Homeownership rate (%)",c:"#d7263d",fmt:function(v){return v.toFixed(1)+"%";},d:[[2010,60.0],[2011,59.1],[2012,57.9],[2013,56.7],[2014,55.7],[2015,55.6],[2016,55.6],[2017,55.8],[2018,55.8],[2019,56.6],[2020,57.2],[2021,57.0],[2022,56.7],[2023,56.0],[2024,55.5]]},
+ {t:"Median home value ($)",c:"#2e8b57",fmt:function(v){return "$"+v.toLocaleString();},d:[[2010,164700],[2011,166300],[2012,167200],[2013,167500],[2014,167400],[2015,169600],[2016,177700],[2017,194800],[2018,219900],[2019,241700],[2020,267400],[2021,294200],[2022,354700],[2023,386600],[2024,417400]]},
+ {t:"Median gross rent ($)",c:"#f0af1e",fmt:function(v){return "$"+v.toLocaleString();},d:[[2015,845],[2016,853],[2017,971],[2018,1036],[2019,1102],[2020,1172],[2021,1252],[2022,1394],[2023,1485],[2024,1582]]},
+ {t:"Single-family homes (1-unit)",c:"#4fa0bd",fmt:function(v){return v.toLocaleString();},d:[[2010,160570],[2011,161613],[2012,162253],[2013,162008],[2014,163959],[2015,165121],[2016,166621],[2017,168574],[2018,171253],[2019,174247],[2020,180734],[2021,184074],[2022,189027],[2023,193007],[2024,197423]]},
+ {t:"Rental units",c:"#7b5cd6",fmt:function(v){return v.toLocaleString();},d:[[2010,106956],[2011,109898],[2012,114082],[2013,116371],[2014,119338],[2015,121166],[2016,123872],[2017,124766],[2018,127504],[2019,128927],[2020,131801],[2021,133417],[2022,138670],[2023,146538],[2024,153381]]}
+];
+var tip=document.getElementById('tip'),grid=document.getElementById('grid');
+function ns(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+function nice(v){var p=Math.pow(10,Math.floor(Math.log10(v)));var m=v/p;m=m<=1?1:m<=2?2:m<=2.5?2.5:m<=5?5:10;return m*p;}
+PANELS.forEach(function(P){
+  var card=document.createElement('div');card.className='card';
+  var v0=P.d[0][1],v1=P.d[P.d.length-1][1],pct=Math.round(100*(v1-v0)/v0);
+  card.innerHTML='<h2>'+P.t+'</h2><div class="delta">'+P.d[0][0]+'–'+P.d[P.d.length-1][0]+' &middot; '+P.fmt(v0)+' → '+P.fmt(v1)+' ('+(pct>=0?'+':'')+pct+'%)</div>';
+  var svg=ns('svg',{viewBox:'0 0 420 190',width:'100%'});card.appendChild(svg);grid.appendChild(card);
+  var W=420,H=190,padL=54,padR=48,padT=14,padB=26,plot=H-padT-padB,pw=W-padL-padR;
+  var ys=P.d.map(function(p){return p[1];}),ymin=Math.min.apply(null,ys),ymax=Math.max.apply(null,ys);
+  var lo=Math.floor(ymin/nice((ymax-ymin)||1)*0.98)*nice((ymax-ymin)||1); if(!isFinite(lo))lo=0;
+  var span=(ymax-ymin)||1, pad=span*0.12; var y0=ymin-pad, y1=ymax+pad;
+  var xs=P.d.map(function(p){return p[0];}),xmin=Math.min.apply(null,xs),xmax=Math.max.apply(null,xs);
+  function X(x){return padL+pw*(x-xmin)/((xmax-xmin)||1);}
+  function Y(v){return padT+plot*(1-(v-y0)/((y1-y0)||1));}
+  [0,.5,1].forEach(function(f){var vv=y0+(y1-y0)*f,yy=padT+plot*(1-f);svg.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3','stroke-width':1}));var t=ns('text',{x:padL-6,y:yy+4,fill:'#8a94a0','text-anchor':'end','font-family':'Montserrat','font-size':9.5});t.textContent=P.fmt(Math.round(vv)).replace('$','$');svg.appendChild(t);});
+  [xmin,Math.round((xmin+xmax)/2),xmax].forEach(function(xx){var t=ns('text',{x:X(xx),y:H-8,fill:'#5a6673','text-anchor':'middle','font-family':'Montserrat','font-size':10,'font-weight':600});t.textContent=xx;svg.appendChild(t);});
+  var dstr=P.d.map(function(p,i){return (i?'L':'M')+X(p[0]).toFixed(1)+' '+Y(p[1]).toFixed(1);}).join(' ');
+  svg.appendChild(ns('path',{d:dstr,fill:'none',stroke:P.c,'stroke-width':2.5,'stroke-linejoin':'round'}));
+  P.d.forEach(function(p){var c=ns('circle',{cx:X(p[0]),cy:Y(p[1]),r:3,fill:P.c});c.style.cursor='pointer';
+    c.addEventListener('mousemove',function(e){tip.style.display='block';tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';tip.innerHTML='<b>'+p[0]+'</b><br>'+P.t+': '+P.fmt(p[1]);});
+    c.addEventListener('mouseleave',function(){tip.style.display='none';});svg.appendChild(c);});
+  // endpoint labels
+  function lab(p,anc){var t=ns('text',{x:X(p[0])+(anc==='start'?5:-5),y:Y(p[1])-6,fill:P.c,'text-anchor':anc,'font-family':'Montserrat','font-size':10,'font-weight':800});t.textContent=P.fmt(p[1]);svg.appendChild(t);}
+  lab(P.d[0],'start');lab(P.d[P.d.length-1],'end');
+});
+</script></body></html>
