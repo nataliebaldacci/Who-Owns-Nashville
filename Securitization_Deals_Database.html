@@ -21,6 +21,9 @@
  .dhead .name{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:#1c458c}
  .dhead .op{font-size:12.5px;color:#5a6572}
  .dhead .dep{font-size:12px;color:#8a94a0;font-style:italic}
+ .dhead .dmeta{font-family:'Montserrat',sans-serif;font-size:12px;color:#5a6572;margin-top:3px}
+ .dhead .dmeta b{color:#1c458c;font-weight:800}
+ .dhead .dmeta .amt{color:#b01e37}
  .dhead .pill{margin-left:auto;display:flex;gap:6px;flex-wrap:wrap;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700}
  .pill span{padding:3px 8px;border-radius:20px;white-space:nowrap}
  .pill .p{background:#eef4fb;color:#1c458c}.pill .qc{background:#e9f0f9;color:#28518f}.pill .dt{background:#fff4e0;color:#a06a00}.pill .sec{background:#fde8ec;color:#b01e37}
@@ -59,8 +62,11 @@ function render(f){
     var dt=D.dt.map((x,i)=>docLink(x.u,'Deed of Trust #'+(i+1),esc(x.i)+(x.loan&&+x.loan>0?(' &middot; $'+Number(x.loan).toLocaleString()):''))).join('')||'<div class="empty">none linked</div>';
     var seca=D.sec.slice(0,8).map((u,i)=>docLink(u,'SEC exhibit #'+(i+1),'')).join('')+(D.sec.length>8?('<div class="empty">+'+(D.sec.length-8)+' more exhibits</div>'):'');
     if(!D.sec.length) seca='<div class="empty">none linked</div>';
+    var dt=D.close?('Closed <b>'+esc(D.close)+'</b>'):(D.firstrec?('First recorded <b>'+esc(D.firstrec)+'</b>'):'');
+    var amt=D.size?('<span class="amt">Pool size <b class="amt">'+esc(D.size)+'</b></span>'):'';
+    var meta=(dt||amt)?('<div class="dmeta">'+[dt,amt].filter(Boolean).join(' &middot; ')+'</div>'):'';
     html+='<div class="deal" data-i="'+idx+'"><div class="dhead">'
-      +'<div><div class="name">'+esc(D.deal)+'</div><div class="op">'+esc(D.op||'—')+'</div>'+(D.dep?'<div class="dep">disclosed by '+esc(D.dep)+'</div>':'')+'</div>'
+      +'<div><div class="name">'+esc(D.deal)+'</div>'+meta+'<div class="op">'+esc(D.op||'—')+'</div>'+(D.dep?'<div class="dep">disclosed by '+esc(D.dep)+'</div>':'')+'</div>'
       +'<div class="pill"><span class="p">'+D.n+' homes</span><span class="qc">'+D.qc.length+' QC</span><span class="dt">'+D.dt.length+' DOT</span><span class="sec">'+D.sec.length+' SEC</span></div>'
       +'</div><div class="dbody">'
       +'<div class="col qc"><h4>Quitclaim Deeds</h4>'+qc+'</div>'
