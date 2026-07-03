@@ -1,0 +1,53 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Out-of-State Buyers of Existing Homes — Davidson County Time-Lapse</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Garamond&family=EB+Garamond&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<style>
+ html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',serif}
+ .titlecard{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,.92);
+   padding:9px 18px;border-radius:6px;box-shadow:0 1px 5px rgba(0,0,0,.3);text-align:center;max-width:88%}
+ .titlecard b{font-family:'Montserrat',sans-serif;font-size:15px;color:#1a3a5c}
+ .titlecard .n{font-family:'Montserrat',sans-serif;font-size:12px;color:#cf307a;font-weight:800}
+ .ctrl{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,.95);
+   padding:9px 12px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:center}
+ .ctrl button{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;border:1px solid #d6ddea;background:#fff;color:#1c458c;padding:7px 13px;border-radius:16px;cursor:pointer}
+ .ctrl button.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ .ctrl #play{background:#f0af1e;color:#1c458c;border-color:#f0af1e}
+ .status{position:absolute;bottom:14px;right:12px;z-index:1000;background:rgba(255,255,255,.92);padding:5px 11px;border-radius:5px;font-family:Garamond,serif;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+</style></head><body>
+<div id="map"></div>
+<div class="titlecard"><b>Out-of-State Buyers of Existing Homes, Davidson County</b><br><span class="n" id="frameN">—</span></div>
+<div class="ctrl" id="ctrl"><button id="play">&#9658; Play</button></div>
+<div class="status" id="status">loading…</div>
+<script>
+var FRAMES=[2005,2009,2013,2017,2021,2025];
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":carto,"Aerial":aerial},{},{position:'topright'}).addTo(map);
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(function(r){return r.json();}).then(function(b){
+  var f=(b.features||[]).filter(function(x){return x.properties&&x.properties.OBJECTID===4;});
+  L.geoJSON(f.length?{type:'FeatureCollection',features:f}:b,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+}).catch(function(){});
+function col(y){return y>=2021?'#8b0a2a':y>=2017?'#cf307a':y>=2013?'#e06a97':y>=2009?'#f0a0bd':'#f6c9d8';}
+var PTS=[],layer=L.layerGroup().addTo(map),frame=0,timer=null;
+fetch('oos_existing_points.json').then(function(r){return r.json();}).then(function(d){
+  PTS=d.points;
+  FRAMES.forEach(function(y,i){var b=document.createElement('button');b.textContent=y;b.onclick=function(){show(i);};b.id='f'+i;document.getElementById('ctrl').appendChild(b);});
+  document.getElementById('status').textContent=PTS.length.toLocaleString()+' out-of-state-bought homes';
+  show(FRAMES.length-1);
+}).catch(function(e){document.getElementById('status').textContent='load error: '+e;});
+function show(i){
+  frame=i;var Y=FRAMES[i];layer.clearLayers();var cnt=0;
+  for(var k=0;k<PTS.length;k++){var p=PTS[k];if(p[2]<=Y){cnt++;
+    L.circleMarker([p[1],p[0]],{radius:3,fillColor:col(p[2]),color:'#fff',weight:.3,fillOpacity:.8,interactive:false}).addTo(layer);}}
+  document.getElementById('frameN').textContent='Cumulative through '+Y+' — '+cnt.toLocaleString()+' homes ever bought by an out-of-state owner';
+  FRAMES.forEach(function(y,j){document.getElementById('f'+j).className=(j===i?'on':'');});
+}
+document.getElementById('play').onclick=function(){var btn=this;
+  if(timer){clearInterval(timer);timer=null;btn.innerHTML='&#9658; Play';return;}
+  btn.innerHTML='&#10073;&#10073; Pause';
+  timer=setInterval(function(){show((frame+1)%FRAMES.length);},1400);};
+</script></body></html>
