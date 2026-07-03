@@ -29,7 +29,11 @@
  #owners{top:66px;right:10px;width:252px;max-height:calc(100% - 96px);overflow:auto;padding:10px 12px}
  #owners h3{font-family:'Montserrat',sans-serif;font-size:12.5px;color:#1c458c;margin:0 0 5px}
  #owners .sortrow{display:flex;gap:5px;margin-bottom:6px}
- #owners .o{display:flex;gap:7px;font-size:12px;padding:3px 0;border-bottom:1px solid #eef0f3}
+ #owners .o{display:flex;gap:7px;font-size:12px;padding:3px 4px;border-bottom:1px solid #eef0f3;cursor:pointer;border-radius:4px}
+ #owners .o:hover{background:#f2f6fc}
+ #owners .o.sel{background:#fdeef0;outline:1px solid #f2b8c2}
+ #isoNote{font-size:11.5px;color:#d7263d;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:6px;display:none;cursor:pointer}
+ #isoNote:hover{text-decoration:underline}
  #owners .o .rk{color:#b9c2cf;font-family:'Montserrat',sans-serif;font-weight:700;width:15px}
  #owners .o .nm{flex:1;line-height:1.15}
  #owners .o .ct{font-family:'Montserrat',sans-serif;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;text-align:right}
@@ -59,14 +63,16 @@
   <div class="row" data-k="indiv"><span class="sw" style="background:#4fa0bd"></span><b>Individual</b><span class="n" id="nindiv">—</span></div>
 </div>
 <div class="panel" id="owners"><h3>Top vacant-land owners</h3>
+  <div id="isoNote"></div>
   <div class="sortrow"><span class="chip on" data-s="n">By parcels</span><span class="chip" data-s="ac">By acres</span></div>
   <div id="olist"></div>
+  <div style="font-size:10.5px;color:#9aa4b0;margin-top:6px;font-style:italic">Click an owner to show only their parcels. Toggle the legend colors to filter by owner type.</div>
 </div>
 <div class="panel" id="status">loading…</div>
 <script>
 var CAT={gov:{c:'#7a8794',l:'Government / public'},corp:{c:'#d7263d',l:'Corporate / entity'},indiv:{c:'#4fa0bd',l:'Individual'}};
 var CLSL={R:'Residential',C:'Commercial',E:'Exempt / public',A:'Agricultural',I:'Industrial',F:'Farm',T:'Forest',L:'Other',B:'Other'};
-var vis={gov:true,corp:true,indiv:true},clsF='all',oosOnly=false,osort='n',DATA=null;
+var vis={gov:true,corp:true,indiv:true},clsF='all',oosOnly=false,osort='n',DATA=null,isolate=null,curLB=[];
 var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
 var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
 var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
@@ -83,28 +89,38 @@ function popup(p){
   h+='<div style="font-size:11.5px"><a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+esc(p.pid)+'">Owner history</a> &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+esc(p.pid)+'">Property history</a></div>';
   return h+'</div>';
 }
-function keep(p){
+function baseKeep(p){
   if(!vis[p.cat]) return false;
   if(oosOnly && !p.oos) return false;
   if(clsF!=='all'){ if(clsF==='other'){ if(['R','C','E','A'].indexOf(p.cls)>=0) return false; } else if(p.cls!==clsF) return false; }
   return true;
 }
+function mapKeep(p){ return baseKeep(p) && (!isolate || (p.op||p.own)===isolate); }
 var layer=L.geoJSON(null,{renderer:L.canvas(),
   style:function(f){var c=CAT[f.properties.cat]||{c:'#999'};return {color:c.c,weight:.4,fillColor:c.c,fillOpacity:.5};},
-  filter:function(f){return keep(f.properties);},
+  filter:function(f){return mapKeep(f.properties);},
   onEachFeature:function(f,l){l.on('click',function(){l.bindPopup(popup(f.properties),{maxWidth:310}).openPopup();});}});
 function refresh(){
   layer.clearLayers(); layer.addData(DATA);
   var cc={gov:0,corp:0,indiv:0},nn=0,ac=0,own={};
-  DATA.features.forEach(function(f){var p=f.properties; if(!keep(p))return; nn++; ac+=p.ac||0; cc[p.cat]++;
-    var k=p.op||p.own; var d=own[k]||(own[k]={n:0,ac:0,cat:p.cat,op:p.op,oos:0}); d.n++; d.ac+=p.ac||0; if(p.oos)d.oos++;});
+  DATA.features.forEach(function(f){var p=f.properties;
+    if(baseKeep(p)){ cc[p.cat]++; var k=p.op||p.own; var d=own[k]||(own[k]={n:0,ac:0,cat:p.cat,op:p.op,oos:0}); d.n++; d.ac+=p.ac||0; if(p.oos)d.oos++; }
+    if(mapKeep(p)){ nn++; ac+=p.ac||0; }
+  });
   document.getElementById('ngov').textContent=cc.gov.toLocaleString();
   document.getElementById('ncorp').textContent=cc.corp.toLocaleString();
   document.getElementById('nindiv').textContent=cc.indiv.toLocaleString();
-  document.getElementById('status').innerHTML='<b>'+nn.toLocaleString()+'</b> parcels &middot; '+Math.round(ac).toLocaleString()+' acres';
-  var lb=Object.keys(own).map(k=>({nm:k,...own[k]})).sort((a,b)=>b[osort]-a[osort]).slice(0,25);
-  document.getElementById('olist').innerHTML=lb.map(function(o,i){var c=(CAT[o.cat]||{}).c||'#999';
-    return '<div class="o" title="'+esc(o.nm)+'"><span class="rk">'+(i+1)+'</span><span class="dot" style="background:'+c+'"></span><span class="nm">'+esc(o.op||o.nm)+'<br><span style="color:#9aa4b0;font-size:10.5px">'+Math.round(o.ac).toLocaleString()+' ac'+(o.oos>o.n/2?' &middot; OOS':'')+'</span></span><span class="ct">'+(osort==='ac'?Math.round(o.ac).toLocaleString():o.n)+'</span></div>';}).join('');
+  document.getElementById('status').innerHTML='<b>'+nn.toLocaleString()+'</b> parcels &middot; '+Math.round(ac).toLocaleString()+' acres'+(isolate?' &middot; '+esc(isolate):'');
+  var iso=document.getElementById('isoNote');
+  if(isolate){ iso.style.display='block'; iso.textContent='Showing only: '+isolate+'  ✕ clear'; } else iso.style.display='none';
+  curLB=Object.keys(own).map(k=>({nm:k,...own[k]})).sort((a,b)=>b[osort]-a[osort]).slice(0,30);
+  document.getElementById('olist').innerHTML=curLB.map(function(o,i){var c=(CAT[o.cat]||{}).c||'#999';
+    return '<div class="o'+(o.nm===isolate?' sel':'')+'" data-i="'+i+'" title="'+esc(o.nm)+'"><span class="rk">'+(i+1)+'</span><span class="dot" style="background:'+c+'"></span><span class="nm">'+esc(o.op||o.nm)+'<br><span style="color:#9aa4b0;font-size:10.5px">'+Math.round(o.ac).toLocaleString()+' ac'+(o.oos>o.n/2?' &middot; OOS':'')+'</span></span><span class="ct">'+(osort==='ac'?Math.round(o.ac).toLocaleString():o.n)+'</span></div>';}).join('');
+  document.querySelectorAll('#olist .o').forEach(function(row){row.onclick=function(){var o=curLB[+this.getAttribute('data-i')];pickOwner(o.nm);};});
+}
+function pickOwner(nm){
+  isolate=(isolate===nm)?null:nm; refresh();
+  if(isolate){ try{ var b=layer.getBounds(); if(b.isValid()) map.fitBounds(b.pad(0.15)); }catch(e){} }
 }
 fetch('vacant_land.geojson').then(r=>r.json()).then(function(gj){DATA=gj;layer.addData(gj).addTo(map);refresh();
   document.getElementById('status').title=gj.features.length+' total';
@@ -112,5 +128,6 @@ fetch('vacant_land.geojson').then(r=>r.json()).then(function(gj){DATA=gj;layer.a
 document.querySelectorAll('#legend .row').forEach(function(row){row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];row.classList.toggle('off',!vis[k]);refresh();};});
 document.querySelectorAll('#clsChips .chip').forEach(function(ch){ch.onclick=function(){clsF=this.getAttribute('data-c');document.querySelectorAll('#clsChips .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');refresh();};});
 document.getElementById('oosBtn').onclick=function(){oosOnly=!oosOnly;this.classList.toggle('on',oosOnly);refresh();};
+document.getElementById('isoNote').onclick=function(){isolate=null;refresh();};
 document.querySelectorAll('#owners .sortrow .chip').forEach(function(ch){ch.onclick=function(){osort=this.getAttribute('data-s');document.querySelectorAll('#owners .sortrow .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');refresh();};});
 </script></body></html>
