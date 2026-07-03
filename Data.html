@@ -13,54 +13,58 @@
   #search{flex:1;min-width:240px;padding:11px 14px;font-size:15px;font-family:inherit;border:2px solid var(--bd);border-radius:8px;outline:none}
   #search:focus{border-color:var(--gold)}
   #count{font-size:12.5px;color:var(--muted);white-space:nowrap}
-  .tblwrap{max-width:1300px;margin:0 auto;padding:0 18px 40px;overflow-x:auto}
+  .tblwrap{max-width:1300px;margin:0 auto;padding:0 18px 20px;overflow-x:auto}
   table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px;border:1px solid var(--bd)}
   th{position:sticky;top:0;background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:9px 10px;cursor:pointer;white-space:nowrap;font-size:12px}
   th:hover{background:#16357a}
-  th .ar{opacity:.5;font-size:10px}
+  th .ar{opacity:.6;font-size:10px}
   td{padding:7px 10px;border-bottom:1px solid #eef0f3;vertical-align:top}
   td.num{text-align:right;font-variant-numeric:tabular-nums}
-  tr:nth-child(even) td{background:#f7f9fc}
-  tr:hover td{background:#fff7e6}
+  #body tr{cursor:pointer}
+  #body tr:nth-child(even) td{background:#f7f9fc}
+  #body tr:hover td{background:#fff7e6}
   td a{color:var(--navy);text-decoration:none;font-weight:600}
   td a:hover{color:var(--gold)}
   .pg{max-width:1300px;margin:0 auto;padding:0 18px 40px;display:flex;gap:10px;align-items:center;font-size:13px}
   .pg button{font-family:inherit;font-weight:700;background:var(--gold);color:var(--navy);border:none;border-radius:6px;padding:8px 14px;cursor:pointer}
   .pg button:disabled{opacity:.4;cursor:default}
   #loading{max-width:1300px;margin:0 auto;padding:24px 18px;color:var(--muted);font-size:14px}
+  /* detail */
+  #detail{max-width:1300px;margin:0 auto;padding:0 18px 50px;display:none}
+  .back{color:var(--navy);cursor:pointer;font-size:13px;font-weight:700;display:inline-block;margin:14px 0 6px}
+  .dhead{font-size:20px;font-weight:800;color:var(--navy);margin:2px 0}
+  .dsub{color:var(--muted);font-size:13px;margin-bottom:8px}
+  .htitle{font-size:12px;text-transform:uppercase;letter-spacing:.7px;color:var(--navy);font-weight:700;margin:20px 0 4px;border-bottom:2px solid var(--gold);padding-bottom:3px}
+  .htbl{width:100%;border-collapse:collapse;font-size:12px;background:#fff;border:1px solid var(--bd)}
+  .htbl th{position:static;background:#33507f;padding:7px 9px}
+  .htbl td{padding:6px 9px}
+  .empty{color:var(--muted);font-size:12.5px;padding:8px 2px}
 </style></head><body>
 <header>
   <h1>Parcel Data Table</h1>
-  <p>Every Davidson County parcel &middot; ownership, deed history, assessment, zoning &amp; permits &middot; sort any column, filter, page through &middot; primary government data</p>
+  <p>Every Davidson County parcel &middot; click any row for its full history &mdash; chain of title, permits &amp; zoning &middot; primary government data</p>
 </header>
 <div class="bar">
   <input id="search" placeholder="Loading…" disabled autocomplete="off"/>
   <span id="count"></span>
 </div>
 <div id="loading">Loading the parcel table (one-time, ~18&nbsp;MB)…</div>
-<div class="tblwrap"><table id="tbl" style="display:none"><thead><tr id="hdr"></tr></thead><tbody id="body"></tbody></table></div>
+<div class="tblwrap" id="tblwrap"><table id="tbl" style="display:none"><thead><tr id="hdr"></tr></thead><tbody id="body"></tbody></table></div>
 <div class="pg" id="pg" style="display:none">
   <button id="prev">&larr; Prev</button><span id="pginfo"></span><button id="next">Next &rarr;</button>
 </div>
+<div id="detail"></div>
 <script>
 var COLS=[
- {k:'a',  t:'APN',            link:1},
- {k:'o',  t:'Current Owner'},
- {k:'od', t:'Acquired'},
- {k:'oa', t:'Owner Mailing'},
- {k:'o2', t:'Prior Owner'},
- {k:'nt', t:'Deeds', num:1},
- {k:'lu', t:'Land Use'},
- {k:'z',  t:'Zone'},
- {k:'av', t:'Appraised', num:1, money:1},
- {k:'mv', t:'Market Val', num:1, money:1},
- {k:'sf', t:'Size', num:1},
- {k:'np', t:'Permits', num:1}
+ {k:'a',t:'APN'},{k:'o',t:'Current Owner'},{k:'od',t:'Acquired'},{k:'oa',t:'Owner Mailing'},
+ {k:'nt',t:'Deeds',num:1},{k:'lu',t:'Land Use'},{k:'z',t:'Zone'},
+ {k:'av',t:'Appraised',num:1,money:1},{k:'mv',t:'Market Val',num:1,money:1},{k:'np',t:'Permits',num:1}
 ];
-var DATA=[], VIEW=[], PAGE=0, PER=100, sortK=null, sortDir=1;
-var search=document.getElementById('search'),count=document.getElementById('count'),
-    tbl=document.getElementById('tbl'),body=document.getElementById('body'),hdr=document.getElementById('hdr'),
-    loading=document.getElementById('loading'),pg=document.getElementById('pg'),pginfo=document.getElementById('pginfo');
+var DATA=[],VIEW=[],PAGE=0,PER=100,sortK=null,sortDir=1,SHARDS={};
+var search=document.getElementById('search'),count=document.getElementById('count'),tbl=document.getElementById('tbl'),
+    body=document.getElementById('body'),hdr=document.getElementById('hdr'),loading=document.getElementById('loading'),
+    pg=document.getElementById('pg'),pginfo=document.getElementById('pginfo'),detail=document.getElementById('detail'),
+    tblwrap=document.getElementById('tblwrap');
 
 fetch('parcel_index.json').then(function(r){return r.json();}).then(function(d){
   DATA=d;
@@ -68,51 +72,64 @@ fetch('parcel_index.json').then(function(r){return r.json();}).then(function(d){
   VIEW=DATA;
   hdr.innerHTML=COLS.map(function(c){return '<th data-k="'+c.k+'">'+c.t+' <span class="ar"></span></th>';}).join('');
   [].forEach.call(hdr.querySelectorAll('th'),function(th){th.onclick=function(){sortBy(th.getAttribute('data-k'));};});
-  loading.style.display='none'; tbl.style.display=''; pg.style.display='';
-  search.disabled=false; search.placeholder='Filter by owner, address, or APN…'; search.focus();
+  loading.style.display='none';tbl.style.display='';pg.style.display='';
+  search.disabled=false;search.placeholder='Filter by owner, address, or APN…';search.focus();
   render();
 }).catch(function(e){loading.textContent='Could not load parcel data: '+e;});
 
 function esc(s){return (s==null?'':(''+s)).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
 function money(v){return (v==null||v==='')?'':'$'+Number(v).toLocaleString();}
-
 var t;
 search.addEventListener('input',function(){clearTimeout(t);t=setTimeout(filt,180);});
-function filt(){
-  var q=search.value.trim().toLowerCase();
-  VIEW = q.length<2 ? DATA : DATA.filter(function(r){return r._s.indexOf(q)>-1;});
-  if(sortK) applySort();
-  PAGE=0; render();
-}
-function sortBy(k){ if(sortK===k){sortDir=-sortDir;}else{sortK=k;sortDir=1;} applySort(); PAGE=0; render(); }
-function applySort(){
-  var num=COLS.filter(function(c){return c.k===sortK;})[0].num;
-  VIEW=VIEW.slice().sort(function(a,b){
-    var x=a[sortK]||'',y=b[sortK]||'';
-    if(num){x=parseFloat(x)||-Infinity;y=parseFloat(y)||-Infinity;return (x-y)*sortDir;}
-    return x<y?-sortDir:x>y?sortDir:0;
-  });
-}
+function filt(){var q=search.value.trim().toLowerCase();VIEW=q.length<2?DATA:DATA.filter(function(r){return r._s.indexOf(q)>-1;});if(sortK)applySort();PAGE=0;render();}
+function sortBy(k){if(sortK===k){sortDir=-sortDir;}else{sortK=k;sortDir=1;}applySort();PAGE=0;render();}
+function applySort(){var num=COLS.filter(function(c){return c.k===sortK;})[0].num;
+  VIEW=VIEW.slice().sort(function(a,b){var x=a[sortK]||'',y=b[sortK]||'';if(num){x=parseFloat(x)||-Infinity;y=parseFloat(y)||-Infinity;return (x-y)*sortDir;}return x<y?-sortDir:x>y?sortDir:0;});}
 function render(){
   count.textContent=VIEW.length.toLocaleString()+' parcels'+(VIEW.length!==DATA.length?' (of '+DATA.length.toLocaleString()+')':'');
-  [].forEach.call(hdr.querySelectorAll('th'),function(th){
-    th.querySelector('.ar').textContent = th.getAttribute('data-k')===sortK ? (sortDir>0?'▲':'▼') : '';
-  });
-  var start=PAGE*PER, slice=VIEW.slice(start,start+PER);
+  [].forEach.call(hdr.querySelectorAll('th'),function(th){th.querySelector('.ar').textContent=th.getAttribute('data-k')===sortK?(sortDir>0?'▲':'▼'):'';});
+  var start=PAGE*PER,slice=VIEW.slice(start,start+PER);
   body.innerHTML=slice.map(function(r){
-    return '<tr>'+COLS.map(function(c){
-      var v=r[c.k]; var cell;
-      if(c.money) cell=money(v);
-      else if(c.link) cell='<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcel='+encodeURIComponent(v||'')+'">'+esc(v)+'</a>';
-      else cell=esc(v);
-      return '<td class="'+(c.num?'num':'')+'">'+cell+'</td>';
-    }).join('')+'</tr>';
+    return '<tr data-apn="'+esc(r.a)+'">'+COLS.map(function(c){var v=r[c.k];return '<td class="'+(c.num?'num':'')+'">'+(c.money?money(v):esc(v))+'</td>';}).join('')+'</tr>';
   }).join('');
+  [].forEach.call(body.querySelectorAll('tr'),function(tr){tr.onclick=function(){openHistory(tr.getAttribute('data-apn'));};});
   var pages=Math.max(1,Math.ceil(VIEW.length/PER));
   pginfo.textContent=' Page '+(PAGE+1)+' of '+pages.toLocaleString()+' ';
-  document.getElementById('prev').disabled=PAGE<=0;
-  document.getElementById('next').disabled=PAGE>=pages-1;
+  document.getElementById('prev').disabled=PAGE<=0;document.getElementById('next').disabled=PAGE>=pages-1;
 }
 document.getElementById('prev').onclick=function(){if(PAGE>0){PAGE--;render();window.scrollTo(0,0);}};
 document.getElementById('next').onclick=function(){PAGE++;render();window.scrollTo(0,0);};
+
+function htable(title,cols,rows){
+  var h='<div class="htitle">'+title+'</div>';
+  if(!rows||!rows.length)return h+'<div class="empty">No records.</div>';
+  h+='<div style="overflow-x:auto"><table class="htbl"><thead><tr><th>#</th>'+cols.map(function(c){return '<th>'+c+'</th>';}).join('')+'</tr></thead><tbody>';
+  h+=rows.map(function(row,i){return '<tr><td>'+(i+1)+'</td>'+row.map(function(cell){return '<td>'+cell+'</td>';}).join('')+'</tr>';}).join('');
+  return h+'</tbody></table></div>';
+}
+function openHistory(apn){
+  var pre=apn.slice(0,3);
+  detail.innerHTML='<span class="back">&larr; back to table</span><div style="padding:16px 2px;color:#6b7683">Loading history for APN '+esc(apn)+'…</div>';
+  detail.querySelector('.back').onclick=closeDetail;
+  tblwrap.style.display='none';pg.style.display='none';detail.style.display='';window.scrollTo(0,0);
+  var go=function(sh){ var rec=sh[apn]||{own:[],per:[],zon:[]};
+    var summ=null;for(var i=0;i<DATA.length;i++){if(DATA[i].a===apn){summ=DATA[i];break;}}
+    var own=(rec.own||[]).map(function(o){var doc=o[6]?'<a target="_blank" href="'+esc(o[6])+'">deed</a>':'';
+      return [esc(o[0]),esc(o[1]),o[3]?money(o[3]):'',esc(o[2]),esc(o[4]),esc(o[5]),doc];});
+    var per=(rec.per||[]).map(function(p){return [esc(p[0]),esc(p[1]),esc(p[2]),esc(p[3]),esc(p[4]),p[5]?money(p[5]):'',esc(p[6]),esc(p[7]),esc(p[8])];});
+    var zon=(rec.zon||[]).map(function(z){var u=z[6]?'<a target="_blank" href="'+esc(z[6])+'">doc</a>':'';return [esc(z[0]),esc(z[1]),esc(z[2]),esc(z[3]),esc(z[4]),esc(z[5]),u];});
+    detail.innerHTML='<span class="back">&larr; back to table</span>'+
+      '<div class="dhead">'+esc(summ?summ.o:apn)+'</div><div class="dsub">'+esc(summ?summ.addr:'')+' &middot; APN '+esc(apn)+'</div>'+
+      htable('Chain of Title &mdash; '+own.length+' owner'+(own.length!=1?'s':''),['Owner','Date','Sale Price','Mailing Address','Status','Instrument','Deed'],own)+
+      htable('Permit History &mdash; '+per.length,['Type','Subtype','Case #','Status','Issued','Const. Value','Scope','Bldg SqFt','Units'],per)+
+      htable('Zoning History &mdash; '+zon.length,['Zone','Description','Ordinance','Effective','Case #','Status','Doc'],zon);
+    detail.querySelector('.back').onclick=closeDetail;
+  };
+  if(SHARDS[pre]){go(SHARDS[pre]);}
+  else fetch('parcel_history/'+pre+'.json.gz').then(function(r){
+         return new Response(r.body.pipeThrough(new DecompressionStream('gzip'))).json();
+       }).then(function(sh){SHARDS[pre]=sh;go(sh);})
+       .catch(function(){detail.innerHTML='<span class="back" onclick="location.reload()">&larr; back</span><div class="empty">History not available for this parcel.</div>';});
+}
+function closeDetail(){detail.style.display='none';tblwrap.style.display='';pg.style.display='';window.scrollTo(0,0);}
 </script></body></html>
