@@ -148,14 +148,24 @@
 
  <h2 class="sec">Assessment class</h2>
  <table>
- <thead><tr><th>Class</th><th style="text-align:right">Statutory ratio</th><th style="text-align:right">Parcels</th><th style="text-align:right">Appraised</th><th style="text-align:right">Assessed</th></tr></thead>
+ <thead><tr><th>Class</th><th>Description</th><th style="text-align:right">Assessment ratio</th><th style="text-align:right">Parcels</th><th style="text-align:right">Share</th></tr></thead>
  <tbody>
- <tr><td>Residential &amp; farm</td><td class="n">25%</td><td class="n">275,066</td><td class="n">$175.7B</td><td class="n">$46.1B</td></tr>
- <tr><td>Commercial &amp; industrial</td><td class="n">40%</td><td class="n">9,369</td><td class="n">$64.9B</td><td class="n">$24.1B</td></tr>
- <tr><td>Exempt / low-ratio</td><td class="n">0%</td><td class="n">2,286</td><td class="n">$12.3B</td><td class="n">$0.2B</td></tr>
+ <tr><td>R</td><td>Residential</td><td class="n">25%</td><td class="n">253,709</td><td class="n">79.2%</td></tr>
+ <tr><td>C</td><td>Commercial</td><td class="n">40%</td><td class="n">39,117</td><td class="n">12.2%</td></tr>
+ <tr><td>O</td><td>Common area / open space</td><td class="n">0%</td><td class="n">12,642</td><td class="n">3.9%</td></tr>
+ <tr><td>E</td><td>Exempt</td><td class="n">0%</td><td class="n">9,977</td><td class="n">3.1%</td></tr>
+ <tr><td>I</td><td>Industrial</td><td class="n">40%</td><td class="n">2,071</td><td class="n">0.6%</td></tr>
+ <tr><td>F</td><td>Farm</td><td class="n">25%</td><td class="n">1,931</td><td class="n">0.6%</td></tr>
+ <tr><td>L</td><td>Assessed in other county</td><td class="n">0%</td><td class="n">281</td><td class="n">0.1%</td></tr>
+ <tr><td>A</td><td>Agricultural</td><td class="n">25%</td><td class="n">210</td><td class="n">0.1%</td></tr>
+ <tr><td>B</td><td>OSAP (open-space assessment)</td><td class="n">0%</td><td class="n">154</td><td class="n">0.0%</td></tr>
+ <tr><td>T</td><td>Forest</td><td class="n">25%</td><td class="n">95</td><td class="n">0.0%</td></tr>
+ <tr><td>U</td><td>Utility</td><td class="n">55%</td><td class="n">28</td><td class="n">0.0%</td></tr>
+ <tr><td>P</td><td>OSAP (open-space assessment)</td><td class="n">0%</td><td class="n">1</td><td class="n">0.0%</td></tr>
+ <tr style="font-weight:800;background:#eef4fb"><td class="n">&mdash;</td><td>ALL CLASSES</td><td class="n"></td><td class="n">320,216</td><td class="n">100%</td></tr>
  </tbody>
  </table>
- <div class="note">Notes: Tennessee assesses property at a fixed fraction of appraised value by class, 25% for residential and farm, 40% for commercial and industrial, 0% for exempt (Tenn. Code Ann. &sect; 67-5-801). Parcels are grouped into class here by their observed assessed-to-appraised ratio (sum <code>TotlAssd</code> / sum <code>TotlAppr</code> per land use). Residential dwellings make up 96% of parcels but only 70% of appraised value. Source: Metro Nashville Cadastral, <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&amp;groupByFieldsForStatistics=LUDesc&amp;outStatistics=%5B%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22TotlAppr%22%2C%22outStatisticFieldName%22%3A%22appr%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22TotlAssd%22%2C%22outStatisticFieldName%22%3A%22assd%22%7D%5D&amp;f=json" target="_blank">MapServer/4/query &#8599;</a> (last accessed July 2, 2026).</div>
+ <div class="note">Notes: Assessment class from the Metro Nashville Assessment History layer (<code>CLASS</code> field), active records, n = 320,216 classified parcels. Tennessee assesses each class at a statutory fraction of appraised value: residential, farm, agricultural, and forest at 25%; commercial and industrial at 40%; public utility at 55%; and exempt, common area / open space, open-space assessment (OSAP), and out-of-county at 0% (Tenn. Code Ann. &sect; 67-5-801). Residential (Class R) is 79.2% of parcels. Source: Metro Nashville ParcelService Assessment History, <a href="https://maps.nashville.gov/ParcelService/Search.asmx?op=GetAssessmentHistory" target="_blank">GetAssessmentHistory &#8599;</a> (active <code>CLASS</code> per parcel, last accessed July 2, 2026).</div>
 
  <div class="two">
  <div>
