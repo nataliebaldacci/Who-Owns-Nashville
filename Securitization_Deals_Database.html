@@ -59,7 +59,7 @@ function render(f){
     var hay=(D.deal+' '+D.op+' '+D.dep).toLowerCase();
     if(f&&hay.indexOf(f)<0) return; shown++;
     var qc=D.qc.map((x,i)=>docLink(x.u,'Quitclaim #'+(i+1),esc(x.i))).join('')||'<div class="empty">none linked</div>';
-    var dt=D.dt.map((x,i)=>docLink(x.u,'Deed of Trust #'+(i+1),esc(x.i)+(x.loan&&+x.loan>0?(' &middot; $'+Number(x.loan).toLocaleString()):''))).join('')||'<div class="empty">none linked</div>';
+    var dt=D.dt.map((x,i)=>docLink(x.url||x.u,'Deed of Trust #'+(i+1),esc(x.i)+(x.loan&&+x.loan>0?(' &middot; $'+Number(x.loan).toLocaleString()):''))).join('')||'<div class="empty">none linked</div>';
     var seca=D.sec.slice(0,8).map((u,i)=>docLink(u,'SEC exhibit #'+(i+1),'')).join('')+(D.sec.length>8?('<div class="empty">+'+(D.sec.length-8)+' more exhibits</div>'):'');
     if(!D.sec.length) seca='<div class="empty">none linked</div>';
     var dt=D.close?('Closed <b>'+esc(D.close)+'</b>'):(D.firstrec?('First recorded <b>'+esc(D.firstrec)+'</b>'):'');

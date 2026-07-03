@@ -1,0 +1,97 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Deeds of Trust Database — Who Finances Nashville</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M9 5h11l4 4v18H9z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa;line-height:1.45}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1200px;margin:0 auto;padding:18px 18px 70px}
+ h1{font-family:'Montserrat',sans-serif;font-size:23px;color:#1c458c;margin:6px 0 2px}
+ .lead{font-size:14px;color:#33404e;margin-bottom:12px;max-width:900px}
+ .lead b{color:#1c458c}
+ .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin:12px 0}
+ .card{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:11px 14px}
+ .card .v{font-family:'Montserrat',sans-serif;font-weight:800;font-size:20px;color:#1c458c}
+ .card .l{font-size:11px;color:#5a6572;margin-top:3px}
+ .bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;position:sticky;top:56px;background:#f4f6fa;padding:9px 0;z-index:10}
+ #q{flex:1;min-width:220px;max-width:420px;padding:9px 13px;border:1px solid #c9d3e2;border-radius:7px;font-size:14px;font-family:'EB Garamond',serif}
+ select{padding:8px 10px;border:1px solid #c9d3e2;border-radius:7px;font-family:'EB Garamond',serif;font-size:13.5px;background:#fff}
+ table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border:1px solid #e2e8f1;border-radius:10px;overflow:hidden}
+ thead th{font-family:'Montserrat',sans-serif;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;text-align:left;padding:9px 9px;border-bottom:1.5px solid #e2e8f1;cursor:pointer;white-space:nowrap;background:#fff;position:sticky;top:107px;z-index:5}
+ tbody td{padding:6px 9px;border-bottom:1px solid #eef0f3;vertical-align:top}
+ tbody tr:hover{background:#f8fafd}
+ td.amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;color:#1c458c;font-weight:600}
+ .inst{font-family:'Montserrat',sans-serif;font-size:11px;color:#33404e}
+ .ty{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;padding:1px 5px;border-radius:9px;white-space:nowrap;background:#e9f0f9;color:#28518f}
+ .ty.DOT{background:#fff4e0;color:#a06a00}.ty.AGRMTTRUST{background:#f4ece1;color:#8c564b}
+ .grp{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;color:#6a7684;background:#eef0f3;padding:1px 6px;border-radius:9px;white-space:nowrap}
+ .lnk{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-decoration:none;padding:3px 8px;border-radius:6px;white-space:nowrap;background:#eef4fb;color:#1c458c}
+ .lnk:hover{text-decoration:underline}
+ .none{color:#c2c9d2}
+ .flt{font-size:12px;color:#8a94a0;margin:6px 2px}
+ .note{font-size:12px;color:#8a94a0;margin-top:16px;line-height:1.5}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">Deeds of Trust Database</div></div>
+<div class="wrap">
+  <h1>Every recorded deed of trust and assignment</h1>
+  <div class="lead">The complete compiled record of <b>deeds of trust</b>, <b>DOT assignments</b>, amendments, and trust agreements recorded in Davidson County against the institutional single-family portfolios. Each row is a recorded instrument; where an instrument number exists it links straight to the county deed image. This is the collateral side of the story: which entity pledged which homes, to which trustee, for which lender, and how those security interests were later assigned up the securitization chain. Companion to the <a href="Securitization_Deals_Database.html">Deals database</a> and <a href="Securitized_Homes_Document_Trail.html">Document Trail map</a>.</div>
+  <div class="cards" id="stats"></div>
+  <div class="bar">
+    <input id="q" placeholder="Search grantor, grantee, instrument, property…" autocomplete="off"/>
+    <select id="grp"><option value="">All entity groups</option></select>
+    <select id="ty"><option value="">All instrument types</option></select>
+    <select id="yr"><option value="">All years</option></select>
+  </div>
+  <div class="flt" id="cnt"></div>
+  <table><thead><tr>
+    <th data-k="date">Recorded</th><th data-k="grp">Group</th><th data-k="type">Type</th>
+    <th data-k="grantor">Grantor &rarr; Grantee (trustee / lender)</th>
+    <th data-k="cons">Consideration</th><th data-k="inst">Instrument</th><th>Image</th>
+  </tr></thead><tbody id="body"></tbody></table>
+  <div class="note">Source: Davidson County Register of Deeds, recorded deeds of trust and assignments (image builder <code>davidsonportal.com/gis/file.php?file=&lt;instrument&gt;</code>). Compiled from entity-level portal searches across Borrower, PropCo, SFR, and Asset shell families plus the 2010 bulk DOT-assignment recordings. Records before ~1990 carry a book/page citation rather than an instrument number and are not directly image-linked.</div>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));}
+function usd(v){v=+v||0;return v?'$'+v.toLocaleString():'';}
+var ROWS=[],sortK='date',sortD=1;
+fetch('all_dots.json').then(r=>r.json()).then(d=>{ROWS=d.rows;init();});
+function opts(sel,vals){document.getElementById(sel).insertAdjacentHTML('beforeend',vals.map(v=>'<option>'+esc(v)+'</option>').join(''));}
+function init(){
+  opts('grp',[...new Set(ROWS.map(r=>r.grp).filter(Boolean))].sort());
+  opts('ty',[...new Set(ROWS.map(r=>r.type).filter(Boolean))].sort());
+  opts('yr',[...new Set(ROWS.map(r=>r.year).filter(Boolean))].sort().reverse());
+  ['q','grp','ty','yr'].forEach(id=>document.getElementById(id).addEventListener('input',render));
+  document.querySelectorAll('thead th[data-k]').forEach(th=>th.onclick=()=>{var k=th.dataset.k;if(sortK===k)sortD=-sortD;else{sortK=k;sortD=1;}render();});
+  render();
+}
+function render(){
+  var f=document.getElementById('q').value.toLowerCase().trim();
+  var g=document.getElementById('grp').value,t=document.getElementById('ty').value,y=document.getElementById('yr').value;
+  var list=ROWS.filter(r=>{
+    if(g&&r.grp!==g)return false; if(t&&r.type!==t)return false; if(y&&r.year!==y)return false;
+    if(f&&(r.grantor+' '+r.grantee+' '+r.inst+' '+r.desc+' '+r.xref+' '+r.grp).toLowerCase().indexOf(f)<0)return false;
+    return true;});
+  list.sort((a,b)=>{var x=a[sortK],y2=b[sortK];if(sortK==='cons'){x=+x||0;y2=+y2||0;}else{x=String(x);y2=String(y2);}return x<y2?-sortD:x>y2?sortD:0;});
+  var linked=ROWS.filter(r=>r.url).length, cons=ROWS.reduce((s,r)=>s+(+r.cons||0),0);
+  var yrs=ROWS.map(r=>r.year).filter(Boolean);
+  document.getElementById('stats').innerHTML=
+    '<div class="card"><div class="v">'+ROWS.length.toLocaleString()+'</div><div class="l">recorded instruments</div></div>'+
+    '<div class="card"><div class="v">'+linked.toLocaleString()+'</div><div class="l">linked to county image</div></div>'+
+    '<div class="card"><div class="v">'+(Math.min(...yrs)+'–'+Math.max(...yrs))+'</div><div class="l">recording years</div></div>'+
+    '<div class="card"><div class="v">'+[...new Set(ROWS.map(r=>r.grp))].filter(Boolean).length+'</div><div class="l">entity groups</div></div>';
+  document.getElementById('cnt').textContent=list.length.toLocaleString()+' of '+ROWS.length.toLocaleString()+' instruments shown';
+  var html=list.slice(0,1500).map(r=>{
+    var party=esc(r.grantor||'?')+' <span class="none">&rarr;</span> '+esc(r.grantee||'?')+(r.desc?'<br><span class="none">'+esc(r.desc)+'</span>':'')+(r.xref?'<br><span class="none">xref '+esc(r.xref)+'</span>':'');
+    var img=r.url?'<a class="lnk" href="'+esc(r.url)+'" target="_blank">Deed &#8599;</a>':'<span class="none">'+esc(r.bp||'—')+'</span>';
+    return '<tr><td>'+esc(r.date||'—')+'</td><td><span class="grp">'+esc(r.grp||'—')+'</span></td>'+
+      '<td><span class="ty '+esc((r.type||'').split(/[^A-Z]/)[0])+'">'+esc(r.type||'—')+'</span></td>'+
+      '<td>'+party+'</td><td class="amt">'+usd(r.cons)+'</td><td class="inst">'+esc(r.inst||r.bp||'')+'</td><td>'+img+'</td></tr>';
+  }).join('');
+  document.getElementById('body').innerHTML=html+(list.length>1500?'<tr><td colspan="7" class="flt">Showing first 1,500 &mdash; narrow the filters to see the rest.</td></tr>':'');
+}
+</script></body></html>
