@@ -1,0 +1,71 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Nashville's Build-to-Rent Machine — Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.93);
+    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.22);max-width:92%}
+  #title h2{margin:0;font-size:16.5px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #ctrl{position:absolute;top:74px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:10px 13px;border-radius:6px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-width:270px}
+  #ctrl b{font-size:12.5px} #ctrl select{font-family:inherit;font-size:12.5px;width:100%;margin:5px 0 8px;padding:3px}
+  #leg .r{cursor:pointer;padding:2px 0;user-select:none;line-height:1.35}#leg .r.off{opacity:.32}
+  #leg i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:middle;border:1px solid rgba(0,0,0,.2)}
+  #leg .c{color:#888;font-size:11px;float:right;margin-left:8px}
+  #stats{position:absolute;bottom:16px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);line-height:1.5}#stats b{color:#1a3a5c}
+  #count{position:absolute;bottom:16px;right:12px;z-index:600;background:rgba(255,255,255,.94);padding:6px 12px;border-radius:5px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+  .leaflet-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:320px;line-height:1.5}
+  .pp b{color:#1a3a5c} .pp .nm{font-weight:bold;font-size:13px}
+</style></head><body>
+<div id="title"><h2>Nashville's Build-to-Rent Machine</h2>
+  <p>Every build-to-rent parcel in Davidson County, pipeline and built, as its real lot shape. Color by operator, model, or stage. Click any parcel.</p></div>
+<div id="ctrl"><b>Color by</b>
+  <select id="dim">
+    <option value="ty">BTR type (integrated / land-bank / merchant)</option>
+    <option value="mo">Business model</option>
+    <option value="lc">Lifecycle stage</option>
+    <option value="op">Operator</option>
+  </select>
+  <div id="leg"></div></div>
+<div id="stats">loading&hellip;</div>
+<div id="count">loading BTR parcels&hellip;</div>
+<div id="map"></div>
+<script>
+const PAL=['#1c458c','#b3282d','#e0952a','#1f8166','#8e5aa0','#2c9fb0','#cf307a','#7a5c3a','#5aa84f','#e06a2a','#8dcaf0','#911eb4','#469990','#9A6324','#800000','#808000','#000075','#a9a9a9','#d93a4c','#3f7cc0'];
+const map=L.map('map',{preferCanvas:true,center:[36.10,-86.72],zoom:11});
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:20}).addTo(map);
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'&copy; Esri',maxZoom:20});
+L.control.layers({'CARTO Positron':carto,'Aerial (Esri)':aerial},null,{position:'topright',collapsed:true}).addTo(map);
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{
+  L.geoJSON({type:'FeatureCollection',features:g.features.filter(f=>f.properties.OBJECTID===4)},
+    {style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);});
+let feats=[],layer,dim='ty',cmap={},off={};
+function cats(d){const s={};feats.forEach(f=>{const v=f.properties[d]||'—';s[v]=(s[v]||0)+1;});
+  return Object.entries(s).sort((a,b)=>b[1]-a[1]);}
+function buildCmap(){const cs=cats(dim);cmap={};cs.forEach(([v],i)=>cmap[v]=PAL[i%PAL.length]);}
+function style(f){const v=f.properties[dim]||'—';return{color:'#444',weight:0.4,fillColor:cmap[v]||'#999',fillOpacity:off[v]?0:0.75,opacity:off[v]?0:0.9};}
+function popup(f){const p=f.properties;const A=p.apn;
+  const lnk=(l,u)=>u?`<a href="${u}" target="_blank" rel="noopener">${l}</a> `:'';
+  return `<div class="pp"><span class="nm">${p.op||''}</span><br>
+    <b>Stage:</b> ${p.lc||p.st||'—'}<br><b>Type:</b> ${p.ty||'—'}<br><b>Model:</b> ${p.mo||'—'}<br>
+    <b>Current owner:</b> ${p.own||'—'}<br>${p.addr||''} &middot; ${p.ac||'—'} ac &middot; APN ${A}<br>
+    <div style="margin-top:4px">${lnk('Parcel Viewer','https://maps.nashville.gov/ParcelViewer/?parcelID='+A)}${lnk('Comper','https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+A)}${lnk('Aerial','https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+A)}</div></div>`;
+}
+function draw(){if(layer)layer.remove();
+  layer=L.geoJSON({type:'FeatureCollection',features:feats},{style,onEachFeature:(f,l)=>l.bindPopup(()=>popup(f),{maxWidth:330})}).addTo(map);
+  const shown=feats.filter(f=>!off[f.properties[dim]||'—']).length;
+  document.getElementById('count').innerHTML='<b>'+shown.toLocaleString()+'</b> BTR parcels shown';}
+function legend(){const cs=cats(dim);
+  document.getElementById('leg').innerHTML=cs.map(([v,n])=>`<div class="r ${off[v]?'off':''}" data-v="${v}"><i style="background:${cmap[v]}"></i>${v.length>34?v.slice(0,33)+'…':v}<span class="c">${n}</span></div>`).join('');
+  document.querySelectorAll('#leg .r').forEach(r=>r.onclick=()=>{off[r.dataset.v]=!off[r.dataset.v];draw();legend();});}
+function stats(){const pipe=feats.filter(f=>String(f.properties.st).startsWith('Pipeline')).length;
+  const built=feats.length-pipe;const ops=new Set(feats.map(f=>f.properties.op)).size;
+  document.getElementById('stats').innerHTML=`<b>${feats.length.toLocaleString()}</b> BTR parcels<br><b>${pipe.toLocaleString()}</b> in pipeline · <b>${built.toLocaleString()}</b> built<br><b>${ops}</b> operators`;}
+document.getElementById('dim').addEventListener('change',e=>{dim=e.target.value;off={};buildCmap();draw();legend();});
+document.getElementById('count').textContent='loading BTR parcels…';
+fetch('BTR_Machine.geojson').then(r=>r.json()).then(g=>{feats=g.features.filter(f=>f.geometry&&String(f.geometry.type).indexOf('Polygon')>=0);buildCmap();draw();legend();stats();
+  try{map.fitBounds(layer.getBounds(),{padding:[20,20]});}catch(e){}});
+</script></body></html>
