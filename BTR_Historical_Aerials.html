@@ -9,23 +9,21 @@
   #map{position:absolute;inset:0;background:#111}
   #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.93);padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.3);max-width:92%}
   #title h2{margin:0;font-size:16px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
-  #jump{position:absolute;top:70px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 11px;border-radius:6px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.3);max-width:290px}
-  #jump select{font-family:inherit;font-size:12.5px;padding:3px;width:265px}
-  #info{margin-top:8px;font-size:11.5px;line-height:1.45;max-height:340px;overflow:auto}
+  #jump{position:absolute;top:70px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 11px;border-radius:6px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.3);max-width:300px}
+  #jump select{font-family:inherit;font-size:12.5px;padding:3px;width:275px}
+  #info{margin-top:8px;font-size:11.5px;line-height:1.45;max-height:320px;overflow:auto}
   #info b{color:#1a3a5c} #info .hoa{color:#7a1f1f} #info a{color:#1769aa;text-decoration:none} #info a:hover{text-decoration:underline}
   #info .p{border-top:1px dashed #ddd;padding:3px 0}
-  #slider{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.96);padding:10px 20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);text-align:center;width:min(600px,66%)}
+  #slider{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.96);padding:10px 20px;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);text-align:center;width:min(600px,62%)}
   #slider .yr{font-size:30px;font-weight:bold;color:#1a3a5c;line-height:1} #slider .lab{font-size:11px;color:#666} #slider input{width:100%;margin-top:4px}
   #play{font-family:inherit;font-size:13px;padding:3px 16px;margin-top:6px;cursor:pointer;border:1px solid #1a3a5c;background:#fff;color:#1a3a5c;border-radius:5px}
-  #legend{position:absolute;bottom:20px;right:12px;z-index:600;background:rgba(255,255,255,.94);padding:8px 12px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
-  #legend i{display:inline-block;width:12px;height:12px;border:2px solid;border-radius:2px;margin-right:5px;vertical-align:middle;background:transparent}
-  .leaflet-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px} .pp b{color:#1a3a5c} .pp a{color:#1769aa;font-size:11.5px;margin-right:8px}
+  .leaflet-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px} .pp b{color:#1a3a5c} .pp .tk a{color:#1769aa;font-size:11px;margin-right:7px;white-space:nowrap}
+  .subtip{font-weight:bold;color:#7a1f1f}
 </style></head><body>
 <div id="title"><h2>Watch Nashville Get Built</h2>
-  <p>Build-to-rent subdivisions on Metro's historical aerials, with their recorded plat chain. Pick a subdivision, slide the year, click the deed links.</p></div>
+  <p>Build-to-rent parcels, subdivision boundaries, and HOA common areas on Metro's historical aerials. Toggle layers (top-right), slide the year, click for deeds and permits.</p></div>
 <div id="jump">Zoom to subdivision:<br><select id="c"></select><div id="info"></div></div>
-<div id="legend"><b>Build-to-rent parcels</b><br><i style="border-color:#00e0ff"></i>Pipeline<br><i style="border-color:#ffd21e"></i>Built</div>
-<div id="slider"><div class="lab">Aerial imagery</div><div class="yr" id="yr">2000</div>
+<div id="slider"><div class="lab">Aerial imagery</div><div class="yr" id="yr">2014</div>
   <input type="range" id="rng" min="0" max="0" step="1" value="0"/>
   <div><button id="play">&#9654; Play through the years</button></div></div>
 <div id="map"></div>
@@ -38,27 +36,38 @@ function showYear(i){const y=YEARS[i];document.getElementById('yr').textContent=
   const nl=L.tileLayer(AER+SVC[y]+'/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,attribution:'Aerial: Metro Nashville '+y});
   nl.addTo(map); if(aerial){const old=aerial;setTimeout(()=>map.removeLayer(old),350);} aerial=nl;}
 document.getElementById('rng').max=YEARS.length-1;
-fetch('BTR_Machine.geojson').then(r=>r.json()).then(g=>{
-  const feats=g.features.filter(f=>f.geometry&&String(f.geometry.type).indexOf('Polygon')>=0);
-  L.geoJSON({type:'FeatureCollection',features:feats},{style:f=>{const built=String(f.properties.st||'').indexOf('Current')>=0;
-    return{color:built?'#ffd21e':'#00e0ff',weight:1.5,fillOpacity:0,opacity:0.95};},
-    onEachFeature:(f,l)=>{const p=f.properties,A=p.apn;
-      l.bindPopup('<div class="pp"><b>'+(p.op||'')+'</b><br>'+(p.st||'')+' · '+(p.mo||'')+'<br>'+(p.own||'')+'<br>'+(p.addr||'')+' · APN '+A+
-        '<div style="margin-top:4px"><a href="https://maps.nashville.gov/ParcelViewer/?parcelID='+A+'" target="_blank">Parcel Viewer &#8599;</a>'+
-        '<a href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+A+'" target="_blank">Property Card</a>'+
-        '<a href="https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+A+'" target="_blank">Comper</a>'+
-        '<a href="https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+A+'" target="_blank">Plat history</a></div></div>');}
-  }).addTo(map);
+const doll=n=>n>0?'$'+n.toLocaleString():'';
+// PARCELS
+let parcelLayer=L.geoJSON(null,{style:f=>{const built=String(f.properties.st||'').indexOf('Current')>=0;
+    return{color:built?'#ffd21e':'#00e0ff',weight:1.4,fillOpacity:0,opacity:0.95};},
+  onEachFeature:(f,l)=>{const p=f.properties,A=p.apn,a=p.acq||{};
+    let deed=a.url?'<br><b>Bought from:</b> '+(a.seller||'unknown')+(a.date?' on '+a.date:'')+(a.price>0?' for '+doll(a.price):'')+' <a href="'+a.url+'" target="_blank">deed &#8599;</a>':'';
+    l.bindPopup('<div class="pp"><b>'+(p.op||'')+'</b><br>'+(p.st||'')+' &middot; '+(p.mo||'')+'<br>'+(p.own||'')+'<br>'+(p.addr||'')+' &middot; APN '+A+deed+
+      '<div class="tk" style="margin-top:5px">'+
+      '<a href="https://maps.nashville.gov/ParcelViewer/?parcelID='+A+'" target="_blank">Parcel Viewer</a>'+
+      '<a href="https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+A+'" target="_blank">Comper</a>'+
+      '<a href="https://documents.nashville.gov/Request/Form/PermitCodes?parcelnumber='+A+'" target="_blank">Permit docs</a>'+
+      '<a href="https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+A+'" target="_blank">Plat history</a></div></div>');}
 });
+fetch('BTR_Machine.geojson').then(r=>r.json()).then(g=>{parcelLayer.addData({type:'FeatureCollection',features:g.features.filter(f=>f.geometry&&String(f.geometry.type).indexOf('Polygon')>=0)});parcelLayer.addTo(map);});
+// SUBDIVISION boundaries
+let subLayer=L.geoJSON(null,{style:{color:'#ff2d95',weight:2.2,fill:false,opacity:0.95,dashArray:'5,3'},
+  onEachFeature:(f,l)=>{const n=f.properties.NAME||'';l.bindTooltip(n,{permanent:false,direction:'center',className:'subtip'});l.bindPopup('<b>'+n+'</b><br>Recorded '+(f.properties.RECORDEDDATE?new Date(f.properties.RECORDEDDATE).toLocaleDateString():'')+'<br>Instrument '+(f.properties.INSTRUMENT||''));}});
+fetch('Davidson_BTR_Subdivisions.geojson').then(r=>r.json()).then(g=>subLayer.addData(g).addTo(map));
+// HOA common areas
+let hoaLayer=L.geoJSON(null,{style:{color:'#2ecc40',weight:1.5,fillColor:'#2ecc40',fillOpacity:0.35,opacity:0.9},
+  onEachFeature:(f,l)=>l.bindPopup('<b>HOA / common area</b><br>'+(f.properties.own||'')+'<br>'+(f.properties.addr||'')+' &middot; APN '+f.properties.apn)});
+fetch('Davidson_BTR_HOAs.geojson').then(r=>r.json()).then(g=>hoaLayer.addData(g).addTo(map));
+L.control.layers(null,{'Build-to-rent parcels':parcelLayer,'Subdivision boundaries':subLayer,'HOA / common areas':hoaLayer},{position:'topright',collapsed:false}).addTo(map);
+// subdivision jump + info
 const sel=document.getElementById('c');
 SUBS.forEach((s,i)=>{const o=document.createElement('option');o.value=i;o.textContent=s.label;sel.appendChild(o);});
 function goSub(i){const s=SUBS[i];map.fitBounds([s.b[0],s.b[1]],{padding:[30,30],maxZoom:17});
   let h='<b>'+s.label+'</b>';
   if(s.hoa)h+='<br><span class="hoa">HOA / owner:</span> '+s.hoa;
-  if(s.plats&&s.plats.length){h+='<br><b>Recorded plat chain</b> (click for deed image):';
-    s.plats.forEach(p=>{h+='<div class="p">'+(p.date||'')+' &middot; <b>'+p.type+'</b>'+(p.acres&&p.acres!=='0'?' &middot; '+p.acres+' ac':'')+' &middot; '+(p.status||'')+'<br><a href="'+p.url+'" target="_blank">'+p.ins+' &#8599;</a></div>';});}
-  else h+='<br><i style="color:#888">No recorded plat on file for this cluster.</i>';
-  h+='<div style="margin-top:5px;font-size:10.5px;color:#888">Tell: when the HOA owner mails to a known operator address (e.g. Mountain Springs Townhouse Owners Assn &rarr; 30601 Agoura Rd = AMH), the community is operator build-to-rent.</div>';
+  if(s.plats&&s.plats.length){h+='<br><b>Recorded plat chain</b> (deed image):';
+    s.plats.forEach(p=>{h+='<div class="p">'+(p.date||'')+' &middot; <b>'+p.type+'</b>'+(p.acres&&p.acres!=='0'?' &middot; '+p.acres+' ac':'')+' &middot; '+(p.status||'')+' <a href="'+p.url+'" target="_blank">'+p.ins+' &#8599;</a></div>';});}
+  h+='<div style="margin-top:5px;font-size:10.5px;color:#888">Click any parcel for its purchase deed (who they bought it from) and permit docs. Tell: HOA owner mailing to an operator address (e.g. Mountain Springs Owners Assn &rarr; 30601 Agoura Rd = AMH) = operator build-to-rent.</div>';
   document.getElementById('info').innerHTML=h;}
 sel.addEventListener('change',e=>goSub(+e.target.value));
 document.getElementById('rng').addEventListener('input',e=>showYear(+e.target.value));
@@ -66,5 +75,5 @@ let playing=null;
 document.getElementById('play').addEventListener('click',function(){if(playing){clearInterval(playing);playing=null;this.innerHTML='&#9654; Play through the years';return;}
   this.innerHTML='&#10073;&#10073; Pause';let i=+document.getElementById('rng').value;if(i>=YEARS.length-1)i=0;
   playing=setInterval(()=>{if(i>=YEARS.length-1){clearInterval(playing);playing=null;document.getElementById('play').innerHTML='&#9654; Play through the years';return;}i++;showYear(i);},1400);});
-showYear(YEARS.indexOf(2000)); goSub(0);
+showYear(YEARS.indexOf(2014)); goSub(0);
 </script></body></html>
