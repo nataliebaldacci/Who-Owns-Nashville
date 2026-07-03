@@ -1,0 +1,74 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Where Nashville's Owners Mail Their Tax Bills - Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0;background:#eaf0f6}
+  #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.93);
+    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.22);max-width:92%}
+  #title h2{margin:0;font-size:16.5px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
+  #legend{position:absolute;bottom:16px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);line-height:1.7}
+  #legend b{font-size:12.5px}
+  #legend i{display:inline-block;width:15px;height:12px;margin-right:6px;vertical-align:middle}
+  #panel{position:absolute;top:74px;right:12px;z-index:600;background:rgba(255,255,255,.96);padding:10px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-width:250px}
+  #panel b{color:#1a3a5c} #panel table{border-collapse:collapse;margin-top:4px;width:100%}
+  #panel td{padding:1px 0} #panel td.n{text-align:right;font-weight:bold;color:#1a3a5c}
+  #toggle{position:absolute;top:74px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:7px 10px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.2);font-size:12px}
+  #toggle button{font-family:inherit;font-size:12px;padding:3px 10px;margin:0 2px;cursor:pointer;border:1px solid #1a3a5c;background:#fff;color:#1a3a5c;border-radius:4px}
+  #toggle button.on{background:#1a3a5c;color:#fff}
+  .leaflet-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px}
+  .cl b{color:#1a3a5c}
+</style></head><body>
+<div id="title"><h2>Where Nashville's Owners Mail Their Tax Bills</h2>
+  <p>Every Davidson County parcel, mapped to the state and city its owner's mail goes to. Darker states own more; gold bubbles are the corporate HQ cities.</p></div>
+<div id="toggle"><b>Show:</b><br><button id="tOOS" class="on">Out-of-state</button><button id="tAll">All states</button></div>
+<div id="panel"></div>
+<div id="legend"></div>
+<div id="map"></div>
+<script>
+const D={"states": {"Tennessee": {"p": 186485, "o": 64095, "r": 313757}, "Texas": {"p": 7308, "o": 2083, "r": 10686}, "California": {"p": 7483, "o": 2846, "r": 9149}, "Arizona": {"p": 5876, "o": 718, "r": 7404}, "Georgia": {"p": 4764, "o": 1553, "r": 5918}, "Florida": {"p": 3403, "o": 1412, "r": 3896}, "Illinois": {"p": 3002, "o": 902, "r": 3399}, "New York": {"p": 2288, "o": 911, "r": 2837}, "Kentucky": {"p": 2001, "o": 687, "r": 2409}, "Ohio": {"p": 1565, "o": 504, "r": 1864}, "Pennsylvania": {"p": 1298, "o": 403, "r": 1741}, "Alabama": {"p": 1483, "o": 505, "r": 1601}, "North Carolina": {"p": 1072, "o": 519, "r": 1307}, "Missouri": {"p": 1004, "o": 353, "r": 1094}, "Michigan": {"p": 824, "o": 285, "r": 922}, "Virginia": {"p": 662, "o": 385, "r": 831}, "New Jersey": {"p": 617, "o": 276, "r": 809}, "Indiana": {"p": 620, "o": 330, "r": 774}, "Connecticut": {"p": 717, "o": 162, "r": 767}, "Maryland": {"p": 635, "o": 201, "r": 673}, "Massachusetts": {"p": 608, "o": 167, "r": 650}, "District of Columbia": {"p": 595, "o": 78, "r": 603}, "Colorado": {"p": 472, "o": 325, "r": 585}, "Minnesota": {"p": 479, "o": 249, "r": 559}, "Mississippi": {"p": 447, "o": 201, "r": 500}, "Washington": {"p": 443, "o": 167, "r": 477}, "Louisiana": {"p": 299, "o": 142, "r": 470}, "South Carolina": {"p": 362, "o": 265, "r": 445}, "Wisconsin": {"p": 380, "o": 126, "r": 436}, "Arkansas": {"p": 314, "o": 164, "r": 401}, "Oklahoma": {"p": 267, "o": 185, "r": 326}, "Nevada": {"p": 287, "o": 199, "r": 303}, "Utah": {"p": 214, "o": 135, "r": 278}, "Iowa": {"p": 218, "o": 67, "r": 229}, "Nebraska": {"p": 225, "o": 58, "r": 229}, "Delaware": {"p": 186, "o": 85, "r": 205}, "Kansas": {"p": 148, "o": 93, "r": 166}, "North Dakota": {"p": 100, "o": 14, "r": 134}, "Oregon": {"p": 89, "o": 89, "r": 131}, "Wyoming": {"p": 66, "o": 58, "r": 72}, "West Virginia": {"p": 37, "o": 15, "r": 47}, "New Mexico": {"p": 41, "o": 32, "r": 43}, "Hawaii": {"p": 38, "o": 38, "r": 43}, "Alaska": {"p": 33, "o": 13, "r": 34}, "Rhode Island": {"p": 20, "o": 20, "r": 28}, "New Hampshire": {"p": 25, "o": 22, "r": 28}, "South Dakota": {"p": 22, "o": 20, "r": 26}, "Idaho": {"p": 23, "o": 23, "r": 25}, "Montana": {"p": 21, "o": 21, "r": 24}, "Maine": {"p": 14, "o": 15, "r": 15}, "Vermont": {"p": 13, "o": 9, "r": 13}}, "cities": [{"c": "Scottsdale, AZ", "lat": 33.49, "lon": -111.92, "p": 4666, "o": 454}, {"c": "Atlanta, GA", "lat": 33.75, "lon": -84.39, "p": 3800, "o": 1153}, {"c": "Dallas, TX", "lat": 32.78, "lon": -96.8, "p": 2873, "o": 544}, {"c": "Austin, TX", "lat": 30.27, "lon": -97.74, "p": 1922, "o": 378}, {"c": "Chicago, IL", "lat": 41.85, "lon": -87.65, "p": 1777, "o": 450}, {"c": "Houston, TX", "lat": 29.76, "lon": -95.37, "p": 1653, "o": 452}, {"c": "New York, NY", "lat": 40.71, "lon": -74.01, "p": 1521, "o": 509}, {"c": "Calabasas, CA", "lat": 34.16, "lon": -118.64, "p": 1087, "o": 46}, {"c": "Tempe, AZ", "lat": 33.42, "lon": -111.94, "p": 882, "o": 61}, {"c": "Louisville, KY", "lat": 38.25, "lon": -85.76, "p": 825, "o": 265}, {"c": "Los Angeles, CA", "lat": 34.05, "lon": -118.24, "p": 780, "o": 264}, {"c": "Birmingham, AL", "lat": 33.52, "lon": -86.81, "p": 712, "o": 251}, {"c": "Agoura Hills, CA", "lat": 34.15, "lon": -118.76, "p": 696, "o": 65}, {"c": "San Francisco, CA", "lat": 37.77, "lon": -122.42, "p": 637, "o": 135}, {"c": "Charlotte, NC", "lat": 35.23, "lon": -80.84, "p": 515, "o": 191}, {"c": "Northbrook, IL", "lat": 42.13, "lon": -87.83, "p": 514, "o": 23}, {"c": "Boston, MA", "lat": 42.36, "lon": -71.06, "p": 286, "o": 79}, {"c": "Miami, FL", "lat": 25.76, "lon": -80.19, "p": 196, "o": 98}, {"c": "Newport Beach, CA", "lat": 33.62, "lon": -117.93, "p": 185, "o": 61}, {"c": "Denver, CO", "lat": 39.74, "lon": -104.99, "p": 171, "o": 113}, {"c": "Cincinnati, OH", "lat": 39.1, "lon": -84.51, "p": 118, "o": 57}, {"c": "Beverly Hills, CA", "lat": 34.07, "lon": -118.4, "p": 100, "o": 43}, {"c": "Miami Lakes, FL", "lat": 25.91, "lon": -80.31, "p": 56, "o": 17}]};
+const map=L.map('map',{center:[39.5,-96],zoom:4,scrollWheelZoom:true});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:12}).addTo(map);
+const BREAKS=[0,100,500,1000,2500,5000],COLS=['#eef4fb','#c3d5ec','#8fb0d8','#5183bf','#2a5db0','#14315f'];
+function col(p,oos){ if(oos&&p>7500)return '#14315f'; for(let i=BREAKS.length-1;i>=0;i--){if(p>=BREAKS[i])return COLS[i];} return '#f4f7fb';}
+let mode='oos', sl;
+function style(f){
+  const nm=f.properties.name, s=D.states[nm]; const p=s?s.p:0;
+  if(nm==='Tennessee'&&mode==='oos') return {fillColor:'#e0952a',fillOpacity:.5,color:'#fff',weight:1};
+  return {fillColor:col(p,mode==='oos'),fillOpacity:.82,color:'#fff',weight:1};
+}
+function onEach(f,l){
+  const nm=f.properties.name,s=D.states[nm];
+  l.bindPopup('<div class="cl"><b>'+nm+'</b><br>'+(s?s.p.toLocaleString():0)+' Davidson parcels<br>'+(s?s.o.toLocaleString():0)+' distinct owners</div>');
+  l.on('mouseover',function(){l.setStyle({weight:2,color:'#1a3a5c'});});
+  l.on('mouseout',function(){sl.resetStyle(l);});
+}
+fetch('us_states.geojson').then(r=>r.json()).then(g=>{
+  sl=L.geoJSON(g,{style:style,onEachFeature:onEach}).addTo(map);
+  const rad=p=>Math.max(5,Math.sqrt(p)/2.4);
+  D.cities.forEach(function(c){
+    L.circleMarker([c.lat,c.lon],{radius:rad(c.p),fillColor:'#f0af1e',color:'#8a5a00',weight:1,fillOpacity:.85})
+      .bindPopup('<div class="cl"><b>'+c.c+'</b><br>'+c.p.toLocaleString()+' parcels<br>'+c.o.toLocaleString()+' owners mail here</div>')
+      .addTo(map);
+  });
+});
+function panel(){
+  const top=Object.entries(D.states).filter(([k])=>mode!=='oos'||k!=='Tennessee').sort((a,b)=>b[1].p-a[1].p).slice(0,10);
+  document.getElementById('panel').innerHTML='<b>Top '+(mode==='oos'?'out-of-state ':'')+'owner locations</b><table>'+
+    top.map(([k,v])=>'<tr><td>'+k+'</td><td class="n">'+v.p.toLocaleString()+'</td></tr>').join('')+'</table>';
+}
+function legend(){
+  let h='<b>Davidson parcels owned</b><br>';
+  if(mode==='oos')h+='<div><i style="background:#e0952a;opacity:.5"></i>Tennessee (home)</div>';
+  const labs=['1-99','100-499','500-999','1,000-2,499','2,500-4,999','5,000+'];
+  for(let i=0;i<COLS.length;i++)h+='<div><i style="background:'+COLS[i]+'"></i>'+labs[i]+'</div>';
+  h+='<div style="margin-top:5px"><i style="background:#f0af1e;border-radius:50%;width:12px;height:12px"></i>HQ city (bubble = parcels)</div>';
+  document.getElementById('legend').innerHTML=h;
+}
+document.getElementById('tOOS').onclick=function(){mode='oos';tOOS.classList.add('on');tAll.classList.remove('on');if(sl)sl.setStyle(style);panel();legend();};
+document.getElementById('tAll').onclick=function(){mode='all';tAll.classList.add('on');tOOS.classList.remove('on');if(sl)sl.setStyle(style);panel();legend();};
+panel();legend();
+</script></body></html>
