@@ -126,6 +126,29 @@
  <div class="bars" id="occ"></div>
  <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP. 194,152 parcels (67.7%) match; 92,302 (32.2%) are absentee-owned. Source: <code>OwnZip = PropZip</code> filter, Metro Nashville Cadastral (last accessed July 2, 2026).</div>
 
+ <h2 class="sec">Largest corporate owners (by legal entity)</h2>
+ <table>
+ <thead><tr><th>#</th><th>Owner entity</th><th style="text-align:right">Parcels</th><th style="text-align:right">Appraised</th></tr></thead>
+ <tbody>
+ <tr><td>1</td><td>Normandy II General Partnership</td><td class="n">284</td><td class="n">$99.7M</td></tr>
+ <tr><td>2</td><td>AMH TN Development, LLC</td><td class="n">199</td><td class="n">$91.3M</td></tr>
+ <tr><td>3</td><td>AMH Mountain Springs Development, LLC</td><td class="n">186</td><td class="n">$77.4M</td></tr>
+ <tr><td>4</td><td>AH4R-TN3, LLC</td><td class="n">181</td><td class="n">$76.0M</td></tr>
+ <tr><td>5</td><td>YAMASA Co., Ltd (Progress Residential)</td><td class="n">165</td><td class="n">$61.3M</td></tr>
+ <tr><td>6</td><td>Lake Shore Estates, Inc.</td><td class="n">131</td><td class="n">$52.2M</td></tr>
+ <tr><td>7</td><td>AH4R TN Properties Three, LLC</td><td class="n">127</td><td class="n">$57.3M</td></tr>
+ <tr><td>8</td><td>STAR 2022-SFR3 Borrower, LP (Starwood)</td><td class="n">101</td><td class="n">$55.5M</td></tr>
+ <tr><td>9</td><td>Lincoya Townhomes, LLC</td><td class="n">97</td><td class="n">$28.5M</td></tr>
+ <tr><td>10</td><td>2174 Rivendell Terrace LLC</td><td class="n">97</td><td class="n">$25.1M</td></tr>
+ <tr><td>11</td><td>AHI Borrower, LP (Amherst)</td><td class="n">81</td><td class="n">$37.3M</td></tr>
+ <tr><td>12</td><td>Rowan Propco LLC (Progress)</td><td class="n">80</td><td class="n">$25.8M</td></tr>
+ <tr><td>13</td><td>Progress Residential Borrower 6, LLC</td><td class="n">73</td><td class="n">$27.2M</td></tr>
+ <tr><td>14</td><td>VB TAH, LLC (VineBrook)</td><td class="n">59</td><td class="n">$18.1M</td></tr>
+ <tr><td>15</td><td>Tenax DPI Property, LLC (Tricon)</td><td class="n">51</td><td class="n">$29.6M</td></tr>
+ </tbody>
+ </table>
+ <div class="note">Notes: Raw legal-entity owner names (before shell resolution), grouped by <code>Owner</code>, holding 2 or more parcels. 1,785 corporate entities hold 2+ parcels. The list understates true concentration because a single operator fragments across many entities: American Homes 4 Rent appears here as AMH TN Development, AMH Mountain Springs, AH4R-TN3, and AH4R TN Properties Three; Progress Residential as YAMASA, Rowan Propco, and numbered Borrower LLCs 4 through 20. The <a href="Current_Cadastral_Holdings_Explorer.html">Current Cadastral Holdings Explorer</a> resolves these shells to their parent brands. Query: <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=%28DUCount%3D1+OR+DUCount%3D2%29+AND+LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29+AND+FeatureType+NOT+IN+%28%27Multistory+Condo%27%2C%27Multistory+Common+Area%27%2C%27Open+Space%27%29+AND+%28OWNER+LIKE+%27%25LLC%25%27+OR+OWNER+LIKE+%27%25SFR%25%27+OR+OWNER+LIKE+%27%25BORROW%25%27%29&amp;groupByFieldsForStatistics=Owner&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22Total_Parcel_Count%22%7D%5D&amp;orderByFields=Total_Parcel_Count+DESC&amp;f=html" target="_blank">MapServer/4/query &#8599;</a> (last accessed July 2, 2026).</div>
+
  <h2 class="sec">The residential housing universe</h2>
  <div class="tiles">
  <div class="tile"><div class="n">205,915</div><div class="l">Residential parcels</div><div class="s">1&ndash;2 unit SF, condo, duplex, ZLL</div></div>
