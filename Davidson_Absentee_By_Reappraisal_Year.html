@@ -21,6 +21,13 @@
   #tip b{color:var(--navy)}
   .callout{background:#fffbe9;border-left:4px solid var(--gold);padding:11px 15px;font-size:13.5px;margin:20px 0;border-radius:5px}
   .note{font-size:11.5px;color:var(--muted);margin-top:14px;font-style:italic}
+  .method{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:18px 22px;margin-top:22px;font-size:13px;color:#33414f}
+  .method h3{margin:0 0 8px;color:var(--navy);font-size:15px;font-weight:800;border-bottom:2px solid var(--gold);padding-bottom:4px}
+  .method ol,.method ul{margin:6px 0;padding-left:20px}
+  .method li{margin:5px 0}
+  .method a{color:var(--navy)}
+  .method code{background:#eef2f8;padding:1px 5px;border-radius:3px;font-size:12px}
+  .method .cav{font-size:12px;color:var(--muted);margin-top:10px}
 </style></head><body>
 <header>
   <h1>Absentee &amp; Out-of-State Ownership of Davidson Homes</h1>
@@ -33,7 +40,22 @@
   <div class="legend"><span><span class="sw" style="background:#1c458c"></span><span id="lbar">Out-of-state homes (count)</span></span><span><span class="ln"></span><span id="lline">Out-of-state share (%)</span></span></div>
   <div class="chart"><svg id="svg" viewBox="0 0 900 440" width="100%"></svg></div>
   <div class="callout" id="callout"></div>
-  <p class="note"><b>Source.</b> Davidson County assessment history (class + improvement value at each reappraisal year) joined to the Metro ParcelHistory ownership record (owner in place as of that year), property zip, and owner state. Among Class-R parcels with improvement value &gt; 0. Reappraisal years 1993–2025.</p>
+  <div class="method">
+    <h3>Methodology &amp; data</h3>
+    <p>This chart is built from a single per-parcel master that joins three primary Davidson County / Metro Nashville government datasets, one row per parcel:</p>
+    <ol>
+      <li><b>Ownership history (chain of title)</b> — the recorded deed record, flattened to up to 20 owners per parcel with each owner's acquisition date, sale price, mailing zip, and mailing state. Source: Metro ParcelHistory ownership layer &middot; <a href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2" target="_blank" rel="noopener">ParcelHistory MapServer, Layer 2</a>.</li>
+      <li><b>Assessment history</b> — the assessment class (R = Residential) and improvement (structure) value for every reappraisal year, from the Property Assessor. Source: <a href="https://www.padctn.org/" target="_blank" rel="noopener">Property Assessor of Davidson County (PADCTN)</a>, via the <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4" target="_blank" rel="noopener">Cadastral MapServer, Layer 4</a>.</li>
+      <li><b>Property location</b> — the property zip of each parcel, from <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4" target="_blank" rel="noopener">the current cadastral</a>. Joined to the ownership + assessment layers on the internal ParcelID.</li>
+    </ol>
+    <p><b>How the population is filtered.</b> For each Davidson <b>reappraisal year</b> (1993, 1997, 2001, 2005, 2009, 2013, 2017, 2021, 2025 — Davidson reassesses on a 4-year cycle, so only these years have full county-wide coverage), we keep parcels whose assessment <b>class was R (Residential)</b> and whose <b>improvement value was &gt; 0</b> (i.e., a standing structure — an actual home, not vacant land).</p>
+    <p><b>How the owner is identified.</b> The owner "in place as of" each reappraisal year is the most recent owner in the chain of title whose acquisition date is on or before that year. Two non-owner-occupancy measures are then computed for that owner:</p>
+    <ul>
+      <li><b>Absentee</b> — the owner's mailing zip differs from the property's zip (the standard proxy for a home the owner does not live in).</li>
+      <li><b>Out-of-state</b> — the owner's mailing state is not Tennessee (a stricter signal, most likely an investor or institution).</li>
+    </ul>
+    <p class="cav"><b>Caveats.</b> Off-cycle years (e.g., 2000, 2003) are omitted because the assessor only records off-cycle parcels that transact or physically change, so they under-count. Property zip is the current cadastral zip (parcel location is stable). The underlying master and its column inventory are documented in <code>_METHODOLOGY_Parcel_Ownership_Assessment_ACS_DEDUP_2026-07-02.md</code>; the per-year figures behind this chart are saved as <code>Absentee_and_OOS_Residential_By_Reappraisal_Year.csv</code>.</p>
+  </div>
 </div>
 <div id="tip"></div>
 <script>
