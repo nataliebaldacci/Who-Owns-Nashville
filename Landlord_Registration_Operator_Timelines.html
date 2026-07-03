@@ -1,0 +1,88 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Institutional Landlord Registrations Over Time</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6 L26 14 L23 14 L23 25 L18 25 L18 18 L14 18 L14 25 L9 25 L9 14 L6 14 Z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa;line-height:1.4}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1120px;margin:0 auto;padding:20px 18px 70px}
+ h1{font-family:'Montserrat',sans-serif;font-size:24px;color:#1c458c;margin:6px 0 2px}
+ h2{font-family:'Montserrat',sans-serif;font-size:17px;color:#1c458c;margin:26px 0 2px}
+ .lead,.sub{color:#4a5560;font-size:14px;margin-bottom:6px}
+ .sub{font-size:12.5px;color:#8a94a0;margin-bottom:10px}
+ .chartbox{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:12px 10px;overflow-x:auto}
+ svg{display:block;font-family:'Montserrat',sans-serif}
+ .oplab{font-size:10.5px;fill:#33404e}
+ .axis{font-size:10px;fill:#9aa4b0}
+ .grid{stroke:#eef1f6;stroke-width:1}
+ #tip{position:fixed;pointer-events:none;background:#1c458c;color:#fff;font-family:'Montserrat',sans-serif;font-size:11.5px;padding:6px 9px;border-radius:5px;opacity:0;transition:opacity .1s;z-index:50;max-width:240px;line-height:1.35}
+ .legend{font-size:12px;color:#4a5560;margin:8px 0}
+ .legend i{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle;margin:0 3px 0 10px}
+ .note{font-size:12px;color:#8a94a0;margin-top:14px;line-height:1.5}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO RENTS</small></a><div class="htitle">Institutional Landlord Registrations</div></div>
+<div class="wrap">
+  <h1>When institutional landlords registered — and when it lapsed</h1>
+  <div class="lead">Metro requires a landlord registration for each non-owner-occupied rental. These are the <b>301 registration cases tied to institutional operators</b> (2008&ndash;2026). Each case is one registration; a case can cover many addresses.</div>
+
+  <h2>1 · Registration events over time</h2>
+  <div class="sub">Each bubble is one registration at its issue date; bubble size = number of case addresses on that registration. Red outline = now expired.</div>
+  <div class="chartbox"><svg id="bubble"></svg></div>
+  <div class="legend">Bubble size = addresses on the case (1 &rarr; 442). <i style="background:#1c458c"></i>active <i style="background:#fff;border:2px solid #d7263d;width:9px;height:9px"></i>expired</div>
+
+  <h2>2 · How long each registration was held</h2>
+  <div class="sub">Each bar runs from the issue date to the expiration date &mdash; the window the registration was valid. Bars stack within each operator; gaps show lapses between renewals.</div>
+  <div class="chartbox"><svg id="gantt"></svg></div>
+
+  <div class="note">Source: Metro ePermits landlord registrations (caseTypeID 176, PSLANDLORD), aggregated from address-level records to the case. Operator attribution via the project's parent-family crosswalk. Issue and expiration dates as recorded; the ePermits case also carries an application date via the live API. 301 of 327 institutional cases had a usable issue date.</div>
+</div>
+<div id="tip"></div>
+<script>
+var tip=document.getElementById('tip');
+function showTip(e,html){tip.innerHTML=html;tip.style.opacity=1;tip.style.left=(e.clientX+12)+'px';tip.style.top=(e.clientY+12)+'px';}
+function hideTip(){tip.style.opacity=0;}
+var PAL=['#1c458c','#d7263d','#f0af1e','#2ca02c','#8c564b','#17becf','#9467bd','#e377c2','#4fa0bd','#bcbd22','#ff7f0e','#1f77b4','#8dcaf0','#7a5230'];
+function ns(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+function ym(d){var p=d.split('-');return +p[0]+(+p[1]-1)/12+(+p[2])/365;}
+fetch('landlord_reg_institutional.json').then(r=>r.json()).then(function(j){
+  var C=j.cases;
+  // operators ordered by case count
+  var oc={};C.forEach(c=>oc[c.op]=(oc[c.op]||0)+1);
+  var ops=Object.keys(oc).sort((a,b)=>oc[b]-oc[a]);
+  var col={};ops.forEach((o,i)=>col[o]=PAL[i%PAL.length]);
+  var X0=2008,X1=2027,W=1060,padL=200,padR=20,plotW=W-padL-padR;
+  function xs(v){return padL+(v-X0)/(X1-X0)*plotW;}
+  function yrAxis(sv,H){for(var y=X0;y<=X1;y+=2){var x=xs(y);sv.appendChild(ns('line',{x1:x,y1:0,x2:x,y2:H-22,class:'grid'}));var t=ns('text',{x:x,y:H-8,class:'axis','text-anchor':'middle'});t.textContent=y;sv.appendChild(t);}}
+  function opRows(sv,rowH){ops.forEach(function(o,i){var y=i*rowH+rowH/2;var t=ns('text',{x:padL-8,y:y+3,class:'oplab','text-anchor':'end'});t.textContent=o.length>30?o.slice(0,29)+'…':o;sv.appendChild(t);var c=ns('circle',{cx:padL-186,cy:y,r:4,fill:col[o]});sv.appendChild(c);});}
+  // ---- BUBBLE ----
+  (function(){var rowH=26,H=ops.length*rowH+30,sv=document.getElementById('bubble');sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.setAttribute('width','100%');sv.setAttribute('height',H);
+    yrAxis(sv,H);opRows(sv,rowH);
+    C.forEach(function(c){var oi=ops.indexOf(c.op);var y=oi*rowH+rowH/2;var r=2+Math.sqrt(c.na)*1.15;
+      var e=ns('circle',{cx:xs(ym(c.iss)),cy:y,r:r,fill:col[c.op],'fill-opacity':.62,stroke:c.expired?'#d7263d':'#fff','stroke-width':c.expired?1.4:.5});
+      e.addEventListener('mousemove',function(ev){showTip(ev,'<b>'+c.op+'</b><br>'+c.own+'<br>Case '+c.cn+'<br>Issued '+c.iss+(c.exp?' · exp '+c.exp:'')+'<br><b>'+c.na+'</b> address'+(c.na===1?'':'es')+(c.expired?' · expired':''));});
+      e.addEventListener('mouseleave',hideTip);sv.appendChild(e);});
+  })();
+  // ---- GANTT (lane-packed per operator) ----
+  (function(){var laneH=4.4,gap=6,sv=document.getElementById('gantt');
+    var bands=ops.map(function(o){var cs=C.filter(c=>c.op===o).slice().sort((a,b)=>ym(a.iss)-ym(b.iss));
+      var lanes=[];cs.forEach(function(c){var s=ym(c.iss),e=c.exp?ym(c.exp):s+.1;var placed=false;
+        for(var L=0;L<lanes.length;L++){if(lanes[L]<=s){c._lane=L;lanes[L]=e;placed=true;break;}}
+        if(!placed){c._lane=lanes.length;lanes.push(e);}});
+      return {op:o,cs:cs,nlanes:Math.max(1,lanes.length)};});
+    var H=30,ys={};bands.forEach(function(b){ys[b.op]=H;H+=b.nlanes*laneH+gap;});H+=8;
+    sv.setAttribute('viewBox','0 0 '+W+' '+H);sv.setAttribute('width','100%');sv.setAttribute('height',H);
+    for(var y=X0;y<=X1;y+=2){var x=xs(y);sv.appendChild(ns('line',{x1:x,y1:0,x2:x,y2:H-22,class:'grid'}));var t=ns('text',{x:x,y:H-8,class:'axis','text-anchor':'middle'});t.textContent=y;sv.appendChild(t);}
+    bands.forEach(function(b){var by=ys[b.op];var t=ns('text',{x:padL-8,y:by+b.nlanes*laneH/2+3,class:'oplab','text-anchor':'end'});t.textContent=b.op.length>30?b.op.slice(0,29)+'…':b.op;sv.appendChild(t);
+      var cc=ns('circle',{cx:padL-186,cy:by+b.nlanes*laneH/2,r:4,fill:col[b.op]});sv.appendChild(cc);
+      b.cs.forEach(function(c){var x1=xs(ym(c.iss)),x2=xs(c.exp?ym(c.exp):ym(c.iss)+.15);var yy=by+c._lane*laneH;
+        var rr=ns('rect',{x:x1,y:yy,width:Math.max(1.5,x2-x1),height:laneH-1,rx:1,fill:c.expired?'#c3ccd6':col[b.op],'fill-opacity':c.expired?.85:.8});
+        rr.addEventListener('mousemove',function(ev){showTip(ev,'<b>'+c.op+'</b><br>Case '+c.cn+'<br>'+c.iss+' → '+(c.exp||'?')+'<br>'+c.na+' address'+(c.na===1?'':'es')+(c.expired?' · expired':' · active'));});
+        rr.addEventListener('mouseleave',hideTip);sv.appendChild(rr);});});
+  })();
+});
+</script></body></html>
