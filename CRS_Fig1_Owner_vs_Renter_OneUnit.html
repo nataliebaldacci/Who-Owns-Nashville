@@ -1,0 +1,60 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Owner vs Renter One-Unit Homes — CRS Figure 1, with Davidson County</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c458c;--gold:#f0af1e;--bd:#d6ddea;--ink:#20303f;--muted:#6b7683}
+  body{margin:0;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);background:#eef4fb;line-height:1.5}
+  header{background:var(--navy);color:#fff;padding:24px 22px;border-bottom:5px solid var(--gold);text-align:center}
+  header h1{margin:0;font-size:22px;font-weight:800}
+  header p{margin:6px 0 0;font-size:13px;opacity:.9}
+  .wrap{max-width:760px;margin:0 auto;padding:24px 20px 60px}
+  .lead{font-size:14px;color:#33414f;margin:0 0 20px}
+  .chart{background:#fff;border:1px solid var(--bd);border-radius:10px;padding:22px;box-shadow:0 2px 10px rgba(28,69,140,.08)}
+  .legend{display:flex;gap:18px;justify-content:center;font-size:13px;font-weight:600;margin:6px 0 4px}
+  .legend .sw{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+  .callout{background:#fffbe9;border-left:4px solid var(--gold);padding:11px 15px;font-size:13.5px;margin:20px 0;border-radius:5px}
+  .note{font-size:11.5px;color:var(--muted);margin-top:14px;font-style:italic}
+  .note a{color:var(--navy)}
+</style></head><body>
+<header>
+  <h1>Owner- vs Renter-Occupied One-Unit Homes</h1>
+  <p>CRS Figure 1, recreated — with Nashville–Davidson County added</p>
+</header>
+<div class="wrap">
+  <p class="lead">The Congressional Research Service opens its 2026 report on institutional investors by noting that
+  <b>most single-unit homes are owner-occupied</b>: about <b>84% nationally in 2024</b>, little changed since 2010.
+  Nashville looked the same in 2010 — and then diverged.</p>
+
+  <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied</span></div>
+  <div class="chart"><svg id="svg" viewBox="0 0 700 340" width="100%" role="img" aria-label="Stacked bars of owner vs renter share of one-unit homes"></svg></div>
+
+  <div class="callout"><b>The divergence.</b> In 2010, Davidson County's one-unit homes were <b>83.5% owner-occupied</b> — essentially the national rate. By 2024 that had fallen to <b>80.3%</b>, pushing the renter share of one-unit homes to <b>19.7%</b>, about four points above the national ~16%.</div>
+
+  <p class="note"><b>Sources.</b> National: Congressional Research Service, <i>Institutional Investors and Single-Family Housing: In Brief</i>, R49015 (June 30, 2026), Fig. 1, from U.S. Census Bureau ACS 1-Year, Table B25032 (2010 &amp; 2024). Davidson County: U.S. Census Bureau ACS, Table B25032 (Tenure by Units in Structure), one-unit = detached + attached. Owner/renter of occupied one-unit properties.</p>
+</div>
+<script>
+var DATA=[
+  {label:"United States",yr:"2024",own:84.0,rent:16.0},
+  {label:"Davidson County",yr:"2010",own:83.5,rent:16.5},
+  {label:"Davidson County",yr:"2024",own:80.3,rent:19.7}
+];
+var svg=document.getElementById('svg'),W=700,H=340,padL=40,padB=64,padT=20,plot=H-padB-padT;
+var n=DATA.length, bw=90, gap=(W-80-n*bw)/(n+1), x0=40;
+function el(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
+// axis line
+svg.appendChild(el('line',{x1:x0,y1:padT+plot,x2:W-20,y2:padT+plot,stroke:'#c8d2e0','stroke-width':1}));
+DATA.forEach(function(d,i){
+  var x=x0+gap+i*(bw+gap);
+  var ownH=plot*d.own/100, rentH=plot*d.rent/100;
+  var yOwn=padT+plot-ownH;
+  svg.appendChild(el('rect',{x:x,y:yOwn,width:bw,height:ownH,fill:'#1c458c'}));
+  svg.appendChild(el('rect',{x:x,y:padT+plot-ownH-rentH+ownH,width:bw,height:rentH,fill:'#f0af1e'}));
+  // labels: owner % (white, in navy), renter % (dark, in gold)
+  function txt(tx,ty,s,fill,anchor,size,weight){var t=el('text',{x:tx,y:ty,fill:fill,'text-anchor':anchor||'middle','font-family':'Montserrat','font-size':size||13,'font-weight':weight||700});t.textContent=s;svg.appendChild(t);}
+  txt(x+bw/2, yOwn+ownH/2+5, d.own+'%', '#fff','middle',15,800);
+  txt(x+bw/2, padT+plot-rentH/2+5, d.rent+'%', '#1c458c','middle',13,800);
+  txt(x+bw/2, padT+plot+22, d.label,'#20303f','middle',12.5,700);
+  txt(x+bw/2, padT+plot+40, d.yr,'#6b7683','middle',12,600);
+});
+</script></body></html>
