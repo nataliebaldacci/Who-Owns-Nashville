@@ -1,0 +1,104 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Research Scope — Who Owns Nashville</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{--navy:#1c458c;--navy-dk:#16357a;--gold:#f0af1e;--ink:#1c458c}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Montserrat','Helvetica Neue',Arial,sans-serif;color:#20303f;background:#eef4fb;line-height:1.55}
+  header{background:var(--navy);color:#fff;border-bottom:4px solid var(--gold);padding:30px 22px 26px;text-align:center}
+  header .kick{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:700;margin-bottom:6px}
+  header h1{margin:0 0 8px;font-size:29px;font-weight:800;letter-spacing:-.4px;color:#fff}
+  header p{margin:0 auto;max-width:720px;color:#d6e2f3;font-size:14.5px}
+  .wrap{max-width:1000px;margin:26px auto;padding:0 20px}
+  h2.sec{font-size:14px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin:34px 0 14px;padding-bottom:7px;border-bottom:2px solid var(--gold)}
+  .def{background:#fff;border:1px solid #d6ddea;border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;box-shadow:0 2px 6px rgba(28,69,140,.10)}
+  .def code{display:block;background:#0f2440;color:#e8eef7;border-radius:6px;padding:13px 15px;margin-top:12px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;line-height:1.6;white-space:pre-wrap;word-break:break-word}
+  .def code b{color:var(--gold)}
+  .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:14px;margin-top:14px}
+  .tile{background:#fff;border:1px solid #d6ddea;border-left:4px solid var(--gold);border-radius:8px;padding:16px 18px;box-shadow:0 2px 6px rgba(28,69,140,.10)}
+  .tile .n{font-size:25px;font-weight:800;color:var(--navy);line-height:1.1;font-variant-numeric:tabular-nums}
+  .tile .l{font-size:12px;color:#4a5560;margin-top:5px}
+  table{width:100%;border-collapse:collapse;background:#fff;border:1px solid #d6ddea;border-radius:8px;overflow:hidden;font-size:12.5px;box-shadow:0 2px 6px rgba(28,69,140,.10);margin-top:6px}
+  th{background:var(--navy);color:#fff;text-align:left;padding:9px 12px;font-size:11px;letter-spacing:.5px;text-transform:uppercase}
+  td{padding:8px 12px;border-top:1px solid #eef0f3;font-variant-numeric:tabular-nums}
+  td.n{text-align:right}
+  .bars{background:#fff;border:1px solid #d6ddea;border-radius:8px;padding:16px 18px;box-shadow:0 2px 6px rgba(28,69,140,.10)}
+  .row{display:grid;grid-template-columns:230px 1fr 150px;align-items:center;gap:12px;margin:8px 0;font-size:12.5px}
+  .row .lab{color:#20303f;text-align:right;white-space:nowrap}
+  .row .track{background:#eef4fb;border-radius:4px;height:22px;overflow:hidden}
+  .row .fill{height:100%;background:var(--navy);border-radius:4px}
+  .row .fill.g{background:var(--gold)}
+  .row .val{text-align:right;font-variant-numeric:tabular-nums;color:#4a5560}
+  .row .val b{color:var(--navy)}
+  @media(max-width:720px){.row{grid-template-columns:130px 1fr 110px}}
+  ul.excl{background:#fff;border:1px solid #d6ddea;border-radius:8px;padding:14px 20px 14px 36px;box-shadow:0 2px 6px rgba(28,69,140,.10);font-size:13px;color:#3a4652}
+  ul.excl li{margin:6px 0}
+  ul.excl b{color:var(--navy)}
+  .note{font-size:11px;color:#7a8694;font-style:italic;margin-top:10px;line-height:1.45}
+  .note a{color:var(--navy)}
+  .back{display:inline-block;margin:16px 0 0;color:var(--navy);font-weight:700;font-size:13px;text-decoration:none}
+  footer{text-align:center;color:#7a8694;font-size:12px;padding:26px}
+</style></head><body>
+<header>
+  <div class="kick">Who Owns Nashville · Defining the Universe</div>
+  <h1>Research Scope</h1>
+  <p>This project studies one clearly bounded slice of Davidson County: the small-scale residential homes an ordinary buyer &mdash; or an institutional investor &mdash; would compete for. This page defines exactly what is in and out.</p>
+</header>
+<div class="wrap">
+  <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
+
+  <h2 class="sec">The universe we study</h2>
+  <div class="def">
+    <div>Every parcel in the Metro Nashville cadastral that is a <b>one- or two-unit residential home</b> &mdash; single-family houses, residential condos, duplexes, and zero-lot-line homes &mdash; excluding high-rise condo towers, common areas, and open space. In assessor terms:</div>
+    <code>(DUCount = 1 OR DUCount = 2)
+AND LUDesc IN (<b>'SINGLE FAMILY'</b>, <b>'ZERO LOT LINE'</b>, <b>'DUPLEX'</b>, <b>'RESIDENTIAL CONDO'</b>)
+AND FeatureType NOT IN ('Multistory Condo', 'Multistory Common Area', 'Open Space')</code>
+  </div>
+  <div class="tiles">
+    <div class="tile"><div class="n">205,934</div><div class="l">Parcels in scope</div></div>
+    <div class="tile"><div class="n">215,043</div><div class="l">Dwelling units</div></div>
+    <div class="tile"><div class="n">$121.6B</div><div class="l">Total appraised</div></div>
+    <div class="tile"><div class="n">$590,374</div><div class="l">Avg appraised value</div></div>
+    <div class="tile"><div class="n">2,003</div><div class="l">Avg finished sq ft</div></div>
+    <div class="tile"><div class="n">0.64</div><div class="l">Avg lot (acres)</div></div>
+  </div>
+
+  <h2 class="sec">Composition by housing type</h2>
+  <table>
+    <thead><tr><th>Housing type</th><th style="text-align:right">Parcels</th><th style="text-align:right">Dwelling units</th><th style="text-align:right">Total appraised</th><th style="text-align:right">Avg value</th><th style="text-align:right">Avg sq ft</th></tr></thead>
+    <tbody>
+      <tr><td>Single family</td><td class="n">156,536</td><td class="n">158,462</td><td class="n">$96.77B</td><td class="n">$618,200</td><td class="n">2,073</td></tr>
+      <tr><td>Residential condo</td><td class="n">36,931</td><td class="n">37,011</td><td class="n">$19.86B</td><td class="n">$537,750</td><td class="n">1,832</td></tr>
+      <tr><td>Duplex</td><td class="n">7,048</td><td class="n">14,091</td><td class="n">$3.48B</td><td class="n">$493,871</td><td class="n">1,950</td></tr>
+      <tr><td>Zero lot line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">$1.47B</td><td class="n">$270,753</td><td class="n">1,216</td></tr>
+      <tr style="font-weight:800;background:#eef4fb"><td>TOTAL</td><td class="n">205,934</td><td class="n">215,043</td><td class="n">$121.58B</td><td class="n">$590,374</td><td class="n">2,003</td></tr>
+    </tbody>
+  </table>
+  <div class="note">Notes: The universe is assessed at a 25.5% assessed-to-appraised ratio ($31.01B assessed) &mdash; confirming it is essentially all residential-class property. Grouped by <code>LUDesc</code>; statistics count(ParID), sum(DUCount, TotlAppr, TotlAssd), avg(Acres, FinishArea, TotlAppr). <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query" target="_blank">Metro Nashville Cadastral, Ownership Parcels (MapServer/4)</a> (last accessed July 2, 2026).</div>
+
+  <h2 class="sec">Owner-occupied vs. non-owner-occupied</h2>
+  <div class="bars" id="occ"></div>
+  <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP (<code>OwnZip = PropZip</code>). Within the scope, 163,300 homes (79.3%, $100.2B) are owner-occupied and 42,633 (20.7%, $21.4B) are absentee-owned &mdash; the pool this project tracks for institutional and corporate ownership. Metro Nashville Cadastral (last accessed July 2, 2026).</div>
+
+  <h2 class="sec">What is excluded, and why</h2>
+  <ul class="excl">
+    <li><b>Mobile homes &amp; mobile home parks</b> &mdash; a distinct housing and tenure market.</li>
+    <li><b>Apartments &amp; large multifamily</b> (3+ units) &mdash; 1,921 parcels holding ~121,000 units; institutional ownership there is a separate, well-studied market.</li>
+    <li><b>High-rise / multistory condo towers, common areas, open space</b> &mdash; excluded by feature type to keep the unit definition clean.</li>
+    <li><b>Vacant land, commercial, industrial, institutional, and exempt parcels</b> &mdash; not housing a resident today.</li>
+  </ul>
+  <div class="note">In short: of Davidson County's 286,721 total parcels and 355,677 dwelling units, this study focuses on the <b>205,934 one- and two-unit homes</b> that make up the for-sale and single-family-rental market.</div>
+
+  <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
+</div>
+<footer>Natalie Baldacci · Vanderbilt Law School · Scope figures are a live snapshot of the Metro Nashville Cadastral, July 2, 2026.</footer>
+<script>
+const fmt=n=>n.toLocaleString();
+function bars(el,data,max){
+  el.innerHTML=data.map(d=>{const w=Math.max(2,100*d[1]/max);
+    return `<div class="row"><div class="lab">${d[0]}</div><div class="track"><div class="fill${d[2]?' g':''}" style="width:${w}%"></div></div><div class="val"><b>${fmt(d[1])}</b> · ${d[3]}</div></div>`;}).join('');
+}
+bars(document.getElementById('occ'),[["Owner-occupied",163300,false,"$100.2B · 79.3%"],["Non-owner-occupied",42633,true,"$21.4B · 20.7%"]],163300);
+</script>
+</body></html>
