@@ -126,6 +126,31 @@ AND FeatureType NOT IN ('Multistory Condo', 'Multistory Common Area', 'Open Spac
  Parcel and value figures: Metro Nashville Cadastral, Ownership Parcels (ArcGIS <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4" target="_blank">MapServer/4</a>), live snapshot July 2, 2026.
  </div>
 
+ <h2 class="sec">Sources &amp; live queries</h2>
+ <div class="note" style="font-style:normal;color:#3a4652;font-size:12.5px;line-height:1.6">Every figure is replayable against the live county and federal servers (last accessed July 2, 2026). See the full query library on the <a href="Davidson_Parcel_Overview.html">Parcel Overview</a>.</div>
+ <div style="margin-top:14px"><div style="font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px">Background: the parcel universe</div>
+ <ul style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.8;color:#3a4652">
+   <li>All parcels — count, appraised &amp; assessed value: <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&amp;outFields=&amp;returnGeometry=false&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22Parcel_Count%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22TotlAppr%22%2C%22outStatisticFieldName%22%3A%22Total_Appraised%22%7D%5D&amp;f=html" target="_blank" rel="noopener">run query &#8599;</a></li>
+ </ul></div>
+ <div style="margin-top:14px"><div style="font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px">Land use &amp; the residential scope</div>
+ <ul style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.8;color:#3a4652">
+   <li>All land-use descriptions (by LUDesc): <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&amp;returnGeometry=false&amp;groupByFieldsForStatistics=ludesc&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22Parcel_Count%22%7D%5D&amp;orderByFields=Parcel_Count+DESC&amp;f=html" target="_blank" rel="noopener">run query &#8599;</a></li>
+   <li>Residential descriptions (DUCount &gt; 0): <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=ducount+%3E+0&amp;returnGeometry=false&amp;groupByFieldsForStatistics=ludesc&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22Parcel_Count%22%7D%5D&amp;orderByFields=Parcel_Count+DESC&amp;f=html" target="_blank" rel="noopener">run query &#8599;</a></li>
+   <li>The final scope filter (this page&rsquo;s 205,934 count): <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=%28DUCount%3D1+OR+DUCount%3D2%29+AND+LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29+AND+FeatureType+NOT+IN+%28%27Multistory+Condo%27%2C%27Multistory+Common+Area%27%2C%27Open+Space%27%29&amp;returnCountOnly=true&amp;f=html" target="_blank" rel="noopener">run query &#8599;</a></li>
+ </ul></div>
+ <div style="margin-top:14px"><div style="font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px">Building characteristics (assessor CAMA)</div>
+ <ul style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.8;color:#3a4652">
+   <li>Parcels with building characteristics: <a href="https://services2.arcgis.com/HdTo6HJqh92wn4D8/ArcGIS/rest/services/Parcels_with_Building_Characteristics_view/FeatureServer/0" target="_blank" rel="noopener">run query &#8599;</a></li>
+   <li>Single-family homes by year built: <a href="https://services2.arcgis.com/HdTo6HJqh92wn4D8/ArcGIS/rest/services/Parcels_with_Building_Characteristics_view/FeatureServer/0/query?where=StructureType+%3D+%27SINGLE+FAMILY%27&amp;returnGeometry=false&amp;groupByFieldsForStatistics=Yearbuilt&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22APN%22%2C%22outStatisticFieldName%22%3A%22Parcel_Count%22%7D%5D&amp;orderByFields=Yearbuilt+desc&amp;f=html" target="_blank" rel="noopener">run query &#8599;</a></li>
+ </ul></div>
+ <div style="margin-top:14px"><div style="font-size:12px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px">Households, tenure &amp; demographics</div>
+ <ul style="margin:6px 0 0;padding-left:20px;font-size:12.5px;line-height:1.8;color:#3a4652">
+   <li>Tenure by units in structure, detached vs. attached (ACS B25032): <a href="https://data.census.gov/table/ACSDT5Y2024.B25032?g=050XX00US47037" target="_blank" rel="noopener">run query &#8599;</a></li>
+   <li>Demographic &amp; housing profile (ACS DP05): <a href="https://data.census.gov/table/ACSDP5Y2024.DP05?g=050XX00US47037" target="_blank" rel="noopener">run query &#8599;</a></li>
+   <li>Homeownership rate (FRED HOWNRATEACS047037): <a href="https://fred.stlouisfed.org/series/HOWNRATEACS047037" target="_blank" rel="noopener">run query &#8599;</a></li>
+   <li>Population, Davidson County (FRED TNDAVI5POP): <a href="https://fred.stlouisfed.org/series/TNDAVI5POP" target="_blank" rel="noopener">run query &#8599;</a></li>
+ </ul></div>
+
  <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
 </div>
 <footer>Natalie Baldacci · Vanderbilt Law School · Scope figures are a live snapshot of the Metro Nashville Cadastral, July 2, 2026.</footer>
