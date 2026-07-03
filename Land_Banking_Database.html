@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Land-Banking Deals — Davidson County</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Cpath d='M16 6 L26 14 L23 14 L23 25 L18 25 L18 18 L14 18 L14 25 L9 25 L9 14 L6 14 Z' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+ body{margin:0;font-family:'EB Garamond',Garamond,serif;color:#20303f;background:#f4f6fa;line-height:1.45}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;position:sticky;top:0;z-index:20}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1080px;margin:0 auto;padding:20px 18px 70px}
+ h1{font-family:'Montserrat',sans-serif;font-size:24px;color:#1c458c;margin:6px 0 2px}
+ .lead{font-size:14.5px;color:#33404e;margin-bottom:12px}
+ .lead b{color:#1c458c}
+ .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin:14px 0}
+ .card{background:#fff;border:1px solid #e2e8f1;border-radius:10px;padding:12px 15px}
+ .card .v{font-family:'Montserrat',sans-serif;font-weight:800;font-size:21px;color:#1c458c}
+ .card .l{font-size:11.5px;color:#5a6572;margin-top:4px}
+ .bar{position:sticky;top:56px;background:#f4f6fa;padding:9px 0;z-index:10}
+ #q{width:100%;max-width:420px;padding:9px 13px;border:1px solid #c9d3e2;border-radius:7px;font-size:14px;font-family:'EB Garamond',serif}
+ .deal{background:#fff;border:1px solid #e2e8f1;border-radius:10px;margin-bottom:11px;overflow:hidden}
+ .dh{display:flex;align-items:center;gap:12px;padding:12px 16px;cursor:pointer;border-left:5px solid #8c564b;flex-wrap:wrap}
+ .dh .nm{font-family:'Montserrat',sans-serif;font-weight:800;font-size:15px;color:#1c458c}
+ .dh .sub{font-size:12.5px;color:#5a6572}
+ .dh .sub b{color:#8c564b}
+ .dh .pill{margin-left:auto;display:flex;gap:6px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700}
+ .pill span{padding:3px 8px;border-radius:20px;white-space:nowrap}
+ .pill .a{background:#eef4fb;color:#1c458c}.pill .t{background:#f3 e9df;background:#f4ece1;color:#8c564b}.pill .p{background:#fde8ec;color:#b01e37}
+ .db{display:none;padding:2px 16px 14px}
+ .deal.open .db{display:block}
+ table{width:100%;border-collapse:collapse;font-size:12.5px}
+ th,td{padding:5px 8px;border-bottom:1px solid #eef0f3;text-align:left;vertical-align:top}
+ th{font-family:'Montserrat',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0}
+ td.amt{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+ .ty{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;padding:1px 6px;border-radius:9px;white-space:nowrap}
+ .ty.Acquisition{background:#eef4fb;color:#1c458c}.ty.Option{background:#fff4e0;color:#a06a00}
+ .ty.Takedown{background:#f4ece1;color:#8c564b}.ty.Plat,.ty.Master{background:#eef0f3;color:#666}
+ td a{color:#1c458c;text-decoration:none;font-weight:600}td a:hover{text-decoration:underline}
+ .note{font-size:12px;color:#8a94a0;margin-top:16px;line-height:1.5}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO BUILDS</small></a><div class="htitle">Land-Banking Deals</div></div>
+<div class="wrap">
+  <h1>How builders bank their land</h1>
+  <div class="lead">A land banker buys the dirt and holds title; the builder signs a recorded <b>option</b> and draws lots one <b>takedown</b> at a time, paying as it builds. The builder keeps the land off its balance sheet, but pays the banker's return on top of the land cost, so the finished lot costs more. Every instrument below is a public Davidson County recording. Companion to the <a href="Who_Owns_Vacant_Land.html">vacant-land map</a>.</div>
+  <div class="cards" id="stats"></div>
+  <div class="bar"><input id="q" placeholder="Search project, land banker, or builder…" autocomplete="off"/></div>
+  <div id="list"></div>
+  <div class="note">Source: Davidson County Register of Deeds, recorded acquisitions, option memoranda, and takedown deeds (image builder <code>davidsonportal.com/gis/file.php?file=&lt;instrument&gt;</code>). "Land banker" is the entity holding title under option to the builder. Takedown amounts are the per-draw consideration paid by the builder to the land banker.</div>
+</div>
+<script>
+function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+function usd(v){v=+v||0;return v>=1e6?'$'+(v/1e6).toFixed(1)+'M':'$'+v.toLocaleString();}
+var DEALS={},ORDER=[];
+fetch('landbank_deals.json').then(r=>r.json()).then(function(d){
+  d.rows.forEach(function(r){ if(!DEALS[r.proj]){DEALS[r.proj]={lb:r.lb,builder:r.builder,rows:[]};ORDER.push(r.proj);} DEALS[r.proj].rows.push(r); });
+  var acq=0,td=0,tdamt=0,lbset={};
+  d.rows.forEach(function(r){ if(r.type==='Acquisition')acq+=r.amt; if(r.type==='Takedown'){td++;tdamt+=r.amt;} lbset[r.lb]=1; });
+  document.getElementById('stats').innerHTML=
+    '<div class="card"><div class="v">'+ORDER.length+'</div><div class="l">land-banked projects</div></div>'+
+    '<div class="card"><div class="v">'+Object.keys(lbset).length+'</div><div class="l">land bankers</div></div>'+
+    '<div class="card"><div class="v">'+usd(acq)+'</div><div class="l">land acquired by bankers</div></div>'+
+    '<div class="card"><div class="v">'+usd(tdamt)+'</div><div class="l">paid by builders on '+td+' takedowns</div></div>';
+  render('');
+});
+function render(f){
+  f=f.toLowerCase(); var html='',shown=0;
+  ORDER.forEach(function(p){ var D=DEALS[p];
+    if(f && (p+' '+D.lb+' '+D.builder).toLowerCase().indexOf(f)<0) return; shown++;
+    var acq=D.rows.filter(r=>r.type==='Acquisition').reduce((s,r)=>s+r.amt,0);
+    var tds=D.rows.filter(r=>r.type==='Takedown'); var tdamt=tds.reduce((s,r)=>s+r.amt,0);
+    var opt=D.rows.find(r=>r.type.indexOf('Option')>=0);
+    var body='<table><thead><tr><th>Date</th><th>Instrument</th><th>Type</th><th>Lots / notes</th><th class="amt">Amount</th></tr></thead><tbody>'+
+      D.rows.map(function(r){var t=r.type.split(' ')[0];
+        return '<tr><td>'+esc(r.date)+'</td><td><a target="_blank" href="'+r.url+'">'+esc(r.inst)+' &#8599;</a></td><td><span class="ty '+t+'">'+esc(r.type)+'</span></td><td>'+esc(r.notes)+'</td><td class="amt">'+(r.amt?'$'+r.amt.toLocaleString():'—')+'</td></tr>';}).join('')+
+      '</tbody></table>';
+    html+='<div class="deal"><div class="dh"><div><div class="nm">'+esc(p)+'</div>'+
+      '<div class="sub">Land banker <b>'+esc(D.lb)+'</b> &rarr; builder '+esc(D.builder)+(opt?' &middot; option exp. '+esc((opt.notes.split("exp.")[1]||"").trim()||"—"):'')+'</div></div>'+
+      '<div class="pill"><span class="a">'+usd(acq)+' land</span><span class="t">'+tds.length+' takedowns</span><span class="p">'+usd(tdamt)+' paid</span></div></div>'+
+      '<div class="db">'+body+'</div></div>';
+  });
+  document.getElementById('list').innerHTML=html;
+  document.querySelectorAll('.deal .dh').forEach(function(h){h.onclick=function(){h.parentElement.classList.toggle('open');};});
+}
+document.getElementById('q').addEventListener('input',e=>render(e.target.value));
+</script></body></html>
