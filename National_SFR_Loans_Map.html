@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>National Institutional Single-Family Rental Loans, 2014-2025</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+  html, body { margin:0; padding:0; height:100%; font-family:'EB Garamond','Garamond',serif; }
+  #map { width:100%; height:100vh; }
+  .title-card {
+    position:absolute; top:14px; left:50%; transform:translateX(-50%);
+    background:rgba(255,255,255,0.92); padding:10px 18px; border-radius:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.2); z-index:1000;
+    font-family:'EB Garamond','Garamond',serif; text-align:center; max-width:90%;
+  }
+  .title-card h1 { margin:0; font-size:18px; font-weight:bold; color:#1a3a5c; }
+  .title-card p { margin:4px 0 0; font-size:12px; color:#555; font-style:italic; }
+  .legend {
+    position:absolute; bottom:30px; left:14px;
+    background:rgba(255,255,255,0.94); padding:10px 14px; border-radius:4px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.2); z-index:1000;
+    font-family:'EB Garamond','Garamond',serif; font-size:12px; max-width:280px;
+  }
+  .legend h3 { margin:0 0 6px; font-size:13px; font-weight:bold; }
+  .legend-item { display:flex; align-items:center; margin:2px 0; }
+  .legend-swatch { width:14px; height:14px; border-radius:50%; margin-right:8px; border:1px solid #333; }
+  .status {
+    position:absolute; bottom:14px; right:14px;
+    background:rgba(0,0,0,0.7); color:white; padding:5px 10px; border-radius:3px;
+    font-size:11px; font-family:sans-serif; z-index:1000;
+  }
+  .leaflet-popup-content { font-family:'EB Garamond','Garamond',serif; font-size:12px; max-width:380px; }
+  .leaflet-popup-content a { color:#1a3a5c; }
+  .leaflet-popup-content table { font-size:11px; }
+  .leaflet-popup-content table td { padding:1px 4px; vertical-align:top; }
+  .leaflet-popup-content table td:first-child { color:#666; font-style:italic; }
+</style>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style id="won-inject">
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;font-family:'Montserrat',sans-serif;position:relative;z-index:1200}
+ #won-header .brand{font-size:18px;font-weight:800;color:#fff;text-decoration:none;line-height:1}
+ #won-header .brand small{display:block;font-size:9px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-size:12.5px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ #map{height:calc(100vh - 56px) !important}
+ .title-card{top:70px !important}
+</style>
+</head>
+<body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">National SFR Loans</div></div>
+<div id="map"></div>
+<div class="title-card">
+  <h1>National Institutional Single-Family Rental Loans, 2014-2025</h1>
+  <p>11,131 commercial SFR loan-backed properties across Tennessee, Georgia, Arizona, Texas, and Minnesota. Each point colored by parent brand.</p>
+</div>
+<div id="legend" class="legend"><h3>Parent Brand</h3></div>
+<div id="status" class="status">Loading…</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map', {
+  center: [34.5, -90.0], zoom: 5, preferCanvas: true
+});
+
+// Base layers
+const positron = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+  attribution: '© OpenStreetMap © CARTO', maxZoom: 19
+}).addTo(map);
+const osm = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap', maxZoom: 19
+});
+const aerial = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+  attribution: '© Esri World Imagery', maxZoom: 19
+});
+
+L.control.layers({"CARTO Positron": positron, "OpenStreetMap": osm, "Aerial (Esri)": aerial}, null, {position:'topright', collapsed:false}).addTo(map);
+
+// Brand color map
+const colors = {
+  "Progress Residential / Pretium": "#1f77b4",
+  "American Homes 4 Rent":           "#ff7f0e",
+  "Amherst Residential":             "#2ca02c",
+  "Tricon Residential (Blackstone)": "#d62728",
+  "Invitation Homes":                "#9467bd",
+  "Starwood Capital Group":          "#8c564b",
+  "FirstKey Homes (Cerberus)":       "#e377c2",
+  "Rithm Capital":                   "#7f7f7f",
+  "Brookfield Asset Management":     "#bcbd22",
+  "Hudson Homes Management":         "#17becf",
+  "Ares Management":                 "#aec7e8",
+  "Invesco":                         "#ffbb78",
+  "Home Partners of America (Blackstone)": "#98df8a",
+  "TPG Angelo Gordon":               "#c5b0d5",
+  "My Community Homes (KKR)":        "#f7b6d2",
+  "VineBrook Homes":                 "#dbdb8d",
+  "Bluerock Homes":                  "#9edae5",
+  "Maymont Homes (Brookfield)":      "#ff9896",
+  "Homeward (Blackstone)":           "#c49c94",
+  "ARP / pre-AMH (legacy)":          "#5b8c00",
+  "Front Yard Residential (legacy)": "#6b4226",
+  "Other Borrower":                  "#999999",
+  "Non-Institutional / Other":       "#dddddd"
+};
+const colorFor = b => colors[b] || "#888";
+
+document.getElementById('status').textContent = "Loading geojson…";
+
+fetch('_NATIONAL_SFR_LOANS_GEOJSON_2026-05-27.geojson')
+  .then(r => r.json())
+  .then(gj => {
+    const features = gj.features;
+    document.getElementById('status').textContent = `Rendering ${features.length.toLocaleString()} points…`;
+    const brandCounts = {};
+    features.forEach(f => {
+      const b = f.properties.parent_brand || "Other Borrower";
+      brandCounts[b] = (brandCounts[b]||0) + 1;
+    });
+
+    const layer = L.geoJSON(gj, {
+      pointToLayer: (feat, latlng) => {
+        const b = feat.properties.parent_brand || "Other Borrower";
+        return L.circleMarker(latlng, {
+          radius: 3, fillColor: colorFor(b), color: '#222', weight: 0.4,
+          opacity: 0.9, fillOpacity: 0.75
+        });
+      },
+      onEachFeature: (feat, lyr) => {
+        const p = feat.properties;
+        const amt = p.amount ? '$' + Number(p.amount).toLocaleString(undefined, {maximumFractionDigits:0}) : '';
+        lyr.bindPopup(`
+          <table>
+            <tr><td>Property</td><td><strong>${p.address}</strong><br>${p.city}, ${p.state} ${p.zip}</td></tr>
+            <tr><td>Parent</td><td><strong>${p.parent_brand}</strong></td></tr>
+            <tr><td>Borrower</td><td>${p.borrower}</td></tr>
+            <tr><td>Lender</td><td>${p.lender}</td></tr>
+            <tr><td>Loan date</td><td>${p.date}</td></tr>
+            <tr><td>Loan amount</td><td>${amt}</td></tr>
+            <tr><td>Parcel ID</td><td>${p.parcelid||''}</td></tr>
+            <tr><td>County</td><td>${p.county}, ${p.state}</td></tr>
+          </table>
+        `, {maxWidth: 380});
+      }
+    }).addTo(map);
+
+    // Build legend (sorted desc by count)
+    const sorted = Object.entries(brandCounts).sort((a,b)=>b[1]-a[1]);
+    const legend = document.getElementById('legend');
+    sorted.forEach(([b, n]) => {
+      const row = document.createElement('div');
+      row.className = 'legend-item';
+      row.innerHTML = `<span class="legend-swatch" style="background:${colorFor(b)}"></span><span><strong>${n.toLocaleString()}</strong> ${b}</span>`;
+      legend.appendChild(row);
+    });
+
+    document.getElementById('status').textContent = `${features.length.toLocaleString()} loan-backed parcels`;
+  })
+  .catch(err => {
+    document.getElementById('status').textContent = "Error: " + err.message;
+  });
+</script>
+</body>
+</html>
