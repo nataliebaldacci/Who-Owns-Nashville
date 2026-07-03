@@ -3,9 +3,16 @@
 <title>Out-of-State Buyers of Existing Homes — Davidson County Time-Lapse</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-<link href="https://fonts.googleapis.com/css2?family=Garamond&family=EB+Garamond&family=Montserrat:wght@600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Garamond&family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
 <style>
- html,body,#map{height:100%;margin:0;font-family:Garamond,'EB Garamond',serif}
+ html,body{height:100%;margin:0;font-family:Garamond,'EB Garamond',serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
  .titlecard{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,255,.92);
    padding:9px 18px;border-radius:6px;box-shadow:0 1px 5px rgba(0,0,0,.3);text-align:center;max-width:88%}
  .titlecard b{font-family:'Montserrat',sans-serif;font-size:15px;color:#1a3a5c}
@@ -17,6 +24,7 @@
  .ctrl #play{background:#f0af1e;color:#1c458c;border-color:#f0af1e}
  .status{position:absolute;bottom:14px;right:12px;z-index:1000;background:rgba(255,255,255,.92);padding:5px 11px;border-radius:5px;font-family:Garamond,serif;font-size:12px;color:#333;box-shadow:0 1px 3px rgba(0,0,0,.3)}
 </style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>DAVIDSON COUNTY</small></a><div class="htitle">Out-of-State Buyers · Time-Lapse</div></div>
 <div id="map"></div>
 <div class="titlecard"><b>Out-of-State Buyers of Existing Homes, Davidson County</b><br><span class="n" id="frameN">—</span></div>
 <div class="ctrl" id="ctrl"><button id="play">&#9658; Play</button></div>

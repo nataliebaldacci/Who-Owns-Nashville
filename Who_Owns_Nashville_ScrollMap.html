@@ -6,7 +6,11 @@
 <script src="https://unpkg.com/maplibre-gl@3.6.2/dist/maplibre-gl.js"></script>
 <script src="https://unpkg.com/scrollama@3.2.0/build/scrollama.min.js"></script>
 <style>
-:root{--ink:#1a3a5c;--accent:#c1432e;--panelbg:rgba(255,255,255,.92);}
+:root{--ink:#1c458c;--accent:#d7263d;--gold:#f0af1e;--panelbg:rgba(255,255,255,.93);}
+#basetog{position:fixed;top:70px;right:10px;z-index:6;background:#fff;border:1px solid #d6ddea;border-radius:5px;box-shadow:0 1px 5px rgba(0,0,0,.2);overflow:hidden;font-family:'Montserrat','Helvetica Neue',Arial,sans-serif}
+#basetog button{display:block;width:100%;border:none;background:#fff;color:#1c458c;font-weight:700;font-size:11px;padding:6px 12px;cursor:pointer;text-align:left}
+#basetog button.on{background:#1c458c;color:#fff}
+#basetog button+button{border-top:1px solid #eef0f3}
 html,body{margin:0;padding:0;font-family:Garamond,"EB Garamond",Georgia,serif;color:#1d1d1d;background:#f7f6f3;}
 #map{position:fixed;top:0;left:0;width:100%;height:100vh;z-index:1;}
 #titlecard{position:fixed;top:18px;left:50%;transform:translateX(-50%);z-index:5;background:var(--panelbg);border:1px solid #ddd;border-radius:4px;padding:10px 20px;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.12);max-width:90%;}
@@ -45,16 +49,26 @@ const features=RAW.map(p=>({type:"Feature",properties:{y:p[2],t:p[3]},geometry:{
 const FC={type:"FeatureCollection",features};
 const BOUNDARY="https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson";
 const map=new maplibregl.Map({container:"map",style:{version:8,glyphs:"https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
- sources:{carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png","https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png","https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png","https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"],tileSize:256,attribution:"© OpenStreetMap, © CARTO"}},
- layers:[{id:"carto",type:"raster",source:"carto"}]},center:[-86.784,36.166],zoom:9.4,minZoom:8,maxZoom:15});
+ sources:{carto:{type:"raster",tiles:["https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png","https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png","https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png","https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png"],tileSize:256,attribution:"© OpenStreetMap, © CARTO"},
+   aerial:{type:"raster",tiles:["https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"],tileSize:256,attribution:"© Esri"},
+   osm:{type:"raster",tiles:["https://a.tile.openstreetmap.org/{z}/{x}/{y}.png","https://b.tile.openstreetmap.org/{z}/{x}/{y}.png"],tileSize:256,attribution:"© OpenStreetMap"}},
+ layers:[{id:"carto",type:"raster",source:"carto"},
+   {id:"aerial",type:"raster",source:"aerial",layout:{visibility:"none"}},
+   {id:"osm",type:"raster",source:"osm",layout:{visibility:"none"}}]},center:[-86.784,36.166],zoom:9.4,minZoom:8,maxZoom:15});
 map.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");
+(function(){var bases=["carto","aerial","osm"],labels={carto:"Positron",aerial:"Aerial",osm:"Streets"};
+ var box=document.createElement("div");box.id="basetog";
+ bases.forEach(function(b,i){var btn=document.createElement("button");btn.textContent=labels[b];if(i===0)btn.className="on";
+  btn.onclick=function(){bases.forEach(function(x){map.setLayoutProperty(x,"visibility",x===b?"visible":"none");});
+   box.querySelectorAll("button").forEach(function(el){el.className="";});btn.className="on";};box.appendChild(btn);});
+ document.body.appendChild(box);})();
 function cumThrough(y){let c=0;for(const f of features){if(f.properties.y<=y)c++;}return c;}
 map.on("load",async()=>{
  try{const b=await(await fetch(BOUNDARY)).json();map.addSource("cty",{type:"geojson",data:b});
   map.addLayer({id:"cty-line",type:"line",source:"cty",paint:{"line-color":"#1a3a5c","line-width":2,"line-dasharray":[2,2]}});}catch(e){}
  map.addSource("homes",{type:"geojson",data:FC});
  map.addLayer({id:"homes",type:"circle",source:"homes",filter:["<=",["get","y"],2000],
-  paint:{"circle-radius":["interpolate",["linear"],["zoom"],9,2,13,4.5],"circle-color":"#c1432e","circle-opacity":0.55,"circle-stroke-width":0}});
+  paint:{"circle-radius":["interpolate",["linear"],["zoom"],9,2,13,4.5],"circle-color":"#d7263d","circle-opacity":0.55,"circle-stroke-width":0}});
  document.getElementById("loading").style.opacity=0;setTimeout(()=>document.getElementById("loading").remove(),500);
  setYear(2000);
 });
