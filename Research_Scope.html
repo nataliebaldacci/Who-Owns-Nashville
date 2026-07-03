@@ -82,6 +82,20 @@ AND FeatureType NOT IN ('Multistory Condo', 'Multistory Common Area', 'Open Spac
   </table>
   <div class="note">Notes: The universe is assessed at a 25.5% assessed-to-appraised ratio ($31.01B assessed) &mdash; confirming it is essentially all residential-class property. Grouped by <code>LUDesc</code>; statistics count(ParID), sum(DUCount, TotlAppr, TotlAssd), avg(Acres, FinishArea, TotlAppr). <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query" target="_blank">Metro Nashville Cadastral, Ownership Parcels (MapServer/4)</a> (last accessed July 2, 2026).</div>
 
+  <h2 class="sec">Building characteristics</h2>
+  <div class="tiles">
+    <div class="tile"><div class="n">3</div><div class="l">Median bedrooms</div></div>
+    <div class="tile"><div class="n">2</div><div class="l">Median full baths</div></div>
+    <div class="tile"><div class="n">1</div><div class="l">Median stories</div></div>
+    <div class="tile"><div class="n">1985</div><div class="l">Median year built</div></div>
+    <div class="tile"><div class="n">2,003</div><div class="l">Avg finished sq ft</div></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:16px" class="two2">
+    <div><div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px">BEDROOMS</div><div class="bars" id="beds"></div></div>
+    <div><div style="font-size:12px;font-weight:800;color:var(--navy);margin-bottom:8px">FULL BATHROOMS</div><div class="bars" id="baths"></div></div>
+  </div>
+  <div class="note">Notes: Building characteristics from the Metro Nashville assessor's CAMA record (the &ldquo;Comper&rdquo; property-characteristics data), paired to the cadastral by parcel ID for the residential scope (~224,000 homes with a building record). The typical home in scope is a 3-bedroom, 2-bath, one-story house built around 1985. Year built and finished area also appear on the <a href="Davidson_Parcel_Overview.html">Parcel Overview</a>. (last accessed July 2, 2026).</div>
+
   <h2 class="sec">Owner-occupied vs. non-owner-occupied</h2>
   <div class="bars" id="occ"></div>
   <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP (<code>OwnZip = PropZip</code>). Within the scope, 163,300 homes (79.3%, $100.2B) are owner-occupied and 42,633 (20.7%, $21.4B) are absentee-owned &mdash; the pool this project tracks for institutional and corporate ownership. Metro Nashville Cadastral (last accessed July 2, 2026).</div>
@@ -122,5 +136,11 @@ function bars(el,data,max){
     return `<div class="row"><div class="lab">${d[0]}</div><div class="track"><div class="fill${d[2]?' g':''}" style="width:${w}%"></div></div><div class="val"><b>${fmt(d[1])}</b> · ${d[3]}</div></div>`;}).join('');
 }
 bars(document.getElementById('occ'),[["Owner-occupied",163300,false,"$100.2B · 79.3%"],["Non-owner-occupied",42633,true,"$21.4B · 20.7%"]],163300);
+function distBars(el,data,max){el.innerHTML=data.map(d=>{const w=Math.max(2,100*d[1]/max);
+  return `<div class="row" style="grid-template-columns:64px 1fr 96px"><div class="lab">${d[0]}</div><div class="track"><div class="fill" style="width:${w}%"></div></div><div class="val"><b>${fmt(d[1])}</b> · ${d[2]}</div></div>`;}).join('');}
+const BEDS=[["1",7925,"3.6%"],["2",45859,"21%"],["3",112814,"52%"],["4",41906,"19%"],["5",6780,"3.1%"],["6+",1970,"0.9%"]];
+const BATHS=[["1",42589,"20%"],["2",84083,"39%"],["3",67543,"31%"],["4",15933,"7.3%"],["5+",7215,"3.3%"]];
+distBars(document.getElementById('beds'),BEDS,112814);
+distBars(document.getElementById('baths'),BATHS,84083);
 </script>
 </body></html>
