@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Figure 2 — Davidson Landbanking Identification</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* Urban Institute palette: cyan #1696d2, yellow #fdbf11, space gray #5c5859, dark blue #0a4c6a */
+  body{margin:0;background:#ffffff;font-family:'EB Garamond',Garamond,Georgia,serif;color:#1a1a1a;line-height:1.5}
+  #wrap{max-width:1180px;margin:0 auto;padding:16px}
+  .hint{font-size:14px;color:#5c5859;font-style:italic;margin:6px 4px 14px;text-align:center}
+  .hint b{color:#1696d2;font-style:normal;font-weight:700}
+  svg{width:100%;height:auto;display:block;background:#fff;border:1px solid #e3e3e3;border-radius:6px}
+  a.node{cursor:pointer}
+  a.node rect{transition:all .13s ease}
+  a.node:hover rect{stroke:#fdbf11;stroke-width:3.4;filter:drop-shadow(0 3px 7px rgba(253,191,17,.5))}
+  a.node:hover text{fill:#12719e}
+  a.node:hover text[fill="#ffffff"],a.node:hover text[fill="#fff"]{fill:#fff2cf}
+</style></head>
+<body><div id="wrap">
+<div class="hint">Interactive figure — <b>click any box</b> to open its live data source. Hover to highlight.</div>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 1300" font-family="'EB Garamond', Garamond, Georgia, serif">
+  <rect x="0" y="0" width="1400" height="1300" fill="#ffffff"/>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#000000"/>
+    </marker>
+  </defs>
+  <text x="30" y="44" font-size="31" font-weight="bold" fill="#000000">Figure 2: Davidson Landbanking Identification</text>
+  <text x="30" y="76" font-size="17" font-style="italic" fill="#5c5859">Two avenues identify landbanking entities. Avenue 1 starts from known actors (company websites, SEC filings); Avenue 2 starts from the land</text>
+  <text x="30" y="99" font-size="17" font-style="italic" fill="#5c5859">itself (vacant developable parcels and how long each entity has held them). The identified entities sort into four structural categories.</text>
+
+  <rect x="30" y="130" width="655" height="380" fill="#e7f2f8"/>
+  <rect x="705" y="130" width="665" height="380" fill="#f2f2f2"/>
+  <text x="357" y="160" font-size="18" font-style="italic" font-weight="bold" fill="#5c5859" text-anchor="middle">Avenue 1 — Known landbankers</text>
+  <text x="357" y="181" font-size="13" font-style="italic" fill="#9d9d9d" text-anchor="middle">(entity-first)</text>
+  <text x="1037" y="160" font-size="18" font-style="italic" font-weight="bold" fill="#5c5859" text-anchor="middle">Avenue 2 — Vacant tract analysis</text>
+  <text x="1037" y="181" font-size="13" font-style="italic" fill="#9d9d9d" text-anchor="middle">(parcel-first)</text>
+
+  <path d="M200,318 L300,404" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M517,318 L430,404" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M877,318 L960,404" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1197,318 L1120,404" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M360,502 L558,566" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M1040,502 L842,566" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+  <path d="M700,672 L700,712" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <a class="node" href="https://walton.com/about-us/" target="_blank" rel="noopener">
+    <title>Company websites (example: Walton Global land-banking)</title>
+    <rect x="55" y="212" width="290" height="96" rx="9" fill="#ffffff" stroke="#1696d2" stroke-width="1.8"/>
+    <text x="200" y="246" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Website &amp; company searches</text>
+    <text x="200" y="272" font-size="13.5" fill="#333" text-anchor="middle">Walton Global, homebuilder land</text>
+    <text x="200" y="291" font-size="13.5" fill="#333" text-anchor="middle">programs, developer sites</text>
+  </a>
+
+  <a class="node" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001999094&type=10-K&dateb=&owner=include&count=40" target="_blank" rel="noopener">
+    <title>SEC EDGAR — Millrose Properties (Lennar landbank spinoff) and homebuilder filings</title>
+    <rect x="375" y="212" width="285" height="96" rx="9" fill="#ffffff" stroke="#1696d2" stroke-width="1.8"/>
+    <text x="517" y="246" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">SEC EDGAR filings</text>
+    <text x="517" y="272" font-size="13.5" fill="#333" text-anchor="middle">Millrose (Lennar spinoff) 10-K;</text>
+    <text x="517" y="291" font-size="13.5" fill="#333" text-anchor="middle">homebuilder land-option disclosures</text>
+  </a>
+
+  <g><rect x="165" y="410" width="390" height="92" rx="9" fill="#ececec" stroke="#1696d2" stroke-width="1.8"/>
+    <text x="360" y="444" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Named landbanking entities</text>
+    <text x="360" y="470" font-size="13.5" fill="#1a1a1a" text-anchor="middle">Walton · Millrose · Forestar · TPG AG ·</text>
+    <text x="360" y="490" font-size="13.5" fill="#1a1a1a" text-anchor="middle">Kennedy Lewis · Domain · Brookfield</text>
+  </g>
+
+  <a class="node" href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=ImprAppr%3D0+AND+DUCount%3D0+AND+%28Zoning+LIKE+%27RS%25%27+OR+Zoning+LIKE+%27R%25%27+OR+Zoning+LIKE+%27RM%25%27+OR+Zoning+LIKE+%27SP%25%27+OR+Zoning%3D%27AR2A%27%29&returnCountOnly=true&f=json" target="_blank" rel="noopener">
+    <title>Cadastral vacant-land filter (live query, count only)</title>
+    <rect x="730" y="212" width="295" height="96" rx="9" fill="#ffffff" stroke="#1696d2" stroke-width="1.8"/>
+    <text x="877" y="246" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Cadastral vacant-land filter</text>
+    <text x="877" y="272" font-size="13.5" fill="#333" text-anchor="middle">Zoning residential AND ImprAppr = 0</text>
+    <text x="877" y="291" font-size="13.5" fill="#333" text-anchor="middle">AND DUCount = 0  &#8594;  28,418 parcels</text>
+  </a>
+
+  <a class="node" href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2" target="_blank" rel="noopener">
+    <title>ParcelHistory ownership chain (how long held, by whom)</title>
+    <rect x="1055" y="212" width="285" height="96" rx="9" fill="#ffffff" stroke="#1696d2" stroke-width="1.8"/>
+    <text x="1197" y="246" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Ownership chronology</text>
+    <text x="1197" y="272" font-size="13.5" fill="#333" text-anchor="middle">ParcelHistory deeds: how long held,</text>
+    <text x="1197" y="291" font-size="13.5" fill="#333" text-anchor="middle">by whom (92,166 events)</text>
+  </a>
+
+  <g><rect x="845" y="410" width="390" height="92" rx="9" fill="#ececec" stroke="#1696d2" stroke-width="1.8"/>
+    <text x="1040" y="444" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Vacant developable, entity-held</text>
+    <text x="1040" y="470" font-size="13.5" fill="#1a1a1a" text-anchor="middle">10,470 vacant developable parcels</text>
+    <text x="1040" y="490" font-size="13.5" fill="#1a1a1a" text-anchor="middle">under corporate / entity ownership</text>
+  </g>
+
+  <g><rect x="490" y="568" width="420" height="104" rx="9" fill="#ececec" stroke="#1696d2" stroke-width="2.4"/>
+    <text x="700" y="604" font-size="19" font-weight="bold" fill="#000000" text-anchor="middle">Landbanker match</text>
+    <text x="700" y="632" font-size="14" fill="#1a1a1a" text-anchor="middle">Entities holding vacant developable land</text>
+    <text x="700" y="654" font-size="14" fill="#1a1a1a" text-anchor="middle">489 parcels   |   39 entities</text>
+  </g>
+
+  <text x="700" y="734" font-size="18" font-weight="bold" fill="#000000" text-anchor="middle">Four structural categories of institutional landbanker</text>
+
+  <a class="node" href="https://walton.com/about-us/" target="_blank" rel="noopener">
+    <title>Third-party land banker (Walton Global; PGIM / Domain)</title>
+    <rect x="35" y="752" width="316" height="176" rx="10" fill="#fff2cf" stroke="#fdbf11" stroke-width="2"/>
+    <text x="193" y="784" font-size="16.5" font-weight="bold" fill="#000000" text-anchor="middle">1 · Third-party land banker</text>
+    <text x="193" y="807" font-size="12.5" font-style="italic" fill="#5c5859" text-anchor="middle">pure-play intermediary</text>
+    <text x="193" y="836" font-size="13.5" fill="#1a1a1a" text-anchor="middle">Walton Global</text>
+    <text x="193" y="856" font-size="12" fill="#5c5859" text-anchor="middle">(Walton Tennessee, LLC)</text>
+    <text x="193" y="882" font-size="13.5" fill="#1a1a1a" text-anchor="middle">PGIM / Domain Real Estate</text>
+    <text x="193" y="902" font-size="12" fill="#5c5859" text-anchor="middle">(Domain Timberlake)</text>
+  </a>
+
+  <a class="node" href="https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001999094&type=10-K&dateb=&owner=include&count=40" target="_blank" rel="noopener">
+    <title>Builder-affiliated developer (Forestar / D.R. Horton; Millrose / Lennar)</title>
+    <rect x="367" y="752" width="316" height="176" rx="10" fill="#fff2cf" stroke="#fdbf11" stroke-width="2"/>
+    <text x="525" y="784" font-size="16.5" font-weight="bold" fill="#000000" text-anchor="middle">2 · Builder-affiliated developer</text>
+    <text x="525" y="807" font-size="12.5" font-style="italic" fill="#5c5859" text-anchor="middle">inside the builder family</text>
+    <text x="525" y="832" font-size="13.5" fill="#1a1a1a" text-anchor="middle">Forestar Group (61% D.R. Horton)</text>
+    <text x="525" y="858" font-size="13.5" fill="#1a1a1a" text-anchor="middle">Millrose Properties</text>
+    <text x="525" y="876" font-size="12" fill="#5c5859" text-anchor="middle">(Lennar spinoff · Kennedy Lewis)</text>
+    <text x="525" y="902" font-size="13.5" fill="#1a1a1a" text-anchor="middle">FivePoint Holdings</text>
+  </a>
+
+  <a class="node" href="https://www.sec.gov/Archives/edgar/data/920760/000162828021000722/len-20201130x10kxexh1012.htm" target="_blank" rel="noopener">
+    <title>Institutional asset manager (TPG Angelo Gordon Master Agreement; Kennedy Lewis; 400 Capital)</title>
+    <rect x="699" y="752" width="316" height="176" rx="10" fill="#fff2cf" stroke="#fdbf11" stroke-width="2"/>
+    <text x="857" y="784" font-size="16.5" font-weight="bold" fill="#000000" text-anchor="middle">3 · Institutional asset manager</text>
+    <text x="857" y="807" font-size="12.5" font-style="italic" fill="#5c5859" text-anchor="middle">dedicated land-banking program</text>
+    <text x="857" y="830" font-size="13" fill="#1a1a1a" text-anchor="middle">TPG Angelo Gordon — EHC (Len + Mth)</text>
+    <text x="857" y="850" font-size="13" fill="#1a1a1a" text-anchor="middle">Kennedy Lewis (KLLB AIV)</text>
+    <text x="857" y="870" font-size="13" fill="#1a1a1a" text-anchor="middle">400 Capital / Builder Capital (DFH)</text>
+    <text x="857" y="894" font-size="12.5" fill="#5c5859" text-anchor="middle">Blue Owl · Guggenheim · Hearthstone</text>
+  </a>
+
+  <a class="node" href="https://www.economicliberties.us/wp-content/uploads/2025/11/20251014-aelp-capitalcrunch-final.pdf" target="_blank" rel="noopener">
+    <title>Debt intermediary / builder land-bank disclosures (Capital Crunch report)</title>
+    <rect x="1031" y="752" width="316" height="176" rx="10" fill="#fff2cf" stroke="#fdbf11" stroke-width="2"/>
+    <text x="1189" y="784" font-size="16.5" font-weight="bold" fill="#000000" text-anchor="middle">4 · Debt intermediary</text>
+    <text x="1189" y="807" font-size="12.5" font-style="italic" fill="#5c5859" text-anchor="middle">builder disclosures &amp; forward flow</text>
+    <text x="1189" y="830" font-size="12.5" fill="#1a1a1a" text-anchor="middle">Meritage · PulteGroup · Lennar · NVR</text>
+    <text x="1189" y="850" font-size="12.5" fill="#1a1a1a" text-anchor="middle">Beazer · Toll Brothers · Smith Douglas</text>
+    <text x="1189" y="870" font-size="12.5" fill="#1a1a1a" text-anchor="middle">Hovnanian · Taylor Morrison · Century</text>
+    <text x="1189" y="894" font-size="12" font-style="italic" fill="#5c5859" text-anchor="middle">builder land-bank disclosures</text>
+  </a>
+
+  <path d="M700,928 L700,968" stroke="#000000" stroke-width="2" fill="none" marker-end="url(#arrow)"/>
+
+  <g><rect x="150" y="970" width="1100" height="164" rx="10" fill="#1696d2" stroke="#12719e" stroke-width="1.8"/>
+    <text x="700" y="1008" font-size="20" font-weight="bold" fill="#ffffff" text-anchor="middle">Davidson Landbankers in the deed record</text>
+    <text x="700" y="1038" font-size="14" fill="#fff" text-anchor="middle">Kennedy Lewis (KLLB AIV) 141 · TPG AG EHC (Lennar + Meritage) 173 · Dry Creek 52 · Walton Tennessee 9</text>
+    <text x="700" y="1060" font-size="14" fill="#fff" text-anchor="middle">Domain Timberlake · Millrose Properties Tennessee · Brookfield (Cane Ridge) · Wilson Concord · NW Burkitt</text>
+    <text x="700" y="1082" font-size="14" fill="#fff" text-anchor="middle">HOA / community shells:  Thornton Grove · 1201 Neelys Bend Road · Parkview Preserve</text>
+    <text x="700" y="1110" font-size="14" font-style="italic" fill="#fff" text-anchor="middle">489 parcels held by 39 landbanking entities · Davidson County</text>
+  </g>
+
+  <text x="700" y="1162" font-size="13.5" font-style="italic" fill="#12719e" text-anchor="middle">BTR diversion: optioned land also feeds build-to-rent pipelines — e.g. Pretium's SFR/BTR securitizations (Part IV §II.E).</text>
+  <text x="30" y="1192" font-size="13.5" font-style="italic" fill="#5c5859">Sources: Metro Nashville Cadastral (MapServer/4) + ParcelHistory (MapServer/2); SEC EDGAR (Millrose, Forestar, Lennar Master Agreement); company disclosures. (last accessed July 2, 2026)</text>
+</svg>
+</div></body></html>
