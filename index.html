@@ -11,11 +11,12 @@
   header h1{margin:0 0 8px;font-size:31px;font-weight:800;letter-spacing:-.4px;color:#fff}
   header p{margin:0 auto;max-width:690px;color:#d6e2f3;font-size:15px}
   .wrap{max-width:1000px;margin:10px auto 0;padding:0 20px}
-  .group{margin:44px 0 2px}
-  .group h2{font-size:17px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin:0;padding-bottom:7px;border-bottom:3px solid var(--gold)}
+  .group{margin:54px 0 2px;scroll-margin-top:14px}
+  .group h2{font-size:19px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin:0;padding-bottom:7px;border-bottom:3px solid var(--gold)}
   .group p{margin:8px 0 0;font-size:13px;color:#5a6673}
-  .sub{font-size:12px;font-weight:800;color:#b07d0a;text-transform:uppercase;letter-spacing:1.5px;margin:20px 0 0;display:flex;align-items:center;gap:8px}
-  .sub::after{content:"";flex:1;height:1px;background:#e2d6bd}
+  .sub{font-size:13.5px;font-weight:800;color:var(--navy);margin:28px 0 0;padding:6px 0 6px 12px;border-left:5px solid var(--gold);background:#e8eff9;border-radius:0 6px 6px 0;display:flex;align-items:baseline;gap:8px}
+  .sub .lab{color:#b07d0a;font-weight:800}
+  .sub .note{font-weight:600;color:#5a6673;font-size:12px}
   .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:12px 0 8px}
   a.card{display:block;background:#fff;border:1px solid #d6ddea;border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;
     box-shadow:0 2px 6px rgba(28,69,140,.10);transition:transform .12s,box-shadow .12s}
@@ -23,9 +24,9 @@
   a.card h2{margin:0 0 6px;font-size:16.5px;font-weight:800;color:var(--navy)}
   a.card p{margin:0;font-size:13px;color:#4a5560}
   footer{text-align:center;color:#7a8694;font-size:12px;padding:26px;max-width:760px;margin:0 auto}
-  .navbtns{max-width:1000px;margin:24px auto 0;padding:0 20px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
-  .navbtns a{display:inline-block;background:var(--gold);color:var(--navy);text-decoration:none;font-size:15px;font-weight:800;
-    padding:13px 26px;border-radius:8px;box-shadow:0 2px 6px rgba(28,69,140,.22);transition:background .12s,transform .12s}
+  .navbtns{max-width:1000px;margin:24px auto 0;padding:0 20px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+  .navbtns a{display:inline-block;background:var(--gold);color:var(--navy);text-decoration:none;font-size:14px;font-weight:800;
+    padding:11px 20px;border-radius:8px;box-shadow:0 2px 6px rgba(28,69,140,.22);transition:background .12s,transform .12s}
   .navbtns a:hover{background:#d99a12;transform:translateY(-2px)}
 </style></head><body>
 <header>
@@ -34,32 +35,92 @@
   <p>Interactive maps, databases, and graphics on institutional and corporate ownership of residential housing in Davidson County, Tennessee. Built entirely from primary government data.</p>
 </header>
 <div class="navbtns">
-  <a href="Research_Scope.html">Research Scope</a>
-  <a href="Davidson_Parcel_Overview.html">Parcel Overview</a>
-  <a href="Methodology_Corporate_Landlords.html">Methodology</a>
-  <a href="Data_Filter_Funnel.html">How the Data Was Filtered</a>
-  <a href="Series_Aims_Diagram.html">Series Aims</a>
+  <a href="#overview">Overview</a>
+  <a href="#owns">Who Owns?</a>
+  <a href="#rents">Who Rents?</a>
+  <a href="#builds">Who Builds?</a>
+  <a href="#landbanks">Who Landbanks?</a>
+  <a href="#finances">Who Finances?</a>
+  <a href="#profile">Housing Profile</a>
 </div>
 <div class="wrap">
 
-  <div class="group"><h2>Start here</h2><p>The flagship, cross-cutting tools: the full searchable map, the narrated scroll story, and the primary-source databases.</p></div>
+  <!-- ===================== OVERVIEW ===================== -->
+  <div class="group" id="overview"><h2>Overview</h2><p>Start here: what the project covers, how the data was built, and the flagship tools that cut across every Part.</p></div>
+  <div class="sub"><span class="lab">Scope &amp; Methods</span></div>
+  <div class="grid">
+    <a class="card" href="Research_Scope.html"><h2>Research Scope</h2><p>What the project covers: which residential parcels are in scope, how "institutional" is defined (350+ homes, ROAD to Housing Act), and the commitment to exclusively primary government data.</p></a>
+    <a class="card" href="Davidson_Parcel_Overview.html"><h2>Parcel Overview</h2><p>The county parcel universe at a glance — how many parcels, of what type, and how the residential stock breaks down.</p></a>
+    <a class="card" href="Methodology_Corporate_Landlords.html"><h2>Methodology</h2><p>How corporate and institutional owners are identified, aggregated to parent brands, and validated against the chain of title.</p></a>
+    <a class="card" href="Data_Filter_Funnel.html"><h2>★ How the Data Was Filtered</h2><p>The filter funnel: from all 286,721 county parcels down to the 205,934-home research scope, the 16,616 corporate-owned homes, and the 4,264 held by named institutional operators. Every stage links to a live, replayable county query.</p></a>
+    <a class="card" href="Series_Aims_Diagram.html"><h2>Series Aims</h2><p>A diagram of the series: what each Part asks — Who Owns, Rents, Builds, Landbanks, Finances — and how they connect.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Flagship Tools &amp; Databases</span></div>
   <div class="grid">
     <a class="card" href="https://nataliebaldacci.github.io/who-owns-nashville-app/web/frontend/map.html"><h2>★ Full Parcel Map — Search Every Home</h2><p>The complete interactive map. Search any owner, address, ZIP, or APN; every corporate-owned home is a house glyph colored by operator, with census-tract, council-district, and ZIP overlays. Click any parcel for the full county toolkit.</p></a>
     <a class="card" href="Who_Owns_Nashville_ScrollMap.html"><h2>★ A Decade of Institutional Acquisition (Scroll Story)</h2><p>Scroll through the narrated story — watch corporate buyers sweep across Davidson County year by year, the map building under the text as you read.</p></a>
     <a class="card" href="Data.html"><h2>★ Parcel Data Explorer</h2><p>The full flattened record for every parcel. Browse and sort the table, filter by owner/address/APN, then click any row for that parcel's whole history — chain of title, permits, and zoning.</p></a>
     <a class="card" href="Document_Database.html"><h2>★ Document Database</h2><p>Every primary source, organized by Part — property cards, ownership deeds, deeds of trust, trustees' deeds, permit receipts, building permits, and Metro zoning/legislation links.</p></a>
     <a class="card" href="Address_Search.html"><h2>★ Parcel Address Search (with photos)</h2><p>Type any Davidson County address and see the assessor's photo of the house plus its parcel record — owner, APN, and direct county links. 198,358 parcels.</p></a>
-    <a class="card" href="Data_Filter_Funnel.html"><h2>★ How the Data Was Filtered</h2><p>The filter funnel: from all 286,721 county parcels down to the 205,934-home research scope, the 16,616 corporate-owned homes, and the 4,264 held by named institutional operators. Every stage links to a live, replayable county query.</p></a>
     <a class="card" href="ROAD_Act_Section_1001_Map.html"><h2>The Act Bites in Two Places — § 1001 Mapped to the Series</h2><p>How the ROAD to Housing Act's § 1001 splits across the series: renters live inside the purchase ban and its outreach machinery, builders inside the excepted-purchase carve-out, and the build-to-rent exception is the seam where Who Rents and Who Builds meet.</p></a>
   </div>
 
-  <div class="group"><h2>Landlord Registration &amp; Compliance</h2><p>What happened when corporate owners met the landlord-registration mandate: who registered, who didn't, and who got cited.</p></div>
-  <div class="sub">Database</div>
+  <!-- ===================== WHO OWNS? (Part I) ===================== -->
+  <div class="group" id="owns"><h2>Who Owns?</h2><p>Who the corporate owners are, where their homes cluster, and how the pattern built up. Organized to the Part I findings scheme.</p></div>
+  <div class="sub"><span class="lab">The Ownership Landscape</span> <span class="note">— counts, concentration, top owners</span></div>
+  <div class="grid">
+    <a class="card" href="WhoOwnsNashville_Explorer.html"><h2>Owner Portfolio Explorer</h2><p>Search any owner. The map highlights every home in that owner's portfolio — all the LLCs and shells linked to the same entity by name and mailing address.</p></a>
+    <a class="card" href="Current_Cadastral_Holdings_Explorer.html"><h2>Current Cadastral Holdings Explorer</h2><p>Every operator's current cadastral holdings, browsable by parent brand — the live snapshot of who holds what right now.</p></a>
+    <a class="card" href="Davidson_Current_Ownership_Map.html"><h2>★ Who Owns Every Home Now (2026)</h2><p>The current snapshot: 210,082 residential parcels, each colored by where its owner receives mail. 170,581 owner-occupants, 28,023 in-state absentee, 11,478 out-of-state. Toggle any layer to isolate the investors.</p></a>
+    <a class="card" href="Corporate_Landlords_by_CouncilDistrict.html"><h2>Corporate Landlords by Council District</h2><p>Institutional single-family holdings aggregated to Metro Council districts — which of the 35 districts carry the heaviest corporate footprint.</p></a>
+    <a class="card" href="Corporate_Landlords_ParcelShapes_Nashville.html"><h2>Corporate-Owned Parcels</h2><p>Every corporate-owned single-family parcel as its actual lot shape, colored by parent operator.</p></a>
+    <a class="card" href="Corporate_Landlords_Hexmap_ckmeans.html"><h2>Concentration Hexmap</h2><p>Where corporate ownership clusters across the county, binned into hexagons.</p></a>
+    <a class="card" href="Institutional_SF_Homes_DotMap.html"><h2>Institutional Single-Family Homes (Dot Map)</h2><p>Every single-family home owned by a corporate / institutional entity as one dot — the GAO-style density view. 34,274 homes, concentrated southeast.</p></a>
+    <a class="card" href="SF_NeverOwnerOccupied_Nashville.html"><h2>Single-Family Homes Never Owner-Occupied</h2><p>The 8,977 single-family parcels where no owner in the entire chain of title ever lived in the home — pure investor stock.</p></a>
+    <a class="card" href="Institutional_Owner_Leaderboard.html"><h2>★ Institutional Owner Leaderboard</h2><p>The corrected top-owners ranking, each operator's full holdings consolidated to parent (Yamasa&rarr;Progress, AMH dev LLCs&rarr;AMH). Progress 1,215 &middot; AMH 1,182 &middot; Amherst 699 &middot; Regent 642. Toggle parcels / dwelling units / acres / value; filter in-state vs out-of-state.</p></a>
+    <a class="card" href="Preview_Owners_by_Type.html"><h2>Owners by Type</h2><p>Chart of all 24,300 entity-owned single-family parcels by owner category: 19,984 local LLCs dwarf the 3,049 PE-backed operator and 1,192 public-REIT homes.</p></a>
+    <a class="card" href="Ownership_Rates_Charts.html"><h2>Ownership Rate Breakdown</h2><p>Owner-occupied vs. non-owner vs. entity-owned shares of the single-family stock, charted.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Socioeconomic Geography</span> <span class="note">— where they own: tract income, value, race, burdened tracts</span></div>
+  <div class="grid">
+    <a class="card" href="Institutional_Ownership_By_Tract.html"><h2>Institutional Ownership by Census Tract</h2><p>Choropleth of the share of single-family homes owned by corporate / institutional entities, by census tract.</p></a>
+    <a class="card" href="Institutional_Ownership_By_BlockGroup.html"><h2>★ Institutional Ownership by Block Group</h2><p>The granular version: all 470 Davidson census block groups shaded by institutional homeownership share. Hotspots in southeast Antioch and the BTR corridors hit 20–30%; popups carry the block group's income, %Black, and poverty.</p></a>
+    <a class="card" href="Institutional_Ownership_By_Block.html"><h2>★ Institutional Ownership by Block (operator filter)</h2><p>The finest grain: 1,337 census blocks that contain an institutional owner, shaded by share — whole BTR blocks hit 50–100%. Filter to any operator (Progress, AMH, Amherst, Tricon…) to see just their blocks.</p></a>
+    <a class="card" href="Institutional_Ownership_By_Community.html"><h2>★ Institutional Ownership by Community</h2><p>A choropleth of every Davidson community shaded by the share of its homes held by named institutional operators. Antioch leads at 14.8% (Progress), Hermitage 9.1% (AMH). Click any community for its profile.</p></a>
+    <a class="card" href="Davidson_Renter_CostBurden_by_Tract_map.html"><h2>Renter Cost Burden by Tract</h2><p>Choropleth of the share of renters paying more than 30% of income on housing, by census tract — the demand-side backdrop to institutional concentration.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Out-of-State &amp; Absentee Acquisition</span> <span class="note">— 2000–2026</span></div>
+  <div class="grid">
+    <a class="card" href="Davidson_OOS_Existing_Buyers_TimeLapse.html"><h2>★ Out-of-State Buyers of Existing Homes (Time-Lapse)</h2><p>Press play and watch the footprint grow — every existing home bought arms-length by an out-of-state owner, cumulatively at 2005, 2009, 2013, 2017, 2021, 2025. 17,093 homes; the 2021 surge is unmistakable.</p></a>
+    <a class="card" href="Owner_Mailing_Addresses_Map.html"><h2>★ Where Owners Mail Their Tax Bills</h2><p>The national map of absentee control: every Davidson parcel mapped to the state and city its owner's mail goes to. California, Texas, and Arizona lead; gold bubbles mark the corporate HQ cities, Scottsdale, Calabasas, Austin, Dallas, Atlanta. Toggle out-of-state vs. all.</p></a>
+    <a class="card" href="SF_BecameNonOwner_AllTransfers_Timeline_Nashville.html"><h2>When Homes Became Non-Owner-Occupied</h2><p>Every absentee-owned home, placed in the year its current owner acquired it. 83% changed hands since 2010.</p></a>
+    <a class="card" href="OutOfState_Acquisitions_By_Type.html"><h2>★ Out-of-State Acquisitions by Owner Type</h2><p>Every Davidson parcel bought by an owner mailing from outside Tennessee, 2000–2026. Watch the shift from the foreclosure/lender era to the post-2012 business-entity surge. Counts or share.</p></a>
+    <a class="card" href="Davidson_Residential_Ownership_Analysis.html"><h2>★ Residential Ownership &amp; Sales (Analysis Hub)</h2><p>One page, one dataset: Class-R sales volume by year (existing vs new), out-of-state buyers of existing homes 2001–2025, and absentee/out-of-state ownership by reappraisal year — with full methodology and data links.</p></a>
+    <a class="card" href="Davidson_Absentee_By_Reappraisal_Year.html"><h2>★ Absentee Ownership by Reappraisal Year, 1993–2025</h2><p>Non-owner-occupied homes (owner zip ≠ property zip) at every Davidson reappraisal year — the U-shape: 19% → 15.8% low in 2001 → 18.7% by 2025 (+69% in count). Built from the assessment history.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Operator Accumulation Over Time</span></div>
+  <div class="grid">
+    <a class="card" href="Corporate_Acquisition_Timeline.html"><h2>★ Corporate Acquisition Timeline (Play)</h2><p>Press play and watch corporate Nashville assemble itself. 38,461 corporate-owned homes, each appearing the year its current owner actually acquired it (from the chain of title), colored by operator. The 2021-2025 surge is the whole story.</p></a>
+    <a class="card" href="Operator_Holdings_Over_Time.html"><h2>★ Operator Holdings Over Time, 2000–2026</h2><p>Year-end Davidson holdings for every institutional operator, reconstructed from the chain of title. Progress peaks at 2,524, AMH at 1,225; the 2021–2023 surge is unmistakable. Click any operator to isolate it.</p></a>
+    <a class="card" href="Corporate_Landlords_Timeline_Nashville.html"><h2>Corporate Acquisition Timeline (Chart)</h2><p>When corporate owners <em>bought</em> their homes, year by year — the build-up of concentration across the last decade.</p></a>
+    <a class="card" href="Transaction_History_Timeline_Nashville.html"><h2>Transaction History, 2013–2026</h2><p>Every recorded single-family sale, colored by who bought from whom. Play the slider to watch the corporate acquisition wave rise and fall against the ordinary market.</p></a>
+    <a class="card" href="Deed_Events_By_Buyer_Type.html"><h2>★ Deed Events by Buyer Type, 1969–2026</h2><p>Every recorded ownership transfer in Davidson County, classified by who got the deed: individual, LLC, trust, homebuilder, bank/REO, SFR REIT, iBuyer. Interactive stacked area, 1.55M deeds. Toggle counts vs. share and any buyer type.</p></a>
+    <a class="card" href="Who_Bought_Nashville_Homes.html"><h2>★ Who Bought Nashville's Homes, 2010–2024</h2><p>Every single-family sale each year split by purchaser: owner-occupant, small investor, or named institutional operator. Institutional buying peaks 2021–2022 as small investors fade. Counts or share.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Operators and Neighborhoods</span></div>
+  <div class="grid">
+    <a class="card" href="davidson_institutional_acquisitions_by_operator.html"><h2>Institutional Acquisitions by Operator</h2><p>Every corporate-bought home colored by its parent operator — Progress, American Homes 4 Rent, Amherst, Tricon, FirstKey. The Security-for-Sale view for Davidson County.</p></a>
+    <a class="card" href="BigOperators_vs_AllSF_DotMap.html"><h2>Big Operators vs. All Single-Family Homes</h2><p>Grey = every single-family home; colored dots = homes held by the major institutional operators. Where the big players actually sit.</p></a>
+    <a class="card" href="BigOperators_vs_AllSF_ParcelShapes.html"><h2>Big Operators — Parcel Shapes</h2><p>The same view as the dot map, but every operator home is its real lot shape, colored by operator, over the grey field of all single-family homes.</p></a>
+    <a class="card" href="WithinParent_Chains_Nashville.html"><h2>Within-Parent Ownership Chains</h2><p>How homes move between the shell LLCs of a single parent operator — the internal transfers that fragment one company across dozens of entity names.</p></a>
+    <a class="card" href="Corporate_Landlords_Neighborhood_Antioch.html"><h2>Antioch Close-Up (37013)</h2><p>Corporate-landlord concentration in Antioch — the county's most heavily acquired neighborhood — block by block, by operator.</p></a>
+  </div>
+
+  <!-- ===================== WHO RENTS? (Part II) ===================== -->
+  <div class="group" id="rents"><h2>Who Rents?</h2><p>The operational end state: who registered as a landlord, who did not, who got cited, and where evictions land.</p></div>
+  <div class="sub"><span class="lab">Landlord Registration &amp; Compliance</span></div>
   <div class="grid">
     <a class="card" href="Landlord_Registration_Database.html"><h2>Landlord Registration Database</h2><p>The searchable record of Metro landlord registrations (ePermits case type 176) — the applicant, address, and status behind every registered rental.</p></a>
-  </div>
-  <div class="sub">Maps</div>
-  <div class="grid">
     <a class="card" href="Detached_Rental_Conversion_Map.html"><h2>★ The Detached-Rental Conversion</h2><p>Change in the share of detached single-family houses that are renter-occupied, by census tract (2010→2024) and block group (2013→2024). Red where the rental share rose, blue where it fell — the neighborhood fingerprint of the single-family rental wave.</p></a>
     <a class="card" href="Active_Corporate_SFR_Detail_Map.html"><h2>Active Rentals — Property Detail</h2><p>Every currently-active corporate single-family rental, clickable. Each dot opens bed/bath, square footage, year built, purchase year, registration history, and direct county links.</p></a>
     <a class="card" href="Landlord_Registration_Operator_Timelines.html"><h2>★ Institutional Landlord Registrations Over Time</h2><p>Two views of the 301 institutional registration cases: a bubble timeline (size = addresses per case) of when each operator registered, and a Gantt of how long each registration was held before it expired.</p></a>
@@ -67,151 +128,117 @@
     <a class="card" href="Landlord_Registrations_with_Photos_map.html"><h2>Landlord Registrations, with Photos</h2><p>Registered rental homes across the county, each popup showing the county assessor's photo of the house.</p></a>
     <a class="card" href="Davidson_LandlordReg_FreezeFrame_Map_2026-05-29.html"><h2>Landlord Registration Snapshot</h2><p>A freeze-frame of active landlord registrations across Davidson County as of mid-2026.</p></a>
     <a class="card" href="CALLR_violations_map.html"><h2>Code Enforcement Against Corporate Landlords</h2><p>Metro enforcement cases (CALLR) brought against corporate landlords, including the Invitation Homes SFR JV borrower shells.</p></a>
-  </div>
-  <div class="sub">Graphics</div>
-  <div class="grid">
     <a class="card" href="Corporate_Landlords_Timeline_LandlordReg.html"><h2>Corporate Rental Growth, 2008–2026</h2><p>A decade-plus of corporate-owned single-family rental registrations. Toggle corporate-only, structure type, and watch cumulative vs. still-active.</p></a>
     <a class="card" href="Landlord_Registrations_Over_Time.html"><h2>★ Landlord Registrations Over Time, by Property Type</h2><p>Every registered single-family home, condo, and duplex placed in the year it was first registered. Drag the year slider or press play to watch registrations accumulate across the county, paired with the per-year stacked-bar timeline. 33,061 registrations.</p></a>
   </div>
-
-  <div class="group"><h2>Ownership &amp; Concentration</h2><p>Who the corporate owners are, where their homes cluster, and how ownership concentrates behind the shells.</p></div>
-  <div class="sub">Database</div>
+  <div class="sub"><span class="lab">Eviction Trends</span></div>
   <div class="grid">
-    <a class="card" href="WhoOwnsNashville_Explorer.html"><h2>Owner Portfolio Explorer</h2><p>Search any owner. The map highlights every home in that owner's portfolio — all the LLCs and shells linked to the same entity by name and mailing address.</p></a>
-    <a class="card" href="Current_Cadastral_Holdings_Explorer.html"><h2>Current Cadastral Holdings Explorer</h2><p>Every operator's current cadastral holdings, browsable by parent brand — the live snapshot of who holds what right now.</p></a>
-  </div>
-  <div class="sub">Maps</div>
-  <div class="grid">
-    <a class="card" href="Corporate_Acquisition_Timeline.html"><h2>★ Corporate Acquisition Timeline (Play)</h2><p>Press play and watch corporate Nashville assemble itself. 38,461 corporate-owned homes, each appearing the year its current owner actually acquired it (from the chain of title), colored by operator. The 2021-2025 surge is the whole story.</p></a>
-    <a class="card" href="Davidson_Current_Ownership_Map.html"><h2>★ Who Owns Every Home Now (2026)</h2><p>The current snapshot: 210,082 residential parcels, each colored by where its owner receives mail. 170,581 owner-occupants, 28,023 in-state absentee, 11,478 out-of-state. Toggle any layer to isolate the investors.</p></a>
-    <a class="card" href="Davidson_OOS_Existing_Buyers_TimeLapse.html"><h2>★ Out-of-State Buyers of Existing Homes (Time-Lapse)</h2><p>Press play and watch the footprint grow — every existing home bought arms-length by an out-of-state owner, cumulatively at 2005, 2009, 2013, 2017, 2021, 2025. 17,093 homes; the 2021 surge is unmistakable.</p></a>
-    <a class="card" href="Corporate_Landlords_by_CouncilDistrict.html"><h2>Corporate Landlords by Council District</h2><p>Institutional single-family holdings aggregated to Metro Council districts — which of the 35 districts carry the heaviest corporate footprint.</p></a>
-    <a class="card" href="davidson_institutional_acquisitions_by_operator.html"><h2>Institutional Acquisitions by Operator</h2><p>Every corporate-bought home colored by its parent operator — Progress, American Homes 4 Rent, Amherst, Tricon, FirstKey. The Security-for-Sale view for Davidson County.</p></a>
-    <a class="card" href="Owner_Mailing_Addresses_Map.html"><h2>★ Where Owners Mail Their Tax Bills</h2><p>The national map of absentee control: every Davidson parcel mapped to the state and city its owner's mail goes to. California, Texas, and Arizona lead; gold bubbles mark the corporate HQ cities, Scottsdale, Calabasas, Austin, Dallas, Atlanta. Toggle out-of-state vs. all.</p></a>
-    <a class="card" href="Corporate_Landlords_ParcelShapes_Nashville.html"><h2>Corporate-Owned Parcels</h2><p>Every corporate-owned single-family parcel as its actual lot shape, colored by parent operator.</p></a>
-    <a class="card" href="Corporate_Landlords_Hexmap_ckmeans.html"><h2>Concentration Hexmap</h2><p>Where corporate ownership clusters across the county, binned into hexagons.</p></a>
-    <a class="card" href="Davidson_Renter_CostBurden_by_Tract_map.html"><h2>Renter Cost Burden by Tract</h2><p>Choropleth of the share of renters paying more than 30% of income on housing, by census tract — the demand-side backdrop to institutional concentration.</p></a>
-    <a class="card" href="Institutional_Ownership_By_Tract.html"><h2>Institutional Ownership by Census Tract</h2><p>Choropleth of the share of single-family homes owned by corporate / institutional entities, by census tract.</p></a>
-    <a class="card" href="Institutional_SF_Homes_DotMap.html"><h2>Institutional Single-Family Homes (Dot Map)</h2><p>Every single-family home owned by a corporate / institutional entity as one dot — the GAO-style density view. 34,274 homes, concentrated southeast.</p></a>
-    <a class="card" href="BigOperators_vs_AllSF_DotMap.html"><h2>Big Operators vs. All Single-Family Homes</h2><p>Grey = every single-family home; colored dots = homes held by the major institutional operators. Where the big players actually sit.</p></a>
-    <a class="card" href="BigOperators_vs_AllSF_ParcelShapes.html"><h2>Big Operators — Parcel Shapes</h2><p>The same view as the dot map, but every operator home is its real lot shape, colored by operator, over the grey field of all single-family homes.</p></a>
-    <a class="card" href="WithinParent_Chains_Nashville.html"><h2>Within-Parent Ownership Chains</h2><p>How homes move between the shell LLCs of a single parent operator — the internal transfers that fragment one company across dozens of entity names.</p></a>
-    <a class="card" href="Corporate_Landlords_Neighborhood_Antioch.html"><h2>Antioch Close-Up (37013)</h2><p>Corporate-landlord concentration in Antioch — the county's most heavily acquired neighborhood — block by block, by operator.</p></a>
-    <a class="card" href="Transaction_History_Timeline_Nashville.html"><h2>Transaction History, 2013–2026</h2><p>Every recorded single-family sale, colored by who bought from whom. Play the slider to watch the corporate acquisition wave rise and fall against the ordinary market.</p></a>
-    <a class="card" href="SF_BecameNonOwner_AllTransfers_Timeline_Nashville.html"><h2>When Homes Became Non-Owner-Occupied</h2><p>Every absentee-owned home, placed in the year its current owner acquired it. 83% changed hands since 2010.</p></a>
-    <a class="card" href="SF_NeverOwnerOccupied_Nashville.html"><h2>Single-Family Homes Never Owner-Occupied</h2><p>The 8,977 single-family parcels where no owner in the entire chain of title ever lived in the home — pure investor stock.</p></a>
-  </div>
-  <div class="sub">Graphics</div>
-  <div class="grid">
-    <a class="card" href="Land_Banking_Database.html"><h2>★ Land-Banking Deals Database</h2><p>How builders bank their land: a land banker (Kennedy Lewis, TPG, Millrose/Lennar, Brookfield, DRP) buys the dirt and options it to the builder, who draws lots by recorded takedown. 9 projects, every acquisition, option memo, and takedown with its deed link.</p></a>
-    <a class="card" href="Who_Owns_Vacant_Land.html"><h2>★ Who Owns the Vacant Land?</h2><p>Actual parcel shapes of Nashville's 15,358 genuinely vacant developable parcels (no structure, no dwelling unit, common areas excluded) — 76,036 acres, colored by owner type. Government holds the most; Regent Homes leads private holders.</p></a>
-    <a class="card" href="Institutional_Ownership_By_Block.html"><h2>★ Institutional Ownership by Block (operator filter)</h2><p>The finest grain: 1,337 census blocks that contain an institutional owner, shaded by share — whole BTR blocks hit 50–100%. Filter to any operator (Progress, AMH, Amherst, Tricon…) to see just their blocks.</p></a>
-    <a class="card" href="Institutional_Ownership_By_BlockGroup.html"><h2>★ Institutional Ownership by Block Group</h2><p>The granular version: all 470 Davidson census block groups shaded by institutional homeownership share. Hotspots in southeast Antioch and the BTR corridors hit 20–30%; popups carry the block group's income, %Black, and poverty.</p></a>
-    <a class="card" href="Institutional_Ownership_By_Community.html"><h2>★ Institutional Ownership by Community</h2><p>A choropleth of every Davidson community shaded by the share of its homes held by named institutional operators. Antioch leads at 14.8% (Progress), Hermitage 9.1% (AMH). Click any community for its profile.</p></a>
-    <a class="card" href="Institutional_Owner_Leaderboard.html"><h2>★ Institutional Owner Leaderboard</h2><p>The corrected top-owners ranking, each operator\'s full holdings consolidated to parent (Yamasa&rarr;Progress, AMH dev LLCs&rarr;AMH). Progress 1,215 &middot; AMH 1,182 &middot; Amherst 699 &middot; Regent 642. Toggle parcels / dwelling units / acres / value; filter in-state vs out-of-state.</p></a>
-    <a class="card" href="Preview_Owners_by_Type.html"><h2>Owners by Type</h2><p>Chart of all 24,300 entity-owned single-family parcels by owner category: 19,984 local LLCs dwarf the 3,049 PE-backed operator and 1,192 public-REIT homes.</p></a>
-    <a class="card" href="Corporate_Landlords_Timeline_Nashville.html"><h2>Corporate Acquisition Timeline</h2><p>When corporate owners <em>bought</em> their homes, year by year — the build-up of concentration across the last decade.</p></a>
-    <a class="card" href="Ownership_Rates_Charts.html"><h2>Ownership Rate Breakdown</h2><p>Owner-occupied vs. non-owner vs. entity-owned shares of the single-family stock, charted.</p></a>
-    <a class="card" href="Deed_Events_By_Buyer_Type.html"><h2>★ Deed Events by Buyer Type, 1969–2026</h2><p>Every recorded ownership transfer in Davidson County, classified by who got the deed: individual, LLC, trust, homebuilder, bank/REO, SFR REIT, iBuyer. Interactive stacked area, 1.55M deeds. Toggle counts vs. share and any buyer type.</p></a>
-    <a class="card" href="Operator_Holdings_Over_Time.html"><h2>★ Operator Holdings Over Time, 2000–2026</h2><p>Year-end Davidson holdings for every institutional operator, reconstructed from the chain of title. Progress peaks at 2,524, AMH at 1,225; the 2021–2023 surge is unmistakable. Click any operator to isolate it.</p></a>
-    <a class="card" href="OutOfState_Acquisitions_By_Type.html"><h2>★ Out-of-State Acquisitions by Owner Type</h2><p>Every Davidson parcel bought by an owner mailing from outside Tennessee, 2000–2026. Watch the shift from the foreclosure/lender era to the post-2012 business-entity surge. Counts or share.</p></a>
-    <a class="card" href="Who_Bought_Nashville_Homes.html"><h2>★ Who Bought Nashville's Homes, 2010–2024</h2><p>Every single-family sale each year split by purchaser: owner-occupant, small investor, or named institutional operator. Institutional buying peaks 2021–2022 as small investors fade. Counts or share.</p></a>
-    <a class="card" href="Davidson_Residential_Ownership_Analysis.html"><h2>★ Residential Ownership &amp; Sales (Analysis Hub)</h2><p>One page, one dataset: Class-R sales volume by year (existing vs new), out-of-state buyers of existing homes 2001–2025, and absentee/out-of-state ownership by reappraisal year — with full methodology and data links.</p></a>
-    <a class="card" href="Davidson_Absentee_By_Reappraisal_Year.html"><h2>★ Absentee Ownership by Reappraisal Year, 1993–2025</h2><p>Non-owner-occupied homes (owner zip ≠ property zip) at every Davidson reappraisal year — the U-shape: 19% → 15.8% low in 2001 → 18.7% by 2025 (+69% in count). Built from the assessment history.</p></a>
+    <a class="card" href="Davidson_Institutional_Evictions.html"><h2>Institutional Evictions (Map)</h2><p>Eviction filings brought by named institutional operators across Davidson County, mapped to the properties behind them.</p></a>
+    <a class="card" href="Davidson_Eviction_Filings_Timeline.html"><h2>Davidson Eviction Filings Over Time</h2><p>Detainer and eviction filings in Davidson County year by year, tracing how filing volume rose and fell.</p></a>
+    <a class="card" href="Eviction_Deviation_Diverging_Column.html"><h2>Eviction Rate Deviation by Neighborhood</h2><p>How each neighborhood's eviction rate diverges from the county norm — where filings run hotter and cooler than expected.</p></a>
   </div>
 
-  <div class="group"><h2>National Context: The CRS Report</h2><p>Charts illustrating the June 2026 Congressional Research Service report on institutional investors (R49015), with a Nashville–Davidson County comparison.</p></div>
-  <div class="sub">Graphics</div>
-  <div class="grid">
-    <a class="card" href="CRS_Fig1_Owner_vs_Renter_OneUnit.html"><h2>Owner vs. Renter of One-Unit Homes (CRS Fig. 1)</h2><p>The report's opener — ~84% of one-unit homes are owner-occupied nationally. Nashville matched that in 2010, then diverged: 80.3% owner by 2024, its renter share ~4 points above the nation.</p></a>
-    <a class="card" href="Davidson_OwnerRenter_OneUnit_Timeline.html"><h2>Davidson One-Unit Homes: Owner vs. Renter, 2010–2024</h2><p>The year-by-year counts in Nashville's one-unit stock — renter-occupied one-unit homes grew from 26,485 to 38,835 (+47%), far outpacing owner-occupied growth.</p></a>
-    <a class="card" href="Davidson_Tenure_By_Structure_MiniGraphs.html"><h2>Owner vs. Renter by Structure Type</h2><p>Mini-graphs for detached, attached, and two-unit homes, each with the homeownership-rate line. The gradient: detached ~82% owner, attached ~70%, duplexes only ~13%.</p></a>
-  </div>
-
-  <div class="group"><h2>Wall Street Finance: Securitization &amp; Mortgages</h2><p>The bond deals and mortgage debt behind corporate-owned homes.</p></div>
-  <div class="sub">Maps</div>
-  <div class="grid">
-    <a class="card" href="Who_Finances_Securitization_Report.html"><h2>★ Wall Street's Debt on Nashville (Securitization Report)</h2><p>Interactive version of the SFR securitization report: headline stats, top lenders and operators as bar charts, and a searchable/sortable table of all 330 pool-loan recordings with parent-sponsor attribution.</p></a>
-    <a class="card" href="Securitized_Homes_Document_Trail.html"><h2>★ The Document Trail (Securitized Homes)</h2><p>Every securitized home linked to its source paper: click any dot to open its Quitclaim Deed, its Deed of Trust, and the SEC exhibit that disclosed it. 1,664 homes with live document links.</p></a>
-    <a class="card" href="Securitization_Deal_Characteristics.html"><h2>★ Deal Neighborhood Characteristics</h2><p>Each securitization bundle joined to census-tract ACS demographics: median income, home value, rent, race, poverty, and burdened-tract share by deal. Tricon buys $150k-income tracts; Progress buys 33%-Black, high-poverty ones.</p></a>
-    <a class="card" href="Securitization_Deals_Database.html"><h2>★ Securitization Deals — Document Database</h2><p>By deal: the Quitclaim Deeds that assembled the portfolio, the Deed of Trust that pledged it, and the SEC document that disclosed it. 63 Davidson deals, searchable.</p></a>
-    <a class="card" href="Finance_Master_Recordings.html"><h2>★ Who Finances Nashville — Master Recordings</h2><p>The consolidated Register-of-Deeds record: 1,620 recordings, 86 loans ≥$10M, top lenders and borrower shells behind $17.7B in Wall Street pool loans. Goldman $10.9B, Progress $20.6B across 38 SPEs. Every row linked to the county image.</p></a>
-    <a class="card" href="Deeds_of_Trust_Database.html"><h2>★ Deeds of Trust — Full Financing Record</h2><p>Every recorded deed of trust, assignment, amendment, and trust agreement against the institutional portfolios, 1972–2026. 2,860 instruments, 2,810 linked to the county deed image, filterable by entity group, type, and year.</p></a>
-    <a class="card" href="Progress_Borrower_Davidson_Map.html"><h2>Progress Borrower Parcels — Davidson</h2><p>Every Davidson parcel held by a Progress Residential borrower shell, mapped by entity. The collateral pool behind the securitization.</p></a>
-    <a class="card" href="Progress_Borrower_Points_Davidson_Map.html"><h2>Progress Borrower Homes — Point Map</h2><p>Point-level view of the Progress Residential borrower portfolio across Davidson County.</p></a>
-    <a class="card" href="Progress_Borrower_Loan_Deeds.html"><h2>Progress — Davidson Loan Deeds of Trust</h2><p>All 269 commercial deeds of trust filed against Progress Residential Borrower entities, 2017–2026, each linked to the county image.</p></a>
-    <a class="card" href="Amherst_BAF_ARMM_Shells_Map.html"><h2>Amherst Shell Vehicles — 5-State Map</h2><p>904 SFR loan-backed properties across BAF Assets 5, ARMM Assets 2, and BAF Assets 6, colored by shell entity.</p></a>
-    <a class="card" href="National_SFR_Loans_Map.html"><h2>National Institutional SFR Loans</h2><p>Institutional single-family rental loans nationwide, 2014–2025 — the lending footprint that Nashville sits inside.</p></a>
-    <a class="card" href="National_SFR_Securitized_Map.html"><h2>★ National Securitized Homes — by Owner</h2><p>4,879 single-family homes pledged as collateral in institutional SFR securitizations across AZ, GA, TX, MN, and TN, colored by parent brand. Progress 2,077, Tricon 1,094, Amherst 550, Invitation 456.</p></a>
-    <a class="card" href="Financed_Mortgages_Nashville.html"><h2>Financed Mortgages — Davidson</h2><p>Davidson County single-family homes carrying a commercial securitized mortgage, mapped by owner. The Wall Street lien layer beneath Nashville's rentals.</p></a>
-    <a class="card" href="Securitized_Parcels_MAP_v2.html"><h2>Securitized Single-Family Homes (v2)</h2><p>Every Davidson home pledged as collateral in an SFR securitization, mapped from the deal dealsheet. The Wall Street mortgage layer beneath the rentals.</p></a>
-    <a class="card" href="Securitization_Parcels_map.html"><h2>Securitized Parcels — Homes Pledged to Bond Deals</h2><p>Every Davidson single-family home pledged as collateral in a single-family-rental securitization, mapped by borrower trust — Progress, FirstKey, Amherst and others.</p></a>
-    <a class="card" href="Securitization_Mortgages_map.html"><h2>Securitized Mortgages — The Debt Behind the Homes</h2><p>The securitized loans backing those homes, each tied to its SFR bond deal. Where the mortgage debt sits across the county.</p></a>
-    <a class="card" href="Financed_Mortgages_Nashville.html"><h2>Financed Corporate Homes</h2><p>Corporate-owned single-family homes carrying a recorded mortgage, mapped loan by loan — the financed footprint behind institutional ownership.</p></a>
-    <a class="card" href="Progress_Borrower_Davidson_Map_v2.html"><h2>Progress Residential — Borrower Case Study</h2><p>Every Davidson home pledged by Progress Residential's securitization borrower entities, mapped for the case study.</p></a>
-    <a class="card" href="LP_Entity_Parcels_map.html"><h2>Limited-Partnership Land Holdings</h2><p>Residential parcels held by limited-partnership and investment-fund entities — the LP layer of institutional landholding.</p></a>
-  </div>
-
-  <div class="group"><h2>Build-to-Rent &amp; New Construction</h2><p>Homes built to be rented, and the construction wave behind the buildup.</p></div>
+  <!-- ===================== WHO BUILDS? (Part III) ===================== -->
+  <div class="group" id="builds"><h2>Who Builds?</h2><p>The construction exception: homes built to be rented, the five build-to-rent models, and the construction wave behind the buildup.</p></div>
+  <div class="sub"><span class="lab">The Build-to-Rent Models</span></div>
   <div class="grid">
     <a class="card" href="BTR_Models_And_Impact.html"><h2>★ Five Models of Build-to-Rent, and Their Impact</h2><p>Every BTR parcel sorted into five models (integrated / contractor / partnership / one-off sale / land bank) by who builds and who holds, with the housing impact: 92.8% held or in pipeline, only 7.2% ever reached a homebuyer, and 0 barred by the ROAD Act.</p></a>
-    <a class="card" href="BTR_Historical_Aerials.html"><h2>★ Watch Nashville Get Built (Historical Aerials)</h2><p>Build-to-rent parcels overlaid on Metro Nashville's historical aerial photography, 1996 to 2023. Jump to a community and slide the year to watch the land go from field to subdivision. Cyan = pipeline, gold = built.</p></a>
     <a class="card" href="BTR_Machine_Map.html"><h2>★ Nashville's Build-to-Rent Machine</h2><p>Every build-to-rent parcel as its real lot shape, pipeline and built. 3,478 parcels, 26 operators. Color by BTR type (integrated / land-bank / merchant), business model, lifecycle stage, or operator; click any parcel for owner, builder, and county links.</p></a>
     <a class="card" href="BTR_Operators_Parcels_Map.html"><h2>Build-to-Rent Operators, by Parcel</h2><p>The 15 named build-to-rent operators, each parcel as its real lot shape colored by operator. 2,005 parcels — VB TAH/NexPoint, Resibuilt/Invitation, Pulte, Lennar, TPG, AHV, KSSK, Crescent, and more. Click any operator in the legend to isolate it; click a parcel for owner, land use, and county links.</p></a>
-  </div>
-  <div class="grid">
-    <a class="card" href="Supply_Curve_By_Tract.html"><h2>★ Where Prices Rose and Building Kept Up</h2><p>Every census tract plotted by how fast it built homes vs. how much prices grew, colored by institutional share. A Glaeser-Gyourko read of Nashville's supply elasticity. Hover any tract.</p></a>
-  </div>
-  <div class="sub">Maps</div>
-  <div class="grid">
-    <a class="card" href="BTR_Current_vs_Pipeline_Map.html"><h2>Build-to-Rent: Current vs. Pipeline</h2><p>Built-and-held rental homes versus vacant lots still in the development pipeline, by operator.</p></a>
-    <a class="card" href="BTR_Exit_vs_Pipeline_Nashville.html"><h2>Build-to-Rent: Exits vs. Pipeline</h2><p>BTR homes operators have since sold off, set against the lots still sitting in the development pipeline.</p></a>
-    <a class="card" href="BTR_Lifecycle_Map.html"><h2>Build-to-Rent Lifecycle</h2><p>Each build-to-rent community traced through its lifecycle stage — raw land, under construction, leasing, stabilized.</p></a>
     <a class="card" href="BTR_Models_Map.html"><h2>Build-to-Rent by Business Model</h2><p>BTR communities classed by development model: scattered-site, horizontal apartment, and subdivision-style rental.</p></a>
     <a class="card" href="BTR_Types_Map.html"><h2>Build-to-Rent by Product Type</h2><p>BTR developments by housing product — detached houses, townhomes, and cottage-court formats.</p></a>
   </div>
-  <div class="sub">Graphics</div>
+  <div class="sub"><span class="lab">Pipeline, Lifecycle &amp; Exits</span></div>
+  <div class="grid">
+    <a class="card" href="BTR_Historical_Aerials.html"><h2>★ Watch Nashville Get Built (Historical Aerials)</h2><p>Build-to-rent parcels overlaid on Metro Nashville's historical aerial photography, 1996 to 2023. Jump to a community and slide the year to watch the land go from field to subdivision. Cyan = pipeline, gold = built.</p></a>
+    <a class="card" href="BTR_Current_vs_Pipeline_Map.html"><h2>Build-to-Rent: Current vs. Pipeline</h2><p>Built-and-held rental homes versus vacant lots still in the development pipeline, by operator.</p></a>
+    <a class="card" href="BTR_Exit_vs_Pipeline_Nashville.html"><h2>Build-to-Rent: Exits vs. Pipeline</h2><p>BTR homes operators have since sold off, set against the lots still sitting in the development pipeline.</p></a>
+    <a class="card" href="BTR_Lifecycle_Map.html"><h2>Build-to-Rent Lifecycle</h2><p>Each build-to-rent community traced through its lifecycle stage — raw land, under construction, leasing, stabilized.</p></a>
+  </div>
+  <div class="sub"><span class="lab">New Construction &amp; Supply</span></div>
   <div class="grid">
     <a class="card" href="New_Construction_Permits_Timeline.html"><h2>New Construction Permits, 2006–2026</h2><p>Residential building permits issued over two decades — the construction wave behind the institutional buildup.</p></a>
     <a class="card" href="davidson_residential_construction_by_type_IF12988.html"><h2>Residential Construction by Structure Type</h2><p>Davidson building permits by structure type over time — the CRS housing-supply figure, rebuilt for the county.</p></a>
     <a class="card" href="Davidson_New_vs_Existing_Sales.html"><h2>Home Sales: New vs. Existing, 2012–2024</h2><p>Davidson County single-family home sales each year, split into newly built and existing homes.</p></a>
+    <a class="card" href="Supply_Curve_By_Tract.html"><h2>★ Where Prices Rose and Building Kept Up</h2><p>Every census tract plotted by how fast it built homes vs. how much prices grew, colored by institutional share. A Glaeser-Gyourko read of Nashville's supply elasticity. Hover any tract.</p></a>
   </div>
 
-  <div class="group"><h2>Who Owns the Vacant Land?</h2><p>Every genuinely vacant parcel in Davidson County, no building, no year built, no dwelling units, as its real lot shape. 45% is corporate or business owned.</p></div>
-  <div class="sub">Maps</div>
+  <!-- ===================== WHO LANDBANKS? (Part IV) ===================== -->
+  <div class="group" id="landbanks"><h2>Who Landbanks?</h2><p>The Act's blind spot: raw land and unbuilt lots held before they become homes. Who holds it, how long, and where.</p></div>
+  <div class="sub"><span class="lab">Vacant-Land Concentration</span></div>
   <div class="grid">
     <a class="card" href="Vacant_Land_Owners_Map.html"><h2>★ Who Owns the Vacant Land in Nashville?</h2><p>All 33,662 genuinely vacant parcels drawn as their actual lot shapes, colored by who owns them: corporate/business, individual, government/institutional, or trust. $10.6B of vacant land. Filter by owner type; click any parcel for the county record.</p></a>
-  </div>
-
-  <div class="group"><h2>Land Banking &amp; Foreclosure</h2><p>Investors holding vacant land, and where foreclosed homes ended up.</p></div>
-  <div class="sub">Maps</div>
-  <div class="grid">
-    <a class="card" href="Development_Timing_By_Model.html"><h2>★ Development Timing: BTR vs Builder vs Landbanker</h2><p>How long each development model takes to rezone, permit, and build, and how often it builds at all. Speculative landbankers sit on rezoned land 12.5 years and build just 24%; build-to-rent moves fastest. Time-to-develop and do-they-build views.</p></a>
-    <a class="card" href="Developer_Rezone_Permit_Lags.html"><h2>★ How Long Developers Take to Rezone &amp; Permit</h2><p>Median years from acquisition to rezoning and to building permit, comparing national/institutional builders, local builders, and out-of-state developers. Out-of-state developers are slowest to permit (3.5 yr) and sit longest on rezoned land (6 yr); national builders permit fastest.</p></a>
-    <a class="card" href="Vacant_Land_Hold_Time.html"><h2>★ Who Sits on Vacant Land, and How Long</h2><p>Every vacant parcel by years the current owner has held it undeveloped. Individuals hold a median 9 years (25% held 20+ years); corporate holders are mostly homebuilders' short-term pipelines (median 4 years). By-duration and by-operator views.</p></a>
-    <a class="card" href="Land_Held_Before_Building.html"><h2>★ How Long Land Sat Before It Was Built</h2><p>Years each lot was held vacant before construction, by owner type and by builder, 1990–2025. Individuals sit on land longest (mean 2.6 yr, spiking to ~7 yr recently); national builders build within a year. Over-time and by-builder views.</p></a>
-    <a class="card" href="LandBank_Timeline_Nashville.html"><h2>How Land Banking Unfolds</h2><p>Starts with the vacant land in 2000 and plays forward — the acquire → subdivide → build sequence, year by year.</p></a>
+    <a class="card" href="Who_Owns_Vacant_Land.html"><h2>★ Who Owns the Vacant Land? (Developable)</h2><p>Actual parcel shapes of Nashville's 15,358 genuinely vacant developable parcels (no structure, no dwelling unit, common areas excluded) — 76,036 acres, colored by owner type. Government holds the most; Regent Homes leads private holders.</p></a>
+    <a class="card" href="Land_Banking_Database.html"><h2>★ Land-Banking Deals Database</h2><p>How builders bank their land: a land banker (Kennedy Lewis, TPG, Millrose/Lennar, Brookfield, DRP) buys the dirt and options it to the builder, who draws lots by recorded takedown. 9 projects, every acquisition, option memo, and takedown with its deed link.</p></a>
     <a class="card" href="LandBank_Footprints_Nashville.html"><h2>Land-Bank Footprints</h2><p>The actual shape of the land each investor controls — Walton, Drapac, Green Trails, Domain Timberlake and more, by acreage.</p></a>
     <a class="card" href="LandBank_Tracts_Nashville.html"><h2>Who Land-Banks Nashville?</h2><p>Large vacant residential tracts held by out-of-state and investor entities — held-years, buyer, and what it became.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Vacancy Duration &amp; Development Timing</span></div>
+  <div class="grid">
+    <a class="card" href="Vacant_Land_Hold_Time.html"><h2>★ Who Sits on Vacant Land, and How Long</h2><p>Every vacant parcel by years the current owner has held it undeveloped. Individuals hold a median 9 years (25% held 20+ years); corporate holders are mostly homebuilders' short-term pipelines (median 4 years). By-duration and by-operator views.</p></a>
+    <a class="card" href="Land_Held_Before_Building.html"><h2>★ How Long Land Sat Before It Was Built</h2><p>Years each lot was held vacant before construction, by owner type and by builder, 1990–2025. Individuals sit on land longest (mean 2.6 yr, spiking to ~7 yr recently); national builders build within a year. Over-time and by-builder views.</p></a>
+    <a class="card" href="Development_Timing_By_Model.html"><h2>★ Development Timing: BTR vs Builder vs Landbanker</h2><p>How long each development model takes to rezone, permit, and build, and how often it builds at all. Speculative landbankers sit on rezoned land 12.5 years and build just 24%; build-to-rent moves fastest. Time-to-develop and do-they-build views.</p></a>
+    <a class="card" href="Developer_Rezone_Permit_Lags.html"><h2>★ How Long Developers Take to Rezone &amp; Permit</h2><p>Median years from acquisition to rezoning and to building permit, comparing national/institutional builders, local builders, and out-of-state developers. Out-of-state developers are slowest to permit (3.5 yr) and sit longest on rezoned land (6 yr); national builders permit fastest.</p></a>
+    <a class="card" href="LandBank_Timeline_Nashville.html"><h2>How Land Banking Unfolds</h2><p>Starts with the vacant land in 2000 and plays forward — the acquire → subdivide → build sequence, year by year.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Foreclosure Outcomes</span></div>
+  <div class="grid">
     <a class="card" href="Foreclosure_Timeline_Nashville.html"><h2>What Happened to Foreclosed Homes</h2><p>Every parcel sold by Trustee's Deed, 2001–today. Red at foreclosure, then green or orange as it returns to a resident or an investor. Filter by status today.</p></a>
   </div>
 
-  <div class="group"><h2>Davidson County Housing Profile</h2><p>The physical stock and how it changed — the county's housing indicators, the parcel fabric, and the census-tract picture over time.</p></div>
-  <div class="sub">Maps</div>
+  <!-- ===================== WHO FINANCES? (Part V) ===================== -->
+  <div class="group" id="finances"><h2>Who Finances?</h2><p>The origin of capital: the bond deals and mortgage debt behind corporate-owned homes. Organized to the Part V findings scheme.</p></div>
+  <div class="sub"><span class="lab">The Lenders &amp; the Debt Record</span></div>
+  <div class="grid">
+    <a class="card" href="Who_Finances_Securitization_Report.html"><h2>★ Wall Street's Debt on Nashville (Securitization Report)</h2><p>Interactive version of the SFR securitization report: headline stats, top lenders and operators as bar charts, and a searchable/sortable table of all 330 pool-loan recordings with parent-sponsor attribution.</p></a>
+    <a class="card" href="Finance_Master_Recordings.html"><h2>★ Who Finances Nashville — Master Recordings</h2><p>The consolidated Register-of-Deeds record: 1,620 recordings, 86 loans ≥$10M, top lenders and borrower shells behind $17.7B in Wall Street pool loans. Goldman $10.9B, Progress $20.6B across 38 SPEs. Every row linked to the county image.</p></a>
+    <a class="card" href="Deeds_of_Trust_Database.html"><h2>★ Deeds of Trust — Full Financing Record</h2><p>Every recorded deed of trust, assignment, amendment, and trust agreement against the institutional portfolios, 1972–2026. 2,860 instruments, 2,810 linked to the county deed image, filterable by entity group, type, and year.</p></a>
+    <a class="card" href="National_SFR_Loans_Map.html"><h2>National Institutional SFR Loans</h2><p>Institutional single-family rental loans nationwide, 2014–2025 — the lending footprint that Nashville sits inside.</p></a>
+    <a class="card" href="Securitization_Mortgages_map.html"><h2>Securitized Mortgages — The Debt Behind the Homes</h2><p>The securitized loans backing those homes, each tied to its SFR bond deal. Where the mortgage debt sits across the county.</p></a>
+    <a class="card" href="Financed_Mortgages_Nashville.html"><h2>Financed Mortgages — Davidson</h2><p>Davidson County single-family homes carrying a commercial securitized mortgage, mapped by owner. The Wall Street lien layer beneath Nashville's rentals.</p></a>
+  </div>
+  <div class="sub"><span class="lab">The Deals &amp; Representative Transactions</span></div>
+  <div class="grid">
+    <a class="card" href="Securitization_Deals_Database.html"><h2>★ Securitization Deals — Document Database</h2><p>By deal: the Quitclaim Deeds that assembled the portfolio, the Deed of Trust that pledged it, and the SEC document that disclosed it. 63 Davidson deals, searchable.</p></a>
+    <a class="card" href="Securitization_Deal_Characteristics.html"><h2>★ Deal Neighborhood Characteristics</h2><p>Each securitization bundle joined to census-tract ACS demographics: median income, home value, rent, race, poverty, and burdened-tract share by deal. Tricon buys $150k-income tracts; Progress buys 33%-Black, high-poverty ones.</p></a>
+    <a class="card" href="Progress_Borrower_Davidson_Map_v2.html"><h2>Progress Residential — Borrower Case Study</h2><p>Every Davidson home pledged by Progress Residential's securitization borrower entities, mapped for the case study.</p></a>
+    <a class="card" href="Progress_Borrower_Davidson_Map.html"><h2>Progress Borrower Parcels — Davidson</h2><p>Every Davidson parcel held by a Progress Residential borrower shell, mapped by entity. The collateral pool behind the securitization.</p></a>
+    <a class="card" href="Progress_Borrower_Points_Davidson_Map.html"><h2>Progress Borrower Homes — Point Map</h2><p>Point-level view of the Progress Residential borrower portfolio across Davidson County.</p></a>
+    <a class="card" href="Progress_Borrower_Loan_Deeds.html"><h2>Progress — Davidson Loan Deeds of Trust</h2><p>All 269 commercial deeds of trust filed against Progress Residential Borrower entities, 2017–2026, each linked to the county image.</p></a>
+    <a class="card" href="Amherst_BAF_ARMM_Shells_Map.html"><h2>Amherst Shell Vehicles — 5-State Map</h2><p>904 SFR loan-backed properties across BAF Assets 5, ARMM Assets 2, and BAF Assets 6, colored by shell entity.</p></a>
+  </div>
+  <div class="sub"><span class="lab">The Securitized Parcels</span> <span class="note">— geographic &amp; document overlay</span></div>
+  <div class="grid">
+    <a class="card" href="Securitized_Homes_Document_Trail.html"><h2>★ The Document Trail (Securitized Homes)</h2><p>Every securitized home linked to its source paper: click any dot to open its Quitclaim Deed, its Deed of Trust, and the SEC exhibit that disclosed it. 1,664 homes with live document links.</p></a>
+    <a class="card" href="National_SFR_Securitized_Map.html"><h2>★ National Securitized Homes — by Owner</h2><p>4,879 single-family homes pledged as collateral in institutional SFR securitizations across AZ, GA, TX, MN, and TN, colored by parent brand. Progress 2,077, Tricon 1,094, Amherst 550, Invitation 456.</p></a>
+    <a class="card" href="Securitized_Parcels_MAP_v2.html"><h2>Securitized Single-Family Homes (v2)</h2><p>Every Davidson home pledged as collateral in an SFR securitization, mapped from the deal dealsheet. The Wall Street mortgage layer beneath the rentals.</p></a>
+    <a class="card" href="Securitization_Parcels_map.html"><h2>Securitized Parcels — Homes Pledged to Bond Deals</h2><p>Every Davidson single-family home pledged as collateral in a single-family-rental securitization, mapped by borrower trust — Progress, FirstKey, Amherst and others.</p></a>
+    <a class="card" href="LP_Entity_Parcels_map.html"><h2>Limited-Partnership Land Holdings</h2><p>Residential parcels held by limited-partnership and investment-fund entities — the LP layer of institutional landholding.</p></a>
+  </div>
+
+  <!-- ===================== HOUSING PROFILE ===================== -->
+  <div class="group" id="profile"><h2>Davidson County Housing Profile</h2><p>Context for the whole series: the physical stock and how it changed, the parcel fabric over time, and how owner-vs-renter tenure tracks the national CRS report.</p></div>
+  <div class="sub"><span class="lab">The Housing Stock Over Time</span></div>
   <div class="grid">
     <a class="card" href="SF_YearBuilt_Timeline_Nashville.html"><h2>When Nashville's Single-Family Stock Was Built</h2><p>Every single-family home placed by year built. Play the slider to watch the county grow; filter by detached, attached, or duplex.</p></a>
     <a class="card" href="SF_Current_PropertyTypes_Nashville.html"><h2>Current Single-Family Property Types</h2><p>The whole single-family stock colored by structure type, with an owner-occupied vs. non-owner filter and live stats.</p></a>
+    <a class="card" href="Davidson_Housing_Indicators_Timeline.html"><h2>★ Housing Indicators Over Time, 2010–2024</h2><p>Six interactive panels — population, homeownership rate, median home value, median rent, single-family homes, and rental units — the whole housing picture, year by year. Home values 2.5×'d while the ownership rate fell to 55.5%.</p></a>
+    <a class="card" href="Davidson_Total_Housing_Units.html"><h2>Total Housing Units, 1980–2025</h2><p>The county's housing stock against the units-to-population ratio. Hover any year for the unit count, ratio, and source.</p></a>
+    <a class="card" href="Davidson_ACS_TimeLapse.html"><h2>★ Census-Tract Time-Lapse, 2011–2024</h2><p>Press play and watch each Davidson census tract change over five ACS vintages — median home value, household income, gross rent, % renter-occupied, and % renters cost-burdened.</p></a>
+  </div>
+  <div class="sub"><span class="lab">Parcel Fabric &amp; History</span></div>
+  <div class="grid">
     <a class="card" href="Reconstructed_Tracts_Nashville.html"><h2>Reconstructed Retired Parcels</h2><p>Parcels that no longer exist, rebuilt by merging the lots they were subdivided into — the original tract boundary before re-platting.</p></a>
     <a class="card" href="Davidson_Historic_Parcels_Timeline.html"><h2>Historic Parcels Timeline</h2><p>Retired and historic parcels placed in time — the parcel fabric before subdivision and re-platting.</p></a>
     <a class="card" href="Nashville_Historical_Imagery_map.html"><h2>Historical Aerial Imagery</h2><p>Davidson parcels laid over historical aerial photography to see how the landscape changed.</p></a>
-    <a class="card" href="Davidson_ACS_TimeLapse.html"><h2>★ Census-Tract Time-Lapse, 2011–2024</h2><p>Press play and watch each Davidson census tract change over five ACS vintages — median home value, household income, gross rent, % renter-occupied, and % renters cost-burdened.</p></a>
     <a class="card" href="parcel_acs_map.html"><h2>Parcels × ACS Neighborhood</h2><p>Every parcel colored by its census-tract ACS profile — homeownership, median value, and renter cost burden, joined to the parcel fabric.</p></a>
     <a class="card" href="institutional_parcels_acs_map.html"><h2>Institutional Parcels × ACS</h2><p>Institutionally-owned parcels set against their census-tract demographics — where corporate ownership meets neighborhood conditions.</p></a>
   </div>
-  <div class="sub">Graphics</div>
+  <div class="sub"><span class="lab">Tenure — National (CRS) Context</span></div>
   <div class="grid">
-    <a class="card" href="Davidson_Housing_Indicators_Timeline.html"><h2>★ Housing Indicators Over Time, 2010–2024</h2><p>Six interactive panels — population, homeownership rate, median home value, median rent, single-family homes, and rental units — the whole housing picture, year by year. Home values 2.5×'d while the ownership rate fell to 55.5%.</p></a>
-    <a class="card" href="Davidson_Total_Housing_Units.html"><h2>Total Housing Units, 1980–2025</h2><p>The county's housing stock against the units-to-population ratio. Hover any year for the unit count, ratio, and source.</p></a>
+    <a class="card" href="CRS_Fig1_Owner_vs_Renter_OneUnit.html"><h2>Owner vs. Renter of One-Unit Homes (CRS Fig. 1)</h2><p>The June 2026 CRS report's opener — ~84% of one-unit homes are owner-occupied nationally. Nashville matched that in 2010, then diverged: 80.3% owner by 2024, its renter share ~4 points above the nation.</p></a>
+    <a class="card" href="Davidson_OwnerRenter_OneUnit_Timeline.html"><h2>Davidson One-Unit Homes: Owner vs. Renter, 2010–2024</h2><p>The year-by-year counts in Nashville's one-unit stock — renter-occupied one-unit homes grew from 26,485 to 38,835 (+47%), far outpacing owner-occupied growth.</p></a>
+    <a class="card" href="Davidson_Tenure_By_Structure_MiniGraphs.html"><h2>Owner vs. Renter by Structure Type</h2><p>Mini-graphs for detached, attached, and two-unit homes, each with the homeownership-rate line. The gradient: detached ~82% owner, attached ~70%, duplexes only ~13%.</p></a>
   </div>
 
 </div>
