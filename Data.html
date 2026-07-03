@@ -1,100 +1,118 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Who Owns Nashville — Parcel Data Explorer</title>
+<title>Who Owns Nashville — Parcel Data Table</title>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{--navy:#1c458c;--gold:#f0af1e;--bd:#d6ddea;--ink:#20303f;--muted:#6b7683}
   *{box-sizing:border-box}
-  body{margin:0;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);background:#eef4fb;line-height:1.5}
-  header{background:var(--navy);color:#fff;padding:26px 22px;border-bottom:5px solid var(--gold);text-align:center}
-  header h1{margin:0;font-size:24px;font-weight:800}
-  header p{margin:6px 0 0;font-size:13px;opacity:.9}
-  .wrap{max-width:900px;margin:0 auto;padding:20px}
-  #search{width:100%;padding:14px 16px;font-size:16px;font-family:inherit;border:2px solid var(--bd);border-radius:8px;outline:none}
+  body{margin:0;font-family:'Montserrat',Arial,sans-serif;color:var(--ink);background:#eef4fb;line-height:1.4}
+  header{background:var(--navy);color:#fff;padding:20px 22px;border-bottom:5px solid var(--gold)}
+  header h1{margin:0;font-size:22px;font-weight:800}
+  header p{margin:5px 0 0;font-size:12.5px;opacity:.9}
+  .bar{max-width:1300px;margin:0 auto;padding:14px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+  #search{flex:1;min-width:240px;padding:11px 14px;font-size:15px;font-family:inherit;border:2px solid var(--bd);border-radius:8px;outline:none}
   #search:focus{border-color:var(--gold)}
-  #status{font-size:12.5px;color:var(--muted);margin:8px 2px}
-  #results{margin-top:8px}
-  .hit{background:#fff;border:1px solid var(--bd);border-left:3px solid var(--gold);border-radius:6px;padding:9px 13px;margin:7px 0;cursor:pointer;font-size:13px}
-  .hit:hover{background:#f5f8fd}
-  .hit b{color:var(--navy)}
-  .hit .sub{color:var(--muted);font-size:12px}
-  .card{background:#fff;border:1px solid var(--bd);border-top:4px solid var(--gold);border-radius:8px;padding:18px 20px;margin:10px 0 20px;box-shadow:0 3px 10px rgba(28,69,140,.1)}
-  .card h2{margin:0 0 3px;font-size:19px;color:var(--navy);font-weight:800}
-  .card .addr{color:var(--muted);font-size:13px;margin-bottom:12px}
-  .row{display:grid;grid-template-columns:160px 1fr;gap:4px 12px;font-size:13px;padding:4px 0;border-bottom:1px solid #eef0f3}
-  .row .k{color:var(--muted);font-weight:600}
-  .sec{font-size:11px;text-transform:uppercase;letter-spacing:.7px;color:var(--navy);font-weight:700;margin:14px 0 4px;border-bottom:1px solid var(--gold);padding-bottom:2px}
-  .links a{display:inline-block;margin:8px 8px 0 0;background:var(--navy);color:#fff;text-decoration:none;padding:6px 11px;border-radius:5px;font-size:12px;font-weight:700}
-  .links a:hover{background:var(--gold);color:var(--navy)}
-  .back{color:var(--navy);cursor:pointer;font-size:13px;font-weight:700;display:inline-block;margin-bottom:8px}
+  #count{font-size:12.5px;color:var(--muted);white-space:nowrap}
+  .tblwrap{max-width:1300px;margin:0 auto;padding:0 18px 40px;overflow-x:auto}
+  table{border-collapse:collapse;width:100%;background:#fff;font-size:12.5px;border:1px solid var(--bd)}
+  th{position:sticky;top:0;background:var(--navy);color:#fff;font-weight:700;text-align:left;padding:9px 10px;cursor:pointer;white-space:nowrap;font-size:12px}
+  th:hover{background:#16357a}
+  th .ar{opacity:.5;font-size:10px}
+  td{padding:7px 10px;border-bottom:1px solid #eef0f3;vertical-align:top}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  tr:nth-child(even) td{background:#f7f9fc}
+  tr:hover td{background:#fff7e6}
+  td a{color:var(--navy);text-decoration:none;font-weight:600}
+  td a:hover{color:var(--gold)}
+  .pg{max-width:1300px;margin:0 auto;padding:0 18px 40px;display:flex;gap:10px;align-items:center;font-size:13px}
+  .pg button{font-family:inherit;font-weight:700;background:var(--gold);color:var(--navy);border:none;border-radius:6px;padding:8px 14px;cursor:pointer}
+  .pg button:disabled{opacity:.4;cursor:default}
+  #loading{max-width:1300px;margin:0 auto;padding:24px 18px;color:var(--muted);font-size:14px}
 </style></head><body>
 <header>
-  <h1>Parcel Data Explorer</h1>
-  <p>Search every Davidson County parcel &middot; owner, deed history, assessment, zoning &amp; permits &middot; primary government data</p>
+  <h1>Parcel Data Table</h1>
+  <p>Every Davidson County parcel &middot; ownership, deed history, assessment, zoning &amp; permits &middot; sort any column, filter, page through &middot; primary government data</p>
 </header>
-<div class="wrap">
-  <input id="search" placeholder="Loading parcels…" disabled autocomplete="off"/>
-  <div id="status">Loading the parcel database (one-time, ~18 MB)…</div>
-  <div id="results"></div>
+<div class="bar">
+  <input id="search" placeholder="Loading…" disabled autocomplete="off"/>
+  <span id="count"></span>
+</div>
+<div id="loading">Loading the parcel table (one-time, ~18&nbsp;MB)…</div>
+<div class="tblwrap"><table id="tbl" style="display:none"><thead><tr id="hdr"></tr></thead><tbody id="body"></tbody></table></div>
+<div class="pg" id="pg" style="display:none">
+  <button id="prev">&larr; Prev</button><span id="pginfo"></span><button id="next">Next &rarr;</button>
 </div>
 <script>
-var DATA=[], READY=false;
-var search=document.getElementById('search'), status=document.getElementById('status'), results=document.getElementById('results');
+var COLS=[
+ {k:'a',  t:'APN',            link:1},
+ {k:'o',  t:'Current Owner'},
+ {k:'od', t:'Acquired'},
+ {k:'oa', t:'Owner Mailing'},
+ {k:'o2', t:'Prior Owner'},
+ {k:'nt', t:'Deeds', num:1},
+ {k:'lu', t:'Land Use'},
+ {k:'z',  t:'Zone'},
+ {k:'av', t:'Appraised', num:1, money:1},
+ {k:'mv', t:'Market Val', num:1, money:1},
+ {k:'sf', t:'Size', num:1},
+ {k:'np', t:'Permits', num:1}
+];
+var DATA=[], VIEW=[], PAGE=0, PER=100, sortK=null, sortDir=1;
+var search=document.getElementById('search'),count=document.getElementById('count'),
+    tbl=document.getElementById('tbl'),body=document.getElementById('body'),hdr=document.getElementById('hdr'),
+    loading=document.getElementById('loading'),pg=document.getElementById('pg'),pginfo=document.getElementById('pginfo');
+
 fetch('parcel_index.json').then(function(r){return r.json();}).then(function(d){
   DATA=d;
-  for(var i=0;i<DATA.length;i++){var r=DATA[i];r._s=((r.o||'')+' '+(r.addr||'')+' '+(r.a||'')).toLowerCase();}
-  READY=true;
-  search.disabled=false; search.placeholder='Search by owner, address, or APN…'; search.focus();
-  status.textContent=DATA.length.toLocaleString()+' parcels loaded. Type at least 3 characters.';
-}).catch(function(e){status.textContent='Could not load parcel data: '+e;});
+  for(var i=0;i<DATA.length;i++){DATA[i]._s=((DATA[i].o||'')+' '+(DATA[i].addr||'')+' '+(DATA[i].a||'')).toLowerCase();}
+  VIEW=DATA;
+  hdr.innerHTML=COLS.map(function(c){return '<th data-k="'+c.k+'">'+c.t+' <span class="ar"></span></th>';}).join('');
+  [].forEach.call(hdr.querySelectorAll('th'),function(th){th.onclick=function(){sortBy(th.getAttribute('data-k'));};});
+  loading.style.display='none'; tbl.style.display=''; pg.style.display='';
+  search.disabled=false; search.placeholder='Filter by owner, address, or APN…'; search.focus();
+  render();
+}).catch(function(e){loading.textContent='Could not load parcel data: '+e;});
 
 function esc(s){return (s==null?'':(''+s)).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
-function fmt(v){return (v==null||v==='')?'&mdash;':esc(v);}
-function money(v){return (v==null||v==='')?'&mdash;':'$'+Number(v).toLocaleString();}
+function money(v){return (v==null||v==='')?'':'$'+Number(v).toLocaleString();}
 
 var t;
-search.addEventListener('input',function(){clearTimeout(t);t=setTimeout(run,180);});
-function run(){
-  if(!READY)return;
+search.addEventListener('input',function(){clearTimeout(t);t=setTimeout(filt,180);});
+function filt(){
   var q=search.value.trim().toLowerCase();
-  if(q.length<3){results.innerHTML='';status.textContent=DATA.length.toLocaleString()+' parcels loaded. Type at least 3 characters.';return;}
-  var hits=[];
-  for(var i=0;i<DATA.length && hits.length<60;i++){if(DATA[i]._s.indexOf(q)>-1){hits.push(DATA[i]);}}
-  status.textContent=hits.length+(hits.length>=60?'+':'')+' matches';
-  results.innerHTML=hits.map(function(r){
-    return '<div class="hit" data-apn="'+esc(r.a)+'"><b>'+fmt(r.o)+'</b><br><span class="sub">'+fmt(r.addr)+' &middot; APN '+esc(r.a)+'</span></div>';
+  VIEW = q.length<2 ? DATA : DATA.filter(function(r){return r._s.indexOf(q)>-1;});
+  if(sortK) applySort();
+  PAGE=0; render();
+}
+function sortBy(k){ if(sortK===k){sortDir=-sortDir;}else{sortK=k;sortDir=1;} applySort(); PAGE=0; render(); }
+function applySort(){
+  var num=COLS.filter(function(c){return c.k===sortK;})[0].num;
+  VIEW=VIEW.slice().sort(function(a,b){
+    var x=a[sortK]||'',y=b[sortK]||'';
+    if(num){x=parseFloat(x)||-Infinity;y=parseFloat(y)||-Infinity;return (x-y)*sortDir;}
+    return x<y?-sortDir:x>y?sortDir:0;
+  });
+}
+function render(){
+  count.textContent=VIEW.length.toLocaleString()+' parcels'+(VIEW.length!==DATA.length?' (of '+DATA.length.toLocaleString()+')':'');
+  [].forEach.call(hdr.querySelectorAll('th'),function(th){
+    th.querySelector('.ar').textContent = th.getAttribute('data-k')===sortK ? (sortDir>0?'▲':'▼') : '';
+  });
+  var start=PAGE*PER, slice=VIEW.slice(start,start+PER);
+  body.innerHTML=slice.map(function(r){
+    return '<tr>'+COLS.map(function(c){
+      var v=r[c.k]; var cell;
+      if(c.money) cell=money(v);
+      else if(c.link) cell='<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcel='+encodeURIComponent(v||'')+'">'+esc(v)+'</a>';
+      else cell=esc(v);
+      return '<td class="'+(c.num?'num':'')+'">'+cell+'</td>';
+    }).join('')+'</tr>';
   }).join('');
-  [].forEach.call(results.querySelectorAll('.hit'),function(el){el.onclick=function(){showCard(el.getAttribute('data-apn'));};});
+  var pages=Math.max(1,Math.ceil(VIEW.length/PER));
+  pginfo.textContent=' Page '+(PAGE+1)+' of '+pages.toLocaleString()+' ';
+  document.getElementById('prev').disabled=PAGE<=0;
+  document.getElementById('next').disabled=PAGE>=pages-1;
 }
-function showCard(apn){
-  var r=null;for(var i=0;i<DATA.length;i++){if(DATA[i].a===apn){r=DATA[i];break;}}
-  if(!r)return;
-  var pv='https://maps.nashville.gov/ParcelViewer/?parcel='+encodeURIComponent(apn);
-  var pc='http://www.padctn.org/prc/#/search/'+encodeURIComponent(apn);
-  var api='https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2/query?where=APN=%27'+encodeURIComponent(apn)+'%27&outFields=*&f=json';
-  var h='<span class="back" onclick="run()">&larr; back to results</span>'+
-    '<div class="card"><h2>'+fmt(r.o)+'</h2><div class="addr">'+fmt(r.addr)+' &middot; APN '+esc(apn)+'</div>'+
-    '<div class="sec">Ownership</div>'+
-    '<div class="row"><span class="k">Current owner</span><span>'+fmt(r.o)+'</span></div>'+
-    '<div class="row"><span class="k">Acquired</span><span>'+fmt(r.od)+'</span></div>'+
-    '<div class="row"><span class="k">Owner mailing</span><span>'+fmt(r.oa)+'</span></div>'+
-    '<div class="row"><span class="k">Prior owner</span><span>'+fmt(r.o2)+'</span></div>'+
-    '<div class="row"><span class="k">Owner before that</span><span>'+fmt(r.o3)+'</span></div>'+
-    '<div class="row"><span class="k">Total deed events</span><span>'+fmt(r.nt)+'</span></div>'+
-    '<div class="sec">Assessment &amp; characteristics</div>'+
-    '<div class="row"><span class="k">Land use / class</span><span>'+fmt(r.lu)+'</span></div>'+
-    '<div class="row"><span class="k">Appraised value</span><span>'+money(r.av)+'</span></div>'+
-    '<div class="row"><span class="k">Market value</span><span>'+money(r.mv)+'</span></div>'+
-    '<div class="row"><span class="k">Property size</span><span>'+fmt(r.sf)+'</span></div>'+
-    '<div class="sec">Zoning</div>'+
-    '<div class="row"><span class="k">Zone</span><span>'+fmt(r.z)+(r.zd?' &middot; '+esc(r.zd):'')+'</span></div>'+
-    '<div class="sec">Permits</div>'+
-    '<div class="row"><span class="k">Total permits</span><span>'+fmt(r.np)+'</span></div>'+
-    '<div class="row"><span class="k">Most recent</span><span>'+fmt(r.lp)+(r.lpd?' ('+esc(r.lpd)+')':'')+'</span></div>'+
-    '<div class="links"><a target="_blank" href="'+pv+'">Parcel Viewer</a><a target="_blank" href="'+pc+'">Property Card</a>'+
-    '<a target="_blank" href="'+api+'">Ownership API</a></div>'+
-    '</div>';
-  results.innerHTML=h;
-  window.scrollTo(0,0);
-}
+document.getElementById('prev').onclick=function(){if(PAGE>0){PAGE--;render();window.scrollTo(0,0);}};
+document.getElementById('next').onclick=function(){PAGE++;render();window.scrollTo(0,0);};
 </script></body></html>
