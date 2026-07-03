@@ -20,7 +20,16 @@
   #methods{margin-top:9px;padding-top:8px;border-top:1px solid #e3ddd3;font-size:9.5px;line-height:1.45;color:#666;text-align:left}
   #methods b{color:#1a3a5c}
   .maplibregl-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:300px}
-</style></head><body>
+</style><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet"><style id="won-inject">
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;font-family:'Montserrat',sans-serif;position:relative;z-index:1200}
+ #won-header .brand{font-size:18px;font-weight:800;color:#fff;text-decoration:none;line-height:1}
+ #won-header .brand small{display:block;font-size:9px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-size:12.5px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ #map{height:calc(100vh - 56px) !important}
+ .title-card{top:70px !important}
+</style>
+</head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">Financed Mortgages — Davidson</div></div>
 <div id="map"></div>
 <div id="title"><h2>Who Finances Nashville: Securitized Mortgages on Institutional Homes</h2>
   <p>Each home pledged as collateral on a Wall Street Deed of Trust. Slide to isolate the largest loans.</p></div>
@@ -41,6 +50,7 @@ const map=new maplibregl.Map({container:'map',center:[-86.75,36.12],zoom:9.7,
     tiles:['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png']}},
     layers:[{id:'base',type:'raster',source:'base'}]}});
 map.addControl(new maplibregl.NavigationControl(),'top-right');
+map.on('load',()=>{fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{var fs=(g.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);map.addSource('davb',{type:'geojson',data:fs.length?{type:'FeatureCollection',features:fs}:g});map.addLayer({id:'davb',type:'line',source:'davb',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[3,3]}});}).catch(()=>{});});
 let GJ=null;
 const colorExpr=['match',['get','parent']]; Object.entries(PAL).forEach(([k,c])=>colorExpr.push(k,c)); colorExpr.push('#999');
 function apply(thr){

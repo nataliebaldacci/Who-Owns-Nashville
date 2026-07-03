@@ -1,0 +1,68 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>National SFR Securitized Homes by Owner — Who Finances Nashville</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23f0af1e'/%3E%3C/svg%3E"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+  html,body{margin:0;padding:0;height:100%;font-family:'EB Garamond','Garamond',serif}
+  #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box;font-family:'Montserrat',sans-serif;position:relative;z-index:1200}
+  #won-header .brand{font-size:18px;font-weight:800;color:#fff;text-decoration:none;line-height:1}
+  #won-header .brand small{display:block;font-size:9px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+  #won-header .htitle{font-size:12.5px;font-weight:600;color:#dbe6f5;margin-left:auto}
+  #map{width:100%;height:calc(100vh - 56px)}
+  .title-card{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:9px 18px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;text-align:center;max-width:90%}
+  .title-card h1{margin:0;font-size:16px;font-weight:bold;color:#1a3a5c}
+  .title-card p{margin:4px 0 0;font-size:12px;color:#555;font-style:italic}
+  .legend{position:absolute;bottom:26px;left:14px;background:rgba(255,255,255,0.95);padding:11px 15px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12.5px;max-width:300px}
+  .legend h3{margin:0 0 7px;font-size:13px;font-weight:bold;color:#1a3a5c}
+  .legend-item{display:flex;align-items:center;margin:3px 0}
+  .legend-swatch{width:13px;height:13px;border-radius:50%;margin-right:9px;border:1px solid #333;flex:none}
+  .leaflet-popup-content{font-family:'EB Garamond','Garamond',serif;font-size:12px;max-width:360px}
+  .leaflet-popup-content table td{padding:1px 5px;vertical-align:top;font-size:11.5px}
+  .leaflet-popup-content table td:first-child{color:#666;font-style:italic;white-space:nowrap}
+  #status{position:absolute;bottom:26px;right:14px;background:rgba(255,255,255,0.95);padding:6px 12px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12px;color:#555}
+</style>
+</head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">National SFR Securitized Homes</div></div>
+<div id="map"></div>
+<div class="title-card">
+  <h1>Securitized Single-Family Rental Homes, by Owner</h1>
+  <p>Homes pledged as collateral in institutional SFR securitizations, colored by parent brand. Nashville sits inside a national mortgage machine.</p>
+</div>
+<div id="legend" class="legend"><h3>Parent brand</h3></div>
+<div id="status">Loading…</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+const map = L.map('map',{center:[37.8,-96.0],zoom:5,preferCanvas:true});
+const positron=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO',maxZoom:19}).addTo(map);
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
+L.control.layers({"CARTO Positron":positron,"OpenStreetMap":osm,"Aerial (Esri)":aerial},null,{position:'topright',collapsed:false}).addTo(map);
+function usd(v){v=Number(v);return isFinite(v)&&v>0?'$'+v.toLocaleString(undefined,{maximumFractionDigits:0}):'—';}
+fetch('National_SFR_Securitized_by_Owner.geojson').then(r=>r.json()).then(gj=>{
+  const counts={},cols={};
+  const layer=L.geoJSON(gj,{
+    pointToLayer:(f,ll)=>{const b=f.properties.parent_brand||'Other';const c=f.properties.color||'#888';counts[b]=(counts[b]||0)+1;cols[b]=c;
+      return L.circleMarker(ll,{radius:3,fillColor:c,color:'#222',weight:0.3,opacity:0.9,fillOpacity:0.75});},
+    onEachFeature:(f,lyr)=>{const p=f.properties;
+      lyr.bindPopup(`<table>
+        <tr><td>Property</td><td><strong>${p.address||''}</strong><br>${p.city||''}, ${p.state||''} ${p.zip||''}</td></tr>
+        <tr><td>Owner</td><td><strong>${p.parent_brand||''}</strong></td></tr>
+        <tr><td>Borrower</td><td>${p.borrower||''}</td></tr>
+        <tr><td>Lender</td><td>${p.lender||''}</td></tr>
+        <tr><td>Loan type</td><td>${p.loan_type||''}</td></tr>
+        <tr><td>Loan date</td><td>${p.date||''}</td></tr>
+        <tr><td>Loan amount</td><td>${usd(p.amount)}</td></tr>
+        <tr><td>Parcel</td><td>${p.parcelid||''}</td></tr>
+      </table>`,{maxWidth:360});}
+  }).addTo(map);
+  try{map.fitBounds(layer.getBounds(),{padding:[30,30]});}catch(e){}
+  const lg=document.getElementById('legend');
+  Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([n,c])=>{
+    const row=document.createElement('div');row.className='legend-item';
+    row.innerHTML=`<span class="legend-swatch" style="background:${cols[n]}"></span><span><strong>${c.toLocaleString()}</strong> ${n}</span>`;lg.appendChild(row);});
+  document.getElementById('status').textContent=gj.features.length.toLocaleString()+' securitized homes';
+}).catch(e=>{document.getElementById('status').textContent='Error loading data';});
+</script>
+</body></html>
