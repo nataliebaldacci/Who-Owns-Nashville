@@ -29,7 +29,8 @@
   <p class="lead">The same tenure question, split by how many units are in the building. Bars are the
   <b>count</b> of occupied homes each year (owner + renter); the red line is the <b>homeownership rate</b> (owner share).
   Notice the gradient: the more units in the structure, the fewer are owner-occupied.</p>
-  <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied</span><span><span class="ln"></span>Homeownership rate (%)</span></div>
+  <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied</span><span><span class="ln"></span>Ownership rate of this structure type</span><span><span class="ln" style="border-top:2px dashed #5a6673"></span>Overall Davidson rate (all housing)</span></div>
+  <p class="lead" style="margin-top:-6px"><b>Why the rates look high:</b> the red line is the ownership rate <i>of that structure type</i> — and single-family houses are mostly owner-occupied. The dashed grey line is Davidson County's <b>overall homeownership rate across all housing</b> (apartments and condos included), which fell from <b>57.6% in 2010 to 52.8% in 2024</b> — Nashville is a majority-renter county.</p>
 
   <div class="mini"><h2>All Single-Family (1-unit: detached + attached, combined)</h2><div class="tk">The full single-family stock — ~80% owner-occupied in 2024, down from 83.5% in 2010; renter one-unit homes grew from 26,485 to 38,835.</div><svg class="c" data-key="all" viewBox="0 0 840 240" width="100%"></svg></div>
   <div class="mini"><h2>1-Unit, Detached (standalone houses)</h2><div class="tk">Overwhelmingly owner-occupied — but the ownership rate slipped from 85.6% to 82.2%.</div><svg class="c" data-key="det" viewBox="0 0 840 240" width="100%"></svg></div>
@@ -46,6 +47,7 @@ var DATA={
  att:[{y:2010,own:13129,rent:6199},{y:2011,own:13422,rent:7189},{y:2012,own:13069,rent:7616},{y:2013,own:12948,rent:7635},{y:2014,own:13129,rent:8145},{y:2015,own:12986,rent:7992},{y:2016,own:12774,rent:7473},{y:2017,own:12927,rent:6935},{y:2018,own:13615,rent:7366},{y:2019,own:14384,rent:7361},{y:2020,own:15829,rent:8140},{y:2021,own:16799,rent:8266},{y:2022,own:18429,rent:8620},{y:2023,own:20388,rent:8620},{y:2024,own:21497,rent:9201}],
  two:[{y:2019,own:1571,rent:10194},{y:2024,own:1459,rent:9534}]
 };
+var OVERALL={2010:57.6,2011:56.8,2012:55.4,2013:54.7,2014:54.0,2015:54.1,2016:54.0,2017:54.4,2018:54.1,2019:54.3,2020:54.4,2021:54.6,2022:54.2,2023:53.4,2024:52.8};
 var tip=document.getElementById('tip');
 function ns(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
 function niceMax(v){var p=Math.pow(10,Math.floor(Math.log10(v)));var m=v/p;m=m<=1?1:m<=2?2:m<=5?5:10;return m*p;}
@@ -79,6 +81,10 @@ function drawMini(svg,rows){
     svg.appendChild(ns('path',{d:dstr,fill:'none',stroke:'#d7263d','stroke-width':2.5}));}
   pts.forEach(function(p){svg.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3.5,fill:'#d7263d'}));
     var t=ns('text',{x:p[0],y:p[1]-7,fill:'#d7263d','text-anchor':'middle','font-family':'Montserrat','font-size':9.5,'font-weight':800});t.textContent=p[2].toFixed(0)+'%';svg.appendChild(t);});
+  // overall Davidson homeownership rate (all housing) — dashed reference
+  var opts=rows.map(function(d,i){return [padL+i*(bw+gap)+bw/2, padT+plot*(1-OVERALL[d.y]/100), OVERALL[d.y]];}).filter(function(p){return !isNaN(p[1]);});
+  if(opts.length>1){var ds=opts.map(function(p,i){return (i?'L':'M')+p[0]+' '+p[1];}).join(' ');svg.appendChild(ns('path',{d:ds,fill:'none',stroke:'#5a6673','stroke-width':2,'stroke-dasharray':'5,4'}));}
+  opts.forEach(function(p){svg.appendChild(ns('circle',{cx:p[0],cy:p[1],r:2.4,fill:'#5a6673'}));});
 }
 [].forEach.call(document.querySelectorAll('svg.c'),function(svg){drawMini(svg,DATA[svg.getAttribute('data-key')]);});
 </script></body></html>
