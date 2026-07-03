@@ -45,9 +45,9 @@
   <div class="sec">
     <h2>2. Out-of-state buyers of existing homes, 2001–2025 <span style="font-size:12px;font-weight:600;color:var(--muted)">(arms-length only)</span></h2>
     <p class="sub">Existing residential homes bought <b>arms-length</b> (trustee's deeds excluded) by an owner mailing outside Tennessee — the true investor / institutional-buyer signal.</p>
-    <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Out-of-state arms-length buyers (count)</span><span><span class="ln"></span>Share of arms-length existing-home sales (%)</span></div>
+    <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Out-of-state arms-length buyers (investors)</span><span><span class="sw" style="background:#8c564b"></span>Out-of-state foreclosure (trustee) grantees</span><span><span class="ln"></span>Arms-length share of existing-home sales (%)</span></div>
     <svg id="c2" viewBox="0 0 900 320" width="100%"></svg>
-    <div class="cap"><b>The correction.</b> Once foreclosure trustee's deeds are removed, out-of-state buying of existing homes was only <b>~5–6% through the crash years</b> (not the 20% the raw deeds imply) — the real investor surge is <b>2021–2022 at ~13%</b>, the pandemic single-family-rental push.</div>
+    <div class="cap"><b>The correction, stacked.</b> The brown band is out-of-state foreclosure trustee's deeds — banks/servicers taking title during the crash. It dwarfs the true arms-length investor buying (navy) in 2008–2012, which is why the raw deed count looked like a 20% spike. Real out-of-state <i>investor</i> buying of existing homes was only ~5–6% then, and doesn't surge until <b>2021–2022 (~13%)</b>. Hover the bars for counts and the line for the arms-length %.</div>
   </div>
 
   <div class="sec">
@@ -103,14 +103,17 @@ function hover(gp,html){gp.style.cursor='pointer';gp.addEventListener('mousemove
    if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);
    hover(gp,'<b>'+r.y+'</b><br>Arms-length sales: '+r.t.toLocaleString()+'<br>Existing: '+r.e.toLocaleString()+'<br>Land/new: '+r.n.toLocaleString());sv.appendChild(gp);});
 })();
-// C2 OOS arms-length buyers
-(function(){var sv=document.getElementById('c2'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n,mx=niceMax(Math.max.apply(null,d.map(x=>x.eo))),pm=15;
+// C2 stacked: OOS arms-length (investor) + OOS foreclosure (trustee); hoverable % line
+(function(){var sv=document.getElementById('c2'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n,mx=niceMax(Math.max.apply(null,d.map(x=>x.eo+x.fco))),pm=15;
  for(var g=0;g<=4;g++){var v=mx*g/4,yy=padT+plot*(1-g/4);sv.appendChild(ns('line',{x1:padL,y1:yy,x2:W-padR,y2:yy,stroke:'#eef0f3'}));tx(sv,padL-6,yy+4,(v/1000).toFixed(1)+'k','#8a94a0','end');}
  [0,5,10,15].forEach(function(p){tx(sv,W-8,padT+plot*(1-p/pm)+4,p+'%','#d7263d','end',9.5,700);});
- var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),bh=plot*r.eo/mx,gp=ns('g',{});gp.appendChild(ns('rect',{x:x,y:padT+plot-bh,width:bw,height:bh,fill:'#1c458c'}));
-   if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);pts.push([x+bw/2,padT+plot*(1-r.po/pm)]);
-   hover(gp,'<b>'+r.y+'</b><br>OOS arms-length buyers: '+r.eo.toLocaleString()+'<br>Share: '+r.po+'%');sv.appendChild(gp);});
- sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));pts.forEach(p=>sv.appendChild(ns('circle',{cx:p[0],cy:p[1],r:3,fill:'#d7263d'})));
+ var pts=[];d.forEach(function(r,i){var x=padL+i*(bw+gap),eh=plot*r.eo/mx,fh=plot*r.fco/mx,gp=ns('g',{});
+   gp.appendChild(ns('rect',{x:x,y:padT+plot-eh,width:bw,height:eh,fill:'#1c458c'}));
+   gp.appendChild(ns('rect',{x:x,y:padT+plot-eh-fh,width:bw,height:fh,fill:'#8c564b'}));
+   if(i%2==0)tx(sv,x+bw/2,H-14,"'"+(''+r.y).slice(2),'#5a6673','middle',9.5,700);pts.push([x+bw/2,padT+plot*(1-r.po/pm),r.po,r]);
+   hover(gp,'<b>'+r.y+'</b><br>Arms-length OOS buyers: '+r.eo.toLocaleString()+'<br>Foreclosure OOS grantees: '+r.fco.toLocaleString()+'<br>Total OOS acquisitions: '+(r.eo+r.fco).toLocaleString()+'<br>Arms-length share: '+r.po+'%');sv.appendChild(gp);});
+ sv.appendChild(ns('path',{d:pts.map((p,i)=>(i?'L':'M')+p[0]+' '+p[1]).join(' '),fill:'none',stroke:'#d7263d','stroke-width':2.5}));
+ pts.forEach(function(p){var c=ns('circle',{cx:p[0],cy:p[1],r:4,fill:'#d7263d'});hover(c,'<b>'+p[3].y+'</b><br>Arms-length OOS share: '+p[2]+'%<br>('+p[3].eo.toLocaleString()+' of '+p[3].e.toLocaleString()+' existing-home sales)');sv.appendChild(c);});
 })();
 // C3 foreclosures
 (function(){var sv=document.getElementById('c3'),d=TX,n=d.length,gap=6,bw=(W-padL-padR-gap*(n-1))/n,mx=niceMax(Math.max.apply(null,d.map(x=>x.fc))),pm=100;
