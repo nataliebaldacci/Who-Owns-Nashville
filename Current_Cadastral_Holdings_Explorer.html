@@ -68,6 +68,16 @@
   .note{font-size:12px;color:var(--warn);padding:10px 20px 0}
   footer{color:#7c8b9a;font-size:12px;padding:8px 0 40px}
   footer code{background:#eef2f6;padding:1px 5px;border-radius:4px;font-size:11.5px}
+  .methods{border-top:2px solid var(--ink);margin:14px 0 20px;padding-top:22px}
+  .methods h2{font-family:var(--serif);font-size:23px;font-weight:900;margin:0 0 6px}
+  .methods h2::after{content:"";display:block;width:52px;height:5px;background:var(--warn);margin-top:8px;border-radius:1px}
+  .methods h3{font-family:var(--serif);font-size:16px;font-weight:700;margin:24px 0 8px;color:var(--urban-navy)}
+  .methods p{max-width:880px;color:#242424;font-size:14px}
+  .methods ol,.methods ul{max-width:900px;font-size:13.5px;color:#242424;padding-left:22px}
+  .methods li{margin:8px 0}
+  .methods a{color:var(--accent2)}
+  .methods .tnbear{background:#fff8e6;border-left:4px solid var(--warn);padding:12px 16px;border-radius:0 8px 8px 0;margin:14px 0;font-size:13.5px}
+  ol.refs{font-size:12.5px;color:#39434d} ol.refs li{margin:10px 0}
 </style>
 </head>
 <body>
@@ -100,6 +110,39 @@
     </div>
     <div id="p_body"></div>
   </div>
+
+  <section class="methods">
+    <h2>How we identified the owners</h2>
+    <p>Corporate ownership in Nashville hides behind hundreds of separate LLCs, limited partnerships, and securitization trusts. A single operator can hold homes under dozens of entity names. To see the operator behind the shells, we build an ownership network from primary government records, following the "horizontal holdings" network approach of Shelton and Seymour (2024).</p>
+    <ol>
+      <li><b>Start from the primary record.</b> Every parcel's legal owner name and owner mailing address comes from the Metro Nashville assessor's cadastral (Ownership Parcels layer). No third-party or proprietary ownership data is used, every parcel traces to a live county record.</li>
+      <li><b>Normalize entity names.</b> We strip corporate suffixes (LLC, LP, INC, CORP, TRUST) and punctuation so spelling variants of the same entity collapse together.</li>
+      <li><b>Link entities into operators.</b> A union-find algorithm joins entities that share (a) a normalized owner name, (b) a common owner mailing address, or (c) a shared registered agent or principal-office address in the Tennessee Secretary of State business registry.</li>
+      <li><b>Resolve to the ultimate parent.</b> Shell families are mapped to their parent brand (for example, YAMASA Co. and PR Borrower entities to Progress Residential; STAR 20XX-SFR borrowers to Starwood Capital; SFR JV borrowers to Tricon) using SEC filings (ABS-15G, 10-K, Schedule III), securitization deal names, and mailing-address convergence.</li>
+      <li><b>Validate.</b> We keep only currently-active ownership, drop shared tax-agent mailboxes that host multiple unrelated operators, and spot-check every cluster against live county records.</li>
+    </ol>
+    <div class="tnbear"><b>Yes, we use the Tennessee business data.</b> Because Tennessee does not publish beneficial owners, the <b>Tennessee Secretary of State business registry</b> (pulled from TNBear) is the bridge that links otherwise-anonymous shells to one operator: entities filed by the same registered agent or listing the same principal-office address are joined into a single owner. <a href="https://tnbear.tn.gov/Ecommerce/FilingSearch.aspx" target="_blank">tnbear.tn.gov &#8599;</a></div>
+
+    <h3>Data sources (all primary, all replayable)</h3>
+    <ul>
+      <li><b>Metro Nashville Cadastral</b>, Ownership Parcels (owner, address, land use, value): <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4" target="_blank">maps.nashville.gov/&#8230;/Cadastral_Layers/MapServer/4</a></li>
+      <li><b>Metro Nashville ParcelHistory</b>, deed and ownership history: <a href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/2" target="_blank">&#8230;/Parcels/ParcelHistory/MapServer/2</a></li>
+      <li><b>Tennessee Secretary of State</b> business registry (registered agent, principal office): <a href="https://tnbear.tn.gov/Ecommerce/FilingSearch.aspx" target="_blank">tnbear.tn.gov</a></li>
+      <li><b>Metro Nashville ePermits</b>, landlord registration (case type 176): <a href="https://epermits.nashville.gov/api/permit/1.0/Case?$filter=caseTypeID%20eq%20176" target="_blank">epermits.nashville.gov/api/permit/1.0/Case</a></li>
+      <li><b>SEC EDGAR</b>, ABS-15G and 10-K filings for parent-brand resolution: <a href="https://www.sec.gov/cgi-bin/browse-edgar" target="_blank">sec.gov/cgi-bin/browse-edgar</a></li>
+      <li><b>Assessor CAMA / Comper</b>, building characteristics and photos: <a href="https://davidson-tn-citizen.comper.info/" target="_blank">comper.info</a></li>
+    </ul>
+
+    <h3>Method scholarship</h3>
+    <ol class="refs">
+      <li>Taylor Shelton and Eric Seymour. 2024. "Horizontal Holdings: Untangling the Networks of Corporate Landlords." <i>Annals of the American Association of Geographers</i> 114 (8): 1819&ndash;31. <a href="https://doi.org/10.1080/24694452.2023.2278690" target="_blank">doi.org/10.1080/24694452.2023.2278690</a></li>
+      <li>Forrest Hangen and Daniel T. O'Brien. 2024. "Linking Landlords to Uncover Ownership Obscurity." <i>Housing Studies</i>: 1&ndash;26. <a href="https://doi.org/10.1080/02673037.2024.2325508" target="_blank">doi.org/10.1080/02673037.2024.2325508</a></li>
+      <li>Benjamin Preis. 2024. "Where the Landlords Are: A Network Approach to Landlord-Rental Locations." <i>Annals of the American Association of Geographers</i> 114 (8): 1757&ndash;1768. <a href="https://doi.org/10.1080/24694452.2023.2277810" target="_blank">doi.org/10.1080/24694452.2023.2277810</a></li>
+      <li>Henry Gomory. 2022. "The Social and Institutional Contexts Underlying Landlords' Eviction Practices." <i>Social Forces</i> 100 (4): 1774&ndash;805. <a href="https://doi.org/10.1093/sf/soab063" target="_blank">doi.org/10.1093/sf/soab063</a></li>
+      <li>Dan Immergluck, Jeff Ernsthausen, Stephanie Earl, and Allison Powell. 2020. "Evictions, Large Owners, and Serial Filings: Findings from Atlanta." <i>Housing Studies</i> 35 (5): 903&ndash;24. <a href="https://doi.org/10.1080/02673037.2019.1639635" target="_blank">doi.org/10.1080/02673037.2019.1639635</a></li>
+      <li>Erin McElroy and Azad Amir-Ghassemi. 2020. "Evictor Structures: On Fighting Displacement." <i>Logic Magazine</i>. <a href="https://logicmag.io/commons/evictor-structures-erin-mcelroy-and-azad-amir-ghassemi-on-fighting/" target="_blank">logicmag.io</a></li>
+    </ol>
+  </section>
 
   <footer>
     Photo: <code>image-cdn.spatialest.com/.../Images/{APN}_1.jpg</code>. Comper: <code>comper.info/template.aspx?propertyID={APN}</code>.
