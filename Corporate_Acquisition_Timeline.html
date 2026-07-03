@@ -71,11 +71,17 @@
 .legGroup.grp{cursor:pointer;display:flex;justify-content:space-between;align-items:center}
 .legGroup .gtgl{font-size:9px;font-weight:400;color:#8a94a0;text-transform:none;border:1px solid #d4cfc4;border-radius:3px;padding:0 4px}
 .legGroup.goff{opacity:.55}
-#timeline{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:700;background:#fff;border:1px solid var(--bd);border-radius:7px;box-shadow:0 3px 12px #0002;padding:7px 14px;display:flex;align-items:center;gap:11px;width:min(560px,80vw)}
-#tlplay{font-family:inherit;font-size:13px;cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:5px;padding:3px 12px;white-space:nowrap}
-#tlyear{font-weight:700;color:var(--navy);min-width:40px;text-align:center;font-size:15px}
-#tlslider{flex:1}
-#timeline .tlnote{font-size:9px;color:#8a94a0;max-width:110px;line-height:1.15}
+#timeline{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);z-index:700;background:rgba(255,255,255,.96);border:1px solid var(--bd);border-radius:9px;box-shadow:0 3px 14px #0003;padding:9px 14px 7px;display:flex;align-items:center;gap:13px;width:min(840px,94vw);box-sizing:border-box}
+#tlplay{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;cursor:pointer;border:1px solid var(--navy);background:var(--navy);color:#fff;border-radius:6px;padding:6px 14px;white-space:nowrap;flex:0 0 auto}
+#tlchartwrap{flex:1;position:relative;height:66px;cursor:crosshair}
+#tlchart{width:100%;height:66px;display:block;overflow:visible}
+#tldot{position:absolute;width:9px;height:9px;border-radius:50%;background:#f0af1e;border:1.5px solid #fff;box-shadow:0 0 3px #0004;transform:translate(-50%,-50%);pointer-events:none;transition:left .18s linear,top .18s linear}
+#tlchartwrap .axis{position:absolute;bottom:-4px;width:100%;display:flex;justify-content:space-between;font-family:'Montserrat',sans-serif;font-size:8.5px;color:#9aa4b0;pointer-events:none}
+#tlmeta{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-end;min-width:104px;line-height:1.05}
+#tlmeta .yr{font-family:'Montserrat',sans-serif;font-weight:800;font-size:26px;color:var(--navy)}
+#tlmeta .tot{font-family:'Montserrat',sans-serif;font-size:11.5px;color:#4a5560;margin-top:2px}
+#tlmeta .tot b{color:var(--navy);font-size:15px;font-weight:800}
+#tlmeta .tot small{display:block;font-size:8.5px;color:#9aa4b0;font-weight:600;text-transform:uppercase;letter-spacing:.4px}
 </style>
 </head>
 <body>
@@ -95,7 +101,12 @@
       <div id="legendNote">Click an operator to filter · each dot is one corporate-owned parcel</div>
     </div>
     <div id="status">loading…</div>
-    <div id="timeline"><button id="tlplay">▶ Play</button><span id="tlyear">2026</span><input id="tlslider" type="range" min="2009" max="2026" value="2026" step="1"/><span class="tlnote">each home appears the year its current corporate owner acquired it</span></div>
+    <div id="timeline">
+      <button id="tlplay">&#9658; Play</button>
+      <div id="tlchartwrap"><svg id="tlchart" viewBox="0 0 600 66" preserveAspectRatio="none"></svg><div id="tldot"></div><div class="axis"><span>2000</span><span>2026</span></div></div>
+      <div id="tlmeta"><span class="yr" id="tlyear">2026</span><span class="tot"><b id="tltotal">0</b> homes<small>corporate-owned by year</small></span></div>
+      <input id="tlslider" type="range" min="2000" max="2026" value="2026" step="1" style="display:none"/>
+    </div>
     <div id="tractLegend"></div>
   </div>
 </div>
@@ -254,7 +265,38 @@ function drawCorp(){
   // only branded operators render; "Other corporate" is hidden
   CORP.rows.forEach(r=>{if(keep(r)&&r[idx.brand]!=='Other corporate')mkOne(r);});
   status.textContent=n.toLocaleString()+' corporate homes owned by '+curYear+(activeZip?' in ZIP':'');
+  refreshChart();
 }
+// ---- animated cumulative area chart in the timeline bar ----
+let HIST=null;
+function computeHist(){
+  if(!CORP)return; const idx={}; CORP.cols.forEach((c,i)=>idx[c]=i);
+  const D0=2000,D1=2026,per=new Array(D1-D0+1).fill(0);
+  CORP.rows.forEach(r=>{const b=r[idx.brand]; if(b==='Other corporate')return;
+    if(hiddenTypes.has(brandType[b]))return; if(isolate&&b!==isolate)return;
+    if(activeZip&&!ptInGeom(r[idx.lat],r[idx.lon],activeZip))return;
+    let y=+r[idx.acq_year]||D0; if(y<D0)y=D0; if(y>D1)return; per[y-D0]++;});
+  const cum=[]; let s=0; per.forEach(v=>{s+=v;cum.push(s);});
+  HIST={D0,D1,cum,max:Math.max(s,1)};
+}
+function renderChart(){
+  if(!HIST)return; const {D0,cum,max}=HIST,n=cum.length,W=600,H=66,pad=5;
+  const X=i=>i/(n-1)*W, Y=v=>H-(v/max)*(H-pad);
+  const ci=Math.max(0,Math.min(n-1,curYear-D0));
+  const pts=cum.map((v,i)=>[X(i),Y(v)]);
+  const faint='M0,'+H+' '+pts.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+' L'+W+','+H+' Z';
+  const fp=pts.slice(0,ci+1);
+  const fill='M0,'+H+' '+fp.map(p=>'L'+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')+' L'+X(ci).toFixed(1)+','+H+' Z';
+  document.getElementById('tlchart').innerHTML=
+    '<path d="'+faint+'" fill="#dbe4f2"/>'+
+    '<path d="'+fill+'" fill="#1c458c" fill-opacity="0.9"/>'+
+    '<line x1="'+X(ci).toFixed(1)+'" y1="0" x2="'+X(ci).toFixed(1)+'" y2="'+H+'" stroke="#f0af1e" stroke-width="1.5"/>';
+  const dot=document.getElementById('tldot');
+  dot.style.left=(ci/(n-1)*100)+'%'; dot.style.top=(Y(cum[ci])/H*66)+'px';
+  document.getElementById('tltotal').textContent=cum[ci].toLocaleString();
+  document.getElementById('tlyear').textContent=D0+ci;
+}
+function refreshChart(){computeHist();renderChart();}
 // ---- base layer (gray, viewport-culled, click-nearest) ----
 function drawBase(){
   baseLayer.clearLayers();
@@ -347,16 +389,21 @@ fetch('data/corp_timeline.json').then(r=>r.json()).then(j=>{CORP=j;buildLegend()
 
 // ---- timeline animation ----
 (function(){
-  const sl=document.getElementById('tlslider'),yl=document.getElementById('tlyear'),pb=document.getElementById('tlplay');
-  function setYear(y){curYear=+y;yl.textContent=y;sl.value=y;if(CORP)drawCorp();}
-  sl.addEventListener('input',()=>setYear(sl.value));
+  const D0=2000,D1=2026,sl=document.getElementById('tlslider'),pb=document.getElementById('tlplay'),wrap=document.getElementById('tlchartwrap');
+  function setYear(y){y=Math.max(D0,Math.min(D1,+y));curYear=y;sl.value=y;if(CORP)drawCorp();else document.getElementById('tlyear').textContent=y;}
+  // click / drag the chart to scrub the year
+  function scrub(e){const rc=wrap.getBoundingClientRect();const f=Math.max(0,Math.min(1,(e.clientX-rc.left)/rc.width));setYear(Math.round(D0+f*(D1-D0)));}
+  let dragging=false;
+  wrap.addEventListener('mousedown',e=>{dragging=true;scrub(e);});
+  window.addEventListener('mousemove',e=>{if(dragging)scrub(e);});
+  window.addEventListener('mouseup',()=>dragging=false);
   let t=null;
-  function stop(){clearInterval(t);t=null;pb.textContent='\u25B6 Play';}
+  function stop(){clearInterval(t);t=null;pb.innerHTML='\u25B6 Play';}
   pb.addEventListener('click',()=>{
     if(t){stop();return;}
-    pb.textContent='\u275A\u275A Pause';
-    if(+sl.value>=2026) setYear(2009);
-    t=setInterval(()=>{let y=+sl.value; if(y>=2026){stop();return;} setYear(y+1);},700);
+    pb.innerHTML='\u275A\u275A Pause';
+    if(+sl.value>=D1) setYear(D0);
+    t=setInterval(()=>{let y=+sl.value; if(y>=D1){stop();return;} setYear(y+1);},650);
   });
 })();
 </script>
