@@ -28,7 +28,7 @@
 <div class="wrap">
   <p class="lead">Each column is one year's count of occupied one-unit homes (detached + attached),
   stacked into owner-occupied and renter-occupied. Hover any year for exact numbers.</p>
-  <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied</span></div>
+  <div class="legend"><span><span class="sw" style="background:#1c458c"></span>Owner-occupied (count)</span><span><span class="sw" style="background:#f0af1e"></span>Renter-occupied (count)</span><span><span style="display:inline-block;width:16px;border-top:2px dashed #5a6673;vertical-align:3px;margin-right:6px"></span>Overall Davidson homeownership rate (all housing, right axis)</span></div>
   <div class="toggle"><button id="bStack" class="on">Owner + Renter (counts)</button><button id="bRent">Renter only</button></div>
   <div class="chart"><svg id="svg" viewBox="0 0 940 440" width="100%" role="img" aria-label="Owner and renter counts of one-unit homes by year"></svg></div>
   <div class="callout"><b>The number that grew.</b> Renter-occupied one-unit homes in Davidson County rose from
@@ -43,7 +43,8 @@ var D=[{y:2010,own:134085,rent:26485},{y:2011,own:133025,rent:28588},{y:2012,own
 {y:2016,own:132751,rent:33870},{y:2017,own:135757,rent:32817},{y:2018,own:137715,rent:33538},
 {y:2019,own:140519,rent:33728},{y:2020,own:144601,rent:36133},{y:2021,own:148037,rent:36037},
 {y:2022,own:152004,rent:37023},{y:2023,own:155821,rent:37186},{y:2024,own:158588,rent:38835}];
-var svg=document.getElementById('svg'),tip=document.getElementById('tip'),W=940,H=440,padL=58,padR=16,padT=18,padB=52,plot=H-padT-padB;
+var OVERALL={2010:57.6,2011:56.8,2012:55.4,2013:54.7,2014:54.0,2015:54.1,2016:54.0,2017:54.4,2018:54.1,2019:54.3,2020:54.4,2021:54.6,2022:54.2,2023:53.4,2024:52.8};
+var svg=document.getElementById('svg'),tip=document.getElementById('tip'),W=940,H=440,padL=58,padR=44,padT=18,padB=52,plot=H-padT-padB;
 var n=D.length,gap=8,bw=(W-padL-padR-gap*(n-1))/n,MODE='stack';
 function el(t,a){var e=document.createElementNS('http://www.w3.org/2000/svg',t);for(var k in a)e.setAttribute(k,a[k]);return e;}
 function txt(x,y,s,f,anc,sz,w){var t=el('text',{x:x,y:y,fill:f||'#20303f','text-anchor':anc||'middle','font-family':'Montserrat','font-size':sz||11,'font-weight':w||600});t.textContent=s;svg.appendChild(t);return t;}
@@ -72,6 +73,12 @@ function draw(){
     svg.appendChild(g);
   });
   txt(padL-46,padT+plot/2,'Homes',' #8a94a0','middle',11,600);
+  // overall Davidson homeownership rate (all housing) — dashed, right % axis
+  [0,50,100].forEach(function(p){var yy=padT+plot*(1-p/100);txt(W-8,yy+4,p+'%','#5a6673','end',10,700);});
+  var opts=D.map(function(d,i){return [padL+i*(bw+gap)+bw/2, padT+plot*(1-OVERALL[d.y]/100)];});
+  svg.appendChild(el('path',{d:opts.map(function(p,i){return (i?'L':'M')+p[0]+' '+p[1];}).join(' '),fill:'none',stroke:'#5a6673','stroke-width':2,'stroke-dasharray':'5,4'}));
+  opts.forEach(function(p){svg.appendChild(el('circle',{cx:p[0],cy:p[1],r:2.4,fill:'#5a6673'}));});
+  txt(opts[opts.length-1][0], opts[opts.length-1][1]-9, OVERALL[2024]+'% overall','#5a6673','end',10,800);
 }
 document.getElementById('bStack').onclick=function(){MODE='stack';this.classList.add('on');document.getElementById('bRent').classList.remove('on');draw();};
 document.getElementById('bRent').onclick=function(){MODE='rent';this.classList.add('on');document.getElementById('bStack').classList.remove('on');draw();};
