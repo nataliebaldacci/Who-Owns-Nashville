@@ -1,0 +1,45 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/>
+<title>Development Timing by Model - Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root{--navy:#1c458c;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--line:#e4e9f0}
+*{box-sizing:border-box}body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:#f6f8fb;line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:26px 22px 70px}
+a.back{color:var(--navy);text-decoration:none;font-weight:600;font-size:13px}a.back:hover{text-decoration:underline}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:12px 0 3px}
+h1{font-size:24px;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.3px}
+.sub{font-size:14.5px;color:var(--mut);margin:0 0 18px;max-width:820px}
+.card{background:#fff;border:1px solid var(--line);border-radius:12px;padding:18px 20px 10px;box-shadow:0 2px 8px rgba(20,50,90,.05)}
+.ctrls{display:flex;gap:8px;flex-wrap:wrap;margin:2px 0 14px}
+.ctrls button{font-family:inherit;font-size:12.5px;font-weight:700;padding:6px 14px;border-radius:20px;cursor:pointer;border:1.5px solid var(--navy);background:#fff;color:var(--navy)}
+.ctrls button.on{background:var(--navy);color:#fff}
+.chwrap{position:relative;height:450px}
+.note{font-size:11.5px;color:var(--mut);font-style:italic;margin:16px 0 0;border-top:1px solid var(--line);padding-top:12px}
+</style></head><body><div class="wrap">
+<a class="back" href="index.html">&larr; Who Owns Nashville</a>
+<p class="kick">Development timing</p><h1>Development timing by model: build-to-rent vs merchant builder vs lot developer vs landbanker</h1>
+<p class="sub">Median years each development model takes to rezone, permit, and build, and how often it ever builds at all. Speculative landbankers sit on rezoned land 12.5 years before permitting and build only 24% of what they buy; build-to-rent operators move fastest.</p>
+<div class="card"><div class="ctrls"><button id="bL" class="on">Time to develop</button><button id="bB">Do they build?</button></div><div class="chwrap"><canvas id="ch"></canvas></div></div>
+<p class="note">Notes: Entities classified per the project BTR/Landbanker/Developer roster and owner-to-operator crosswalk. Lags = median years from acquisition, using Davidson zoning history (Layer 5) and permit history (issued date); build year from the assessor. n=36,114 parcels (28,156 merchant/captive builder, 3,064 build-to-rent, 2,706 lot developer, 2,188 speculative landbanker). Metro Nashville (last accessed 2026).</p></div>
+<script>
+const D={"Build-to-rent": {"parcels": 3064.0, "acq_to_rezone": 1.61, "rezone_to_permit": 0.73, "acq_to_permit": 0.63, "acq_to_build": 0.0, "pct_ever_built": 15.14}, "Lot developer": {"parcels": 2706.0, "acq_to_rezone": 0.0, "rezone_to_permit": 2.08, "acq_to_permit": 3.2, "acq_to_build": 3.0, "pct_ever_built": 49.11}, "Merchant / captive builder": {"parcels": 28156.0, "acq_to_rezone": 2.98, "rezone_to_permit": 2.18, "acq_to_permit": 1.35, "acq_to_build": 1.0, "pct_ever_built": 55.84}, "Speculative landbanker": {"parcels": 2188.0, "acq_to_rezone": 5.68, "rezone_to_permit": 12.53, "acq_to_permit": 5.62, "acq_to_build": 5.0, "pct_ever_built": 24.41}};let view='lag',chart;
+const ORDER=['Build-to-rent','Merchant / captive builder','Lot developer','Speculative landbanker'];
+const COL={'Build-to-rent':'#1f8166','Merchant / captive builder':'#1c458c','Lot developer':'#e0952a','Speculative landbanker':'#b3282d'};
+const STAGES=[['acq_to_rezone','Acquisition to rezoning'],['rezone_to_permit','Rezoning to permit'],['acq_to_permit','Acquisition to permit']];
+function lagCfg(){return{type:'bar',data:{labels:STAGES.map(s=>s[1]),datasets:ORDER.map(m=>({label:m,backgroundColor:COL[m],
+   data:STAGES.map(s=>D[m][s[0]]),borderRadius:3}))},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'top',labels:{font:{family:'Montserrat',size:11.5},usePointStyle:true,pointStyle:'rectRounded'}},
+   tooltip:{callbacks:{label:c=>' '+c.dataset.label+': '+(c.parsed.y==null?'0 (rezoned at acquisition)':c.parsed.y+' yr median')}}},
+  scales:{x:{grid:{display:false},ticks:{font:{size:12,weight:'600'}}},y:{title:{display:true,text:'Median years',font:{family:'Montserrat',size:12,weight:'600'}},beginAtZero:true}}}};}
+function buildCfg(){return{type:'bar',data:{labels:ORDER,datasets:[{label:'% of acquired parcels ever built',
+   data:ORDER.map(m=>D[m].pct_ever_built),backgroundColor:ORDER.map(m=>COL[m]),borderRadius:3}]},
+ options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},
+   tooltip:{callbacks:{label:c=>' '+c.parsed.x.toFixed(0)+'% ever built ('+D[ORDER[c.dataIndex]].parcels.toLocaleString()+' parcels)'}}},
+  scales:{x:{title:{display:true,text:'% of acquired parcels ever built',font:{family:'Montserrat',size:12,weight:'600'}},beginAtZero:true,max:70},y:{ticks:{font:{size:11}}}}}};}
+function render(){if(chart)chart.destroy();chart=new Chart(document.getElementById('ch'),view==='lag'?lagCfg():buildCfg());}
+bL.onclick=()=>{view='lag';bL.classList.add('on');bB.classList.remove('on');render();};
+bB.onclick=()=>{view='build';bB.classList.add('on');bL.classList.remove('on');render();};
+render();</script></body></html>
