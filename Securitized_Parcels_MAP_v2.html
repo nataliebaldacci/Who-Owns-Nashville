@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Securitized Single-Family Homes — Davidson County</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  #map{position:absolute;inset:0}
+  .titlecard{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:1000;
+    background:rgba(255,255,255,.88);border:1px solid #d9d2c5;border-radius:8px;padding:8px 18px;
+    text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.15);max-width:90vw}
+  .titlecard h1{margin:0;font-size:17px;color:#1a3a5c;font-weight:600}
+  .titlecard p{margin:2px 0 0;font-size:12px;color:#555}
+  #legend{position:absolute;top:150px;right:10px;z-index:1000;background:rgba(255,255,255,.94);
+    border:1px solid #d9d2c5;border-radius:7px;padding:9px 11px;box-shadow:0 2px 8px rgba(0,0,0,.15);
+    font-size:12px;max-height:60vh;overflow:auto;min-width:170px}
+  #legend b{color:#1a3a5c;font-size:12.5px}
+  #legend .row{display:flex;align-items:center;gap:6px;margin-top:4px;cursor:pointer}
+  #legend .row.off{opacity:.35}
+  #legend i{width:11px;height:11px;border-radius:2px;display:inline-block;flex:none}
+  #legend .cnt{margin-left:auto;color:#8a94a0;font-variant-numeric:tabular-nums}
+  #status{position:absolute;bottom:10px;right:10px;z-index:1000;background:rgba(255,255,255,.9);
+    border:1px solid #d9d2c5;border-radius:6px;padding:6px 10px;font-size:12px;color:#333}
+  .leaflet-popup-content{font-family:Garamond,'EB Garamond',Georgia,serif;font-size:12px;max-width:380px}
+  .leaflet-popup-content b{color:#1a3a5c}
+  .pp-h{font-size:14px;font-weight:600;color:#1a3a5c}
+  .pp-s{font-size:11px;color:#666;margin:1px 0 4px}
+  .pp-img{width:100%;max-height:150px;object-fit:cover;border-radius:5px;margin:3px 0}
+  .pp-d{display:grid;grid-template-columns:auto auto;gap:1px 12px;font-size:11.5px;margin:3px 0}
+  .pp-d span{color:#777}.pp-d b{color:#222;font-weight:600;text-align:right}
+  .pp-l{font-size:11px;line-height:1.8;margin-top:5px}
+  .pp-l a{color:#9b2a23;text-decoration:none;border-bottom:1px dotted #c4b;margin-right:6px}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="titlecard">
+  <h1>Securitized Single-Family Homes — Davidson County</h1>
+  <p>4,194 parcels pledged as collateral for Wall Street single-family-rental bonds. Click any home for its deal and full record.</p>
+</div>
+<div id="legend"><b>Operator (bond sponsor)</b><div id="legrows"></div></div>
+<div id="status">Loading…</div>
+
+<script>
+const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20});
+const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19});
+const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {attribution:'Esri World Imagery',maxZoom:19});
+const map=L.map('map',{preferCanvas:true,layers:[carto]}).setView([36.166,-86.784],10);
+L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{collapsed:false,position:'topright'}).addTo(map);
+const renderer=L.canvas({padding:.5});
+
+// Davidson County boundary (OBJECTID=4)
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson')
+  .then(r=>r.json()).then(gj=>L.geoJSON(gj,{filter:f=>f.properties&&(f.properties.OBJECTID==4||f.properties.objectid==4),
+    style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map)).catch(()=>{});
+
+// operator palette
+const PALETTE=['#1b9e77','#d95f02','#7570b3','#e7298a','#66a61d','#e6ab02','#a6761d','#666666',
+  '#1f77b4','#2ca02c','#ff7f0e','#9467bd','#8c564b','#17becf','#bcbd22','#e377c2'];
+const esc=s=>String(s==null?'':s);
+const CDN='https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/';
+const PATRIOT="5D050659143EB96630FB38B91DE12E40";
+
+function toolkit(p){
+  const apn=esc(p.APN).replace(/[^0-9A-Za-z]/g,''), addr=esc(p.address)+' '+esc(p.city);
+  const q=encodeURIComponent(addr+' TN');
+  const A=(u,t)=>'<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>';
+  let h='<div class="pp-h">'+esc(p.address||apn)+'</div>';
+  h+='<div class="pp-s">APN '+apn+(p.operator?(' · <b>'+esc(p.operator)+'</b>'):'')+'</div>';
+  if(p.deal||p.lender||p.sponsor){
+    h+='<div class="pp-s">'+[p.deal&&('Deal: '+esc(p.deal)),p.lender&&('Lender: '+esc(p.lender)),p.sponsor&&('Sponsor: '+esc(p.sponsor))].filter(Boolean).join(' · ')+'</div>';
+  }
+  h+='<div class="pp-s">Borrower of record: '+esc(p.owner)+'</div>';
+  if(p.photo) h+='<img class="pp-img" src="'+CDN+esc(p.photo)+'" onerror="this.style.display=\'none\'" loading="lazy"/>';
+  const dd=[];
+  if(p.year_built) dd.push(['Year built',esc(p.year_built)]);
+  if(p.beds!=null) dd.push(['Beds / Baths',esc(p.beds)+' / '+esc(p.baths)]);
+  if(p.sqft) dd.push(['Sq ft',Number(p.sqft).toLocaleString()]);
+  if(p.value) dd.push(['Appraised value','$'+Number(p.value).toLocaleString()]);
+  if(p.sale_price) dd.push(['Last sale','$'+Number(p.sale_price).toLocaleString()+(p.sale_date?(' · '+esc(p.sale_date)):'')]);
+  if(dd.length) h+='<div class="pp-d">'+dd.map(x=>'<span>'+x[0]+'</span><b>'+x[1]+'</b>').join('')+'</div>';
+  // FULL Nashville URL toolkit
+  const base='https://maps.nashville.gov/ParcelService/Search.asmx/';
+  h+='<div class="pp-l">'+[
+    A('https://maps.nashville.gov/ParcelViewer/?parcelID='+apn,'Parcel Viewer'),
+    A('https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+apn,'Property Card'),
+    A('https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+apn,'Comper'),
+    A('https://www.google.com/maps/search/?api=1&query='+q,'Aerial'),
+    A('https://www.google.com/maps?q&layer=c&cbll='+q,'Street View')
+  ].join(' · ')+'</div>';
+  h+='<div class="pp-l"><b>Permits:</b> '+[
+    A('https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+apn+'&searchType=permit','ePermit'),
+    A('https://documents.nashville.gov/Request/Form/PermitCodes?parcelnumber='+apn,'Permit Docs')
+  ].join(' · ')+'</div>';
+  h+='<div class="pp-l"><b>History APIs:</b> '+[
+    A(base+'GetOwnerHistory?onlyactive=false&pin='+apn,'Owner'),
+    A(base+'GetPropertyHistory?onlyactive=false&pin='+apn,'Property'),
+    A(base+'GetPermitHistory?apn='+apn,'Permit'),
+    A(base+'GetZoningHistory?onlyactive=false&pin='+apn,'Zoning'),
+    A(base+'GetAssessmentHistory?onlyactive=false&pin='+apn,'Assessment')
+  ].join(' · ')+'</div>';
+  h+='<div class="pp-l">'+A('https://davidsonportal.com/landrecords/','Land Records portal')+'</div>';
+  return h;
+}
+
+fetch('Securitized_Parcels_MAP.geojson').then(r=>r.json()).then(gj=>{
+  const feats=gj.features;
+  const opCount={}; feats.forEach(f=>{const o=f.properties.operator||'(unattributed)';opCount[o]=(opCount[o]||0)+1;});
+  const ops=Object.keys(opCount).sort((a,b)=>opCount[b]-opCount[a]);
+  const color={}; ops.forEach((o,i)=>color[o]=PALETTE[i%PALETTE.length]);
+  const layers={}; const bounds=[];
+  ops.forEach(o=>layers[o]=L.layerGroup().addTo(map));
+  feats.forEach(f=>{
+    const p=f.properties, c=f.geometry.coordinates, o=p.operator||'(unattributed)';
+    if(!c||c[0]==null) return;
+    const ll=[c[1],c[0]]; bounds.push(ll);
+    L.circleMarker(ll,{renderer,radius:3.2,weight:.5,color:'#fff',fillColor:color[o],fillOpacity:.8})
+      .bindPopup(()=>toolkit(p),{maxWidth:380}).addTo(layers[o]);
+  });
+  // legend with toggles
+  const lr=document.getElementById('legrows');
+  lr.innerHTML=ops.map(o=>`<div class="row" data-o="${esc(o)}"><i style="background:${color[o]}"></i>${esc(o)}<span class="cnt">${opCount[o].toLocaleString()}</span></div>`).join('');
+  lr.querySelectorAll('.row').forEach(row=>row.onclick=()=>{
+    const o=row.getAttribute('data-o'); row.classList.toggle('off');
+    if(map.hasLayer(layers[o])) map.removeLayer(layers[o]); else layers[o].addTo(map);
+  });
+  if(bounds.length) map.fitBounds(bounds,{padding:[20,20]});
+  document.getElementById('status').textContent='✓ '+feats.length.toLocaleString()+' securitized parcels';
+}).catch(e=>document.getElementById('status').textContent='load error: '+e);
+</script>
+<div style="position:absolute;bottom:6px;left:50%;transform:translateX(-50%);z-index:1000;background:rgba(255,255,248,.95);border:1px solid #d9d2c5;border-radius:5px;padding:4px 11px;font-size:9.5px;color:#6b7683;max-width:70vw;font-style:italic;line-height:1.3;text-align:center"><b style="font-style:normal;color:#1a3a5c">Sources &amp; method:</b> SFR securitization deals from SEC EDGAR (ABS-15G, 2013–2026) matched to borrower shells, Deeds of Trust (Davidson Register of Deeds), and parcel ownership records; 4,194 parcels geocoded via Metro Nashville Cadastral. Color = bond sponsor / operator. Last accessed June 30, 2026.</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Corporate-Owned Homes by Nashville Council District</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet"/>
+<style>
+ html,body,#map{height:100%;margin:0;font-family:Garamond,Georgia,serif;}
+ #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(255,255,255,.95);
+   padding:9px 18px;border-radius:6px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.2);max-width:92%;}
+ #title h2{margin:0;font-size:16px;} #title p{margin:3px 0 0;font-size:11.5px;color:#555;}
+ #legend{position:absolute;bottom:16px;left:12px;z-index:5;background:rgba(255,255,255,.95);padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 5px rgba(0,0,0,.2);}
+ #legend b{display:block;margin-bottom:5px;} #legend i{display:inline-block;width:14px;height:12px;margin-right:6px;vertical-align:middle;}
+ .maplibregl-popup-content{font-family:Garamond,serif;font-size:13px;}
+</style></head><body>
+<div id="map"></div>
+<div id="title"><h2>Corporate-Owned Homes by Nashville Council District</h2>
+ <p>Each Metro council district shaded by the number of institutionally-owned single-family homes inside it (20,045 total). Click a district for its count.</p></div>
+<div id="legend"><b>Corporate-owned homes</b><div id="rows"></div></div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+const BREAKS=[0,200,400,600,800,1000,1500], RAMP=['#fff7ec','#fee8c8','#fdbb84','#fc8d59','#ef6548','#d7301f','#990000'];
+const map=new maplibregl.Map({container:'map',center:[-86.784,36.166],zoom:9.6,
+ style:{version:8,sources:{
+  base:{type:'raster',tileSize:256,attribution:'&copy; OpenStreetMap, &copy; CARTO',
+    tiles:['https://a.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png']},
+  labels:{type:'raster',tileSize:256,tiles:['https://a.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png','https://b.basemaps.cartocdn.com/light_only_labels/{z}/{x}/{y}.png']}},
+  layers:[{id:'base',type:'raster',source:'base'},{id:'labels',type:'raster',source:'labels'}]}});
+map.addControl(new maplibregl.NavigationControl(),'top-right');
+map.on('load',()=>{
+ fetch('Davidson_Institutional_by_CouncilDistrict.geojson').then(r=>r.json()).then(geo=>{
+  map.addSource('cd',{type:'geojson',data:geo});
+  map.addLayer({id:'fill',type:'fill',source:'cd',paint:{'fill-color':[
+    'step',['get','inst_homes'],RAMP[0],BREAKS[1],RAMP[1],BREAKS[2],RAMP[2],BREAKS[3],RAMP[3],BREAKS[4],RAMP[4],BREAKS[5],RAMP[5],BREAKS[6],RAMP[6]],
+    'fill-opacity':0.78}},'labels');
+  map.addLayer({id:'line',type:'line',source:'cd',paint:{'line-color':'#666','line-width':0.7}},'labels');
+  map.on('click','fill',e=>{const p=e.features[0].properties;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(
+      '<b>District '+p.district+'</b><br>'+(p.member||'')+'<br><b>'+(+p.inst_homes).toLocaleString()+'</b> corporate-owned homes').addTo(map);});
+  map.on('mouseenter','fill',()=>map.getCanvas().style.cursor='pointer');
+  map.on('mouseleave','fill',()=>map.getCanvas().style.cursor='');
+ });
+ fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(geo=>{
+  map.addSource('cty',{type:'geojson',data:{type:'FeatureCollection',features:geo.features.filter(f=>f.properties.OBJECTID===4)}});
+  map.addLayer({id:'cty',type:'line',source:'cty',paint:{'line-color':'#1a3a5c','line-width':2,'line-dasharray':[2,2]}});});
+ const lbl=['0–200','200–400','400–600','600–800','800–1,000','1,000–1,500','1,500+'];
+ document.getElementById('rows').innerHTML=lbl.map((t,i)=>'<div><i style="background:'+RAMP[i]+'"></i>'+t+'</div>').join('');
+});
+</script></body></html>
