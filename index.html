@@ -10,15 +10,17 @@
   header h1{margin:0 0 8px;font-size:31px;font-weight:800;letter-spacing:-.4px;color:#fff}
   header p{margin:0 auto;max-width:690px;color:#d6e2f3;font-size:15px}
   .wrap{max-width:1000px;margin:10px auto 0;padding:0 20px}
-  .group{margin:40px 0 2px}
-  .group h2{font-size:16px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin:0;padding-bottom:7px;border-bottom:2px solid var(--gold)}
+  .group{margin:44px 0 2px}
+  .group h2{font-size:17px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:1px;margin:0;padding-bottom:7px;border-bottom:3px solid var(--gold)}
   .group p{margin:8px 0 0;font-size:13px;color:#5a6673}
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:16px 0 8px}
+  .sub{font-size:12px;font-weight:800;color:#b07d0a;text-transform:uppercase;letter-spacing:1.5px;margin:20px 0 0;display:flex;align-items:center;gap:8px}
+  .sub::after{content:"";flex:1;height:1px;background:#e2d6bd}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;margin:12px 0 8px}
   a.card{display:block;background:#fff;border:1px solid #d6ddea;border-left:4px solid var(--gold);border-radius:8px;padding:18px 20px;text-decoration:none;color:inherit;
     box-shadow:0 2px 6px rgba(28,69,140,.10);transition:transform .12s,box-shadow .12s}
   a.card:hover{transform:translateY(-3px);box-shadow:0 8px 20px rgba(28,69,140,.20)}
-  a.card h2{margin:0 0 6px;font-size:17px;font-weight:800;color:var(--navy)}
-  a.card p{margin:0;font-size:13.5px;color:#4a5560}
+  a.card h2{margin:0 0 6px;font-size:16.5px;font-weight:800;color:var(--navy)}
+  a.card p{margin:0;font-size:13px;color:#4a5560}
   footer{text-align:center;color:#7a8694;font-size:12px;padding:26px;max-width:760px;margin:0 auto}
   .navbtns{max-width:1000px;margin:24px auto 0;padding:0 20px;display:flex;gap:14px;flex-wrap:wrap;justify-content:center}
   .navbtns a{display:inline-block;background:var(--gold);color:var(--navy);text-decoration:none;font-size:15px;font-weight:800;
@@ -28,40 +30,50 @@
 <header>
   <div class="kick">Davidson County · Primary Government Data</div>
   <h1>Who Owns Nashville?</h1>
-  <p>Interactive maps of institutional and corporate ownership of residential housing in Davidson County, Tennessee. Built entirely from primary government data.</p>
+  <p>Interactive maps, databases, and graphics on institutional and corporate ownership of residential housing in Davidson County, Tennessee. Built entirely from primary government data.</p>
 </header>
 <div class="navbtns">
   <a href="Research_Scope.html">Research Scope</a>
   <a href="Davidson_Parcel_Overview.html">Parcel Overview</a>
   <a href="Methodology_Corporate_Landlords.html">Methodology</a>
-  <a href="Current_Cadastral_Holdings_Explorer.html">Holdings Explorer</a>
-  <a href="Landlord_Registration_Database.html">Landlord Database</a>
-  <a href="Data.html">&#128269; Parcel Data Explorer</a>
 </div>
 <div class="wrap">
 
-  <div class="group"><h2>Start here</h2><p>The main entry points: the full searchable map, the narrated scroll story, and the primary-source database.</p></div>
+  <div class="group"><h2>Start here</h2><p>The flagship, cross-cutting tools: the full searchable map, the narrated scroll story, and the primary-source databases.</p></div>
   <div class="grid">
-    <a class="card" href="https://nataliebaldacci.github.io/who-owns-nashville-app/web/frontend/map.html"><h2>★ Full Parcel Map — Search Every Home</h2><p>The complete interactive map. Search any owner, address, ZIP, or APN; every corporate-owned home is a house glyph colored by operator (Progress, American Homes 4 Rent, Amherst, Tricon…), with census-tract, council-district, and ZIP overlays. Click any parcel for the full county toolkit — photo, property card, deeds, permits, and owner profile.</p></a>
+    <a class="card" href="https://nataliebaldacci.github.io/who-owns-nashville-app/web/frontend/map.html"><h2>★ Full Parcel Map — Search Every Home</h2><p>The complete interactive map. Search any owner, address, ZIP, or APN; every corporate-owned home is a house glyph colored by operator, with census-tract, council-district, and ZIP overlays. Click any parcel for the full county toolkit.</p></a>
     <a class="card" href="Who_Owns_Nashville_ScrollMap.html"><h2>★ A Decade of Institutional Acquisition (Scroll Story)</h2><p>Scroll through the narrated story — watch corporate buyers sweep across Davidson County year by year, the map building under the text as you read.</p></a>
+    <a class="card" href="Data.html"><h2>★ Parcel Data Explorer</h2><p>The full flattened record for every parcel. Browse and sort the table, filter by owner/address/APN, then click any row for that parcel's whole history — chain of title, permits, and zoning.</p></a>
     <a class="card" href="Document_Database.html"><h2>★ Document Database</h2><p>Every primary source, organized by Part — property cards, ownership deeds, deeds of trust, trustees' deeds, permit receipts, building permits, and Metro zoning/legislation links.</p></a>
     <a class="card" href="Address_Search.html"><h2>★ Parcel Address Search (with photos)</h2><p>Type any Davidson County address and see the assessor's photo of the house plus its parcel record — owner, APN, and direct county links. 198,358 parcels.</p></a>
   </div>
 
-  <div class="group"><h2>The landlord record: registration &amp; compliance</h2><p>What happened when corporate owners met the landlord-registration mandate: who registered, who didn't, and who got cited.</p></div>
+  <div class="group"><h2>Landlord Registration &amp; Compliance</h2><p>What happened when corporate owners met the landlord-registration mandate: who registered, who didn't, and who got cited.</p></div>
+  <div class="sub">Database</div>
   <div class="grid">
-    <a class="card" href="Landlord_Registration_Database.html"><h2>★ Landlord Registration Database</h2><p>The searchable record of Metro landlord registrations (ePermits case type 176), the applicant, address, and status behind every registered rental.</p></a>
-    <a class="card" href="Corporate_Landlords_Timeline_LandlordReg.html"><h2>Corporate Rental Growth, 2008–2026</h2><p>A decade-plus of corporate-owned single-family rental registrations. Toggle corporate-only, structure type (detached vs. attached), and watch cumulative vs. still-active.</p></a>
+    <a class="card" href="Landlord_Registration_Database.html"><h2>Landlord Registration Database</h2><p>The searchable record of Metro landlord registrations (ePermits case type 176) — the applicant, address, and status behind every registered rental.</p></a>
+  </div>
+  <div class="sub">Maps</div>
+  <div class="grid">
     <a class="card" href="Active_Corporate_SFR_Detail_Map.html"><h2>Active Rentals — Property Detail</h2><p>Every currently-active corporate single-family rental, clickable. Each dot opens bed/bath, square footage, year built, purchase year, registration history, and direct county links.</p></a>
     <a class="card" href="Holdings_vs_Registration_Nashville.html"><h2>Holdings vs. Landlord Registration</h2><p>Every operator's corporate homes vs. their active landlord registrations. Red dots are unregistered — only 53% of corporate homes are registered.</p></a>
     <a class="card" href="Landlord_Registrations_with_Photos_map.html"><h2>Landlord Registrations, with Photos</h2><p>Registered rental homes across the county, each popup showing the county assessor's photo of the house.</p></a>
     <a class="card" href="Davidson_LandlordReg_FreezeFrame_Map_2026-05-29.html"><h2>Landlord Registration Snapshot</h2><p>A freeze-frame of active landlord registrations across Davidson County as of mid-2026.</p></a>
     <a class="card" href="CALLR_violations_map.html"><h2>Code Enforcement Against Corporate Landlords</h2><p>Metro enforcement cases (CALLR) brought against corporate landlords, including the Invitation Homes SFR JV borrower shells.</p></a>
   </div>
+  <div class="sub">Graphics</div>
+  <div class="grid">
+    <a class="card" href="Corporate_Landlords_Timeline_LandlordReg.html"><h2>Corporate Rental Growth, 2008–2026</h2><p>A decade-plus of corporate-owned single-family rental registrations. Toggle corporate-only, structure type, and watch cumulative vs. still-active.</p></a>
+  </div>
 
-  <div class="group"><h2>Who owns Nashville: ownership &amp; concentration</h2><p>Who the corporate owners are, where their homes cluster, and how ownership concentrates behind the shells.</p></div>
+  <div class="group"><h2>Ownership &amp; Concentration</h2><p>Who the corporate owners are, where their homes cluster, and how ownership concentrates behind the shells.</p></div>
+  <div class="sub">Database</div>
   <div class="grid">
     <a class="card" href="WhoOwnsNashville_Explorer.html"><h2>Owner Portfolio Explorer</h2><p>Search any owner. The map highlights every home in that owner's portfolio — all the LLCs and shells linked to the same entity by name and mailing address.</p></a>
+    <a class="card" href="Current_Cadastral_Holdings_Explorer.html"><h2>Current Cadastral Holdings Explorer</h2><p>Every operator's current cadastral holdings, browsable by parent brand — the live snapshot of who holds what right now.</p></a>
+  </div>
+  <div class="sub">Maps</div>
+  <div class="grid">
     <a class="card" href="davidson_institutional_acquisitions_by_operator.html"><h2>Institutional Acquisitions by Operator</h2><p>Every corporate-bought home colored by its parent operator — Progress, American Homes 4 Rent, Amherst, Tricon, FirstKey. The Security-for-Sale view for Davidson County.</p></a>
     <a class="card" href="Corporate_Landlords_ParcelShapes_Nashville.html"><h2>Corporate-Owned Parcels</h2><p>Every corporate-owned single-family parcel as its actual lot shape, colored by parent operator.</p></a>
     <a class="card" href="Corporate_Landlords_Hexmap_ckmeans.html"><h2>Concentration Hexmap</h2><p>Where corporate ownership clusters across the county, binned into hexagons.</p></a>
@@ -69,17 +81,21 @@
     <a class="card" href="Institutional_SF_Homes_DotMap.html"><h2>Institutional Single-Family Homes (Dot Map)</h2><p>Every single-family home owned by a corporate / institutional entity as one dot — the GAO-style density view. 34,274 homes, concentrated southeast.</p></a>
     <a class="card" href="BigOperators_vs_AllSF_DotMap.html"><h2>Big Operators vs. All Single-Family Homes</h2><p>Grey = every single-family home; colored dots = homes held by the major institutional operators. Where the big players actually sit.</p></a>
     <a class="card" href="BigOperators_vs_AllSF_ParcelShapes.html"><h2>Big Operators — Parcel Shapes</h2><p>The same view as the dot map, but every operator home is its real lot shape, colored by operator, over the grey field of all single-family homes.</p></a>
-    <a class="card" href="Preview_Owners_by_Type.html"><h2>Owners by Type</h2><p>Chart of all 24,300 entity-owned single-family parcels by owner category: 19,984 local LLCs dwarf the 3,049 PE-backed operator and 1,192 public-REIT homes.</p></a>
     <a class="card" href="WithinParent_Chains_Nashville.html"><h2>Within-Parent Ownership Chains</h2><p>How homes move between the shell LLCs of a single parent operator — the internal transfers that fragment one company across dozens of entity names.</p></a>
     <a class="card" href="Corporate_Landlords_Neighborhood_Antioch.html"><h2>Antioch Close-Up (37013)</h2><p>Corporate-landlord concentration in Antioch — the county's most heavily acquired neighborhood — block by block, by operator.</p></a>
-    <a class="card" href="Corporate_Landlords_Timeline_Nashville.html"><h2>Corporate Acquisition Timeline</h2><p>When corporate owners <em>bought</em> their homes, year by year — the build-up of concentration across the last decade.</p></a>
     <a class="card" href="Transaction_History_Timeline_Nashville.html"><h2>Transaction History, 2013–2026</h2><p>Every recorded single-family sale, colored by who bought from whom. Play the slider to watch the corporate acquisition wave rise and fall against the ordinary market.</p></a>
     <a class="card" href="SF_BecameNonOwner_AllTransfers_Timeline_Nashville.html"><h2>When Homes Became Non-Owner-Occupied</h2><p>Every absentee-owned home, placed in the year its current owner acquired it. 83% changed hands since 2010.</p></a>
     <a class="card" href="SF_NeverOwnerOccupied_Nashville.html"><h2>Single-Family Homes Never Owner-Occupied</h2><p>The 8,977 single-family parcels where no owner in the entire chain of title ever lived in the home — pure investor stock.</p></a>
+  </div>
+  <div class="sub">Graphics</div>
+  <div class="grid">
+    <a class="card" href="Preview_Owners_by_Type.html"><h2>Owners by Type</h2><p>Chart of all 24,300 entity-owned single-family parcels by owner category: 19,984 local LLCs dwarf the 3,049 PE-backed operator and 1,192 public-REIT homes.</p></a>
+    <a class="card" href="Corporate_Landlords_Timeline_Nashville.html"><h2>Corporate Acquisition Timeline</h2><p>When corporate owners <em>bought</em> their homes, year by year — the build-up of concentration across the last decade.</p></a>
     <a class="card" href="Ownership_Rates_Charts.html"><h2>Ownership Rate Breakdown</h2><p>Owner-occupied vs. non-owner vs. entity-owned shares of the single-family stock, charted.</p></a>
   </div>
 
-  <div class="group"><h2>Wall Street finance: securitization &amp; mortgages</h2><p>The bond deals and mortgage debt behind corporate-owned homes.</p></div>
+  <div class="group"><h2>Wall Street Finance: Securitization &amp; Mortgages</h2><p>The bond deals and mortgage debt behind corporate-owned homes.</p></div>
+  <div class="sub">Maps</div>
   <div class="grid">
     <a class="card" href="Securitization_Parcels_map.html"><h2>Securitized Parcels — Homes Pledged to Bond Deals</h2><p>Every Davidson single-family home pledged as collateral in a single-family-rental securitization, mapped by borrower trust — Progress, FirstKey, Amherst and others.</p></a>
     <a class="card" href="Securitization_Mortgages_map.html"><h2>Securitized Mortgages — The Debt Behind the Homes</h2><p>The securitized loans backing those homes, each tied to its SFR bond deal. Where the mortgage debt sits across the county.</p></a>
@@ -88,19 +104,24 @@
     <a class="card" href="LP_Entity_Parcels_map.html"><h2>Limited-Partnership Land Holdings</h2><p>Residential parcels held by limited-partnership and investment-fund entities — the LP layer of institutional landholding.</p></a>
   </div>
 
-  <div class="group"><h2>Build-to-rent &amp; new construction</h2><p>Homes built to be rented, and the construction wave behind the buildup.</p></div>
+  <div class="group"><h2>Build-to-Rent &amp; New Construction</h2><p>Homes built to be rented, and the construction wave behind the buildup.</p></div>
+  <div class="sub">Maps</div>
   <div class="grid">
     <a class="card" href="BTR_Current_vs_Pipeline_Map.html"><h2>Build-to-Rent: Current vs. Pipeline</h2><p>Built-and-held rental homes versus vacant lots still in the development pipeline, by operator.</p></a>
     <a class="card" href="BTR_Exit_vs_Pipeline_Nashville.html"><h2>Build-to-Rent: Exits vs. Pipeline</h2><p>BTR homes operators have since sold off, set against the lots still sitting in the development pipeline.</p></a>
     <a class="card" href="BTR_Lifecycle_Map.html"><h2>Build-to-Rent Lifecycle</h2><p>Each build-to-rent community traced through its lifecycle stage — raw land, under construction, leasing, stabilized.</p></a>
     <a class="card" href="BTR_Models_Map.html"><h2>Build-to-Rent by Business Model</h2><p>BTR communities classed by development model: scattered-site, horizontal apartment, and subdivision-style rental.</p></a>
     <a class="card" href="BTR_Types_Map.html"><h2>Build-to-Rent by Product Type</h2><p>BTR developments by housing product — detached houses, townhomes, and cottage-court formats.</p></a>
+  </div>
+  <div class="sub">Graphics</div>
+  <div class="grid">
     <a class="card" href="New_Construction_Permits_Timeline.html"><h2>New Construction Permits, 2006–2026</h2><p>Residential building permits issued over two decades — the construction wave behind the institutional buildup.</p></a>
     <a class="card" href="davidson_residential_construction_by_type_IF12988.html"><h2>Residential Construction by Structure Type</h2><p>Davidson building permits by structure type over time — the CRS housing-supply figure, rebuilt for the county.</p></a>
     <a class="card" href="Davidson_New_vs_Existing_Sales.html"><h2>Home Sales: New vs. Existing, 2012–2024</h2><p>Davidson County single-family home sales each year, split into newly built and existing homes.</p></a>
   </div>
 
-  <div class="group"><h2>Land banking &amp; foreclosure</h2><p>Investors holding vacant land, and where foreclosed homes ended up.</p></div>
+  <div class="group"><h2>Land Banking &amp; Foreclosure</h2><p>Investors holding vacant land, and where foreclosed homes ended up.</p></div>
+  <div class="sub">Maps</div>
   <div class="grid">
     <a class="card" href="LandBank_Timeline_Nashville.html"><h2>How Land Banking Unfolds</h2><p>Starts with the vacant land in 2000 and plays forward — the acquire → subdivide → build sequence, year by year.</p></a>
     <a class="card" href="LandBank_Footprints_Nashville.html"><h2>Land-Bank Footprints</h2><p>The actual shape of the land each investor controls — Walton, Drapac, Green Trails, Domain Timberlake and more, by acreage.</p></a>
@@ -108,14 +129,18 @@
     <a class="card" href="Foreclosure_Timeline_Nashville.html"><h2>What Happened to Foreclosed Homes</h2><p>Every parcel sold by Trustee's Deed, 2001–today. Red at foreclosure, then green or orange as it returns to a resident or an investor. Filter by status today.</p></a>
   </div>
 
-  <div class="group"><h2>The housing stock over time</h2><p>The physical stock and how the parcel fabric changed.</p></div>
+  <div class="group"><h2>The Housing Stock Over Time</h2><p>The physical stock and how the parcel fabric changed.</p></div>
+  <div class="sub">Maps</div>
   <div class="grid">
     <a class="card" href="SF_YearBuilt_Timeline_Nashville.html"><h2>When Nashville's Single-Family Stock Was Built</h2><p>Every single-family home placed by year built. Play the slider to watch the county grow; filter by detached, attached, or duplex.</p></a>
     <a class="card" href="SF_Current_PropertyTypes_Nashville.html"><h2>Current Single-Family Property Types</h2><p>The whole single-family stock colored by structure type, with an owner-occupied vs. non-owner filter and live stats.</p></a>
-    <a class="card" href="Davidson_Total_Housing_Units.html"><h2>Total Housing Units, 1980–2025</h2><p>The county's housing stock against the units-to-population ratio. Hover any year for the unit count, ratio, and source.</p></a>
     <a class="card" href="Reconstructed_Tracts_Nashville.html"><h2>Reconstructed Retired Parcels</h2><p>Parcels that no longer exist, rebuilt by merging the lots they were subdivided into — the original tract boundary before re-platting.</p></a>
     <a class="card" href="Davidson_Historic_Parcels_Timeline.html"><h2>Historic Parcels Timeline</h2><p>Retired and historic parcels placed in time — the parcel fabric before subdivision and re-platting.</p></a>
     <a class="card" href="Nashville_Historical_Imagery_map.html"><h2>Historical Aerial Imagery</h2><p>Davidson parcels laid over historical aerial photography to see how the landscape changed.</p></a>
+  </div>
+  <div class="sub">Graphics</div>
+  <div class="grid">
+    <a class="card" href="Davidson_Total_Housing_Units.html"><h2>Total Housing Units, 1980–2025</h2><p>The county's housing stock against the units-to-population ratio. Hover any year for the unit count, ratio, and source.</p></a>
   </div>
 
 </div>
