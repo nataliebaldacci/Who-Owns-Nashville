@@ -34,6 +34,18 @@
  .pp .none{color:#999;font-style:italic;font-size:12px}
  .pp .tk{margin-top:6px;font-size:11.5px;border-top:1px solid #eef0f3;padding-top:5px}
  .pp .tk a{color:#1c458c;text-decoration:none;font-weight:600}.pp .tk a:hover{text-decoration:underline}
+ /* operator filter panel (right) */
+ #ops{position:absolute;top:88px;right:10px;z-index:1000;background:rgba(255,255,255,.97);border:1px solid #d6ddea;border-left:4px solid #f0af1e;border-radius:8px;box-shadow:0 4px 14px rgba(28,69,140,.28);padding:10px 12px 9px;width:210px;max-height:calc(100% - 220px);overflow:auto}
+ #ops .ttl{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12.5px;color:#1c458c;margin:0 0 3px;line-height:1.2}
+ #ops .ttl small{display:block;font-family:'EB Garamond',serif;font-size:11px;font-weight:400;color:#777;font-style:italic}
+ #ops .cbrow{display:flex;align-items:center;gap:6px;margin:7px 0 8px;font-family:'Montserrat',sans-serif;font-size:10.5px;color:#3a4652;cursor:pointer;user-select:none}
+ #ops .cbrow input{margin:0;cursor:pointer}
+ #ops .r{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;padding:2px 0}
+ #ops .r.faded{opacity:.3}
+ #ops .r .bar{width:18px;height:11px;border-radius:2px;flex:0 0 auto;border:1px solid rgba(0,0,0,.15)}
+ #ops .r .lab{font-family:'Montserrat',sans-serif;font-size:10.5px;color:#3a4652;line-height:1.15}
+ #ops .r .lab .c{color:#8a94a0;font-weight:400}
+ #ops .all{font-family:'Montserrat',sans-serif;font-size:10px;color:#1c458c;cursor:pointer;margin-top:7px;display:none;text-decoration:underline}
 </style></head><body>
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">The Document Trail · Securitized Homes</div></div>
 <div id="map"></div>
@@ -42,6 +54,12 @@
   <div class="row" data-k="doc"><span class="dot" style="background:#1c458c"></span><b>Quitclaim + Deed of Trust</b><span class="n" id="ndoc">—</span></div>
   <div class="row" data-k="none"><span class="dot" style="background:#b8c2d0"></span><b>Securitized (no linked docs)</b><span class="n" id="nnone">—</span></div>
   <div class="hint">Click a home to open its Quitclaim Deed, Deed of Trust, and the SEC exhibit that disclosed it.</div>
+</div>
+<div id="ops">
+  <div class="ttl">Operators<small>Click one to isolate its homes</small></div>
+  <label class="cbrow"><input type="checkbox" id="colorByOp"/> Color dots by operator</label>
+  <div id="oprows"></div>
+  <div class="all" id="opAll">Show all operators</div>
 </div>
 <div class="status" id="status">loading…</div>
 <script>
@@ -69,22 +87,69 @@ function popup(p){
   h+='<div class="tk"><a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a> &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+apn+'">Property Card</a> &middot; <a target="_blank" href="https://davidsonportal.com/landrecords/">Land Records</a></div>';
   return h+'</div>';
 }
-var layers={sec:L.layerGroup(),doc:L.layerGroup(),none:L.layerGroup()},vis={sec:true,doc:true,none:true},cnt={sec:0,doc:0,none:0};
+// per-operator brand palette (Security-for-Sale family + extensions)
+var OPCOLOR={
+  'Progress Residential (Pretium)':'#e0567a',
+  'American Homes 4 Rent':'#2c719f',
+  'Amherst Residential':'#5ba7d8',
+  'Tricon Residential (Blackstone)':'#3ba55c',
+  'Starwood':'#c26a1e',
+  'FirstKey Homes (Cerberus)':'#1f8166',
+  'My Community Homes (KKR)':'#8156b8',
+  'Invitation Homes':'#cf307a',
+  'Rithm Capital':'#d9a520',
+  'Maymont/Conrex (Brookfield)':'#c0392b',
+  'Hudson Capital Properties':'#159ea8',
+  'Home Partners of America':'#7f8896',
+  'Homeward (Blackstone)':'#3b3f8c'
+};
+function opColor(o){return OPCOLOR[o]||'#888';}
+var pane=L.layerGroup().addTo(map);            // single re-rendered layer
+var PTS=[], vis={sec:true,doc:true,none:true}, isolateOp=null, colorByOp=false, cnt={sec:0,doc:0,none:0}, opCnt={};
+function draw(){
+  pane.clearLayers();
+  var shown=0;
+  PTS.forEach(function(p){
+    var k=cls(p);
+    if(!vis[k]) return;
+    if(isolateOp && p.op!==isolateOp) return;
+    var s=STY[k], col=colorByOp?opColor(p.op):s.c, r=colorByOp?3:s.r, o=colorByOp?.85:s.o;
+    L.circleMarker([p.lat,p.lon],{radius:r,fillColor:col,color:col,weight:0,fillOpacity:o})
+      .on('click',function(){this.bindPopup(popup(p),{maxWidth:360}).openPopup();}).addTo(pane);
+    shown++;
+  });
+  document.getElementById('status').textContent=shown.toLocaleString()+(isolateOp?(' '+isolateOp.replace(/ \(.*\)/,'')):' securitized')+' homes';
+}
+function buildOpRows(){
+  var rows=Object.keys(opCnt).sort(function(a,b){return opCnt[b]-opCnt[a];});
+  document.getElementById('oprows').innerHTML=rows.map(function(o){
+    return '<div class="r" data-op="'+o.replace(/"/g,'&quot;')+'"><span class="bar" style="background:'+opColor(o)+'"></span>'
+      +'<span class="lab">'+o.replace(/ \(.*\)/,'')+' <span class="c">('+opCnt[o].toLocaleString()+')</span></span></div>';
+  }).join('');
+  document.querySelectorAll('#oprows .r').forEach(function(row){
+    row.onclick=function(){setIsolate(row.getAttribute('data-op'));};
+  });
+}
+function setIsolate(o){
+  isolateOp=(isolateOp===o)?null:o;
+  document.querySelectorAll('#oprows .r').forEach(function(row){
+    row.classList.toggle('faded', isolateOp && row.getAttribute('data-op')!==isolateOp);
+  });
+  document.getElementById('opAll').style.display=isolateOp?'block':'none';
+  draw();
+}
 fetch('securitized_docs_points.json').then(r=>r.json()).then(function(d){
-  var P=d.points;
-  // draw none first (bottom), then doc, then sec (top)
-  ['none','doc','sec'].forEach(function(k){});
-  P.forEach(function(p){var k=cls(p),s=STY[k];cnt[k]++;
-    L.circleMarker([p.lat,p.lon],{radius:s.r,fillColor:s.c,color:s.c,weight:0,fillOpacity:s.o})
-      .on('click',function(e){this.bindPopup(popup(p),{maxWidth:360}).openPopup();}).addTo(layers[k]);});
-  ['none','doc','sec'].forEach(k=>layers[k].addTo(map));
+  PTS=d.points;
+  PTS.forEach(function(p){var k=cls(p);cnt[k]++;var o=p.op||'Unknown';opCnt[o]=(opCnt[o]||0)+1;});
   document.getElementById('nsec').textContent=cnt.sec.toLocaleString();
   document.getElementById('ndoc').textContent=cnt.doc.toLocaleString();
   document.getElementById('nnone').textContent=cnt.none.toLocaleString();
-  document.getElementById('status').textContent=P.length.toLocaleString()+' securitized homes';
+  buildOpRows();
+  draw();
 }).catch(function(e){document.getElementById('status').textContent='load error: '+e;});
 document.querySelectorAll('#legend .row').forEach(function(row){
-  row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];row.classList.toggle('off',!vis[k]);
-    vis[k]?layers[k].addTo(map):map.removeLayer(layers[k]);};
+  row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];row.classList.toggle('off',!vis[k]);draw();};
 });
+document.getElementById('colorByOp').onchange=function(){colorByOp=this.checked;draw();};
+document.getElementById('opAll').onclick=function(){setIsolate(isolateOp);};
 </script></body></html>
