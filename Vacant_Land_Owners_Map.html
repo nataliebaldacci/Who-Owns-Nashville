@@ -4,102 +4,207 @@
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
 <link href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" rel="stylesheet"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
-  html,body{margin:0;height:100%;font-family:Garamond,'EB Garamond',Georgia,serif}
+  html,body{margin:0;height:100%;font-family:'EB Garamond',Garamond,Georgia,serif}
   #map{position:absolute;inset:0}
   #title{position:absolute;top:12px;left:50%;transform:translateX(-50%);z-index:600;background:rgba(255,255,255,.92);
-    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.22);max-width:92%}
+    padding:8px 18px;border-radius:5px;text-align:center;box-shadow:0 1px 5px rgba(0,0,0,.22);max-width:60%}
   #title h2{margin:0;font-size:17px} #title p{margin:3px 0 0;font-size:11.5px;color:#555}
-  #legend{position:absolute;top:78px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:12px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  #legend b{display:block;margin-bottom:5px;font-size:12.5px}
+  .panel{position:absolute;z-index:600;background:rgba(255,255,255,.96);border-radius:7px;box-shadow:0 1px 5px rgba(0,0,0,.2)}
+  .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:5px 10px;border-radius:15px;cursor:pointer}
+  .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+  .chip.oos.on{background:#d7263d;border-color:#d7263d}
+  #filters{top:78px;left:12px;padding:10px 12px;max-width:250px}
+  #filters .lab{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin:2px 0 4px}
+  #filters .chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+  #legend{padding:9px 13px;font-size:12px}
+  #legend b{display:block;margin-bottom:5px;font-size:12.5px;font-family:'Montserrat',sans-serif}
   #legend .r{cursor:pointer;padding:2px 0;user-select:none;opacity:1;transition:opacity .15s}
   #legend .r.off{opacity:.32}
   #legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:6px;vertical-align:middle;border:1px solid rgba(0,0,0,.25)}
-  #legend .c{color:#666;font-size:11px;float:right;margin-left:14px}
-  #stats{position:absolute;bottom:16px;left:12px;z-index:600;background:rgba(255,255,255,.96);padding:9px 13px;border-radius:6px;font-size:11.5px;box-shadow:0 1px 4px rgba(0,0,0,.2);max-width:250px;line-height:1.5}
-  #stats b{color:#1a3a5c}
-  #count{position:absolute;bottom:16px;right:12px;z-index:600;background:rgba(255,255,255,.94);padding:6px 12px;border-radius:5px;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.2)}
-  .leaflet-popup-content{font-family:Garamond,Georgia,serif;font-size:12.5px;max-width:380px;line-height:1.5}
-  .pp .nm{font-size:13.5px;font-weight:bold;color:#1a3a5c} .pp .ot{font-weight:bold}
+  #legend .c{color:#666;font-size:11px;float:right;margin-left:14px;font-family:'Montserrat',sans-serif;font-weight:700}
+  #baseToggle{top:12px;right:12px;padding:6px 8px;display:flex;gap:5px}
+  #owners{top:58px;right:12px;width:250px;max-height:calc(100% - 150px);overflow:auto;padding:10px 12px}
+  #owners h3{font-family:'Montserrat',sans-serif;font-size:12.5px;color:#1c458c;margin:0 0 5px}
+  #owners .sortrow{display:flex;gap:5px;margin-bottom:6px}
+  #isoNote{font-size:11.5px;color:#d7263d;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:6px;display:none;cursor:pointer}
+  #isoNote:hover{text-decoration:underline}
+  #owners .o{display:flex;gap:7px;font-size:12px;padding:3px 4px;border-bottom:1px solid #eef0f3;cursor:pointer;border-radius:4px}
+  #owners .o:hover{background:#f2f6fc} #owners .o.sel{background:#fdeef0;outline:1px solid #f2b8c2}
+  #owners .o .rk{color:#b9c2cf;font-family:'Montserrat',sans-serif;font-weight:700;width:16px}
+  #owners .o .dot{width:8px;height:8px;border-radius:2px;flex:0 0 auto;margin-top:4px}
+  #owners .o .nm{flex:1;line-height:1.15}
+  #owners .o .ct{font-family:'Montserrat',sans-serif;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;text-align:right}
+  #stats{bottom:16px;left:50%;transform:translateX(-50%);padding:0;display:flex;overflow:hidden;max-width:calc(100% - 300px)}
+  #stats .tile{padding:7px 15px;text-align:center;border-right:1px solid #e9ecf1}
+  #stats .tile:last-child{border-right:none}
+  #stats .tile .v{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;line-height:1.15}
+  #stats .tile .l{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:2px}
+  #stats .tile.iso .v{color:#d7263d;font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .leaflet-popup-content{font-family:'EB Garamond',Georgia,serif;font-size:12.5px;max-width:380px;line-height:1.5}
+  .pp .nm{font-size:13.5px;font-weight:bold;color:#1a3a5c;border-bottom:1px dotted #1a3a5c;cursor:pointer;text-decoration:none}
+  .pp .nm:hover{background:#fdeef0} .pp .ot{font-weight:bold}
   .pp table{border-collapse:collapse;margin:5px 0} .pp td{padding:1px 7px 1px 0;vertical-align:top}
   .pp .tk a{display:inline-block;margin:2px 7px 0 0;font-size:11.5px;color:#1769aa;text-decoration:none;border-bottom:1px solid #cfe0ee}
   .pp .tk a:hover{border-color:#1769aa}
 </style></head><body>
 <div id="title"><h2>Who Owns the Vacant Land in Nashville?</h2>
-  <p>Every genuinely vacant parcel in Davidson County, no building, no year built, no dwelling units, as its real lot shape. Click any parcel for the county record.</p></div>
-<div id="legend"></div>
-<div id="stats">loading&hellip;</div>
-<div id="count">loading vacant parcels&hellip;</div>
+  <p>Every genuinely vacant parcel in Davidson County, as its real lot shape. Click a parcel for the county record; click an owner name to highlight all their parcels.</p></div>
+<div class="panel" id="filters">
+  <div class="lab">Vacant land type</div>
+  <div class="chips" id="ltChips"><span class="chip on" data-lt="all">All</span><span class="chip" data-lt="res">Residential</span><span class="chip" data-lt="rural">Rural</span><span class="chip" data-lt="comm">Commercial</span><span class="chip" data-lt="ind">Industrial</span><span class="chip" data-lt="other">Other</span></div>
+  <div class="lab">Owner location</div>
+  <div class="chips" id="locChips"><span class="chip on" data-loc="all">All</span><span class="chip" data-loc="in">In-state</span><span class="chip oos" data-loc="oos">Out-of-state</span></div>
+  <div id="legend"></div>
+</div>
+<div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span><select id="yearSel" style="display:none;margin-left:7px;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;color:#1c458c;padding:4px 5px;border:1px solid #cdd6e3;border-radius:5px;cursor:pointer"></select></div>
+<div class="panel" id="owners"><h3>Top vacant-land owners</h3><div id="isoNote"></div>
+  <div class="sortrow"><span class="chip on" data-s="ac">By acres</span><span class="chip" data-s="n">By parcels</span></div>
+  <div id="olist"></div></div>
+<div class="panel" id="stats">loading&hellip;</div>
 <div id="map"></div>
 <script>
 const COLORS={'Corporate/Business':'#b3282d','Individual':'#26456b','Government/Institutional':'#8a8f98','Trust':'#e0952a'};
 const ORDER=['Corporate/Business','Individual','Government/Institutional','Trust'];
-const off={};
-const map=L.map('map',{preferCanvas:true,center:[36.166,-86.784],zoom:10});
+const PATRIOT="5D050659143EB96630FB38B91DE12E40&SECRETKEY=A92169630C9BC3C00A1C0F9F140E6DAEC21C8E62DCFF9FC443FB1BE70DDF6AA4268527B9DDE2ECC2C7EE9BB5BF728C06F0DF4019BBECDEBD2A6DD0BBE28A419D8F929E1F3E8DF478E56619995BEFCA8E369276689D791197DC1284F14B3252DBFB2A19A2E451EEA832D6D96488DDC673EBA4B37BD741223B656A793D93209C0F";
+// owner rollup crosswalk (name -> clean operator/parent); landbank corrections included
+const CW=[[/WALTON TENNESSEE|WALTON INTERNATIONAL/,'Walton Global'],[/\bKLLB\b/,'Kennedy Lewis (KLLB)'],[/TPG AG EHC/,'TPG Angelo Gordon'],
+ [/AMH TN DEVELOPMENT|AMERICAN HOMES 4 RENT|\bAH4R\b/,'American Homes 4 Rent'],[/PHILLIPS BUILDERS|\bMERITAGE\b/,'Meritage Homes'],
+ [/REGENT HOMES/,'Regent Homes'],[/PULTE|CENTEX/,'PulteGroup'],[/\bM ?I HOMES\b/,'M/I Homes'],[/\bNVR\b|RYAN HOMES/,'NVR / Ryan Homes'],
+ [/VM MASTER ISSUER|VM PRONTO|MESA VERDE ASSETS|\bAMHERST\b/,'Amherst Residential'],[/DREAM FINDERS|\bDFH\b/,'Dream Finders Homes'],
+ [/D ?R HORTON/,'D.R. Horton'],[/\bLENNAR\b/,'Lennar'],[/\bBEAZER\b/,'Beazer Homes'],[/CENTURY COMMUNITIES/,'Century Communities'],
+ [/OLE SOUTH/,'Ole South Properties'],[/\bDREES\b/,'Drees Homes'],[/\bGOODALL\b/,'Goodall Homes'],[/CLAYTON (PROPERTIES|HOMES)/,'Clayton Properties'],
+ [/FRANK BATSON/,'Frank Batson Homes'],[/PROGRESS RESIDENTIAL|\bYAMASA\b|ROWAN PROPCO/,'Progress Residential'],
+ [/INVITATION HOMES|\bRESICAP\b|SN TENNESSEE/,'Invitation Homes'],[/\bTRICON\b/,'Tricon Residential']];
+function grp(own){const u=(own||'').toUpperCase();for(const[r,l]of CW){if(r.test(u))return l;}return own||'(unknown owner)';}
+function landType(lu){const s=(lu||'').toUpperCase();
+  if(/RESID|RESIENT|SINGLE FAMILY|MULTI FAMILY|DUPLEX|ZERO LOT|CONDO|APARTMENT|MOBILE HOME|DORMITORY/.test(s))return 'res';
+  if(/RURAL|FARM|AGRICULT|GREENHOUSE|FOREST|NURSERY/.test(s))return 'rural';
+  if(/INDUSTRIAL|WAREHOUSE|WARHOUSE|MANUFACTUR|STORAGE|MINERAL|TERMINAL|DISTRIBUTION/.test(s))return 'ind';
+  if(/COMMERCIAL|RETAIL|OFFICE|STORE|SHOP|RESTAUR|RESTUR|HOTEL|MOTEL|BANK|FINANC|MARKET|GAS|AUTO|PARKING|NIGHTCLUB|THEATER|CAR WASH|DEALER|BUSINESS|MEDICAL|CLINIC|HOSPITAL|DAY CARE|NURSING|GOLF|FAST FOOD|DEPARTMENT/.test(s))return 'comm';
+  return 'other';}
+function median(a){if(!a.length)return null;a=a.slice().sort((x,y)=>x-y);const m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2;}
+const dollars=n=>n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':'$'+Math.round(n).toLocaleString();
+const esc=s=>String(s==null?'':s).replace(/</g,'&lt;');
+const off={},map=L.map('map',{preferCanvas:true,center:[36.166,-86.784],zoom:10});
+let ltF='all',locF='all',isolate=null,osort='ac',feats=[],layer,curLB=[];
 const carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:20}).addTo(map);
 const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
-const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'&copy; Esri',maxZoom:20});
-L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{position:'topright',collapsed:false}).addTo(map);
-
+// Historical aerial imagery (Metro Nashville Imagery MapServer) + current (Esri)
+const AER='https://maps.nashville.gov/arcgis/rest/services/Imagery/';
+const AER_YEARS=[2023,2022,2020,2018,2017,2016,2014,2013,2010,2009,2008,2006,2005,2004,2003,2000,1996];
+const AER_SVC={2023:'2023Imagery_WGS84',2022:'2022Imagery_WGS84',2020:'2020Imagery_WGS84',2018:'2018Imagery_WGS84',2017:'2017Imagery_WGS84',2016:'2016Imagery_WGS84',2014:'2014Imagery_WGS84',2013:'2013PictometryImagery_WGS84',2010:'2010Imagery_WGS84',2009:'2009Imagery_WGS84',2008:'2008Imagery_WGS84',2006:'2006Imagery_WGS84',2005:'2005Imagery_WGS84',2004:'2004Imagery_WGS84',2003:'2003Imagery_WGS84',2000:'2000Imagery_WGS84',1996:'1996Imagery_WGS84'};
+const esriImg=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri, Maxar',maxZoom:20});
+function aerialFor(y){return y==='esri'?esriImg:L.tileLayer(AER+AER_SVC[y]+'/MapServer/tile/{z}/{y}/{x}',{maxZoom:20,maxNativeZoom:19,attribution:'Aerial: Metro Nashville '+y});}
+let aerYear='esri',aerialLyr=null;
+const BASES={gray:carto,streets:osm};
+function setBase(k){
+  [carto,osm].forEach(l=>{if(map.hasLayer(l))map.removeLayer(l);});
+  if(aerialLyr&&map.hasLayer(aerialLyr))map.removeLayer(aerialLyr);
+  const ys=document.getElementById('yearSel');
+  if(k==='aerial'){aerialLyr=aerialFor(aerYear);aerialLyr.addTo(map).bringToBack();ys.style.display='';}
+  else{BASES[k].addTo(map).bringToBack();ys.style.display='none';}
+}
+map.createPane('mask');const _mp=map.getPane('mask');_mp.style.zIndex=350;_mp.style.pointerEvents='none';
 fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{
-  L.geoJSON({type:'FeatureCollection',features:g.features.filter(f=>f.properties.OBJECTID===4)},
-    {style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);
+  const feat=(g.features||[]).find(f=>f.properties&&f.properties.OBJECTID===4)||g.features[0];if(!feat)return;
+  L.geoJSON(feat,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+  const outer=[[85,-180],[85,180],[-85,180],[-85,-180]];
+  const polys=feat.geometry.type==='Polygon'?[feat.geometry.coordinates]:feat.geometry.coordinates;
+  const holes=polys.map(pl=>pl[0].map(c=>[c[1],c[0]]));
+  L.polygon([outer].concat(holes),{pane:'mask',stroke:false,fillColor:'#e9edf1',fillOpacity:.85,interactive:false}).addTo(map);
 });
-
-const dollars=n=>n>=1e9?'$'+(n/1e9).toFixed(2)+'B':n>=1e6?'$'+(n/1e6).toFixed(1)+'M':'$'+n.toLocaleString();
-let layer, feats=[];
-function style(f){const t=f.properties.otype;return{color:'#333',weight:0.5,fillColor:COLORS[t]||'#999',fillOpacity:off[t]?0:0.7,opacity:off[t]?0:0.9};}
+function baseKeep(p){
+  if(off[p.otype])return false;
+  if(locF==='oos'&&(!p.ostate||p.ostate==='TN'))return false;
+  if(locF==='in'&&p.ostate&&p.ostate!=='TN')return false;
+  if(ltF!=='all'&&landType(p.lu)!==ltF)return false;
+  return true;
+}
+function mapKeep(p){if(isolate)return grp(p.owner)===isolate;return baseKeep(p);}
+function style(f){const p=f.properties,vis=mapKeep(p),c=COLORS[p.otype]||'#999';
+  if(!vis)return{weight:0,fillOpacity:0,opacity:0};
+  if(map.getZoom()<13)return{color:c,weight:0.25,fillColor:c,fillOpacity:0.6,opacity:0.5};   // zoomed out: clean filled shapes
+  return{color:c,weight:1.4,dashArray:'4,3',fillColor:c,fillOpacity:0.12,opacity:0.95};}       // zoomed in: dashed outline, see-through
+function centroid(g){let cx=0,cy=0,n=0;(function w(c){if(typeof c[0]==='number'){cx+=c[0];cy+=c[1];n++;}else c.forEach(w);})(g.coordinates);return[cx/n,cy/n];}
 function popup(f){
-  const p=f.properties, A=p.apn;
-  // centroid for street view
-  let cx=0,cy=0,n=0;(function walk(c){if(typeof c[0]==='number'){cx+=c[0];cy+=c[1];n++;}else c.forEach(walk);})(f.geometry.coordinates);
-  cx/=n;cy/=n;
+  const p=f.properties,A=esc(p.apn),o=esc(p.owner),oe=encodeURIComponent(p.owner||''),c=centroid(f.geometry),cx=c[0],cy=c[1];
   const lnk=(l,u)=>`<a href="${u}" target="_blank" rel="noopener">${l}</a>`;
-  return `<div class="pp"><span class="nm">${p.owner||'(unknown owner)'}</span><br>
-    <span class="ot" style="color:${COLORS[p.otype]}">${p.otype}</span>${p.ostate&&p.ostate!=='TN'?' &middot; owner in '+p.ostate:''}<br>
+  return `<div class="pp"><a class="nm" href="#">${o||'(unknown owner)'}</a><br>
+    <span class="ot" style="color:${COLORS[p.otype]}">${esc(p.otype)}</span>${p.ostate&&p.ostate!=='TN'?' &middot; owner in '+esc(p.ostate):''}${grp(p.owner)!==p.owner?' &middot; <b style="color:#d7263d">'+esc(grp(p.owner))+'</b>':''}<br>
     <table>
-    <tr><td><b>Land use</b></td><td>${p.lu||'(null)'}</td></tr>
+    <tr><td><b>Land use</b></td><td>${esc(p.lu||'(null)')}</td></tr>
     <tr><td><b>Land value</b></td><td>${p.land?('$'+p.land.toLocaleString()):'&ndash;'}</td></tr>
     <tr><td><b>Acreage</b></td><td>${p.acres||'&ndash;'}</td></tr>
-    <tr><td><b>Zoning</b></td><td>${p.zoning||'&ndash;'}</td></tr>
+    <tr><td><b>Zoning</b></td><td>${esc(p.zoning||'&ndash;')}</td></tr>
     <tr><td><b>APN</b></td><td>${A}</td></tr></table>
     <div class="tk">
     ${lnk('Parcel Viewer','https://maps.nashville.gov/ParcelViewer/?parcelID='+A)}
     ${lnk('Property Card','https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+A)}
     ${lnk('Comper','https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+A)}
-    ${lnk('Aerial','https://www.google.com/maps/search/?api=1&query='+cy+','+cx)}
+    ${lnk('Aerial','https://portal.patriotproperties.com/?APIKEY='+PATRIOT+'&LAT='+cy+'&LONG='+cx)}
     ${lnk('Street View','https://www.google.com/maps?q&layer=c&cbll='+cy+','+cx)}
     ${lnk('Land Records','https://davidsonportal.com/landrecords/')}
     ${lnk('Owner History','https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+A)}
     ${lnk('Property History','https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+A)}
     ${lnk('Zoning History','https://maps.nashville.gov/ParcelService/Search.asmx/GetZoningHistory?onlyactive=false&pin='+A)}
     ${lnk('Assessment History','https://maps.nashville.gov/ParcelService/Search.asmx/GetAssessmentHistory?onlyactive=false&pin='+A)}
-    ${lnk('ePermits','https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+A)}
+    ${lnk('ePermits (APN)','https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+A)}
+    ${lnk('ePermits (Owner)','https://epermits.nashville.gov/#/search?searchCode=OWNR&searchText='+oe)}
     </div></div>`;
 }
 function draw(){
   if(layer)layer.remove();
-  layer=L.geoJSON({type:'FeatureCollection',features:feats},{style,onEachFeature:(f,l)=>l.bindPopup(()=>popup(f),{maxWidth:390})}).addTo(map);
+  layer=L.geoJSON({type:'FeatureCollection',features:feats},{renderer:L.canvas(),style,
+    onEachFeature:(f,l)=>l.on('click',function(){
+      l.bindPopup(popup(f),{maxWidth:390}).openPopup();
+      const el=l.getPopup().getElement();if(el){const a=el.querySelector('.nm');if(a)a.onclick=function(e){e.preventDefault();map.closePopup();pickOwner(grp(f.properties.owner));};}
+    })}).addTo(map);
 }
-function refreshLegend(){
-  const cnt={},val={};ORDER.forEach(t=>{cnt[t]=0;val[t]=0;});
-  feats.forEach(f=>{const t=f.properties.otype;if(cnt[t]!==undefined){cnt[t]++;val[t]+=f.properties.land||0;}});
-  const shown=feats.filter(f=>!off[f.properties.otype]).length;
-  document.getElementById('count').innerHTML='<b>'+shown.toLocaleString()+'</b> vacant parcels shown';
-  const total=feats.length, totVal=feats.reduce((s,f)=>s+(f.properties.land||0),0);
-  const corp=cnt['Corporate/Business']||0;
-  document.getElementById('stats').innerHTML=
-    `<b>${total.toLocaleString()}</b> genuinely vacant parcels<br>`+
-    `Total land value <b>${dollars(totVal)}</b><br>`+
-    `<b>${(100*corp/total).toFixed(0)}%</b> corporate / business owned`;
-  document.getElementById('legend').innerHTML='<b>Owner of the vacant land</b>'+
-    ORDER.map(t=>`<div class="r ${off[t]?'off':''}" data-t="${t}"><i style="background:${COLORS[t]}"></i>${t}<span class="c">${(cnt[t]||0).toLocaleString()}</span></div>`).join('')+
-    '<div style="font-size:10.5px;color:#888;margin-top:5px">click a row to toggle</div>';
-  document.querySelectorAll('#legend .r').forEach(r=>r.onclick=()=>{const t=r.dataset.t;off[t]=!off[t];draw();refreshLegend();});
+let _zmode=null;map.on('zoomend',function(){const m=map.getZoom()<13?'out':'in';if(m!==_zmode){_zmode=m;if(layer)layer.setStyle(style);}});
+function pickOwner(nm){isolate=(isolate===nm)?null:nm;refresh();
+  if(isolate){try{const b=L.geoJSON({type:'FeatureCollection',features:feats.filter(f=>mapKeep(f.properties))}).getBounds();if(b.isValid())map.fitBounds(b.pad(0.15));}catch(e){}}}
+function refresh(){
+  if(layer)layer.setStyle(style);
+  const cnt={},own={};ORDER.forEach(t=>cnt[t]=0);
+  let nn=0,ac=0,val=0,acr=[],vpa=[];
+  feats.forEach(f=>{const p=f.properties;
+    if(!off[p.otype]&&(locF==='all'||(locF==='oos'?(p.ostate&&p.ostate!=='TN'):(!p.ostate||p.ostate==='TN')))&&(ltF==='all'||landType(p.lu)===ltF)){
+      const k=grp(p.owner);const d=own[k]||(own[k]={n:0,ac:0,val:0,otype:p.otype,oos:0});d.n++;d.ac+=p.acres||0;d.val+=p.land||0;if(p.ostate&&p.ostate!=='TN')d.oos++;}
+    if(mapKeep(p)){nn++;ac+=p.acres||0;val+=p.land||0;acr.push(p.acres||0);if(p.land>0&&p.acres>0)vpa.push(p.land/p.acres);}
+  });
+  feats.forEach(f=>{const t=f.properties.otype;if(cnt[t]!==undefined&&!off[t])cnt[t]++;});
+  const mAc=median(acr),mV=median(vpa);
+  const tiles=[['Parcels',nn.toLocaleString()],['Total acres',Math.round(ac).toLocaleString()],['Median acres',mAc==null?'—':mAc.toFixed(2)],['Land value',dollars(val)],['Median $/acre',mV==null?'—':dollars(mV)]];
+  let sh=tiles.map(t=>`<div class="tile"><div class="v">${t[1]}</div><div class="l">${t[0]}</div></div>`).join('');
+  if(isolate)sh+=`<div class="tile iso"><div class="v" title="${esc(isolate)}">${esc(isolate)}</div><div class="l">Showing only</div></div>`;
+  document.getElementById('stats').innerHTML=sh;
+  const iso=document.getElementById('isoNote');
+  if(isolate){iso.style.display='block';iso.textContent='Showing only: '+isolate+'  ✕ clear';}else iso.style.display='none';
+  document.getElementById('legend').innerHTML='<b>Owner type (click to toggle)</b>'+
+    ORDER.map(t=>`<div class="r ${off[t]?'off':''}" data-t="${t}"><i style="background:${COLORS[t]}"></i>${t}<span class="c">${(cnt[t]||0).toLocaleString()}</span></div>`).join('');
+  document.querySelectorAll('#legend .r').forEach(r=>r.onclick=()=>{const t=r.dataset.t;off[t]=!off[t];refresh();});
+  curLB=Object.keys(own).map(k=>Object.assign({nm:k},own[k])).sort((a,b)=>b[osort]-a[osort]).slice(0,30);
+  document.getElementById('olist').innerHTML=curLB.map((o,i)=>{const c=COLORS[o.otype]||'#999';
+    return `<div class="o${o.nm===isolate?' sel':''}" data-i="${i}" title="${esc(o.nm)}"><span class="rk">${i+1}</span><span class="dot" style="background:${c}"></span><span class="nm">${esc(o.nm)}<br><span style="color:#9aa4b0;font-size:10.5px">${Math.round(o.ac).toLocaleString()} ac${o.oos>o.n/2?' &middot; OOS':''}</span></span><span class="ct">${osort==='ac'?Math.round(o.ac).toLocaleString():o.n}</span></div>`;}).join('');
+  document.querySelectorAll('#olist .o').forEach(row=>row.onclick=function(){pickOwner(curLB[+this.getAttribute('data-i')].nm);});
 }
-document.getElementById('count').textContent='loading 33,000 parcel shapes…';
+function chipRow(sel,attr,set){document.querySelectorAll(sel+' .chip').forEach(ch=>ch.onclick=function(){set(this.getAttribute(attr));document.querySelectorAll(sel+' .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');refresh();});}
+chipRow('#ltChips','data-lt',v=>ltF=v);
+chipRow('#locChips','data-loc',v=>locF=v);
+document.querySelectorAll('#baseToggle .chip').forEach(ch=>ch.onclick=function(){setBase(this.getAttribute('data-base'));document.querySelectorAll('#baseToggle .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');});
+(function(){const ys=document.getElementById('yearSel');
+  ys.innerHTML='<option value="esri">Current (Esri)</option>'+AER_YEARS.map(y=>`<option value="${y}">${y} aerial</option>`).join('');
+  ys.value=aerYear;
+  ys.onchange=function(){aerYear=this.value;setBase('aerial');
+    document.querySelectorAll('#baseToggle .chip').forEach(x=>x.classList.toggle('on',x.getAttribute('data-base')==='aerial'));};
+})();
+document.querySelectorAll('#owners .sortrow .chip').forEach(ch=>ch.onclick=function(){osort=this.getAttribute('data-s');document.querySelectorAll('#owners .sortrow .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');refresh();});
+document.getElementById('isoNote').onclick=()=>{isolate=null;refresh();};
+document.getElementById('stats').textContent='loading 33,000 parcel shapes…';
 fetch('Davidson_Vacant_Land.geojson').then(r=>r.json()).then(g=>{
-  feats=g.features; draw(); refreshLegend();
+  feats=g.features;draw();refresh();
   try{map.fitBounds(layer.getBounds(),{padding:[20,20]});}catch(e){}
 });
 </script></body></html>
