@@ -34,18 +34,20 @@
  .pp .none{color:#999;font-style:italic;font-size:12px}
  .pp .tk{margin-top:6px;font-size:11.5px;border-top:1px solid #eef0f3;padding-top:5px}
  .pp .tk a{color:#1c458c;text-decoration:none;font-weight:600}.pp .tk a:hover{text-decoration:underline}
- /* operator filter panel (right) */
- #ops{position:absolute;top:88px;right:10px;z-index:1000;background:rgba(255,255,255,.97);border:1px solid #d6ddea;border-left:4px solid #f0af1e;border-radius:8px;box-shadow:0 4px 14px rgba(28,69,140,.28);padding:10px 12px 9px;width:210px;max-height:calc(100% - 220px);overflow:auto}
- #ops .ttl{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12.5px;color:#1c458c;margin:0 0 3px;line-height:1.2}
- #ops .ttl small{display:block;font-family:'EB Garamond',serif;font-size:11px;font-weight:400;color:#777;font-style:italic}
- #ops .cbrow{display:flex;align-items:center;gap:6px;margin:7px 0 8px;font-family:'Montserrat',sans-serif;font-size:10.5px;color:#3a4652;cursor:pointer;user-select:none}
+ /* operator filter panel (right) — matches app map legend card */
+ #ops{position:absolute;top:88px;right:10px;z-index:1000;background:#fff;border:1px solid #d6ddea;border-left:4px solid #f0af1e;border-radius:6px;box-shadow:0 4px 14px rgba(28,69,140,.28);padding:10px 12px 9px;width:200px;max-height:calc(100% - 220px);overflow:auto}
+ #ops .ttl{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12.5px;color:#1c458c;margin:0 0 2px;line-height:1.25}
+ #ops .ttl small{display:block;font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:400;color:#6b7683}
+ #ops .cbrow{display:flex;align-items:center;gap:6px;margin:8px 0 8px;font-family:'Montserrat',sans-serif;font-size:10px;color:#3a4652;cursor:pointer;user-select:none}
  #ops .cbrow input{margin:0;cursor:pointer}
- #ops .r{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;padding:2px 0}
- #ops .r.faded{opacity:.3}
- #ops .r .bar{width:18px;height:11px;border-radius:2px;flex:0 0 auto;border:1px solid rgba(0,0,0,.15)}
- #ops .r .lab{font-family:'Montserrat',sans-serif;font-size:10.5px;color:#3a4652;line-height:1.15}
+ #ops .r{display:flex;align-items:center;gap:7px;cursor:pointer;user-select:none;padding:2.5px 0}
+ #ops .r.faded{opacity:.28}
+ #ops .r .bar{width:20px;height:11px;border-radius:2px;flex:0 0 auto;border:1px solid rgba(0,0,0,.12)}
+ #ops .r .lab{font-family:'Montserrat',sans-serif;font-size:10.5px;color:#3a4652;line-height:1.12}
  #ops .r .lab .c{color:#8a94a0;font-weight:400}
- #ops .all{font-family:'Montserrat',sans-serif;font-size:10px;color:#1c458c;cursor:pointer;margin-top:7px;display:none;text-decoration:underline}
+ #ops .all{font-family:'Montserrat',sans-serif;font-size:9.5px;color:#8a94a0;cursor:pointer;margin-top:8px;display:none}
+ .homeMarker{background:none;border:none}
+ .homeMarker svg{filter:drop-shadow(0 .5px .5px rgba(0,0,0,.35))}
 </style></head><body>
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">The Document Trail · Securitized Homes</div></div>
 <div id="map"></div>
@@ -56,8 +58,8 @@
   <div class="hint">Click a home to open its Quitclaim Deed, Deed of Trust, and the SEC exhibit that disclosed it.</div>
 </div>
 <div id="ops">
-  <div class="ttl">Operators<small>Click one to isolate its homes</small></div>
-  <label class="cbrow"><input type="checkbox" id="colorByOp"/> Color dots by operator</label>
+  <div class="ttl">Securitized homes<small>Click an operator to filter</small></div>
+  <label class="cbrow"><input type="checkbox" id="colorByOp"/> Color homes by operator</label>
   <div id="oprows"></div>
   <div class="all" id="opAll">Show all operators</div>
 </div>
@@ -87,23 +89,27 @@ function popup(p){
   h+='<div class="tk"><a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a> &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+apn+'">Property Card</a> &middot; <a target="_blank" href="https://davidsonportal.com/landrecords/">Land Records</a></div>';
   return h+'</div>';
 }
-// per-operator brand palette (Security-for-Sale family + extensions)
+// per-operator brand palette — matched to the app parcel map's operator colors
 var OPCOLOR={
-  'Progress Residential (Pretium)':'#e0567a',
-  'American Homes 4 Rent':'#2c719f',
-  'Amherst Residential':'#5ba7d8',
-  'Tricon Residential (Blackstone)':'#3ba55c',
-  'Starwood':'#c26a1e',
+  'Progress Residential (Pretium)':'#d7263d',
+  'American Homes 4 Rent':'#1f6fb2',
+  'Amherst Residential':'#8dcaf0',
+  'Tricon Residential (Blackstone)':'#2ca02c',
+  'Starwood':'#17becf',
   'FirstKey Homes (Cerberus)':'#1f8166',
   'My Community Homes (KKR)':'#8156b8',
   'Invitation Homes':'#cf307a',
   'Rithm Capital':'#d9a520',
-  'Maymont/Conrex (Brookfield)':'#c0392b',
+  'Maymont/Conrex (Brookfield)':'#bcbd22',
   'Hudson Capital Properties':'#159ea8',
   'Home Partners of America':'#7f8896',
   'Homeward (Blackstone)':'#3b3f8c'
 };
 function opColor(o){return OPCOLOR[o]||'#888';}
+// little house glyph marker (matches the app parcel map)
+function houseSVG(f){return "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='13' height='13'><path d='M12 3 L21 11 L18.5 11 L18.5 20 L14 20 L14 14 L10 14 L10 20 L5.5 20 L5.5 11 L3 11 Z' fill='"+f+"' stroke='rgba(0,0,0,.5)' stroke-width='1.4'/></svg>";}
+var _iconCache={};
+function houseIcon(c){if(!_iconCache[c])_iconCache[c]=L.divIcon({html:houseSVG(c),className:'homeMarker',iconSize:[13,13],iconAnchor:[6,10],popupAnchor:[0,-9]});return _iconCache[c];}
 var pane=L.layerGroup().addTo(map);            // single re-rendered layer
 var PTS=[], vis={sec:true,doc:true,none:true}, isolateOp=null, colorByOp=false, cnt={sec:0,doc:0,none:0}, opCnt={};
 function draw(){
@@ -113,8 +119,8 @@ function draw(){
     var k=cls(p);
     if(!vis[k]) return;
     if(isolateOp && p.op!==isolateOp) return;
-    var s=STY[k], col=colorByOp?opColor(p.op):s.c, r=colorByOp?3:s.r, o=colorByOp?.85:s.o;
-    L.circleMarker([p.lat,p.lon],{radius:r,fillColor:col,color:col,weight:0,fillOpacity:o})
+    var col=colorByOp?opColor(p.op):STY[k].c;
+    L.marker([p.lat,p.lon],{icon:houseIcon(col)})
       .on('click',function(){this.bindPopup(popup(p),{maxWidth:360}).openPopup();}).addTo(pane);
     shown++;
   });
