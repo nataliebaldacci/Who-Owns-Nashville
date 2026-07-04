@@ -26,7 +26,8 @@
  #legend .sw{width:15px;height:12px;border-radius:2px;flex:0 0 auto;border:1px solid rgba(0,0,0,.3)}
  #legend b{font-family:'Montserrat',sans-serif;font-size:12px}
  #legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto;font-size:11.5px}
- #owners{top:66px;right:10px;width:252px;max-height:calc(100% - 96px);overflow:auto;padding:10px 12px}
+ #baseToggle{top:66px;right:10px;padding:6px 8px;display:flex;gap:5px;z-index:1001}
+ #owners{top:112px;right:10px;width:252px;max-height:calc(100% - 142px);overflow:auto;padding:10px 12px}
  #owners h3{font-family:'Montserrat',sans-serif;font-size:12.5px;color:#1c458c;margin:0 0 5px}
  #owners .sortrow{display:flex;gap:5px;margin-bottom:6px}
  #owners .o{display:flex;gap:7px;font-size:12px;padding:3px 4px;border-bottom:1px solid #eef0f3;cursor:pointer;border-radius:4px}
@@ -38,30 +39,43 @@
  #owners .o .nm{flex:1;line-height:1.15}
  #owners .o .ct{font-family:'Montserrat',sans-serif;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;text-align:right}
  #owners .o .dot{width:8px;height:8px;border-radius:2px;flex:0 0 auto;margin-top:4px}
- #status{bottom:16px;right:12px;padding:6px 12px;font-size:12px;color:#20303f;font-family:'Montserrat',sans-serif;font-weight:600}
- #status b{color:#d7263d}
+ #status{bottom:16px;left:50%;transform:translateX(-50%);padding:0;display:flex;overflow:hidden;max-width:calc(100% - 300px)}
+ #status .tile{padding:7px 16px;text-align:center;border-right:1px solid #e9ecf1}
+ #status .tile:last-child{border-right:none}
+ #status .tile .v{font-family:'Montserrat',sans-serif;font-size:16px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;line-height:1.15}
+ #status .tile .l{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:2px}
+ #status .tile.iso .v{color:#d7263d;font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
  .lp{font-family:'EB Garamond',serif;font-size:13px;max-width:290px}
  .lp b{font-family:'Montserrat',sans-serif;color:#1c458c;font-size:13px}
  .lp .held{font-family:'Montserrat',sans-serif;font-weight:800;color:#d7263d;font-size:12px;margin:4px 0}
  .lp .g{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:4px 0;font-size:12px}
  .lp .g span:nth-child(odd){color:#8a94a0}
  .lp a{color:#1c458c}
+ .lp a.lp-owner{border-bottom:1px dotted #1c458c;cursor:pointer;text-decoration:none}
+ .lp a.lp-owner:hover{background:#fdeef0}
 </style></head><body>
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO OWNS THE LAND</small></a><div class="htitle">Vacant Land · Davidson County</div></div>
 <div id="map"></div>
 <div class="panel" id="filters">
-  <div class="lab">Assessment class</div>
-  <div class="chips" id="clsChips">
-    <span class="chip on" data-c="all">All</span><span class="chip" data-c="R">Residential</span><span class="chip" data-c="C">Commercial</span><span class="chip" data-c="E">Exempt / public</span><span class="chip" data-c="A">Agricultural</span><span class="chip" data-c="other">Other</span>
+  <div class="lab">Vacant land type</div>
+  <div class="chips" id="ltChips">
+    <span class="chip on" data-lt="all">All</span><span class="chip" data-lt="res">Residential</span><span class="chip" data-lt="rural">Rural</span><span class="chip" data-lt="comm">Commercial</span><span class="chip" data-lt="ind">Industrial</span><span class="chip" data-lt="other">Other</span>
+  </div>
+  <div class="lab">Owner type</div>
+  <div class="chips" id="otChips">
+    <span class="chip on" data-ot="all">All</span><span class="chip" data-ot="gov">Government</span><span class="chip" data-ot="corp">Corporate</span><span class="chip" data-ot="indiv">Individual</span>
   </div>
   <div class="lab">Owner location</div>
-  <div class="chips"><span class="chip oos" id="oosBtn" data-on="0">Out-of-state owners only</span></div>
+  <div class="chips" id="locChips">
+    <span class="chip on" data-loc="all">All</span><span class="chip" data-loc="in">In-state</span><span class="chip oos" data-loc="oos">Out-of-state</span>
+  </div>
 </div>
 <div class="panel" id="legend">
   <div class="row" data-k="gov"><span class="sw" style="background:#7a8794"></span><b>Government / public</b><span class="n" id="ngov">—</span></div>
   <div class="row" data-k="corp"><span class="sw" style="background:#d7263d"></span><b>Corporate / entity</b><span class="n" id="ncorp">—</span></div>
   <div class="row" data-k="indiv"><span class="sw" style="background:#4fa0bd"></span><b>Individual</b><span class="n" id="nindiv">—</span></div>
 </div>
+<div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span></div>
 <div class="panel" id="owners"><h3>Top vacant-land owners</h3>
   <div id="isoNote"></div>
   <div class="sortrow"><span class="chip on" data-s="n">By parcels</span><span class="chip" data-s="ac">By acres</span></div>
@@ -72,45 +86,77 @@
 <script>
 var CAT={gov:{c:'#7a8794',l:'Government / public'},corp:{c:'#d7263d',l:'Corporate / entity'},indiv:{c:'#4fa0bd',l:'Individual'}};
 var CLSL={R:'Residential',C:'Commercial',E:'Exempt / public',A:'Agricultural',I:'Industrial',F:'Farm',T:'Forest',L:'Other',B:'Other'};
-var vis={gov:true,corp:true,indiv:true},clsF='all',oosOnly=false,osort='n',DATA=null,isolate=null,curLB=[];
+var vis={gov:true,corp:true,indiv:true},ltF='all',catF='all',locF='all',osort='n',DATA=null,isolate=null,curLB=[];
+function landType(lu){var s=(lu||'').toUpperCase();
+  if(/RESID|RESIENT|SINGLE FAMILY|MULTI FAMILY|DUPLEX|ZERO LOT|CONDO|APARTMENT|MOBILE HOME|DORMITORY/.test(s)) return 'res';
+  if(/RURAL|FARM|AGRICULT|GREENHOUSE|FOREST|NURSERY/.test(s)) return 'rural';
+  if(/INDUSTRIAL|WAREHOUSE|WARHOUSE|MANUFACTUR|STORAGE|MINERAL|TERMINAL|DISTRIBUTION/.test(s)) return 'ind';
+  if(/COMMERCIAL|RETAIL|OFFICE|STORE|SHOP|RESTAUR|RESTUR|HOTEL|MOTEL|BANK|FINANC|MARKET|GAS|AUTO|PARKING|NIGHTCLUB|THEATER|CAR WASH|DEALER|BUSINESS|MEDICAL|CLINIC|HOSPITAL|DAY CARE|NURSING|GOLF|FAST FOOD|DEPARTMENT/.test(s)) return 'comm';
+  return 'other';}
 var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
 var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
-var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri',maxZoom:19});
-L.control.layers({"CARTO Positron":carto,"Aerial":aerial},{},{position:'topright'}).addTo(map);
+var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri, Maxar, Earthstar Geographics',maxZoom:19});
+var BASES={gray:carto,streets:osm,aerial:aerial};
+function setBase(k){Object.keys(BASES).forEach(function(b){if(map.hasLayer(BASES[b]))map.removeLayer(BASES[b]);});BASES[k].addTo(map);}
+function median(a){if(!a.length)return null;a=a.slice().sort(function(x,y){return x-y;});var m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2;}
+map.createPane('mask'); var _mp=map.getPane('mask'); _mp.style.zIndex=350; _mp.style.pointerEvents='none';
 fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
   var f=(b.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);
-  L.geoJSON(f.length?{type:'FeatureCollection',features:f}:b,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"}}).addTo(map);
+  var feat=f.length?f[0]:((b.features||[])[0]); if(!feat) return;
+  L.geoJSON(feat,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"},interactive:false}).addTo(map);
+  var outer=[[85,-180],[85,180],[-85,180],[-85,-180]];
+  var polys=feat.geometry.type==='Polygon'?[feat.geometry.coordinates]:feat.geometry.coordinates;
+  var holes=polys.map(function(pl){return pl[0].map(function(c){return [c[1],c[0]];});});
+  L.polygon([outer].concat(holes),{pane:'mask',stroke:false,fillColor:'#e9edf1',fillOpacity:.85,interactive:false}).addTo(map);
 }).catch(function(){});
 function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+var PATRIOT="5D050659143EB96630FB38B91DE12E40&SECRETKEY=A92169630C9BC3C00A1C0F9F140E6DAEC21C8E62DCFF9FC443FB1BE70DDF6AA4268527B9DDE2ECC2C7EE9BB5BF728C06F0DF4019BBECDEBD2A6DD0BBE28A419D8F929E1F3E8DF478E56619995BEFCA8E369276689D791197DC1284F14B3252DBFB2A19A2E451EEA832D6D96488DDC673EBA4B37BD741223B656A793D93209C0F";
 function popup(p){
-  var h='<div class="lp"><b>'+esc(p.own)+'</b>'+(p.op?'<br><span style="color:#d7263d;font-weight:600">'+esc(p.op)+'</span>':'');
+  var apn=esc(p.apn).replace(/[^0-9A-Za-z]/g,''), lat=esc(p.lat), lon=esc(p.lon);
+  var h='<div class="lp"><b><a href="#" class="lp-owner" title="Show every parcel this owner holds">'+esc(p.own)+'</a></b>'+(p.op?'<br><span style="color:#d7263d;font-weight:600">'+esc(p.op)+'</span>':'');
   if(p.acq) h+='<div class="held">Held since '+p.acq+' &middot; '+(2026-p.acq)+' year'+((2026-p.acq)===1?'':'s')+'</div>';
   h+='<div class="g"><span>Land use</span><span>'+esc(p.lu||'—')+'</span><span>Acres</span><span>'+(p.ac||0).toLocaleString()+'</span><span>Assess. class</span><span>'+esc(CLSL[p.cls]||p.cls||'—')+' ('+esc(p.cls||'')+')</span><span>Owner</span><span>'+(CAT[p.cat]||{}).l+(p.oos?' &middot; out-of-state':'')+'</span></div>';
+  var tk=[];
+  if(apn) tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a>');
+  if(lat&&lon){ tk.push('<a target="_blank" href="https://portal.patriotproperties.com/?APIKEY='+PATRIOT+'&LAT='+lat+'&LONG='+lon+'">Aerial</a>');
+    tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+lat+','+lon+'">Street View</a>'); }
+  if(tk.length) h+='<div style="font-size:11.5px;margin:3px 0">'+tk.join(' &middot; ')+'</div>';
   h+='<div style="font-size:11.5px"><a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+esc(p.pid)+'">Owner history</a> &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+esc(p.pid)+'">Property history</a></div>';
   return h+'</div>';
 }
 function baseKeep(p){
   if(!vis[p.cat]) return false;
-  if(oosOnly && !p.oos) return false;
-  if(clsF!=='all'){ if(clsF==='other'){ if(['R','C','E','A'].indexOf(p.cls)>=0) return false; } else if(p.cls!==clsF) return false; }
+  if(catF!=='all' && p.cat!==catF) return false;
+  if(locF==='oos' && !p.oos) return false;
+  if(locF==='in' && p.oos) return false;
+  if(ltF!=='all' && landType(p.lu)!==ltF) return false;
   return true;
 }
-function mapKeep(p){ return baseKeep(p) && (!isolate || (p.op||p.own)===isolate); }
+function mapKeep(p){ if(isolate) return (p.op||p.own)===isolate; return baseKeep(p); }
 var layer=L.geoJSON(null,{renderer:L.canvas(),
   style:function(f){var c=CAT[f.properties.cat]||{c:'#999'};return {color:c.c,weight:.4,fillColor:c.c,fillOpacity:.5};},
   filter:function(f){return mapKeep(f.properties);},
-  onEachFeature:function(f,l){l.on('click',function(){l.bindPopup(popup(f.properties),{maxWidth:310}).openPopup();});}});
+  onEachFeature:function(f,l){l.on('click',function(){
+    l.bindPopup(popup(f.properties),{maxWidth:320}).openPopup();
+    var pel=l.getPopup().getElement();
+    if(pel){var a=pel.querySelector('.lp-owner'); if(a) a.onclick=function(e){e.preventDefault(); map.closePopup(); pickOwner(f.properties.op||f.properties.own);};}
+  });}});
 function refresh(){
   layer.clearLayers(); layer.addData(DATA);
-  var cc={gov:0,corp:0,indiv:0},nn=0,ac=0,own={};
+  var cc={gov:0,corp:0,indiv:0},nn=0,ac=0,own={},yrs=[],acr=[],vpa=[];
   DATA.features.forEach(function(f){var p=f.properties;
     if(baseKeep(p)){ cc[p.cat]++; var k=p.op||p.own; var d=own[k]||(own[k]={n:0,ac:0,cat:p.cat,op:p.op,oos:0}); d.n++; d.ac+=p.ac||0; if(p.oos)d.oos++; }
-    if(mapKeep(p)){ nn++; ac+=p.ac||0; }
+    if(mapKeep(p)){ nn++; ac+=p.ac||0; if(p.acq)yrs.push(2026-p.acq); acr.push(p.ac||0); if(p.val>0&&p.ac>0)vpa.push(p.val/p.ac); }
   });
   document.getElementById('ngov').textContent=cc.gov.toLocaleString();
   document.getElementById('ncorp').textContent=cc.corp.toLocaleString();
   document.getElementById('nindiv').textContent=cc.indiv.toLocaleString();
-  document.getElementById('status').innerHTML='<b>'+nn.toLocaleString()+'</b> parcels &middot; '+Math.round(ac).toLocaleString()+' acres'+(isolate?' &middot; '+esc(isolate):'');
+  var mYr=median(yrs),mAc=median(acr),mV=median(vpa);
+  var tiles=[['Parcels',nn.toLocaleString()],['Total acres',Math.round(ac).toLocaleString()],['Median acres',mAc==null?'—':mAc.toFixed(2)],['Median yrs held',mYr==null?'—':Math.round(mYr).toLocaleString()],['Median $/acre',mV==null?'—':'$'+Math.round(mV).toLocaleString()]];
+  var sh=tiles.map(function(t){return '<div class="tile"><div class="v">'+t[1]+'</div><div class="l">'+t[0]+'</div></div>';}).join('');
+  if(isolate) sh+='<div class="tile iso"><div class="v" title="'+esc(isolate)+'">'+esc(isolate)+'</div><div class="l">Showing only</div></div>';
+  document.getElementById('status').innerHTML=sh;
   var iso=document.getElementById('isoNote');
   if(isolate){ iso.style.display='block'; iso.textContent='Showing only: '+isolate+'  ✕ clear'; } else iso.style.display='none';
   curLB=Object.keys(own).map(k=>({nm:k,...own[k]})).sort((a,b)=>b[osort]-a[osort]).slice(0,30);
@@ -126,8 +172,11 @@ fetch('vacant_land.geojson').then(r=>r.json()).then(function(gj){DATA=gj;layer.a
   document.getElementById('status').title=gj.features.length+' total';
 }).catch(function(e){document.getElementById('status').textContent='load error: '+e;});
 document.querySelectorAll('#legend .row').forEach(function(row){row.onclick=function(){var k=row.getAttribute('data-k');vis[k]=!vis[k];row.classList.toggle('off',!vis[k]);refresh();};});
-document.querySelectorAll('#clsChips .chip').forEach(function(ch){ch.onclick=function(){clsF=this.getAttribute('data-c');document.querySelectorAll('#clsChips .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');refresh();};});
-document.getElementById('oosBtn').onclick=function(){oosOnly=!oosOnly;this.classList.toggle('on',oosOnly);refresh();};
+function chipRow(sel,attr,set){document.querySelectorAll(sel+' .chip').forEach(function(ch){ch.onclick=function(){set(this.getAttribute(attr));document.querySelectorAll(sel+' .chip').forEach(function(x){x.classList.remove('on');});this.classList.add('on');refresh();};});}
+chipRow('#ltChips','data-lt',function(v){ltF=v;});
+chipRow('#otChips','data-ot',function(v){catF=v;});
+chipRow('#locChips','data-loc',function(v){locF=v;});
+document.querySelectorAll('#baseToggle .chip').forEach(function(ch){ch.onclick=function(){setBase(this.getAttribute('data-base'));document.querySelectorAll('#baseToggle .chip').forEach(function(x){x.classList.remove('on');});this.classList.add('on');};});
 document.getElementById('isoNote').onclick=function(){isolate=null;refresh();};
 document.querySelectorAll('#owners .sortrow .chip').forEach(function(ch){ch.onclick=function(){osort=this.getAttribute('data-s');document.querySelectorAll('#owners .sortrow .chip').forEach(x=>x.classList.remove('on'));this.classList.add('on');refresh();};});
 </script></body></html>
