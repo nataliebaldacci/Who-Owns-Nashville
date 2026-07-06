@@ -2,77 +2,171 @@
 <title>How the data was filtered &mdash; Who Owns Nashville</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--navy:#1c458c;--navy2:#2a5db0;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--cut:#c0392b;--line:#e4e9f0;--bg:#f6f8fb}
+:root{--navy:#1c458c;--navy2:#2a5db0;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--cut:#c0392b;--line:#e4e9f0;--bg:#f6f8fb;--hl:#fdf6e4}
 *{box-sizing:border-box}
-body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
-.wrap{max-width:960px;margin:0 auto;padding:30px 22px 80px}
+body{margin:0;font-family:Montserrat,system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.5}
+.wrap{max-width:1000px;margin:0 auto;padding:30px 22px 80px}
 a.back{display:inline-block;color:var(--navy);text-decoration:none;font-weight:600;font-size:13px;margin-bottom:14px}
 a.back:hover{text-decoration:underline}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 4px}
 h1{font-size:29px;font-weight:800;letter-spacing:-.4px;margin:0 0 6px;color:var(--navy)}
-.sub{font-size:15px;color:var(--mut);margin:0 0 26px;max-width:680px}
-.funnel{margin:0 0 30px}
-.stage{margin:0 0 6px;cursor:pointer;border-radius:10px;padding:13px 16px;background:#fff;border:1px solid var(--line);
-  box-shadow:0 1px 2px rgba(20,50,90,.04);transition:box-shadow .15s,border-color .15s}
-.stage:hover{border-color:var(--navy2);box-shadow:0 3px 14px rgba(28,69,140,.10)}
-.stage.open{border-color:var(--navy)}
+.sub{font-size:15px;color:var(--mut);margin:0 0 24px;max-width:720px}
+.stage{border-radius:12px;padding:16px 18px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 3px rgba(20,50,90,.05);margin:0}
 .strow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
-.stnum{font-size:12px;font-weight:700;color:#fff;background:var(--navy);width:22px;height:22px;border-radius:50%;
-  display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center}
-.stlabel{font-weight:700;font-size:16px;flex:1 1 220px;min-width:0}
-.stcount{font-weight:800;font-size:20px;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
-.stpct{font-size:11.5px;color:var(--mut);font-weight:600;margin-left:5px}
-.bar{position:relative;height:15px;margin-top:11px;border-radius:8px;background:#eef1f6;overflow:hidden}
-.fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--navy),var(--navy2));
-  border-radius:8px;transform-origin:left center;transform:scaleX(0);animation:grow 1.05s cubic-bezier(.22,1,.36,1) forwards}
-@keyframes grow{to{transform:scaleX(1)}}
-@media(prefers-reduced-motion:reduce){.fill{animation:none;transform:scaleX(1)}}
-.ghost{position:absolute;top:0;bottom:0;background:repeating-linear-gradient(45deg,#fbe3df,#fbe3df 5px,#fdeeeb 5px,#fdeeeb 10px);opacity:0}
+.stnum{font-size:12px;font-weight:800;color:#fff;background:var(--navy);width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center}
+.stlabel{font-weight:800;font-size:17px;flex:1 1 240px;min-width:0;color:var(--navy)}
+.stcount{font-weight:800;font-size:22px;color:var(--navy);font-variant-numeric:tabular-nums;white-space:nowrap}
+.stpct{font-size:11.5px;color:var(--mut);font-weight:600;margin-left:6px}
+.bar{position:relative;height:14px;margin-top:11px;border-radius:8px;background:#eef1f6;overflow:hidden}
+.fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--navy),var(--navy2));border-radius:8px}
 .cut{font-size:12px;color:var(--cut);font-weight:600;margin-top:9px}
 .cut b{font-weight:800}
-.detail{max-height:0;overflow:hidden;transition:max-height .3s ease}
-.stage.open .detail{max-height:280px}
-.detail-in{padding-top:12px;margin-top:12px;border-top:1px dashed var(--line);font-size:13.5px;color:#33414f}
-.detail-in .q{display:inline-block;margin-top:9px;font-size:12px;font-weight:700;color:var(--navy);text-decoration:none;
-  border:1.5px solid var(--navy);border-radius:20px;padding:5px 13px}
-.detail-in .q:hover{background:var(--navy);color:#fff}
-.arrow{text-align:center;color:var(--gold);font-size:19px;line-height:1;margin:1px 0 2px}
-.legend{font-size:11.5px;color:var(--mut);display:flex;gap:18px;flex-wrap:wrap;margin:2px 0 18px;align-items:center}
-.legend span{display:inline-flex;align-items:center;gap:6px}
-.sw{width:13px;height:13px;border-radius:3px;display:inline-block}
-.note{font-size:11.5px;color:var(--mut);font-style:italic;margin-top:22px;border-top:1px solid var(--line);padding-top:14px}
-.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 4px}
+.desc{font-size:13px;color:#33414f;margin-top:9px}
+.arrow{text-align:center;color:var(--gold);font-size:20px;line-height:1;margin:6px 0}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0 2px}
+.tile{background:#f8fafd;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.tile .n{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
+.tile .l{font-size:11px;color:#5a6673;margin-top:2px}
+.bd{margin-top:16px}
+.bdh{font-size:13px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;border-left:4px solid var(--gold);padding-left:9px;margin-bottom:7px}
+.bdh span{display:block;font-size:10.5px;font-weight:600;letter-spacing:0;text-transform:none;color:#8a94a0;margin-top:1px}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{background:#eef4fb;color:var(--navy);text-align:left;padding:8px 12px;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase;font-weight:800;white-space:nowrap}
+td{padding:7px 12px;border-top:1px solid var(--line);font-variant-numeric:tabular-nums}
+td.n,th.n{text-align:right;white-space:nowrap}
+tbody tr:hover{background:var(--hl)}
+.note{font-size:11.5px;color:var(--mut);font-style:italic;margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
+.pending{background:#fff;border:1px dashed #c8d3e2;border-radius:10px;padding:14px 16px;margin-top:22px;font-size:12.5px;color:#5a6673}
+.pending b{color:var(--navy)}
 </style></head><body>
 <div class="wrap">
 <a class="back" href="index.html">&larr; Who Owns Nashville</a>
 <p class="kick">Methodology</p>
 <h1>How the data was filtered</h1>
-<p class="sub">Every count in this project starts from the full Metro Nashville assessor cadastral and narrows through a chain of filters. Each bar is proportional to the parcels that survive; the red line under it is what that filter removed. Click any stage to see the rule and run the live county query yourself.</p>
-<div class="legend">
-  <span><i class="sw" style="background:linear-gradient(90deg,#1c458c,#2a5db0)"></i>Parcels kept</span>
-  <span><i class="sw" style="background:#c0392b"></i>Removed by this filter</span>
-  <span>Bar width = share of all 286,721 parcels</span>
+<p class="sub">The research universe is built in three steps from the full Metro Nashville assessor cadastral. Each step narrows toward the single-family homes the 21st Century Housing Act protects, and each surviving set is broken down by land use, zoning, and feature type, with parcels, dwelling units, acres, and assessed value.</p>
+
+<div class="stage">
+  <div class="strow"><span class="stnum">1</span><span class="stlabel">All Davidson County parcels</span>
+    <span class="stcount">286,721<span class="stpct">100%</span></span></div>
+  <div class="bar"><div class="fill" style="width:100%"></div></div>
+  <div class="desc">Every parcel in the county assessor cadastral: homes, shops, farms, roads, churches, and vacant lots.</div>
 </div>
-<div class="funnel" id="funnel"></div>
-<p class="note">Notes: Live counts from the Metro Nashville Cadastral ArcGIS layer (Cadastral_Layers/MapServer/4), queried July 2, 2026. Single-family = 1&ndash;2 dwelling units per the 21st Century ROAD to Housing Act, H.R. 6644 &sect; 1001. Corporate-owner test follows Redfin and Kestelman et al. (2026): a business keyword in the owner name, with lenders, family trusts, and government excluded. Individuals (172,328), trusts (16,260), and government (730) make up the balance of the housing scope.</p>
+
+<div class="arrow">&#9662;</div>
+
+<div class="stage">
+  <div class="strow"><span class="stnum">2</span><span class="stlabel">Residential &mdash; 1 or 2 dwelling units</span>
+    <span class="stcount">225,496<span class="stpct">78.6% of all parcels</span></span></div>
+  <div class="bar"><div class="fill" style="width:78.6%"></div></div>
+  <div class="cut">&minus; <b>61,225</b> removed: parcels with zero, or three-plus, dwelling units (vacant land, commercial, multifamily, roads).</div>
+  <div class="desc">The pool of one- and two-unit parcels: <code>DUCount = 1 or 2</code>. Still includes condo-building shell records, HOA common areas, open space, and mobile homes.</div>
+  <div class="tiles">
+    <div class="tile"><div class="n">234,788</div><div class="l">Dwelling units</div></div>
+    <div class="tile"><div class="n">137,412</div><div class="l">Acres</div></div>
+    <div class="tile"><div class="n">$108,975</div><div class="l">Median assessed</div></div>
+    <div class="tile"><div class="n">$149,651</div><div class="l">Avg assessed</div></div>
+  </div>
+  <div class="bd">
+      <div class="bdh">By land-use type <span>general land-use groups</span></div>
+      <div class="tw"><table>
+      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
+      <tbody><tr><td>Single Family</td><td class="n">156,577</td><td class="n">158,504</td><td class="n">127,652</td><td class="n">$110,575</td><td class="n">$154,692</td></tr>
+<tr><td>Residential Condo</td><td class="n">54,955</td><td class="n">55,039</td><td class="n">74</td><td class="n">$103,525</td><td class="n">$134,221</td></tr>
+<tr><td>Duplex</td><td class="n">7,047</td><td class="n">14,089</td><td class="n">2,658</td><td class="n">$147,720</td><td class="n">$165,046</td></tr>
+<tr><td>Zero Lot Line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">802</td><td class="n">$65,200</td><td class="n">$71,788</td></tr>
+<tr><td>Mobile Home</td><td class="n">405</td><td class="n">413</td><td class="n">2,001</td><td class="n">$34,575</td><td class="n">$47,113</td></tr>
+<tr><td>Other</td><td class="n">1,093</td><td class="n">1,264</td><td class="n">4,225</td><td class="n">$167,640</td><td class="n">$527,993</td></tr></tbody></table></div></div><div class="bd">
+      <div class="bdh">By zoning district <span>base district, split-zoned parcels to primary</span></div>
+      <div class="tw"><table>
+      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
+      <tbody><tr><td>RS — Single-family</td><td class="n">95,640</td><td class="n">99,881</td><td class="n">48,645</td><td class="n">$107,300</td><td class="n">$136,577</td></tr>
+<tr><td>R — One & two family</td><td class="n">70,068</td><td class="n">73,799</td><td class="n">24,309</td><td class="n">$109,912</td><td class="n">$143,682</td></tr>
+<tr><td>RM — Multifamily</td><td class="n">24,573</td><td class="n">24,835</td><td class="n">801</td><td class="n">$89,650</td><td class="n">$106,918</td></tr>
+<tr><td>SP — Specific plan</td><td class="n">10,978</td><td class="n">11,253</td><td class="n">2,130</td><td class="n">$127,000</td><td class="n">$163,413</td></tr>
+<tr><td>MU — Mixed use</td><td class="n">3,557</td><td class="n">3,607</td><td class="n">267</td><td class="n">$123,800</td><td class="n">$176,093</td></tr>
+<tr><td>OR — Office/residential</td><td class="n">2,449</td><td class="n">2,504</td><td class="n">124</td><td class="n">$116,880</td><td class="n">$163,992</td></tr>
+<tr><td>DTC — Downtown</td><td class="n">2,749</td><td class="n">2,753</td><td class="n">3</td><td class="n">$148,425</td><td class="n">$257,992</td></tr>
+<tr><td>AR — Agricultural/rural</td><td class="n">5,320</td><td class="n">5,587</td><td class="n">49,463</td><td class="n">$117,700</td><td class="n">$136,449</td></tr>
+<tr><td>C — Commercial</td><td class="n">1,316</td><td class="n">1,367</td><td class="n">335</td><td class="n">$109,000</td><td class="n">$171,298</td></tr>
+<tr><td>I — Industrial</td><td class="n">245</td><td class="n">265</td><td class="n">243</td><td class="n">$145,025</td><td class="n">$207,396</td></tr>
+<tr><td>O — Office</td><td class="n">57</td><td class="n">63</td><td class="n">40</td><td class="n">$133,900</td><td class="n">$160,185</td></tr>
+<tr><td>Other</td><td class="n">8,544</td><td class="n">8,874</td><td class="n">11,051</td><td class="n">$268,488</td><td class="n">$403,341</td></tr></tbody></table></div></div><div class="bd">
+      <div class="bdh">By feature type <span>cadastral geometry class</span></div>
+      <div class="tw"><table>
+      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
+      <tbody><tr><td>Lot</td><td class="n">141,104</td><td class="n">147,470</td><td class="n">57,265</td><td class="n">$107,625</td><td class="n">$145,709</td></tr>
+<tr><td>Condo</td><td class="n">37,277</td><td class="n">37,362</td><td class="n">48</td><td class="n">$115,000</td><td class="n">$144,863</td></tr>
+<tr><td>Multistory Condo</td><td class="n">18,065</td><td class="n">18,070</td><td class="n">1</td><td class="n">$88,925</td><td class="n">$119,527</td></tr>
+<tr><td>Other</td><td class="n">17,305</td><td class="n">19,275</td><td class="n">8,962</td><td class="n">$140,775</td><td class="n">$209,665</td></tr>
+<tr><td>Acreage Tract</td><td class="n">11,713</td><td class="n">12,579</td><td class="n">71,041</td><td class="n">$116,675</td><td class="n">$170,270</td></tr>
+<tr><td>Wilson</td><td class="n">10</td><td class="n">10</td><td class="n">15</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Cheatham</td><td class="n">6</td><td class="n">6</td><td class="n">22</td><td class="n">$0</td><td class="n">$33,029</td></tr>
+<tr><td>Cemetery</td><td class="n">4</td><td class="n">4</td><td class="n">32</td><td class="n">$288,682</td><td class="n">$344,151</td></tr>
+<tr><td>Multistory Common Area</td><td class="n">4</td><td class="n">4</td><td class="n">0</td><td class="n">$335,220</td><td class="n">$435,900</td></tr>
+<tr><td>Williamson</td><td class="n">3</td><td class="n">3</td><td class="n">10</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Open Space</td><td class="n">3</td><td class="n">3</td><td class="n">3</td><td class="n">$75,350</td><td class="n">$52,858</td></tr>
+<tr><td>Robertson</td><td class="n">1</td><td class="n">1</td><td class="n">2</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Common Area</td><td class="n">1</td><td class="n">1</td><td class="n">11</td><td class="n">$88,125</td><td class="n">$88,125</td></tr></tbody></table></div></div>
 </div>
-<script>
-const D=[{"label": "All Davidson County parcels", "count": 286721, "cut": 0, "cutLabel": "", "desc": "Every parcel in the county assessor cadastral: homes, shops, farms, roads, churches, vacant lots.", "url": "https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&returnGeometry=false&returnCountOnly=true&f=html"}, {"label": "Residential land use", "count": 224537, "cut": 62184, "cutLabel": "commercial, industrial, agricultural, vacant &amp; exempt land", "desc": "Land-use description is a home type: single family, zero-lot-line, duplex, or residential condo.", "url": "https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29&returnGeometry=false&returnCountOnly=true&f=html"}, {"label": "Single-family scale (1&ndash;2 units)", "count": 223999, "cut": 538, "cutLabel": "3+ unit multifamily buildings", "desc": "One or two dwelling units, the ROAD to Housing Act definition of a single-family home.", "url": "https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29+AND+%28DUCount%3D1+OR+DUCount%3D2%29&returnGeometry=false&returnCountOnly=true&f=html"}, {"label": "Housing scope", "count": 205934, "cut": 18065, "cutLabel": "multistory-condo shells, common areas &amp; open space", "desc": "Physical feature type is a real dwelling, not a condo-building shell record, HOA common area, or open space. This is our research universe.", "url": "https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29+AND+%28DUCount%3D1+OR+DUCount%3D2%29+AND+FeatureType+NOT+IN+%28%27Multistory+Condo%27%2C%27Multistory+Common+Area%27%2C%27Open+Space%27%29&returnGeometry=false&returnCountOnly=true&f=html"}, {"label": "Corporate / business owner", "count": 16616, "cut": 189318, "cutLabel": "individuals (172,328), family trusts (16,260) &amp; government (730)", "desc": "Owner name carries a business keyword (LLC, LP, Inc, Corp, SFR, Borrower, Holdings, Capital, JV); lenders, family trusts and government excluded.", "url": "https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29+AND+%28DUCount%3D1+OR+DUCount%3D2%29+AND+FeatureType+NOT+IN+%28%27Multistory+Condo%27%2C%27Multistory+Common+Area%27%2C%27Open+Space%27%29+AND+%28OWNER+LIKE+%27%25LLC%25%27+OR+OWNER+LIKE+%27%25LLP%25%27+OR+OWNER+LIKE+%27%25+LP%25%27+OR+OWNER+LIKE+%27%25L.P%25%27+OR+OWNER+LIKE+%27%25+INC%25%27+OR+OWNER+LIKE+%27%25CORP%25%27+OR+OWNER+LIKE+%27%25LTD%25%27+OR+OWNER+LIKE+%27%25LIMITED%25%27+OR+OWNER+LIKE+%27%25+CO+%25%27+OR+OWNER+LIKE+%27%25CO.%25%27+OR+OWNER+LIKE+%27%25COMPANY%25%27+OR+OWNER+LIKE+%27%25PARTNER%25%27+OR+OWNER+LIKE+%27%25ASSOC%25%27+OR+OWNER+LIKE+%27%25HOMES%25%27+OR+OWNER+LIKE+%27%25HOLDING%25%27+OR+OWNER+LIKE+%27%25CAPITAL%25%27+OR+OWNER+LIKE+%27%25INVEST%25%27+OR+OWNER+LIKE+%27%25FUND%25%27+OR+OWNER+LIKE+%27%25SOLUTION%25%27+OR+OWNER+LIKE+%27%25SFR%25%27+OR+OWNER+LIKE+%27%25ASSET%25%27+OR+OWNER+LIKE+%27%25BORROW%25%27+OR+OWNER+LIKE+%27%25+JV%25%27%29+AND+NOT+%28OWNER+LIKE+%27%25CITY+OF%25%27+OR+OWNER+LIKE+%27%25HOUSING+AUTH%25%27+OR+OWNER+LIKE+%27%25METRO%25GOV%25%27+OR+OWNER+LIKE+%27%25STATE+OF%25%27+OR+OWNER+LIKE+%27%25COUNTY+OF%25%27+OR+OWNER+LIKE+%27%25HUD%25%27+OR+OWNER+LIKE+%27%25MDHA%25%27+OR+OWNER+LIKE+%27%25UNITED+STATES%25%27%29+AND+NOT+%28OWNER+LIKE+%27%25TRUST%25%27+OR+OWNER+LIKE+%27%25REVOCABLE%25%27+OR+OWNER+LIKE+%27%25LIVING+TR%25%27+OR+OWNER+LIKE+%27%25FAMILY+TR%25%27%29&returnGeometry=false&returnCountOnly=true&f=html"}, {"label": "Named institutional operator", "count": 4264, "cut": 12352, "cutLabel": "local &amp; independent investor LLCs", "desc": "Of the corporate homes, these resolve to a named national operator once shells are linked by name and mailing address (Progress, American Homes 4 Rent, Amherst, Tricon, Invitation, FirstKey, VineBrook, My Community, Rithm, Maymont and peers). This count comes from the project owner-to-operator crosswalk, not a keyword search, so it captures disguised shells like YAMASA, ROWAN PROPCO and the STAR entities that a plain keyword query misses.", "url": "Current_Cadastral_Holdings_Explorer.html"}];
-const MAX=D[0].count, f=document.getElementById('funnel');
-D.forEach((s,i)=>{
-  const pct=(s.count/MAX*100);
-  const el=document.createElement('div');
-  if(i>0){const a=document.createElement('div');a.className='arrow';a.innerHTML='&#9662;';f.appendChild(a);}
-  el.className='stage';
-  el.innerHTML=`<div class="strow"><span class="stnum">${i+1}</span>
-    <span class="stlabel">${s.label}</span>
-    <span class="stcount">${s.count.toLocaleString()}<span class="stpct">${pct.toFixed(pct<1?2:1)}% of all parcels</span></span></div>
-    <div class="bar"><div class="fill" style="width:${Math.max(pct,0.6).toFixed(2)}%;animation-delay:${i*130}ms"></div></div>
-    ${s.cut>0?`<div class="cut">&minus; <b>${s.cut.toLocaleString()}</b> removed: ${s.cutLabel}</div>`:''}
-    <div class="detail"><div class="detail-in">${s.desc}<br><a class="q" href="${s.url}" target="_blank" rel="noopener">Run this count on the live county server &#8599;</a></div></div>`;
-  el.addEventListener('click',e=>{if(e.target.closest('a'))return;el.classList.toggle('open');});
-  f.appendChild(el);
-});
-</script></body></html>
+
+<div class="arrow">&#9662;</div>
+
+<div class="stage">
+  <div class="strow"><span class="stnum">3</span><span class="stlabel">Fits the 21st Century Housing Act framework</span>
+    <span class="stcount">205,933<span class="stpct">71.8% of all parcels</span></span></div>
+  <div class="bar"><div class="fill" style="width:71.8%"></div></div>
+  <div class="cut">&minus; <b>19,563</b> removed: non-residential land uses, multistory-condo shell records, HOA common area, open space, and mobile homes.</div>
+  <div class="desc">The research universe. Land use is single family, zero-lot-line, duplex, or residential condo (or unclassified); feature type is a real dwelling, not a condo shell, common area, or open space; mobile / manufactured homes excluded per &sect; 1001(a)(3)(B). This is a &ldquo;single-family home&rdquo; under the Act: a structure with two or fewer dwelling units.</div>
+  <div class="tiles">
+    <div class="tile"><div class="n">215,041</div><div class="l">Dwelling units</div></div>
+    <div class="tile"><div class="n">131,182</div><div class="l">Acres</div></div>
+    <div class="tile"><div class="n">$110,850</div><div class="l">Median assessed</div></div>
+    <div class="tile"><div class="n">$150,600</div><div class="l">Avg assessed</div></div>
+  </div>
+  <div class="bd">
+      <div class="bdh">By land-use type <span>general land-use groups</span></div>
+      <div class="tw"><table>
+      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
+      <tbody><tr><td>Single Family</td><td class="n">156,536</td><td class="n">158,462</td><td class="n">127,648</td><td class="n">$110,575</td><td class="n">$154,709</td></tr>
+<tr><td>Residential Condo</td><td class="n">36,931</td><td class="n">37,011</td><td class="n">74</td><td class="n">$113,025</td><td class="n">$141,990</td></tr>
+<tr><td>Duplex</td><td class="n">7,047</td><td class="n">14,089</td><td class="n">2,658</td><td class="n">$147,720</td><td class="n">$165,046</td></tr>
+<tr><td>Zero Lot Line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">802</td><td class="n">$65,200</td><td class="n">$71,788</td></tr></tbody></table></div></div><div class="bd">
+      <div class="bdh">By zoning district <span>base district, split-zoned parcels to primary</span></div>
+      <div class="tw"><table>
+      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
+      <tbody><tr><td>RS — Single-family</td><td class="n">94,856</td><td class="n">99,051</td><td class="n">48,103</td><td class="n">$107,625</td><td class="n">$137,119</td></tr>
+<tr><td>R — One & two family</td><td class="n">68,381</td><td class="n">72,081</td><td class="n">23,464</td><td class="n">$111,400</td><td class="n">$145,382</td></tr>
+<tr><td>RM — Multifamily</td><td class="n">16,865</td><td class="n">17,123</td><td class="n">748</td><td class="n">$96,750</td><td class="n">$117,969</td></tr>
+<tr><td>SP — Specific plan</td><td class="n">9,037</td><td class="n">9,306</td><td class="n">1,980</td><td class="n">$128,350</td><td class="n">$150,503</td></tr>
+<tr><td>MU — Mixed use</td><td class="n">1,782</td><td class="n">1,814</td><td class="n">108</td><td class="n">$128,542</td><td class="n">$178,631</td></tr>
+<tr><td>OR — Office/residential</td><td class="n">939</td><td class="n">978</td><td class="n">79</td><td class="n">$124,950</td><td class="n">$161,440</td></tr>
+<tr><td>DTC — Downtown</td><td class="n">146</td><td class="n">150</td><td class="n">1</td><td class="n">$129,225</td><td class="n">$166,312</td></tr>
+<tr><td>AR — Agricultural/rural</td><td class="n">4,977</td><td class="n">5,206</td><td class="n">46,165</td><td class="n">$121,900</td><td class="n">$140,954</td></tr>
+<tr><td>C — Commercial</td><td class="n">483</td><td class="n">520</td><td class="n">134</td><td class="n">$133,275</td><td class="n">$178,018</td></tr>
+<tr><td>I — Industrial</td><td class="n">170</td><td class="n">187</td><td class="n">173</td><td class="n">$121,875</td><td class="n">$158,397</td></tr>
+<tr><td>O — Office</td><td class="n">45</td><td class="n">51</td><td class="n">29</td><td class="n">$112,240</td><td class="n">$143,617</td></tr>
+<tr><td>Other</td><td class="n">8,252</td><td class="n">8,574</td><td class="n">10,197</td><td class="n">$278,188</td><td class="n">$412,117</td></tr></tbody></table></div></div><div class="bd">
+      <div class="bdh">By feature type <span>cadastral geometry class</span></div>
+      <div class="tw"><table>
+      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
+      <tbody><tr><td>Lot</td><td class="n">140,509</td><td class="n">146,825</td><td class="n">56,743</td><td class="n">$107,650</td><td class="n">$144,494</td></tr>
+<tr><td>Condo</td><td class="n">37,268</td><td class="n">37,353</td><td class="n">48</td><td class="n">$114,975</td><td class="n">$142,849</td></tr>
+<tr><td>Other</td><td class="n">16,951</td><td class="n">18,863</td><td class="n">8,405</td><td class="n">$140,325</td><td class="n">$205,562</td></tr>
+<tr><td>Acreage Tract</td><td class="n">11,186</td><td class="n">11,981</td><td class="n">65,935</td><td class="n">$117,975</td><td class="n">$170,070</td></tr>
+<tr><td>Wilson</td><td class="n">10</td><td class="n">10</td><td class="n">15</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Cheatham</td><td class="n">4</td><td class="n">4</td><td class="n">20</td><td class="n">$42,338</td><td class="n">$49,544</td></tr>
+<tr><td>Williamson</td><td class="n">3</td><td class="n">3</td><td class="n">10</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Robertson</td><td class="n">1</td><td class="n">1</td><td class="n">2</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Cemetery</td><td class="n">1</td><td class="n">1</td><td class="n">5</td><td class="n">$64,325</td><td class="n">$64,325</td></tr></tbody></table></div></div>
+</div>
+
+<div class="pending">
+  <b>Coming next on this page:</b> two more breakdown dimensions per stage &mdash; <b>property structure type</b> (CAMA) and <b>assessment class</b> (nearly all Class R) &mdash; plus the downstream owner layers: <b>owner-occupied vs. absentee</b> (owner ZIP &ne; property ZIP: 42,631; out-of-state owner: 11,929), <b>ownership type</b> (individual, entity, trust, government), and <b>owner identification</b> (developer vs. operator).
+</div>
+
+<p class="note">Notes: Live snapshot from the Metro Nashville Cadastral (Cadastral_Layers/MapServer/4), pulled July 6, 2026, one row per parcel. Medians and averages are of total assessed value (<code>TotlAssd</code>). Zoning counts assign each parcel to one base district (split-zoned parcels to their primary residential district). &ldquo;Single-family home&rdquo; = one or two dwelling units per the 21st Century ROAD to Housing Act, H.R. 6644 &sect; 1001(a)(3). Stage&nbsp;3 reproduces the county query returning 205,933 parcels.</p>
+</div>
+</body></html>
