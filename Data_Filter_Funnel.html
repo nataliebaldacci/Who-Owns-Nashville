@@ -12,8 +12,8 @@ a.back{display:inline-block;color:var(--navy);text-decoration:none;font-weight:6
 a.back:hover{text-decoration:underline}
 .kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:0 0 4px}
 h1{font-size:29px;font-weight:800;letter-spacing:-.4px;margin:0 0 6px;color:var(--navy)}
-.sub{font-size:15px;color:var(--mut);margin:0 0 24px;max-width:720px}
-.stage{border-radius:12px;padding:16px 18px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 3px rgba(20,50,90,.05);margin:0}
+.sub{font-size:15px;color:var(--mut);margin:0 0 24px;max-width:740px}
+.stage{border-radius:12px;padding:16px 18px;background:#fff;border:1px solid var(--line);box-shadow:0 1px 3px rgba(20,50,90,.05)}
 .strow{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
 .stnum{font-size:12px;font-weight:800;color:#fff;background:var(--navy);width:24px;height:24px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;flex:0 0 auto;align-self:center}
 .stlabel{font-weight:800;font-size:17px;flex:1 1 240px;min-width:0;color:var(--navy)}
@@ -21,17 +21,17 @@ h1{font-size:29px;font-weight:800;letter-spacing:-.4px;margin:0 0 6px;color:var(
 .stpct{font-size:11.5px;color:var(--mut);font-weight:600;margin-left:6px}
 .bar{position:relative;height:14px;margin-top:11px;border-radius:8px;background:#eef1f6;overflow:hidden}
 .fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--navy),var(--navy2));border-radius:8px}
-.cut{font-size:12px;color:var(--cut);font-weight:600;margin-top:9px}
-.cut b{font-weight:800}
+.cut{font-size:12px;color:var(--cut);font-weight:600;margin-top:9px} .cut b{font-weight:800}
 .desc{font-size:13px;color:#33414f;margin-top:9px}
 .arrow{text-align:center;color:var(--gold);font-size:20px;line-height:1;margin:6px 0}
-.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0 2px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin:14px 0 4px}
 .tile{background:#f8fafd;border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 .tile .n{font-size:17px;font-weight:800;color:var(--navy);font-variant-numeric:tabular-nums}
 .tile .l{font-size:11px;color:#5a6673;margin-top:2px}
-.bd{margin-top:16px}
-.bdh{font-size:13px;font-weight:800;color:var(--navy);text-transform:uppercase;letter-spacing:.5px;border-left:4px solid var(--gold);padding-left:9px;margin-bottom:7px}
-.bdh span{display:block;font-size:10.5px;font-weight:600;letter-spacing:0;text-transform:none;color:#8a94a0;margin-top:1px}
+.tabs{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0 10px;border-bottom:2px solid var(--line);padding-bottom:8px}
+.tab{font-family:inherit;font-size:12px;font-weight:700;color:var(--navy);background:#eef4fb;border:1px solid #d8e2f2;border-radius:20px;padding:6px 13px;cursor:pointer}
+.tab.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.panel{display:none} .panel.on{display:block}
 .tw{overflow-x:auto;border:1px solid var(--line);border-radius:8px}
 table{width:100%;border-collapse:collapse;font-size:12.5px}
 th{background:#eef4fb;color:var(--navy);text-align:left;padding:8px 12px;font-size:10.5px;letter-spacing:.4px;text-transform:uppercase;font-weight:800;white-space:nowrap}
@@ -39,48 +39,169 @@ td{padding:7px 12px;border-top:1px solid var(--line);font-variant-numeric:tabula
 td.n,th.n{text-align:right;white-space:nowrap}
 tbody tr:hover{background:var(--hl)}
 .note{font-size:11.5px;color:var(--mut);font-style:italic;margin-top:24px;border-top:1px solid var(--line);padding-top:14px}
-.pending{background:#fff;border:1px dashed #c8d3e2;border-radius:10px;padding:14px 16px;margin-top:22px;font-size:12.5px;color:#5a6673}
-.pending b{color:var(--navy)}
 </style></head><body>
 <div class="wrap">
 <a class="back" href="index.html">&larr; Who Owns Nashville</a>
-<p class="kick">Methodology</p>
+<p class="kick">Methodology &middot; current owners</p>
 <h1>How the data was filtered</h1>
-<p class="sub">The research universe is built in three steps from the full Metro Nashville assessor cadastral. Each step narrows toward the single-family homes the 21st Century Housing Act protects, and each surviving set is broken down by land use, zoning, and feature type, with parcels, dwelling units, acres, and assessed value.</p>
+<p class="sub">The research universe is built from the full Metro Nashville assessor cadastral, narrowed to the single-family homes the 21st Century Housing Act protects, then split by who owns them. Each step is broken down six ways &mdash; land use, zoning, feature type, structure type, dwelling-unit count, and year built &mdash; with parcels, dwelling units, acres, and assessed value. Click a tab to switch the breakdown.</p>
 
 <div class="stage">
   <div class="strow"><span class="stnum">1</span><span class="stlabel">All Davidson County parcels</span>
     <span class="stcount">286,721<span class="stpct">100%</span></span></div>
   <div class="bar"><div class="fill" style="width:100%"></div></div>
   <div class="desc">Every parcel in the county assessor cadastral: homes, shops, farms, roads, churches, and vacant lots.</div>
+  <div class="tiles"><div class="tile"><div class="n">355,675</div><div class="l">Dwelling units</div></div><div class="tile"><div class="n">287,773</div><div class="l">Acres</div></div><div class="tile"><div class="n">$104,350</div><div class="l">Median assessed</div></div><div class="tile"><div class="n">$245,620</div><div class="l">Avg assessed</div></div></div>
+  <div class="tabs" data-step="s1"><button class="tab on" data-t="s1_lu">Land use</button><button class="tab" data-t="s1_zn">Zoning</button><button class="tab" data-t="s1_ft">Feature type</button><button class="tab" data-t="s1_st">Structure type</button><button class="tab" data-t="s1_du">Dwelling units</button><button class="tab" data-t="s1_yb">Year built</button></div><div class="panel on" id="s1_lu"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Single Family</td><td class="n">156,840</td><td class="n">158,894</td><td class="n">132,263</td><td class="n">$110,600</td><td class="n">$154,983</td></tr>
+<tr><td>Residential Condo</td><td class="n">55,184</td><td class="n">55,123</td><td class="n">101</td><td class="n">$103,400</td><td class="n">$134,046</td></tr>
+<tr><td>Duplex</td><td class="n">7,091</td><td class="n">14,302</td><td class="n">2,716</td><td class="n">$148,080</td><td class="n">$165,856</td></tr>
+<tr><td>Zero Lot Line</td><td class="n">5,421</td><td class="n">5,479</td><td class="n">802</td><td class="n">$65,175</td><td class="n">$71,762</td></tr>
+<tr><td>Mobile Home</td><td class="n">426</td><td class="n">674</td><td class="n">2,147</td><td class="n">$34,975</td><td class="n">$55,705</td></tr>
+<tr><td>Vacant Residential Land</td><td class="n">22,574</td><td class="n">11</td><td class="n">26,724</td><td class="n">$0</td><td class="n">$43,186</td></tr>
+<tr><td>Unclassified</td><td class="n">15,807</td><td class="n">0</td><td class="n">4,584</td><td class="n">$37,250</td><td class="n">$121,016</td></tr>
+<tr><td>Vacant Rural Land</td><td class="n">3,210</td><td class="n">7</td><td class="n">40,427</td><td class="n">$14,625</td><td class="n">$35,055</td></tr>
+<tr><td>Vacant Commercial Land</td><td class="n">2,550</td><td class="n">0</td><td class="n">4,716</td><td class="n">$105,580</td><td class="n">$670,966</td></tr>
+<tr><td>Office Bldg (One Or Two Stories)</td><td class="n">1,804</td><td class="n">493</td><td class="n">3,035</td><td class="n">$560,000</td><td class="n">$1,106,272</td></tr>
+<tr><td>Parking Lot</td><td class="n">1,459</td><td class="n">0</td><td class="n">1,108</td><td class="n">$170,920</td><td class="n">$825,924</td></tr>
+<tr><td>Church</td><td class="n">889</td><td class="n">223</td><td class="n">3,468</td><td class="n">$0</td><td class="n">$80,392</td></tr>
+<tr><td>Small Warehouse</td><td class="n">880</td><td class="n">16</td><td class="n">1,351</td><td class="n">$508,020</td><td class="n">$875,485</td></tr>
+<tr><td>One Story General Retail Store</td><td class="n">867</td><td class="n">70</td><td class="n">1,194</td><td class="n">$585,200</td><td class="n">$1,120,058</td></tr>
+<tr><td>Condominium Ofc Or Other Com Condo</td><td class="n">730</td><td class="n">6</td><td class="n">30</td><td class="n">$158,360</td><td class="n">$321,241</td></tr>
+<tr><td>Strip Shopping Center</td><td class="n">687</td><td class="n">175</td><td class="n">896</td><td class="n">$927,840</td><td class="n">$1,954,188</td></tr>
+<tr><td>Apartment: Low Rise (Built Since 1960)</td><td class="n">668</td><td class="n">74,469</td><td class="n">5,899</td><td class="n">$3,262,140</td><td class="n">$7,112,522</td></tr>
+<tr><td>Terminal/Distribution Warhouse</td><td class="n">617</td><td class="n">17</td><td class="n">4,798</td><td class="n">$2,041,240</td><td class="n">$3,466,677</td></tr>
+<tr><td>Auto Repair/Body Shop</td><td class="n">482</td><td class="n">11</td><td class="n">630</td><td class="n">$421,340</td><td class="n">$761,440</td></tr>
+<tr><td>Resturant/Cafeteria</td><td class="n">446</td><td class="n">19</td><td class="n">304</td><td class="n">$865,800</td><td class="n">$2,000,493</td></tr>
+<tr><td>Residential Combo/Misc</td><td class="n">431</td><td class="n">647</td><td class="n">1,142</td><td class="n">$90,675</td><td class="n">$173,225</td></tr>
+<tr><td>Vacant Industrial Land</td><td class="n">390</td><td class="n">0</td><td class="n">1,763</td><td class="n">$73,900</td><td class="n">$667,109</td></tr>
+<tr><td>Auto Dealer</td><td class="n">376</td><td class="n">37</td><td class="n">888</td><td class="n">$415,680</td><td class="n">$1,147,990</td></tr>
+<tr><td>Triplex</td><td class="n">352</td><td class="n">1,084</td><td class="n">84</td><td class="n">$213,700</td><td class="n">$241,939</td></tr>
+<tr><td>Fast Food</td><td class="n">341</td><td class="n">17</td><td class="n">265</td><td class="n">$825,440</td><td class="n">$982,894</td></tr>
+<tr><td>Medical Office (One Or Two Stories)</td><td class="n">330</td><td class="n">26</td><td class="n">270</td><td class="n">$555,520</td><td class="n">$941,062</td></tr>
+<tr><td>Small Service Shop</td><td class="n">328</td><td class="n">79</td><td class="n">175</td><td class="n">$300,300</td><td class="n">$433,790</td></tr>
+<tr><td>Light Manufacturing</td><td class="n">309</td><td class="n">5</td><td class="n">1,048</td><td class="n">$1,208,720</td><td class="n">$2,029,864</td></tr>
+<tr><td>School Or College</td><td class="n">309</td><td class="n">227</td><td class="n">3,759</td><td class="n">$0</td><td class="n">$339,680</td></tr>
+<tr><td>Mortuary/Cemetery</td><td class="n">305</td><td class="n">7</td><td class="n">1,504</td><td class="n">$0</td><td class="n">$99,889</td></tr>
+<tr><td>Metro Other Than Ofc, School,Hosp, Or Park</td><td class="n">294</td><td class="n">7</td><td class="n">3,898</td><td class="n">$0</td><td class="n">$123</td></tr>
+<tr><td>Farm Buildings Only</td><td class="n">289</td><td class="n">11</td><td class="n">7,096</td><td class="n">$40,675</td><td class="n">$61,576</td></tr>
+<tr><td>Hotel/Motel</td><td class="n">281</td><td class="n">344</td><td class="n">711</td><td class="n">$4,877,520</td><td class="n">$11,919,109</td></tr>
+<tr><td>Convenience Market With Gas</td><td class="n">261</td><td class="n">1</td><td class="n">298</td><td class="n">$912,200</td><td class="n">$1,195,483</td></tr>
+<tr><td>Quadplex</td><td class="n">242</td><td class="n">988</td><td class="n">62</td><td class="n">$240,600</td><td class="n">$265,958</td></tr>
+<tr><td>Apartment: High Rise (3 Stories Or Greater)</td><td class="n">221</td><td class="n">35,618</td><td class="n">765</td><td class="n">$10,269,280</td><td class="n">$16,557,288</td></tr>
+<tr><td>Office Bldg (3 Or More Stories)</td><td class="n">213</td><td class="n">15</td><td class="n">834</td><td class="n">$4,553,360</td><td class="n">$10,629,266</td></tr>
+<tr><td>Branch Financial Institution</td><td class="n">178</td><td class="n">0</td><td class="n">223</td><td class="n">$1,008,080</td><td class="n">$1,643,394</td></tr>
+<tr><td>Rural Combo</td><td class="n">172</td><td class="n">150</td><td class="n">2,346</td><td class="n">$73,200</td><td class="n">$85,001</td></tr>
+<tr><td>Open Storage</td><td class="n">136</td><td class="n">5</td><td class="n">530</td><td class="n">$228,260</td><td class="n">$885,446</td></tr>
+<tr><td>Park Or Recreation</td><td class="n">134</td><td class="n">148</td><td class="n">6,905</td><td class="n">$0</td><td class="n">$8,191</td></tr>
+<tr><td>Nightclub/Lounge</td><td class="n">117</td><td class="n">18</td><td class="n">86</td><td class="n">$550,240</td><td class="n">$2,305,401</td></tr>
+<tr><td>Vacant Zoned Multi Family</td><td class="n">117</td><td class="n">0</td><td class="n">988</td><td class="n">$204,000</td><td class="n">$2,148,939</td></tr>
+<tr><td>Mini Warehouse</td><td class="n">112</td><td class="n">2</td><td class="n">392</td><td class="n">$2,898,020</td><td class="n">$3,416,121</td></tr>
+<tr><td>Recording Studio</td><td class="n">107</td><td class="n">2</td><td class="n">279</td><td class="n">$797,200</td><td class="n">$1,334,322</td></tr>
+<tr><td>Day Care Center</td><td class="n">104</td><td class="n">49</td><td class="n">117</td><td class="n">$254,340</td><td class="n">$554,062</td></tr>
+<tr><td>Business Center</td><td class="n">101</td><td class="n">0</td><td class="n">549</td><td class="n">$2,389,960</td><td class="n">$3,393,744</td></tr>
+<tr><td>Dormitory/Boarding House</td><td class="n">98</td><td class="n">411</td><td class="n">151</td><td class="n">$104,572</td><td class="n">$204,944</td></tr>
+<tr><td>Heavy Manufacturing</td><td class="n">97</td><td class="n">0</td><td class="n">927</td><td class="n">$2,888,000</td><td class="n">$4,588,899</td></tr>
+<tr><td>Transmitting Towers</td><td class="n">93</td><td class="n">2</td><td class="n">286</td><td class="n">$96,160</td><td class="n">$172,133</td></tr>
+<tr><td>Club/Union Hall/Lodge</td><td class="n">89</td><td class="n">10</td><td class="n">520</td><td class="n">$49,200</td><td class="n">$589,008</td></tr>
+<tr><td>Apartment: Walk Up (Built Prior To 1960)
+A</td><td class="n">87</td><td class="n">2,748</td><td class="n">204</td><td class="n">$702,720</td><td class="n">$1,397,836</td></tr>
+<tr><td>Convenience Market Without Gas</td><td class="n">75</td><td class="n">2</td><td class="n">45</td><td class="n">$365,080</td><td class="n">$482,735</td></tr>
+<tr><td>Shopping Center</td><td class="n">74</td><td class="n">103</td><td class="n">700</td><td class="n">$4,882,840</td><td class="n">$6,472,738</td></tr>
+<tr><td>Nursing Home</td><td class="n">58</td><td class="n">848</td><td class="n">962</td><td class="n">$2,088,680</td><td class="n">$4,080,113</td></tr>
+<tr><td>Parking Garage</td><td class="n">58</td><td class="n">46</td><td class="n">84</td><td class="n">$4,225,100</td><td class="n">$6,979,770</td></tr>
+<tr><td>Car Wash</td><td class="n">57</td><td class="n">0</td><td class="n">53</td><td class="n">$570,200</td><td class="n">$773,646</td></tr>
+<tr><td>Non-Profit Charitable Service</td><td class="n">49</td><td class="n">32</td><td class="n">140</td><td class="n">$0</td><td class="n">$54,269</td></tr>
+<tr><td>Neighborhood Supermarket (Free Standing)</td><td class="n">49</td><td class="n">1</td><td class="n">145</td><td class="n">$2,241,160</td><td class="n">$3,162,489</td></tr>
+<tr><td>Federal Other Than Ofc, School, Hosp, Park</td><td class="n">46</td><td class="n">0</td><td class="n">221</td><td class="n">$0</td><td class="n">$88,944</td></tr>
+<tr><td>Recreational</td><td class="n">46</td><td class="n">0</td><td class="n">493</td><td class="n">$621,220</td><td class="n">$1,808,395</td></tr>
+<tr><td>Parsonage</td><td class="n">43</td><td class="n">72</td><td class="n">39</td><td class="n">$0</td><td class="n">$24,522</td></tr>
+<tr><td>Mineral Processing</td><td class="n">43</td><td class="n">3</td><td class="n">1,254</td><td class="n">$846,880</td><td class="n">$1,247,349</td></tr>
+<tr><td>Packing Plant/Food Processing</td><td class="n">42</td><td class="n">1</td><td class="n">251</td><td class="n">$2,086,840</td><td class="n">$5,586,069</td></tr>
+<tr><td>Hospital Or Clinic</td><td class="n">39</td><td class="n">122</td><td class="n">815</td><td class="n">$446,640</td><td class="n">$8,730,132</td></tr>
+<tr><td>Wholesale Outlet</td><td class="n">39</td><td class="n">1</td><td class="n">144</td><td class="n">$1,348,200</td><td class="n">$2,495,202</td></tr>
+<tr><td>Mini Lube</td><td class="n">38</td><td class="n">1</td><td class="n">21</td><td class="n">$509,760</td><td class="n">$586,331</td></tr>
+<tr><td>Mobile Home Park</td><td class="n">35</td><td class="n">1,772</td><td class="n">347</td><td class="n">$487,440</td><td class="n">$1,135,153</td></tr>
+<tr><td>Fire Station</td><td class="n">29</td><td class="n">0</td><td class="n">1,715</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Museum Or Other Cultural Org.</td><td class="n">26</td><td class="n">5</td><td class="n">432</td><td class="n">$0</td><td class="n">$169,902</td></tr>
+<tr><td>Golf Course/Driving Range</td><td class="n">23</td><td class="n">9</td><td class="n">1,585</td><td class="n">$461,360</td><td class="n">$2,580,573</td></tr>
+<tr><td>State Other Than Ofc, School, Hosp, Or Park</td><td class="n">23</td><td class="n">2</td><td class="n">1,252</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Condominium Ofc  Or Other Com Condo</td><td class="n">21</td><td class="n">0</td><td class="n">3</td><td class="n">$182,680</td><td class="n">$252,474</td></tr>
+<tr><td>Satellite City Other Than Ofc, School, Hosp, Park</td><td class="n">20</td><td class="n">0</td><td class="n">76</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Lumber Yard/Sawmill</td><td class="n">20</td><td class="n">1</td><td class="n">61</td><td class="n">$1,126,720</td><td class="n">$2,873,574</td></tr>
+<tr><td>Medical Office (Three Stories Or Greater)</td><td class="n">16</td><td class="n">0</td><td class="n">38</td><td class="n">$3,438,171</td><td class="n">$5,532,996</td></tr>
+<tr><td>Service Station Full Service</td><td class="n">12</td><td class="n">0</td><td class="n">6</td><td class="n">$560,600</td><td class="n">$622,117</td></tr>
+<tr><td>Greenhouse/Nursery</td><td class="n">12</td><td class="n">4</td><td class="n">141</td><td class="n">$442,740</td><td class="n">$735,325</td></tr>
+<tr><td>Theater/Auditorium</td><td class="n">11</td><td class="n">0</td><td class="n">40</td><td class="n">$2,563,360</td><td class="n">$4,342,953</td></tr>
+<tr><td>Self Service Station (Gas Only)</td><td class="n">11</td><td class="n">0</td><td class="n">9</td><td class="n">$507,040</td><td class="n">$742,636</td></tr>
+<tr><td>Exempt Vacant Land</td><td class="n">11</td><td class="n">0</td><td class="n">5</td><td class="n">$0</td><td class="n">$8,986</td></tr>
+<tr><td>Library</td><td class="n">9</td><td class="n">0</td><td class="n">7</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Terminal/Distribution Warehouse</td><td class="n">8</td><td class="n">0</td><td class="n">40</td><td class="n">$1,615,040</td><td class="n">$2,910,905</td></tr>
+<tr><td>Camp Ground</td><td class="n">6</td><td class="n">3</td><td class="n">78</td><td class="n">$1,023,800</td><td class="n">$1,423,547</td></tr>
+<tr><td>Department Store</td><td class="n">6</td><td class="n">0</td><td class="n">30</td><td class="n">$9,934,200</td><td class="n">$14,512,027</td></tr>
+<tr><td>Enclosed Mall</td><td class="n">4</td><td class="n">0</td><td class="n">213</td><td class="n">$120,047,500</td><td class="n">$107,159,390</td></tr>
+<tr><td>Dock/Marina</td><td class="n">3</td><td class="n">0</td><td class="n">39</td><td class="n">$1,828,040</td><td class="n">$1,887,227</td></tr>
+<tr><td>Event Center</td><td class="n">1</td><td class="n">0</td><td class="n">9</td><td class="n">$1,637,320</td><td class="n">$1,637,320</td></tr>
+<tr><td>Police Sub Station</td><td class="n">1</td><td class="n">0</td><td class="n">23</td><td class="n">$0</td><td class="n">$0</td></tr></tbody></table></div></div><div class="panel" id="s1_zn"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>RS — Single-family</td><td class="n">105,695</td><td class="n">105,932</td><td class="n">72,829</td><td class="n">$103,725</td><td class="n">$131,839</td></tr>
+<tr><td>R — One & two family</td><td class="n">84,729</td><td class="n">91,326</td><td class="n">55,365</td><td class="n">$101,525</td><td class="n">$145,250</td></tr>
+<tr><td>RM — Multifamily</td><td class="n">29,640</td><td class="n">70,939</td><td class="n">9,110</td><td class="n">$86,388</td><td class="n">$191,481</td></tr>
+<tr><td>SP — Specific plan</td><td class="n">19,365</td><td class="n">28,393</td><td class="n">11,037</td><td class="n">$112,975</td><td class="n">$316,309</td></tr>
+<tr><td>MU — Mixed use</td><td class="n">7,150</td><td class="n">13,534</td><td class="n">2,599</td><td class="n">$128,360</td><td class="n">$703,277</td></tr>
+<tr><td>OR — Office/residential</td><td class="n">4,182</td><td class="n">7,332</td><td class="n">1,928</td><td class="n">$129,638</td><td class="n">$542,374</td></tr>
+<tr><td>DTC — Downtown</td><td class="n">5,637</td><td class="n">11,864</td><td class="n">923</td><td class="n">$149,150</td><td class="n">$1,501,351</td></tr>
+<tr><td>AR — Agricultural/rural</td><td class="n">8,455</td><td class="n">5,745</td><td class="n">95,816</td><td class="n">$85,525</td><td class="n">$110,424</td></tr>
+<tr><td>C — Commercial</td><td class="n">7,101</td><td class="n">6,778</td><td class="n">6,104</td><td class="n">$203,400</td><td class="n">$666,282</td></tr>
+<tr><td>I — Industrial</td><td class="n">3,414</td><td class="n">865</td><td class="n">14,553</td><td class="n">$468,400</td><td class="n">$1,336,656</td></tr>
+<tr><td>O — Office</td><td class="n">271</td><td class="n">126</td><td class="n">514</td><td class="n">$199,600</td><td class="n">$1,249,485</td></tr>
+<tr><td>Other / legacy</td><td class="n">11,071</td><td class="n">12,841</td><td class="n">16,994</td><td class="n">$258,875</td><td class="n">$546,714</td></tr></tbody></table></div></div><div class="panel" id="s1_ft"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Lot</td><td class="n">156,365</td><td class="n">203,042</td><td class="n">79,300</td><td class="n">$108,050</td><td class="n">$235,342</td></tr>
+<tr><td>Condo</td><td class="n">48,040</td><td class="n">40,333</td><td class="n">53</td><td class="n">$108,275</td><td class="n">$164,080</td></tr>
+<tr><td>Other</td><td class="n">26,750</td><td class="n">53,602</td><td class="n">25,587</td><td class="n">$143,200</td><td class="n">$553,463</td></tr>
+<tr><td>Multistory Condo</td><td class="n">21,783</td><td class="n">18,445</td><td class="n">1</td><td class="n">$89,750</td><td class="n">$161,281</td></tr>
+<tr><td>Acreage Tract</td><td class="n">20,507</td><td class="n">40,221</td><td class="n">168,167</td><td class="n">$94,275</td><td class="n">$360,799</td></tr>
+<tr><td>Common Area</td><td class="n">9,126</td><td class="n">1</td><td class="n">7,131</td><td class="n">$0</td><td class="n">$198</td></tr>
+<tr><td>Open Space</td><td class="n">3,438</td><td class="n">3</td><td class="n">5,500</td><td class="n">$0</td><td class="n">$1,185</td></tr>
+<tr><td>Cemetery</td><td class="n">316</td><td class="n">4</td><td class="n">1,166</td><td class="n">$0</td><td class="n">$44,305</td></tr>
+<tr><td>Williamson</td><td class="n">103</td><td class="n">3</td><td class="n">121</td><td class="n">$0</td><td class="n">$3,923</td></tr>
+<tr><td>Multistory Common Area</td><td class="n">81</td><td class="n">4</td><td class="n">106</td><td class="n">$0</td><td class="n">$28,648</td></tr>
+<tr><td>Wilson</td><td class="n">58</td><td class="n">10</td><td class="n">78</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>USA</td><td class="n">48</td><td class="n">0</td><td class="n">0</td><td class="n">$0</td><td class="n">$0</td></tr>
+<tr><td>Robertson</td><td class="n">46</td><td class="n">1</td><td class="n">239</td><td class="n">$0</td><td class="n">$146</td></tr>
+<tr><td>Cheatham</td><td class="n">45</td><td class="n">6</td><td class="n">315</td><td class="n">$0</td><td class="n">$4,404</td></tr>
+<tr><td>Rutherford</td><td class="n">4</td><td class="n">0</td><td class="n">8</td><td class="n">$0</td><td class="n">$0</td></tr></tbody></table></div></div><div class="panel" id="s1_st"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Single Family</td><td class="n">165,822</td><td class="n">168,386</td><td class="n">129,327</td><td class="n">$113,500</td><td class="n">$159,886</td></tr>
+<tr><td>Residential Condo</td><td class="n">44,145</td><td class="n">44,162</td><td class="n">48</td><td class="n">$91,625</td><td class="n">$112,558</td></tr>
+<tr><td>Duplex</td><td class="n">7,358</td><td class="n">15,011</td><td class="n">3,074</td><td class="n">$148,840</td><td class="n">$167,507</td></tr>
+<tr><td>Zero Lot Line</td><td class="n">5,369</td><td class="n">5,378</td><td class="n">791</td><td class="n">$65,475</td><td class="n">$72,436</td></tr>
+<tr><td>Triplex / Quadplex</td><td class="n">595</td><td class="n">2,143</td><td class="n">195</td><td class="n">$222,040</td><td class="n">$256,068</td></tr>
+<tr><td>Manufactured Home</td><td class="n">724</td><td class="n">745</td><td class="n">2,926</td><td class="n">$74,238</td><td class="n">$81,962</td></tr>
+<tr><td>Apartment / multistory condo</td><td class="n">2,685</td><td class="n">67,163</td><td class="n">3,548</td><td class="n">$187,025</td><td class="n">$2,093,117</td></tr>
+<tr><td>Commercial / other</td><td class="n">10,941</td><td class="n">46,433</td><td class="n">35,095</td><td class="n">$668,760</td><td class="n">$2,232,411</td></tr>
+<tr><td>No building record</td><td class="n">49,071</td><td class="n">6,254</td><td class="n">112,769</td><td class="n">$21,250</td><td class="n">$143,918</td></tr></tbody></table></div></div><div class="panel" id="s1_du"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>0 (vacant / no unit)</td><td class="n">59,293</td><td class="n">0</td><td class="n">139,098</td><td class="n">$31,500</td><td class="n">$475,344</td></tr>
+<tr><td>1 unit</td><td class="n">216,204</td><td class="n">216,204</td><td class="n">123,792</td><td class="n">$107,325</td><td class="n">$146,804</td></tr>
+<tr><td>2 units</td><td class="n">9,292</td><td class="n">18,584</td><td class="n">13,620</td><td class="n">$157,440</td><td class="n">$215,890</td></tr>
+<tr><td>3+ units</td><td class="n">1,921</td><td class="n">120,887</td><td class="n">11,263</td><td class="n">$367,368</td><td class="n">$4,420,356</td></tr></tbody></table></div></div><div class="panel" id="s1_yb"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Before 1940</td><td class="n">18,050</td><td class="n">20,865</td><td class="n">19,728</td><td class="n">$163,138</td><td class="n">$314,878</td></tr>
+<tr><td>1940s</td><td class="n">11,963</td><td class="n">12,909</td><td class="n">10,282</td><td class="n">$117,525</td><td class="n">$198,326</td></tr>
+<tr><td>1950s</td><td class="n">27,004</td><td class="n">28,888</td><td class="n">22,505</td><td class="n">$106,138</td><td class="n">$175,853</td></tr>
+<tr><td>1960s</td><td class="n">29,323</td><td class="n">39,947</td><td class="n">25,855</td><td class="n">$100,575</td><td class="n">$195,230</td></tr>
+<tr><td>1970s</td><td class="n">22,763</td><td class="n">43,194</td><td class="n">22,226</td><td class="n">$90,550</td><td class="n">$271,447</td></tr>
+<tr><td>1980s</td><td class="n">30,282</td><td class="n">52,539</td><td class="n">21,927</td><td class="n">$91,625</td><td class="n">$259,364</td></tr>
+<tr><td>1990s</td><td class="n">21,515</td><td class="n">28,993</td><td class="n">18,450</td><td class="n">$110,250</td><td class="n">$282,081</td></tr>
+<tr><td>2000s</td><td class="n">34,141</td><td class="n">39,329</td><td class="n">19,103</td><td class="n">$111,200</td><td class="n">$217,607</td></tr>
+<tr><td>2010s</td><td class="n">26,318</td><td class="n">44,489</td><td class="n">9,546</td><td class="n">$145,162</td><td class="n">$353,820</td></tr>
+<tr><td>2020+</td><td class="n">16,273</td><td class="n">38,264</td><td class="n">5,371</td><td class="n">$142,150</td><td class="n">$490,670</td></tr>
+<tr><td>Unknown</td><td class="n">49,078</td><td class="n">6,258</td><td class="n">112,779</td><td class="n">$21,250</td><td class="n">$143,940</td></tr></tbody></table></div></div>
 </div>
-
 <div class="arrow">&#9662;</div>
 
 <div class="stage">
   <div class="strow"><span class="stnum">2</span><span class="stlabel">Fits the 21st Century Housing Act framework</span>
     <span class="stcount">205,933<span class="stpct">71.8% of all parcels</span></span></div>
   <div class="bar"><div class="fill" style="width:71.8%"></div></div>
-  <div class="cut">&minus; <b>80,788</b> removed: everything that is not a one- or two-unit home &mdash; three-plus-unit buildings, vacant land, commercial and farm parcels, multistory-condo shell records, HOA common area, open space, and mobile homes.</div>
-  <div class="desc">The research universe. Land use is single family, zero-lot-line, duplex, or residential condo (or unclassified); feature type is a real dwelling, not a condo shell, common area, or open space; mobile / manufactured homes excluded per &sect; 1001(a)(3)(B). This is a &ldquo;single-family home&rdquo; under the Act: a structure with two or fewer dwelling units.</div>
-  <div class="tiles">
-    <div class="tile"><div class="n">215,041</div><div class="l">Dwelling units</div></div>
-    <div class="tile"><div class="n">131,182</div><div class="l">Acres</div></div>
-    <div class="tile"><div class="n">$110,850</div><div class="l">Median assessed</div></div>
-    <div class="tile"><div class="n">$150,600</div><div class="l">Avg assessed</div></div>
-  </div>
-  <div class="bd">
-      <div class="bdh">By land-use type <span>general land-use groups</span></div>
-      <div class="tw"><table>
-      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
-      <tbody><tr><td>Single Family</td><td class="n">156,536</td><td class="n">158,462</td><td class="n">127,648</td><td class="n">$110,575</td><td class="n">$154,709</td></tr>
+  <div class="cut">&minus; <b>80,788</b> removed: everything that is not a one- or two-unit home &mdash; three-plus-unit buildings, vacant land, commercial and farm parcels, multistory-condo shell records, HOA common area, open space, and mobile / manufactured homes.</div>
+  <div class="desc">A &ldquo;single-family home&rdquo; under &sect;&nbsp;1001(a)(3): a structure with two or fewer dwelling units. Land use is single family, zero-lot-line, duplex, or residential condo (or unclassified); real dwellings only, mobile homes excluded.</div>
+  <div class="tiles"><div class="tile"><div class="n">215,041</div><div class="l">Dwelling units</div></div><div class="tile"><div class="n">131,182</div><div class="l">Acres</div></div><div class="tile"><div class="n">$110,850</div><div class="l">Median assessed</div></div><div class="tile"><div class="n">$150,600</div><div class="l">Avg assessed</div></div></div>
+  <div class="tabs" data-step="s2"><button class="tab on" data-t="s2_lu">Land use</button><button class="tab" data-t="s2_zn">Zoning</button><button class="tab" data-t="s2_ft">Feature type</button><button class="tab" data-t="s2_st">Structure type</button><button class="tab" data-t="s2_du">Dwelling units</button><button class="tab" data-t="s2_yb">Year built</button></div><div class="panel on" id="s2_lu"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Single Family</td><td class="n">156,536</td><td class="n">158,462</td><td class="n">127,648</td><td class="n">$110,575</td><td class="n">$154,709</td></tr>
 <tr><td>Residential Condo</td><td class="n">36,931</td><td class="n">37,011</td><td class="n">74</td><td class="n">$113,025</td><td class="n">$141,990</td></tr>
 <tr><td>Duplex</td><td class="n">7,047</td><td class="n">14,089</td><td class="n">2,658</td><td class="n">$147,720</td><td class="n">$165,046</td></tr>
-<tr><td>Zero Lot Line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">802</td><td class="n">$65,200</td><td class="n">$71,788</td></tr></tbody></table></div></div><div class="bd">
-      <div class="bdh">By zoning district <span>base district, split-zoned parcels to primary</span></div>
-      <div class="tw"><table>
-      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
-      <tbody><tr><td>RS — Single-family</td><td class="n">94,856</td><td class="n">99,051</td><td class="n">48,103</td><td class="n">$107,625</td><td class="n">$137,119</td></tr>
+<tr><td>Zero Lot Line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">802</td><td class="n">$65,200</td><td class="n">$71,788</td></tr></tbody></table></div></div><div class="panel" id="s2_zn"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>RS — Single-family</td><td class="n">94,856</td><td class="n">99,051</td><td class="n">48,103</td><td class="n">$107,625</td><td class="n">$137,119</td></tr>
 <tr><td>R — One & two family</td><td class="n">68,381</td><td class="n">72,081</td><td class="n">23,464</td><td class="n">$111,400</td><td class="n">$145,382</td></tr>
 <tr><td>RM — Multifamily</td><td class="n">16,865</td><td class="n">17,123</td><td class="n">748</td><td class="n">$96,750</td><td class="n">$117,969</td></tr>
 <tr><td>SP — Specific plan</td><td class="n">9,037</td><td class="n">9,306</td><td class="n">1,980</td><td class="n">$128,350</td><td class="n">$150,503</td></tr>
@@ -91,11 +212,7 @@ tbody tr:hover{background:var(--hl)}
 <tr><td>C — Commercial</td><td class="n">483</td><td class="n">520</td><td class="n">134</td><td class="n">$133,275</td><td class="n">$178,018</td></tr>
 <tr><td>I — Industrial</td><td class="n">170</td><td class="n">187</td><td class="n">173</td><td class="n">$121,875</td><td class="n">$158,397</td></tr>
 <tr><td>O — Office</td><td class="n">45</td><td class="n">51</td><td class="n">29</td><td class="n">$112,240</td><td class="n">$143,617</td></tr>
-<tr><td>Other</td><td class="n">8,252</td><td class="n">8,574</td><td class="n">10,197</td><td class="n">$278,188</td><td class="n">$412,117</td></tr></tbody></table></div></div><div class="bd">
-      <div class="bdh">By feature type <span>cadastral geometry class</span></div>
-      <div class="tw"><table>
-      <thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead>
-      <tbody><tr><td>Lot</td><td class="n">140,509</td><td class="n">146,825</td><td class="n">56,743</td><td class="n">$107,650</td><td class="n">$144,494</td></tr>
+<tr><td>Other / legacy</td><td class="n">8,252</td><td class="n">8,574</td><td class="n">10,197</td><td class="n">$278,188</td><td class="n">$412,117</td></tr></tbody></table></div></div><div class="panel" id="s2_ft"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Lot</td><td class="n">140,509</td><td class="n">146,825</td><td class="n">56,743</td><td class="n">$107,650</td><td class="n">$144,494</td></tr>
 <tr><td>Condo</td><td class="n">37,268</td><td class="n">37,353</td><td class="n">48</td><td class="n">$114,975</td><td class="n">$142,849</td></tr>
 <tr><td>Other</td><td class="n">16,951</td><td class="n">18,863</td><td class="n">8,405</td><td class="n">$140,325</td><td class="n">$205,562</td></tr>
 <tr><td>Acreage Tract</td><td class="n">11,186</td><td class="n">11,981</td><td class="n">65,935</td><td class="n">$117,975</td><td class="n">$170,070</td></tr>
@@ -103,13 +220,60 @@ tbody tr:hover{background:var(--hl)}
 <tr><td>Cheatham</td><td class="n">4</td><td class="n">4</td><td class="n">20</td><td class="n">$42,338</td><td class="n">$49,544</td></tr>
 <tr><td>Williamson</td><td class="n">3</td><td class="n">3</td><td class="n">10</td><td class="n">$0</td><td class="n">$0</td></tr>
 <tr><td>Robertson</td><td class="n">1</td><td class="n">1</td><td class="n">2</td><td class="n">$0</td><td class="n">$0</td></tr>
-<tr><td>Cemetery</td><td class="n">1</td><td class="n">1</td><td class="n">5</td><td class="n">$64,325</td><td class="n">$64,325</td></tr></tbody></table></div></div>
+<tr><td>Cemetery</td><td class="n">1</td><td class="n">1</td><td class="n">5</td><td class="n">$64,325</td><td class="n">$64,325</td></tr></tbody></table></div></div><div class="panel" id="s2_st"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Single Family</td><td class="n">164,528</td><td class="n">166,468</td><td class="n">122,789</td><td class="n">$113,325</td><td class="n">$159,036</td></tr>
+<tr><td>Residential Condo</td><td class="n">28,096</td><td class="n">28,110</td><td class="n">37</td><td class="n">$97,125</td><td class="n">$114,502</td></tr>
+<tr><td>Duplex</td><td class="n">7,158</td><td class="n">14,285</td><td class="n">2,808</td><td class="n">$147,320</td><td class="n">$164,023</td></tr>
+<tr><td>Zero Lot Line</td><td class="n">5,369</td><td class="n">5,378</td><td class="n">791</td><td class="n">$65,475</td><td class="n">$72,436</td></tr>
+<tr><td>Manufactured Home</td><td class="n">709</td><td class="n">723</td><td class="n">2,853</td><td class="n">$73,975</td><td class="n">$82,006</td></tr>
+<tr><td>Commercial / other</td><td class="n">5</td><td class="n">5</td><td class="n">823</td><td class="n">$137,125</td><td class="n">$189,745</td></tr>
+<tr><td>No building record</td><td class="n">68</td><td class="n">72</td><td class="n">1,081</td><td class="n">$94,425</td><td class="n">$126,005</td></tr></tbody></table></div></div><div class="panel" id="s2_du"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>1 unit</td><td class="n">196,825</td><td class="n">196,825</td><td class="n">119,305</td><td class="n">$109,025</td><td class="n">$147,859</td></tr>
+<tr><td>2 units</td><td class="n">9,108</td><td class="n">18,216</td><td class="n">11,877</td><td class="n">$157,440</td><td class="n">$209,834</td></tr></tbody></table></div></div><div class="panel" id="s2_yb"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Before 1940</td><td class="n">15,943</td><td class="n">17,835</td><td class="n">16,184</td><td class="n">$155,950</td><td class="n">$211,989</td></tr>
+<tr><td>1940s</td><td class="n">10,987</td><td class="n">11,753</td><td class="n">8,013</td><td class="n">$114,525</td><td class="n">$159,296</td></tr>
+<tr><td>1950s</td><td class="n">25,443</td><td class="n">26,596</td><td class="n">20,148</td><td class="n">$105,175</td><td class="n">$141,067</td></tr>
+<tr><td>1960s</td><td class="n">24,536</td><td class="n">25,888</td><td class="n">21,160</td><td class="n">$101,600</td><td class="n">$126,774</td></tr>
+<tr><td>1970s</td><td class="n">18,553</td><td class="n">19,838</td><td class="n">14,284</td><td class="n">$91,125</td><td class="n">$115,622</td></tr>
+<tr><td>1980s</td><td class="n">25,077</td><td class="n">27,042</td><td class="n">15,085</td><td class="n">$89,875</td><td class="n">$114,143</td></tr>
+<tr><td>1990s</td><td class="n">19,750</td><td class="n">19,981</td><td class="n">12,777</td><td class="n">$108,875</td><td class="n">$141,873</td></tr>
+<tr><td>2000s</td><td class="n">28,325</td><td class="n">28,475</td><td class="n">11,950</td><td class="n">$108,900</td><td class="n">$144,479</td></tr>
+<tr><td>2010s</td><td class="n">23,417</td><td class="n">23,599</td><td class="n">7,111</td><td class="n">$144,750</td><td class="n">$192,294</td></tr>
+<tr><td>2020+</td><td class="n">13,830</td><td class="n">13,958</td><td class="n">3,381</td><td class="n">$141,568</td><td class="n">$200,252</td></tr>
+<tr><td>Unknown</td><td class="n">72</td><td class="n">76</td><td class="n">1,090</td><td class="n">$97,300</td><td class="n">$132,990</td></tr></tbody></table></div></div>
+</div>
+<div class="arrow">&#9662;</div>
+
+<div class="stage">
+  <div class="strow"><span class="stnum">3</span><span class="stlabel">Who owns the framework homes</span>
+    <span class="stcount">205,933<span class="stpct">split by owner</span></span></div>
+  <div class="bar"><div class="fill" style="width:71.8%"></div></div>
+  <div class="desc">The same 205,933 homes, split toward identifying operators: whether the owner lives there (owner ZIP = property ZIP) or is absentee / out-of-state, and what kind of owner holds title.</div>
+  <div class="tiles">
+    <div class="tile"><div class="n">42,632</div><div class="l">Non-owner-occupied</div></div>
+    <div class="tile"><div class="n">11,929</div><div class="l">Out-of-state owner</div></div>
+    <div class="tile"><div class="n">16,769</div><div class="l">Entity-owned</div></div>
+    <div class="tile"><div class="n">16,188</div><div class="l">Trust-owned</div></div>
+  </div>
+  <div class="tabs" data-step="s3"><button class="tab on" data-t="s3_occ">Owner occupancy</button><button class="tab" data-t="s3_ot">Owner type</button></div><div class="panel on" id="s3_occ"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Owner-occupied (ZIP match)</td><td class="n">163,301</td><td class="n">167,771</td><td class="n">100,615</td><td class="n">$112,650</td><td class="n">$154,232</td></tr>
+<tr><td>Absentee, in-state</td><td class="n">30,703</td><td class="n">34,750</td><td class="n">25,779</td><td class="n">$100,025</td><td class="n">$134,261</td></tr>
+<tr><td>Out-of-state owner</td><td class="n">11,929</td><td class="n">12,520</td><td class="n">4,788</td><td class="n">$109,375</td><td class="n">$142,930</td></tr></tbody></table></div></div><div class="panel" id="s3_ot"><div class="tw"><table><thead><tr><th>Category</th><th class="n">Parcels</th><th class="n">Dwelling units</th><th class="n">Acres</th><th class="n">Median assessed</th><th class="n">Avg assessed</th></tr></thead><tbody><tr><td>Individual</td><td class="n">172,407</td><td class="n">178,727</td><td class="n">102,132</td><td class="n">$108,775</td><td class="n">$142,096</td></tr>
+<tr><td>Entity</td><td class="n">16,769</td><td class="n">18,314</td><td class="n">10,419</td><td class="n">$111,500</td><td class="n">$149,728</td></tr>
+<tr><td>Trust</td><td class="n">16,188</td><td class="n">17,217</td><td class="n">16,631</td><td class="n">$152,350</td><td class="n">$245,433</td></tr>
+<tr><td>Bank / Lender</td><td class="n">161</td><td class="n">165</td><td class="n">67</td><td class="n">$114,775</td><td class="n">$146,883</td></tr>
+<tr><td>Government</td><td class="n">408</td><td class="n">618</td><td class="n">1,933</td><td class="n">$0</td><td class="n">$18,645</td></tr></tbody></table></div></div>
 </div>
 
-<div class="pending">
-  <b>Coming next on this page:</b> two more breakdown dimensions per stage &mdash; <b>property structure type</b> (CAMA) and <b>assessment class</b> (nearly all Class R) &mdash; plus the downstream owner layers: <b>owner-occupied vs. absentee</b> (owner ZIP &ne; property ZIP: 42,631; out-of-state owner: 11,929), <b>ownership type</b> (individual, entity, trust, government), and <b>owner identification</b> (developer vs. operator).
+<p class="note">Notes: Live per-parcel snapshot from the Metro Nashville Cadastral (Cadastral_Layers/MapServer/4), joined to assessor building characteristics (structure type, year built) by APN, pulled July 6, 2026. Medians and averages are of total assessed value. Zoning assigns each parcel to one base district (split-zoned parcels to their primary residential district). Owner type is a keyword read of the recorded owner name (entity = LLC, LP, Inc, Corp, Homes, Holdings, Capital, SFR, Borrower, JV, etc.; bank / lender, trust, and government pulled out first); owner-occupancy is a ZIP-match proxy. &ldquo;Single-family home&rdquo; = one or two dwelling units per H.R. 6644 &sect;&nbsp;1001(a)(3); the framework step reproduces the county query returning 205,933 parcels. The all-parcel export captured 286,710 of the 286,721 live parcels (11 recently retired).</p>
 </div>
-
-<p class="note">Notes: Live snapshot from the Metro Nashville Cadastral (Cadastral_Layers/MapServer/4), pulled July 6, 2026, one row per parcel. Medians and averages are of total assessed value (<code>TotlAssd</code>). Zoning counts assign each parcel to one base district (split-zoned parcels to their primary residential district). &ldquo;Single-family home&rdquo; = one or two dwelling units per the 21st Century ROAD to Housing Act, H.R. 6644 &sect; 1001(a)(3). Stage&nbsp;3 reproduces the county query returning 205,933 parcels.</p>
-</div>
+<script>
+document.querySelectorAll('.tabs').forEach(function(bar){
+  bar.querySelectorAll('.tab').forEach(function(btn){
+    btn.addEventListener('click',function(){
+      bar.querySelectorAll('.tab').forEach(b=>b.classList.remove('on'));
+      btn.classList.add('on');
+      var step=bar.dataset.step;
+      document.querySelectorAll('.panel').forEach(function(p){ if(p.id.indexOf(step+'_')===0) p.classList.remove('on'); });
+      document.getElementById(btn.dataset.t).classList.add('on');
+    });
+  });
+});
+</script>
 </body></html>
