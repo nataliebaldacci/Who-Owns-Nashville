@@ -38,6 +38,8 @@
  .note a{color:var(--navy)}
  footer{text-align:center;color:#7a8694;font-size:12px;padding:26px}
  .back{display:inline-block;margin:16px 0 0;color:var(--navy);font-weight:700;font-size:13px;text-decoration:none}
+ .grouphdr{font-size:17px;font-weight:800;color:#fff;background:var(--navy);border-radius:8px;padding:13px 18px;margin:40px 0 4px;letter-spacing:1.5px;text-transform:uppercase;border-left:6px solid var(--gold)}
+ .grouphdr span{display:block;font-size:11px;font-weight:600;letter-spacing:.3px;text-transform:none;color:#cfe0f7;margin-top:3px}
 </style></head><body>
 <header>
  <div class="kick">Davidson County · Metro Nashville · Primary Government Data</div>
@@ -45,7 +47,7 @@
  <p>A snapshot of every parcel in Davidson County from the Metro Nashville assessor's cadastral record: land use, housing type, value, and ownership.</p>
 </header>
 <div class="wrap">
- <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
+ <a class="back" href="index.html">&larr; Back to Who Owns Nashville</a><a class="back" href="index.html">&larr; Back to Who Owns Nashville</a>
 
  <h2 class="sec">The county at a glance</h2>
  <div class="tiles">
@@ -57,6 +59,26 @@
  <div class="tile"><div class="n">23,326</div><div class="l">Owned out-of-state</div><div class="s">8.1% of all parcels</div></div>
  </div>
 
+ <h2 class="sec">The residential housing universe</h2>
+ <div class="tiles">
+ <div class="tile"><div class="n">205,915</div><div class="l">Residential parcels</div><div class="s">1&ndash;2 unit SF, condo, duplex, ZLL</div></div>
+ <div class="tile"><div class="n">215,024</div><div class="l">Dwelling units</div></div>
+ <div class="tile"><div class="n">$121.6B</div><div class="l">Total appraised</div></div>
+ <div class="tile"><div class="n">$81.9B</div><div class="l">Improvement value</div></div>
+ <div class="tile"><div class="n">$39.7B</div><div class="l">Land value</div></div>
+ <div class="tile"><div class="n">412M</div><div class="l">Finished sq ft</div></div>
+ </div>
+ <table style="margin-top:16px"><thead><tr><th>Land use</th><th style="text-align:right">Parcels</th><th style="text-align:right">Dwelling units</th><th style="text-align:right">Total appraised</th></tr></thead>
+ <tbody>
+ <tr><td>Single family</td><td class="n">156,517</td><td class="n">158,443</td><td class="n">$96.76B</td></tr>
+ <tr><td>Residential condo</td><td class="n">36,931</td><td class="n">37,011</td><td class="n">$19.86B</td></tr>
+ <tr><td>Duplex</td><td class="n">7,048</td><td class="n">14,091</td><td class="n">$3.48B</td></tr>
+ <tr><td>Zero lot line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">$1.47B</td></tr>
+ <tr style="font-weight:800;background:#eef4fb"><td>TOTAL</td><td class="n">205,915</td><td class="n">215,024</td><td class="n">$121.57B</td></tr>
+ </tbody></table>
+ <div class="note">Notes: The non-owner-agnostic residential universe used throughout this project. Filter <code>(DUCount 1&ndash;2) AND LUDesc IN ('SINGLE FAMILY','ZERO LOT LINE','DUPLEX','RESIDENTIAL CONDO') AND FeatureType IN ('Lot','Condo','Acreage Tract','Other')</code>, statistics count(ParID) + sum(DUCount, Acres, FinishArea, LandAppr, ImprAppr, TotlAppr). <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query" target="_blank">Metro Nashville Cadastral, Ownership Parcels</a> (last accessed July 2, 2026).</div>
+
+ <div class="grouphdr">Property classifications<span>How Metro Nashville and the Assessor label each parcel: land use, zoning, tax class, and building structure.</span></div>
  <h2 class="sec">Land use, parcels, units, and value by type</h2>
  <table>
  <thead><tr><th>Land Use</th><th style="text-align:right">Parcels</th><th style="text-align:right">Dwelling Units</th><th style="text-align:right">Acres</th><th style="text-align:right">Appraised</th><th style="text-align:right">Assessed</th><th style="text-align:right">Ratio</th></tr></thead>
@@ -77,6 +99,110 @@
  </tbody>
  </table>
  <div class="note">Notes: Grouped by <code>LUDesc</code>, statistics count(ParID) + sum(DUCount, Acres, TotlAppr, TotlAssd). The <b>ratio</b> (assessed / appraised) is the assessment-class signal: residential is assessed at 25%, commercial at 40%. Top 12 of 90 categories shown. Query: <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&amp;groupByFieldsForStatistics=LUDesc&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22c%22%7D%2C%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22TotlAppr%22%2C%22outStatisticFieldName%22%3A%22appr%22%7D%5D&amp;f=json" target="_blank">MapServer/4/query &#8599;</a> (last accessed July 2, 2026).</div>
+
+
+ <h2 class="sec">Land-use description types (all 94)</h2>
+ <input class="codefilter" data-t="lucodes" placeholder="Filter use codes or descriptions..." style="width:100%;max-width:340px;font-family:inherit;font-size:13px;padding:8px 12px;border:1px solid #cfd8e6;border-radius:8px;margin:0 0 10px"/>
+ <div style="max-height:420px;overflow:auto;border:1px solid #d6ddea;border-radius:8px">
+ <table id="lucodes" style="border:none;border-radius:0;box-shadow:none">
+ <thead><tr><th style="width:90px;position:sticky;top:0">Code</th><th style="position:sticky;top:0">Land-use description</th></tr></thead>
+ <tbody>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">001</td><td>PARK OR RECREATION</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">002</td><td>METRO OTHER THAN OFC, SCHOOL,HOSP, OR PARK</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">003</td><td>SATELLITE CITY OTHER THAN OFC, SCHOOL, HOSP, PARK</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">004</td><td>STATE OTHER THAN OFC, SCHOOL, HOSP, OR PARK</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">005</td><td>FEDERAL OTHER THAN OFC, SCHOOL, HOSP, PARK</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">006</td><td>LIBRARY</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">007</td><td>FIRE STATION</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">008</td><td>POLICE SUB STATION</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">010</td><td>VACANT RESIDENTIAL LAND</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">010</td><td>VACANT RESIENTIAL LAND</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">011</td><td>SINGLE FAMILY</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">012</td><td>DUPLEX</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">013</td><td>TRIPLEX</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">014</td><td>QUADPLEX</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">015</td><td>RESIDENTIAL CONDO</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">016</td><td>ZERO LOT LINE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">017</td><td>DORMITORY/BOARDING HOUSE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">018</td><td>MOBILE HOME</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">019</td><td>RESIDENTIAL COMBO/MISC</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">020</td><td>VACANT COMMERCIAL LAND</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">021</td><td>NEIGHBORHOOD SUPERMARKET (FREE STANDING)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">022</td><td>STRIP SHOPPING CENTER</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">023</td><td>SHOPPING CENTER</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">024</td><td>SMALL SERVICE SHOP</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">025</td><td>ONE STORY GENERAL RETAIL STORE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">026</td><td>DEPARTMENT STORE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">027</td><td>DAY CARE CENTER</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">028</td><td>ENCLOSED MALL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">029</td><td>CONVENIENCE MARKET WITHOUT GAS</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">030</td><td>VACANT ZONED MULTI FAMILY</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">031</td><td>BRANCH FINANCIAL INSTITUTION</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">032</td><td>OFFICE BLDG (ONE OR TWO STORIES)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">033</td><td>OFFICE BLDG (3 OR MORE STORIES)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">034</td><td>MEDICAL OFFICE (ONE OR TWO STORIES)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">035</td><td>MEDICAL OFFICE (THREE STORIES OR GREATER)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">036</td><td>CONDOMINIUM OFC OR OTHER COM CONDO</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">036</td><td>CONDOMINIUM OFC OR OTHER COM CONDO</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">037</td><td>APARTMENT: WALK UP (BUILT PRIOR TO 1960) A</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">038</td><td>APARTMENT: LOW RISE (BUILT SINCE 1960)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">039</td><td>APARTMENT: HIGH RISE (3 STORIES OR GREATER)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">041</td><td>AUTO DEALER</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">042</td><td>AUTO REPAIR/BODY SHOP</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">043</td><td>SERVICE STATION FULL SERVICE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">044</td><td>SELF SERVICE STATION (GAS ONLY)</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">045</td><td>CONVENIENCE MARKET WITH GAS</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">046</td><td>MINI LUBE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">047</td><td>CAR WASH</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">048</td><td>PARKING LOT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">049</td><td>PARKING GARAGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">051</td><td>RESTURANT/CAFETERIA</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">052</td><td>FAST FOOD</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">053</td><td>NIGHTCLUB/LOUNGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">054</td><td>THEATER/AUDITORIUM</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">055</td><td>TRANSMITTING TOWERS</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">056</td><td>RECREATIONAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">057</td><td>GOLF COURSE/DRIVING RANGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">058</td><td>RECORDING STUDIO</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">059</td><td>HOTEL/MOTEL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">061</td><td>CAMP GROUND</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">062</td><td>MOBILE HOME PARK</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">063</td><td>MINI WAREHOUSE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">064</td><td>SMALL WAREHOUSE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">065</td><td>WHOLESALE OUTLET</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">066</td><td>GREENHOUSE/NURSERY</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">067</td><td>DOCK/MARINA</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">069</td><td>EVENT CENTER</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">070</td><td>VACANT INDUSTRIAL LAND</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">071</td><td>LIGHT MANUFACTURING</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">072</td><td>HEAVY MANUFACTURING</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">073</td><td>LUMBER YARD/SAWMILL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">074</td><td>PACKING PLANT/FOOD PROCESSING</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">075</td><td>BUSINESS CENTER</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">076</td><td>MINERAL PROCESSING</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">077</td><td>TERMINAL/DISTRIBUTION WAREHOUSE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">077</td><td>TERMINAL/DISTRIBUTION WARHOUSE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">078</td><td>OPEN STORAGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">80M</td><td>VACANT RURAL LAND</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">080</td><td>VACANT RURAL LAND</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">081</td><td>SINGLE FAMILY</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">082</td><td>DUPLEX</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">085</td><td>FARM BUILDINGS ONLY</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">086</td><td>RESIDENTIAL CONDO</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">088</td><td>MOBILE HOME</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">089</td><td>RURAL COMBO</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">090</td><td>EXEMPT VACANT LAND</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">091</td><td>CHURCH</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">092</td><td>PARSONAGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">093</td><td>SCHOOL OR COLLEGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">094</td><td>HOSPITAL OR CLINIC</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">095</td><td>NURSING HOME</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">096</td><td>MORTUARY/CEMETERY</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">097</td><td>NON-PROFIT CHARITABLE SERVICE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">098</td><td>CLUB/UNION HALL/LODGE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">099</td><td>MUSEUM OR OTHER CULTURAL ORG.</td></tr>
+ </tbody></table></div>
+ <div class="note">Notes: The Assessor's complete land-use code list (the <code>ludesc</code> field), residential codes shaded. Source: Metro Nashville <a href="https://maps.nashville.gov/ParcelService/search.asmx/GetUseCodes" target="_blank" rel="noopener">ParcelService GetUseCodes</a> (last accessed July 6, 2026).</div>
 
  <h2 class="sec">Zoning, parcels, units, and value by district</h2>
  <table>
@@ -146,6 +272,133 @@
  </table>
  <div class="note">Notes: Zoning codes and descriptions from the Metro Nashville <a href="https://maps.nashville.gov/ParcelService/search.asmx/GetZoningCodes" target="_blank">ParcelService GetZoningCodes</a>. Grouped by <code>Zoning</code>, statistics count(ParID) + sum(DUCount, Acres, TotlAppr). The county's 654 base-plus-overlay zoning combinations are rolled up into broad classes (bold subtotal rows), with the largest individual districts listed beneath each and the remaining small districts folded into a "+N smaller" line so every subtotal reconciles to the county total. Single-family districts (RS/R) dominate; the Downtown Code carries the highest value per parcel. Query: <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=1%3D1&amp;groupByFieldsForStatistics=Zoning&amp;outStatistics=%5B%7B%22statisticType%22%3A%22sum%22%2C%22onStatisticField%22%3A%22Acres%22%2C%22outStatisticFieldName%22%3A%22acres%22%7D%2C%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22c%22%7D%5D&amp;f=json" target="_blank">MapServer/4/query &#8599;</a> (last accessed July 2, 2026).</div>
 
+
+ <h2 class="sec">Zoning description types (all 117)</h2>
+ <input class="codefilter" data-t="zncodes" placeholder="Filter zoning codes or descriptions..." style="width:100%;max-width:340px;font-family:inherit;font-size:13px;padding:8px 12px;border:1px solid #cfd8e6;border-radius:8px;margin:0 0 10px"/>
+ <div style="max-height:420px;overflow:auto;border:1px solid #d6ddea;border-radius:8px">
+ <table id="zncodes" style="border:none;border-radius:0;box-shadow:none">
+ <thead><tr><th style="width:110px;position:sticky;top:0">Code</th><th style="position:sticky;top:0">Zoning description</th></tr></thead>
+ <tbody>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">AG</td><td>AGRICULTURAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">AR2A</td><td>AGRICULTURAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CA</td><td>COMMERCIAL, ATTRACTION</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CA-NS</td><td>COMMERCIAL, ATTRACTION, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CC</td><td>COMMERCIAL, CORE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CF</td><td>COMMERCIAL, CORE FRAME</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CF-NS</td><td>COMMERCIAL, CORE FRAME, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CL</td><td>COMMERCIAL, LIMITED</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CL-A</td><td>COMMERCIAL, LIMITED, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CL-A-NS</td><td>COMMERCIAL, LIMITED, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CL-NS</td><td>COMMERCIAL, LIMITED, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CN</td><td>COMMERCIAL, NEIGHBORHOOD</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CN-A</td><td>COMMERCIAL, NEIGHBORHOOD, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CN-A-NS</td><td>COMMERCIAL, NEIGHBORHOOD, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CN-NS</td><td>COMMERCIAL, NEIGHBORHOOD, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CS</td><td>COMMERCIAL, SERVICE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CS-A</td><td>COMMERCIAL, SERVICE, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CS-A-NS</td><td>COMMERCIAL, SERVICE, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">CS-NS</td><td>COMMERCIAL, SERVICE, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">DTC</td><td>DOWNTOWN CODE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">IG</td><td>INDUSTRIAL, GENERAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">IR</td><td>INDUSTRIAL, RESTRICTIVE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">IWD</td><td>INDUSTRIAL, WAREHOUSING/DISTRIBUTION</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MHP</td><td>MOBILE HOME PARK</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUG</td><td>MIXED USE, GENERAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUG-A</td><td>MIXED USE, GENERAL, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUG-A-NS</td><td>MIXED USE, GENERAL, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUG-NS</td><td>MIXED USE, GENERAL, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUI</td><td>MIXED USE, INTENSIVE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUI-A</td><td>MIXED USE, INTENSIVE, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUI-A-NS</td><td>MIXED USE, INTENSIVE, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUI-NS</td><td>MIXED USE, INTENSIVE, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUL</td><td>MIXED USE, LIMITED</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUL-A</td><td>MIXED USE, LIMITED, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUL-A-NS</td><td>MIXED USE, LIMITED, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUL-NS</td><td>MIXED USE, LIMITED, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUN</td><td>MIXED USE, NEIGHBORHOOD</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUN-A</td><td>MIXED USE, NEIGHBORHOOD, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUN-A-NS</td><td>MIXED USE, NEIGHBORHOOD, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">MUN-NS</td><td>MIXED USE, NEIGHBORHOOD, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OG</td><td>OFFICE, GENERAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OG-NS</td><td>OFFICE, GENERAL, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OL</td><td>OFFICE, LIMITED</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">ON</td><td>OFFICE, NEIGHBORHOOD</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR20</td><td>OFFICE/RESIDENTIAL, 20 UNITS PER ACRE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR20-A</td><td>OFFICE/RESIDENTIAL, 20 UNITS PER ACRE, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR20-A-NS</td><td>OFFICE/RESIDENTIAL, 20 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR20-NS</td><td>OFFICE/RESIDENTIAL, 20 UNITS PER ACRE, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR40</td><td>OFFICE/RESIDENTIAL, 40 UNITS PER ACRE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR40-A</td><td>OFFICE/RESIDENTIAL, 40 UNITS PER ACRE, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR40-A-NS</td><td>OFFICE/RESIDENTIAL, 40 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">OR40-NS</td><td>OFFICE/RESIDENTIAL, 40 UNITS PER ACRE, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">ORI</td><td>OFFICE/RESIDENTIAL, INTENSIVE</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">ORI-A</td><td>OFFICE/RESIDENTIAL, INTENSIVE, ALT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">ORI-A-NS</td><td>OFFICE/RESIDENTIAL, INTENSIVE, ALT, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">ORI-NS</td><td>OFFICE/RESIDENTIAL, INTENSIVE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R10</td><td>ONE&amp;amp;TWO FAMILY 10,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R15</td><td>ONE&amp;amp;TWO FAMILY 15,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R20</td><td>ONE&amp;amp;TWO FAMILY 20,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R30</td><td>ONE&amp;amp;TWO FAMILY 30,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R40</td><td>ONE&amp;amp;TWO FAMILY 40,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R6</td><td>ONE&amp;amp;TWO FAMILY 6,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R6-A</td><td>ONE&amp;amp;TWO FAMILY 6,000 SQUARE FOOT LOT, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R8</td><td>ONE&amp;amp;TWO FAMILY 8,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R8-A</td><td>ONE&amp;amp;TWO FAMILY 8,000 SQUARE FOOT LOT, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">R80</td><td>ONE&amp;amp;TWO FAMILY 80,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM100</td><td>MULTIFAMILY 100 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM100-A</td><td>MULTIFAMILY 100 UNITS PER ACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM100-A-NS</td><td>MULTIFAMILY 100 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM15</td><td>MULTIFAMILY 15 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM15-A</td><td>MULTIFAMILY 15 UNITS PER ACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM15-A-NS</td><td>MULTIFAMILY 15 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM15-NS</td><td>MULTIFAMILY 15 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM2</td><td>MULTIFAMILY 2 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM2-NS</td><td>MULTIFAMILY 2 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM20</td><td>MULTIFAMILY 20 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM20-A</td><td>MULTIFAMILY 20 UNITS PER ACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM20-A-NS</td><td>MULTIFAMILY 20 UNITS PER ACRE, ALT, NOT STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM20-NS</td><td>MULTIFAMILY 20 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM4</td><td>MULTIFAMILY 4 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM4-NS</td><td>MULTIFAMILY 4 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM40</td><td>MULTIFAMILY 40 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM40-A</td><td>MULTIFAMILY 40 UNITS PERACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM40-A-NS</td><td>MULTIFAMILY 40 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM40-NS</td><td>MULTIFAMILY 40 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM6</td><td>MULTIFAMILY 6 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM6-NS</td><td>MULTIFAMILY 6 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM60</td><td>MULTIFAMILY 60 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM60-A</td><td>MULTIFAMILY 60 UNITS PER ACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM60-A-NS</td><td>MULTIFAMILY 60 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM60-NS</td><td>MULTIFAMILY 60 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM80</td><td>MULTIFAMILY 80 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM80-A</td><td>MULTIFAMILY 80 UNITS PER ACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM80-A-NS</td><td>MULTIFAMILY 80 UNITS PER ACRE, ALT, NOT STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM9</td><td>MULTIFAMILY 9 UNITS PER ACRE</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM9-A</td><td>MULTIFAMILY 9 UNITS PER ACRE, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM9-A-NS</td><td>MULTIFAMILY 9 UNITS PER ACRE, ALT, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RM9-NS</td><td>MULTIFAMILY 9 UNITS PER ACRE, NO STR</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS10</td><td>SINGLE FAMILY 10,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS15</td><td>SINGLE FAMILY 15,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS20</td><td>SINGLE FAMILY 20,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS3.75</td><td>SINGLE FAMILY 3,750 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS3.75-A</td><td>SINGLE FAMILY 3,750 SQUARE FOOT LOT, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS30</td><td>SINGLE FAMILY 30,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS40</td><td>SINGLE FAMILY 40,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS5</td><td>SINGLE FAMILY 5,000 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS5-A</td><td>SINGLE FAMILY 5,000 SQUARE FOOT LOT, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS7.5</td><td>SINGLE FAMILY 7,500 SQUARE FOOT LOT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS7.5-A</td><td>SINGLE FAMILY 7,500 SQUARE FOOT LOT, ALT</td></tr>
+<tr style="background:#fdf6e4"><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">RS80</td><td>SINGLE FAMILY 80,000 SQUARE FOOT LOT</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SCC</td><td>SHOPPING CENTER, COMMUNITY</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SCC-NS</td><td>SHOPPING CENTER, COMMUNITY, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SCN</td><td>SHOPPING CENTER, NEIGHBORHOOD</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SCN-NS</td><td>SHOPPING CENTER, NEIGHBORHOOD, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SCR</td><td>SHOPPING CENTER, REGIONAL</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SCR-NS</td><td>SHOPPING CENTER, REGIONAL, NO STR</td></tr>
+<tr><td style="font-family:Consolas,monospace;font-weight:700;color:#2a5db0;white-space:nowrap">SP</td><td>SPECIFIC PLAN</td></tr>
+ </tbody></table></div>
+ <div class="note">Notes: Metro Nashville's complete base-zoning district list (RS single family, R one &amp; two family, RM multifamily, OR office/residential, MU mixed use, C commercial, O office, I industrial, DTC downtown, SP specific plan; suffix A = alternative standards, NS = no short-term rental). Residential base districts shaded. Source: Metro Nashville <a href="https://maps.nashville.gov/ParcelService/search.asmx/GetZoningCodes" target="_blank" rel="noopener">ParcelService GetZoningCodes</a> (last accessed July 6, 2026).</div>
+
  <h2 class="sec">Assessment class</h2>
  <table>
  <thead><tr><th>Class</th><th>Description</th><th style="text-align:right">Assessment ratio</th><th style="text-align:right">Parcels</th><th style="text-align:right">Share</th></tr></thead>
@@ -165,66 +418,88 @@
  <tr style="font-weight:800;background:#eef4fb"><td class="n">&mdash;</td><td>ALL CLASSES</td><td class="n"></td><td class="n">320,216</td><td class="n">100%</td></tr>
  </tbody>
  </table>
- <div class="note">Notes: Assessment class from the Metro Nashville Assessment History layer (<code>CLASS</code> field), active records, n = 320,216 classified parcels. Tennessee assesses each class at a statutory fraction of appraised value: residential, farm, agricultural, and forest at 25%; commercial and industrial at 40%; public utility at 55%; and exempt, common area / open space, open-space assessment (OSAP), and out-of-county at 0% (Tenn. Code Ann. &sect; 67-5-801). Residential (Class R) is 79.2% of parcels. Source: Metro Nashville ParcelService Assessment History, <a href="https://maps.nashville.gov/ParcelService/Search.asmx?op=GetAssessmentHistory" target="_blank">GetAssessmentHistory &#8599;</a> (active <code>CLASS</code> per parcel, last accessed July 2, 2026).</div>
+ <div class="note">Notes: Assessment class from the Metro Nashville Assessment History layer (<code>CLASS</code> field), active records, n = 320,216 classified parcels. Tennessee assesses each class at a statutory fraction of appraised value: residential, farm, agricultural, and forest at 25%; commercial and industrial at 40%; public utility at 55%; and exempt, common area / open space, open-space assessment (OSAP), and out-of-county at 0% (Tenn. Code Ann. &sect; 67-5-801). Residential (Class R) is 79.2% of parcels. Class list from the ParcelHistory <a href="https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/6/query?where=1%3D1&amp;outFields=CLASS%2CNAME&amp;returnDistinctValues=true&amp;returnGeometry=false&amp;f=html" target="_blank" rel="noopener">MapServer/6 (CLASS)</a>; counts from Metro Nashville ParcelService <a href="https://maps.nashville.gov/ParcelService/Search.asmx?op=GetAssessmentHistory" target="_blank">GetAssessmentHistory &#8599;</a> (active <code>CLASS</code> per parcel, last accessed July 6, 2026).</div>
 
- <div class="two">
- <div>
+ <h2 class="sec">Structure types (all 65)</h2>
+ <input class="codefilter" data-t="stcodes" placeholder="Filter structure types..." style="width:100%;max-width:340px;font-family:inherit;font-size:13px;padding:8px 12px;border:1px solid #cfd8e6;border-radius:8px;margin:0 0 10px"/>
+ <div style="max-height:420px;overflow:auto;border:1px solid #d6ddea;border-radius:8px">
+ <table id="stcodes" style="border:none;border-radius:0;box-shadow:none">
+ <thead><tr><th style="position:sticky;top:0">Structure type</th><th style="text-align:right;position:sticky;top:0">Building cards</th></tr></thead>
+ <tbody>
+<tr style="background:#fdf6e4"><td>SINGLE FAMILY</td><td class="n">168,028</td></tr>
+<tr style="background:#fdf6e4"><td>RESIDENTIAL CONDO</td><td class="n">44,150</td></tr>
+<tr style="background:#fdf6e4"><td>DUPLEX</td><td class="n">5,885</td></tr>
+<tr style="background:#fdf6e4"><td>ZERO LOT LINE</td><td class="n">5,369</td></tr>
+<tr><td>OFFICE</td><td class="n">3,427</td></tr>
+<tr><td>WAREHOUSE</td><td class="n">3,046</td></tr>
+<tr style="background:#fdf6e4"><td>HIGH RISE CONDO</td><td class="n">1,991</td></tr>
+<tr><td>RETAIL/SHOPPING CENTER</td><td class="n">1,957</td></tr>
+<tr style="background:#fdf6e4"><td>R1 DUPLEX</td><td class="n">1,545</td></tr>
+<tr><td>APARTMENT</td><td class="n">889</td></tr>
+<tr><td>CHURCH</td><td class="n">791</td></tr>
+<tr style="background:#fdf6e4"><td>MANUFACTURED HOME</td><td class="n">742</td></tr>
+<tr><td>RESTAURANT/BAR</td><td class="n">660</td></tr>
+<tr><td>SERVICE GARAGE</td><td class="n">457</td></tr>
+<tr><td>MEDICAL OFFICE</td><td class="n">433</td></tr>
+<tr style="background:#fdf6e4"><td>TRIPLEX</td><td class="n">359</td></tr>
+<tr><td>MARKET</td><td class="n">342</td></tr>
+<tr><td>FAST FOOD</td><td class="n">339</td></tr>
+<tr><td>PARKING GARAGE</td><td class="n">283</td></tr>
+<tr style="background:#fdf6e4"><td>QUADPLEX</td><td class="n">260</td></tr>
+<tr><td>BANK</td><td class="n">173</td></tr>
+<tr><td>CLUBHOUSE/UNION HALL</td><td class="n">158</td></tr>
+<tr><td>MID RISE APARTMENT</td><td class="n">153</td></tr>
+<tr><td>EQUIPMENT SHED</td><td class="n">137</td></tr>
+<tr><td>MINI WAREHOUSE</td><td class="n">133</td></tr>
+<tr><td>MOTEL</td><td class="n">129</td></tr>
+<tr><td>BUSINESS CENTER</td><td class="n">122</td></tr>
+<tr><td>HOTEL LUXURY ECONOMY</td><td class="n">111</td></tr>
+<tr><td>LAUNDRY</td><td class="n">110</td></tr>
+<tr><td>OLDER WALKUP APT</td><td class="n">104</td></tr>
+<tr><td>SALES SHOWROOM</td><td class="n">84</td></tr>
+<tr><td>DAYCARE</td><td class="n">81</td></tr>
+<tr><td>GROCERY/SUPERMARKET</td><td class="n">73</td></tr>
+<tr><td>AUDITORIUM</td><td class="n">68</td></tr>
+<tr><td>LODGE/ FRATERNAL</td><td class="n">62</td></tr>
+<tr><td>NURSING HOME</td><td class="n">59</td></tr>
+<tr><td>HOTEL FULL SERVICE</td><td class="n">53</td></tr>
+<tr><td>PHARMACY/DRUG STORE</td><td class="n">45</td></tr>
+<tr><td>MID RISE APARTMENT WITH RETAIL</td><td class="n">43</td></tr>
+<tr><td>MANUFACTURING PLANT</td><td class="n">43</td></tr>
+<tr><td>ELDERLY HOUSING</td><td class="n">42</td></tr>
+<tr><td>TRUCK TERMINAL</td><td class="n">39</td></tr>
+<tr><td>LUMBER</td><td class="n">36</td></tr>
+<tr><td>DISCOUNT STORE</td><td class="n">36</td></tr>
+<tr><td>FUNERAL HOME</td><td class="n">33</td></tr>
+<tr><td>MINI LUBE</td><td class="n">33</td></tr>
+<tr><td>HIGH RISE OFFICE</td><td class="n">32</td></tr>
+<tr><td>CAR WASH</td><td class="n">30</td></tr>
+<tr><td>CLIMATE CONTROL MINI WAREHOUSE</td><td class="n">26</td></tr>
+<tr><td>HEALTH CLUB</td><td class="n">23</td></tr>
+<tr><td>HIGH RISE APARTMENT WITH RETAIL</td><td class="n">23</td></tr>
+<tr><td>HOTEL ECONOMY</td><td class="n">20</td></tr>
+<tr><td>WAREHOUSE RETAIL</td><td class="n">17</td></tr>
+<tr><td>HOSPITAL</td><td class="n">15</td></tr>
+<tr><td>SERVICE STATION</td><td class="n">12</td></tr>
+<tr><td>TENNIS</td><td class="n">10</td></tr>
+<tr><td>BOWLING ALLEY</td><td class="n">9</td></tr>
+<tr><td>COUNTRY CLUB</td><td class="n">8</td></tr>
+<tr><td>COMMERCIAL GREENHOUSE</td><td class="n">7</td></tr>
+<tr><td>ENG/RESEARCH</td><td class="n">7</td></tr>
+<tr><td>DEPARTMENT STORE</td><td class="n">7</td></tr>
+<tr><td>CINEMA</td><td class="n">6</td></tr>
+<tr><td>CONVENTION CENTER</td><td class="n">3</td></tr>
+<tr><td>MAINTENANCE HANGER</td><td class="n">3</td></tr>
+<tr><td>T-HANGER</td><td class="n">1</td></tr>
+ <tr style="font-weight:800;background:#eef4fb"><td>ALL STRUCTURE TYPES</td><td class="n">243,372</td></tr>
+ </tbody></table></div>
+ <div class="note">Notes: The assessor's structure-type classification (CAMA), counting primary building cards (<code>AssessorCardNumber</code> 1 or 2), residential types shaded. A parcel can carry more than one card, so the total exceeds the parcel count. Source: Metro Nashville <a href="https://services2.arcgis.com/HdTo6HJqh92wn4D8/ArcGIS/rest/services/Parcels_with_Building_Characteristics_view/FeatureServer/0/query?where=(AssessorCardNumber%3D1%20OR%20AssessorCardNumber%3D2)&amp;groupByFieldsForStatistics=StructureType&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22OBJECTID%22%2C%22outStatisticFieldName%22%3A%22Parcel_Count%22%7D%5D&amp;returnGeometry=false&amp;f=html" target="_blank" rel="noopener">Parcels with Building Characteristics, FeatureServer/0 &#8599;</a> (last accessed July 6, 2026).</div>
+
  <h2 class="sec">Physical feature type</h2>
  <div class="bars" id="feature"></div>
- </div>
- <div>
- <h2 class="sec">Owner's home state</h2>
- <table id="states"><thead><tr><th>State</th><th style="text-align:right">Parcels</th></tr></thead><tbody></tbody></table>
- <div class="note">Top states by owner mailing address. Tennessee owners hold 91.8% of parcels; the largest out-of-state holders are California, Arizona, Texas, and Florida.</div>
- </div>
- </div>
+ <div class="note">Notes: The cadastral <code>FeatureType</code> geometry class of each parcel. Source: Metro Nashville Cadastral (last accessed July 6, 2026).</div>
 
- <h2 class="sec">Occupancy, owner-occupied vs. absentee</h2>
- <div class="bars" id="occ"></div>
- <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP. 194,152 parcels (67.7%) match; 92,302 (32.2%) are absentee-owned. Source: <code>OwnZip = PropZip</code> filter, Metro Nashville Cadastral (last accessed July 2, 2026).</div>
-
- <h2 class="sec">Largest corporate owners (by legal entity)</h2>
- <table>
- <thead><tr><th>#</th><th>Owner entity</th><th style="text-align:right">Parcels</th><th style="text-align:right">Appraised</th></tr></thead>
- <tbody>
- <tr><td>1</td><td>Normandy II General Partnership</td><td class="n">284</td><td class="n">$99.7M</td></tr>
- <tr><td>2</td><td>AMH TN Development, LLC</td><td class="n">199</td><td class="n">$91.3M</td></tr>
- <tr><td>3</td><td>AMH Mountain Springs Development, LLC</td><td class="n">186</td><td class="n">$77.4M</td></tr>
- <tr><td>4</td><td>AH4R-TN3, LLC</td><td class="n">181</td><td class="n">$76.0M</td></tr>
- <tr><td>5</td><td>YAMASA Co., Ltd (Progress Residential)</td><td class="n">165</td><td class="n">$61.3M</td></tr>
- <tr><td>6</td><td>Lake Shore Estates, Inc.</td><td class="n">131</td><td class="n">$52.2M</td></tr>
- <tr><td>7</td><td>AH4R TN Properties Three, LLC</td><td class="n">127</td><td class="n">$57.3M</td></tr>
- <tr><td>8</td><td>STAR 2022-SFR3 Borrower, LP (Starwood)</td><td class="n">101</td><td class="n">$55.5M</td></tr>
- <tr><td>9</td><td>Lincoya Townhomes, LLC</td><td class="n">97</td><td class="n">$28.5M</td></tr>
- <tr><td>10</td><td>2174 Rivendell Terrace LLC</td><td class="n">97</td><td class="n">$25.1M</td></tr>
- <tr><td>11</td><td>AHI Borrower, LP (Amherst)</td><td class="n">81</td><td class="n">$37.3M</td></tr>
- <tr><td>12</td><td>Rowan Propco LLC (Progress)</td><td class="n">80</td><td class="n">$25.8M</td></tr>
- <tr><td>13</td><td>Progress Residential Borrower 6, LLC</td><td class="n">73</td><td class="n">$27.2M</td></tr>
- <tr><td>14</td><td>VB TAH, LLC (VineBrook)</td><td class="n">59</td><td class="n">$18.1M</td></tr>
- <tr><td>15</td><td>Tenax DPI Property, LLC (Tricon)</td><td class="n">51</td><td class="n">$29.6M</td></tr>
- </tbody>
- </table>
- <div class="note">Notes: Raw legal-entity owner names (before shell resolution), grouped by <code>Owner</code>, holding 2 or more parcels. 1,785 corporate entities hold 2+ parcels. The list understates true concentration because a single operator fragments across many entities: American Homes 4 Rent appears here as AMH TN Development, AMH Mountain Springs, AH4R-TN3, and AH4R TN Properties Three; Progress Residential as YAMASA, Rowan Propco, and numbered Borrower LLCs 4 through 20. The <a href="Current_Cadastral_Holdings_Explorer.html">Current Cadastral Holdings Explorer</a> resolves these shells to their parent brands. Query: <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query?where=%28DUCount%3D1+OR+DUCount%3D2%29+AND+LUDesc+IN+%28%27SINGLE+FAMILY%27%2C%27ZERO+LOT+LINE%27%2C%27DUPLEX%27%2C%27RESIDENTIAL+CONDO%27%29+AND+FeatureType+NOT+IN+%28%27Multistory+Condo%27%2C%27Multistory+Common+Area%27%2C%27Open+Space%27%29+AND+%28OWNER+LIKE+%27%25LLC%25%27+OR+OWNER+LIKE+%27%25SFR%25%27+OR+OWNER+LIKE+%27%25BORROW%25%27%29&amp;groupByFieldsForStatistics=Owner&amp;outStatistics=%5B%7B%22statisticType%22%3A%22count%22%2C%22onStatisticField%22%3A%22ParID%22%2C%22outStatisticFieldName%22%3A%22Total_Parcel_Count%22%7D%5D&amp;orderByFields=Total_Parcel_Count+DESC&amp;f=html" target="_blank">MapServer/4/query &#8599;</a> (last accessed July 2, 2026).</div>
-
- <h2 class="sec">The residential housing universe</h2>
- <div class="tiles">
- <div class="tile"><div class="n">205,915</div><div class="l">Residential parcels</div><div class="s">1&ndash;2 unit SF, condo, duplex, ZLL</div></div>
- <div class="tile"><div class="n">215,024</div><div class="l">Dwelling units</div></div>
- <div class="tile"><div class="n">$121.6B</div><div class="l">Total appraised</div></div>
- <div class="tile"><div class="n">$81.9B</div><div class="l">Improvement value</div></div>
- <div class="tile"><div class="n">$39.7B</div><div class="l">Land value</div></div>
- <div class="tile"><div class="n">412M</div><div class="l">Finished sq ft</div></div>
- </div>
- <table style="margin-top:16px"><thead><tr><th>Land use</th><th style="text-align:right">Parcels</th><th style="text-align:right">Dwelling units</th><th style="text-align:right">Total appraised</th></tr></thead>
- <tbody>
- <tr><td>Single family</td><td class="n">156,517</td><td class="n">158,443</td><td class="n">$96.76B</td></tr>
- <tr><td>Residential condo</td><td class="n">36,931</td><td class="n">37,011</td><td class="n">$19.86B</td></tr>
- <tr><td>Duplex</td><td class="n">7,048</td><td class="n">14,091</td><td class="n">$3.48B</td></tr>
- <tr><td>Zero lot line</td><td class="n">5,419</td><td class="n">5,479</td><td class="n">$1.47B</td></tr>
- <tr style="font-weight:800;background:#eef4fb"><td>TOTAL</td><td class="n">205,915</td><td class="n">215,024</td><td class="n">$121.57B</td></tr>
- </tbody></table>
- <div class="note">Notes: The non-owner-agnostic residential universe used throughout this project. Filter <code>(DUCount 1&ndash;2) AND LUDesc IN ('SINGLE FAMILY','ZERO LOT LINE','DUPLEX','RESIDENTIAL CONDO') AND FeatureType IN ('Lot','Condo','Acreage Tract','Other')</code>, statistics count(ParID) + sum(DUCount, Acres, FinishArea, LandAppr, ImprAppr, TotlAppr). <a href="https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query" target="_blank">Metro Nashville Cadastral, Ownership Parcels</a> (last accessed July 2, 2026).</div>
-
+ <div class="grouphdr">Property characteristics<span>The physical and occupancy profile of the stock: unit counts, age, and who lives in the home.</span></div>
  <h2 class="sec">Parcels by dwelling-unit count</h2>
  <div class="bars" id="ducount"></div>
  <div class="note">Notes: Grouped into <code>DUCount</code> buckets over all 286,721 parcels. One-unit parcels dominate (75%); 59,303 carry no dwelling unit (vacant land / common area); 1,921 parcels hold 3+ units. Source: Metro Nashville Cadastral (last accessed July 2, 2026).</div>
@@ -232,6 +507,11 @@
  <h2 class="sec">When the housing was built</h2>
  <div class="bars" id="yearbuilt"></div>
  <div class="note">Notes: Year the primary structure was built (<code>YearBuilt</code>), for the 224,060 residential parcels with a recorded build year (median 1985). Two building booms stand out: the postwar decades (1950s&ndash;60s) and the 2000s. Source: Metro Nashville assessor building characteristics (CAMA), paired to the cadastral by parcel ID (last accessed July 2, 2026).</div>
+
+ <h2 class="sec">Occupancy, owner-occupied vs. absentee</h2>
+ <div class="bars" id="occ"></div>
+ <div class="note">Notes: Owner-occupancy proxy = owner mailing ZIP equals property ZIP. 194,152 parcels (67.7%) match; 92,302 (32.2%) are absentee-owned. Source: <code>OwnZip = PropZip</code> filter, Metro Nashville Cadastral (last accessed July 2, 2026).</div>
+
 
  <h2 class="sec">Sources &amp; live queries</h2>
  <div class="note" style="font-style:normal;color:#3a4652;font-size:12.5px;line-height:1.6">Every figure on this page is replayable against the live county and federal servers (all last accessed July 2, 2026). Add <code>&amp;f=json</code> to any ArcGIS link for machine-readable output.</div>
@@ -298,7 +578,6 @@ const FEAT=[
  ["Lot",156364],["Condo",48044],["Other",26756],["Multistory condo",21783],
  ["Acreage tract",20507],["Common area",9128],["Open space",3438],["Cemetery",316]
 ];
-const STATES=[["TN",263252],["CA",4989],["AZ",2668],["TX",2067],["FL",1969],["GA",1599],["NY",1141],["IL",1104]];
 function bars(el,data,max,useVal){
  el.innerHTML=data.map(d=>{
  const c=d[1], w=Math.max(1.5,100*c/max);
@@ -307,11 +586,19 @@ function bars(el,data,max,useVal){
  }).join('');
 }
 bars(document.getElementById('feature'),FEAT,FEAT[0][1],false);
-document.querySelector('#states tbody').innerHTML=STATES.map(s=>`<tr><td>${s[0]}</td><td class="n">${fmt(s[1])}</td></tr>`).join('');
 bars(document.getElementById('occ'),[["Owner-occupied (ZIP match)",194152],["Absentee / non-owner-occupied",92302]],194152,true);
 const DU=[["0 (vacant / no unit)",59303],["1 unit",216204],["2 units",9293],["3–4 units",835],["5–9 units",183],["10–49 units",317],["50+ units",586]];
 bars(document.getElementById('ducount'),DU,DU[1][1],false);
 const YB=[["<1940",16408],["1940–49",11144],["1950–59",25861],["1960–69",27313],["1970–79",20939],["1980–89",28073],["1990–99",20256],["2000–09",32899],["2010–19",25479],["2020+",15688]];
 bars(document.getElementById('yearbuilt'),YB,Math.max(...YB.map(y=>y[1])),true);
+
+document.querySelectorAll('.codefilter').forEach(function(inp){
+  inp.addEventListener('input',function(){
+    var q=this.value.toLowerCase(), tb=document.getElementById(this.dataset.t).querySelector('tbody');
+    tb.querySelectorAll('tr').forEach(function(tr){
+      tr.style.display = tr.textContent.toLowerCase().indexOf(q)>-1 ? '' : 'none';
+    });
+  });
+});
 </script>
 </body></html>
