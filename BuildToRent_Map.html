@@ -23,17 +23,18 @@ html,body{margin:0;height:100%;font-family:Garamond,"EB Garamond",Georgia,serif}
 #yearbar input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;pointer-events:auto;height:15px;width:15px;border-radius:50%;background:#1c458c;border:2px solid #fff;box-shadow:0 0 2px #0006;cursor:pointer}
 #yearbar .track{position:absolute;top:9px;left:0;right:0;height:4px;background:#dfe3e8;border-radius:2px}
 #status{position:absolute;bottom:12px;right:12px;z-index:600;background:#fffe;border:1px solid var(--bd);border-radius:4px;padding:4px 9px;font-size:11px;color:#4a5560}
-.sec{margin:6px 0 2px;font-size:9.5px;font-weight:800;letter-spacing:.5px;color:#8a94a0;text-transform:uppercase}
-.lp a{color:#1c458c}.ad{font-size:11.5px;line-height:1.4}.ad b{color:#1c458c}
-.mismatch{background:#fbeaec;border-left:3px solid #d7263d;padding:4px 7px;border-radius:3px;margin-top:3px}
+.sec{margin:7px 0 2px;font-size:9.5px;font-weight:800;letter-spacing:.5px;color:#8a94a0;text-transform:uppercase;border-top:1px solid #eef0f3;padding-top:4px}
+.lp a{color:#1c458c}
+.mismatch{background:#fbeaec;border-left:3px solid #d7263d;padding:3px 7px;border-radius:3px;margin-top:3px;font-size:11px}
 .sale{background:#eef5ec;border-left:3px solid #2c7d46;padding:3px 7px;border-radius:3px;font-size:11.5px}
-.pbox{background:#eef2f8;border-left:3px solid #1c458c;padding:4px 7px;border-radius:3px}
-details{margin-top:3px;border-top:1px solid #eef0f3;padding-top:2px}summary{cursor:pointer;font-size:11.5px;color:#1c458c;font-weight:700}
+.pbox{background:#eef2f8;border-left:3px solid #1c458c;padding:4px 7px;border-radius:3px;font-size:11px}
+details{margin-top:2px;border-top:1px solid #eef0f3;padding-top:2px}summary{cursor:pointer;font-size:11.5px;color:#1c458c;font-weight:700}
+table.g{width:100%;border-collapse:collapse;font-size:11px}
+table.g td{padding:1px 4px 1px 0;vertical-align:top}table.g td:first-child{color:#61707f;white-space:nowrap;width:44%}
 table.ch{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:3px}
 table.ch td{border-top:1px solid #eef0f3;padding:2px 4px 2px 0;vertical-align:top}
-table.kv td:first-child{color:#61707f;white-space:nowrap;padding-right:8px;width:42%}
 .occ{color:#2c7d46;font-weight:700}.ren{color:#b3282d}.pre{color:#9aa4af}
-.pop-scroll{max-height:60vh;overflow-y:auto}
+.pop-scroll{max-height:62vh;overflow-y:auto}
 </style></head><body><div id="map"></div>
 <div class="card"><h1>Who builds to rent Nashville</h1><p>6,994 single-family &amp; duplex homes built 2000+ that have <b>never been owner-occupied since construction</b>. Color by owner location, type, or SFR operator. Click a home for its full dossier.</p></div>
 <div id="legendCard"><div class="modes"><button data-m="loc" class="on">Owner location</button><button data-m="ot">Owner type</button><button data-m="br">SFR operator</button></div><div id="legendTitle"></div><div id="hint">click a legend row to isolate</div><div id="sw"></div></div>
@@ -53,37 +54,48 @@ fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boun
 const rndr=L.canvas({padding:.5});
 function mk(p,solo){const a=A(),i=p[a.ix];return L.circleMarker([p[0],p[1]],{renderer:rndr,radius:solo?5:3.2,weight:solo?.7:.4,color:'#fff',fillColor:col(a,i),fillOpacity:.82,interactive:false});}
 function visible(){const a=A();return PTS.filter(p=>(sel<0||p[a.ix]===sel)&&p[3]>=y0&&p[3]<=y1);}
-function cget(pairs,k){for(const kv of pairs)if(kv[0]===k)return kv[1];return '';}
-function drop(title,inner){return '<details><summary>'+title+'</summary>'+inner+'</details>';}
+function cget(pairs,k){if(pairs)for(const kv of pairs)if(kv[0]===k)return kv[1];return '';}
+function drop(t,inner){return inner?'<details><summary>'+t+'</summary>'+inner+'</details>':'';}
+function row(k,v){return v?'<tr><td>'+k+'</td><td>'+esc(v)+'</td></tr>':'';}
 function popup(p){const L2=(u,t)=>'<a href="'+u+'" target="_blank" rel="noopener">'+t+'</a>';const apn=p[5],pid=p[6],yr=p[3],E='https://epermits.nashville.gov/api/permit/1.0';
- const det=DETAILS?DETAILS[apn]:null;const cad=det?det.cad:[];
+ const det=DETAILS?DETAILS[apn]:null;const cad=det?det.cad:[];const cm=det&&det.comper?det.comper:null;
  const full=cad.length?[cget(cad,'PropAddr'),cget(cad,'PropCity'),cget(cad,'PropState'),cget(cad,'PropZip')].filter(Boolean).join(' '):p[4];
- let h='<div class="lp pop-scroll" style="min-width:252px;max-width:288px;font-size:12px">';
+ const struct=cget(cad,'FeatureType')||(p[19]?p[19][2]:'')||(p[2]===2?'Duplex':'Single family');
+ const du=cget(cad,'DUCount')||p[2];const fin=cget(cad,'FinishArea');
+ const zoning=p[19]?p[19][3]:'';const lu=cget(cad,'LUDesc')||(p[19]?p[19][0]:'');const acls=p[19]?p[19][1]:'';
+ let h='<div class="lp pop-scroll" style="min-width:255px;max-width:290px;font-size:12px">';
  h+='<img src="https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+apn+'_1.jpg" style="width:100%;border-radius:5px;margin-bottom:4px" onerror="this.style.display=\'none\'" loading="lazy"/>';
- h+='<b style="font-size:13px">'+esc(full||apn)+'</b><br><span style="color:#54606d">Built '+yr+' &middot; '+(p[2]===2?'Duplex':'Single-family')+(cad.length?' &middot; '+esc(cget(cad,'DUCount'))+' dwelling unit(s)':'')+'</span>';
- h+='<div class="sec">Why it is build-to-rent</div><div class="ad"><b>Property:</b> '+esc(full||p[4])+'<div class="mismatch"><b>Owner mails to:</b> '+esc(p[11]||'(unknown)')+'</div><span style="color:#8a94a0;font-size:10.5px">'+esc(p[12])+' &middot; never owner-occupied since built</span></div>';
+ h+='<b style="font-size:13px">'+esc(full||apn)+'</b>';
+ h+='<div class="sec">Property information</div><table class="g">';
+ h+=row('Address',cget(cad,'PropAddr')||p[4])+row('City / State / Zip',[cget(cad,'PropCity'),cget(cad,'PropState'),cget(cad,'PropZip')].filter(Boolean).join(' '));
+ h+=row('Year built',yr)+row('Structure type',struct)+row('Dwelling units',du);
+ h+=row('Zoning',zoning)+row('Land use',lu)+row('Assessment class',acls);
+ h+=row('Finished area',fin?fin+' sq ft':(cm?cm.FinishedArea+' sq ft':''));
+ if(cm){h+=row('Condition',cm.Condition)+row('Grade',cm.Grade)+row('Bedrooms',cm.NumofBedrooms)+row('Baths (full / half)',(cm.FullBath||'')+' / '+(cm.HalfBath||''))+row('Stories',cm.StoryHgt)+row('Exterior',cm.primewall)+row('Market value',cm.Total_Appraised?'$'+Number(cm.Total_Appraised).toLocaleString():'');}
+ h+='</table>';
+ h+='<div class="sec">Current owner</div><table class="g">'+row('Owner',p[7]+(p[8]?' ('+p[8]+')':''))+row('Owner type',p[9])+row('Date acquired',p[10])+row('Mailing address',p[11])+'</table>';
+ h+='<div class="mismatch">Property zip &ne; owner mailing zip &middot; '+esc(p[12])+' &middot; never owner-occupied since built</div>';
  if(p[13])h+='<div class="sec">Last recorded sale</div><div class="sale">'+esc(p[13])+'</div>';
- h+='<div class="sec">Current owner</div><div class="ad">'+esc(p[7])+(p[8]?'<br><b>'+esc(p[8])+'</b>':'')+'<br><span style="color:#61707f">'+esc(p[9])+(p[10]?' &middot; acquired '+esc(p[10]):'')+'</span></div>';
  const pm=p[18];
  if(pm&&pm!==0){h+='<div class="sec">Permit that built the home</div><div class="pbox"><b>'+esc(pm[0])+'</b>'+(pm[1]?' ('+pm[1]+')':'')+(pm[7]?' <span style="color:#8a94a0">'+esc(pm[7])+'</span>':'');
    const rr=[['Applicant / builder',pm[2]+(pm[3]?' — '+pm[3]:'')],['Contractor',pm[4]],['Permit owner',pm[5]],['Owner at permit',pm[6]]].filter(x=>x[1]&&String(x[1]).trim());
    h+='<table class="ch">'+rr.map(x=>'<tr><td style="color:#1c458c;font-weight:700;white-space:nowrap;padding-right:6px">'+x[0]+'</td><td>'+esc(x[1])+'</td></tr>').join('')+'</table>';
-   if(pm[8])h+='<div style="font-size:10.5px;margin-top:2px">'+L2(E+'/CasePeople?$filter=caseID%20eq%20'+pm[8],'all permit people')+' &middot; '+L2(E+'/Case/'+pm[8],'permit record')+'</div>';
-   h+='</div>';}
- // dropdowns
+   if(pm[8])h+='<div style="font-size:10.5px;margin-top:2px">'+L2(E+'/CasePeople?$filter=caseID%20eq%20'+pm[8],'all permit people')+' &middot; '+L2(E+'/Case/'+pm[8],'permit record')+'</div>';h+='</div>';}
+ h+='<div class="sec">Histories</div>';
  const ch=p[14]||[];
- if(ch.length)h+=drop('Ownership history ('+ch.length+')','<table class="ch">'+ch.map(o=>{const oy=parseInt(String(o[0]).slice(-4));const pre=oy<yr;const badge=pre?'<span class="pre">pre-build</span>':(o[3]?'<span class="occ">owner-occ</span>':'<span class="ren">rental</span>');return '<tr><td style="white-space:nowrap">'+esc(o[0])+'</td><td>'+esc(o[1])+(o[2]>1000?'<br><span style="color:#61707f">$'+o[2].toLocaleString()+'</span>':'')+'</td><td style="text-align:right;white-space:nowrap">'+badge+'</td></tr>';}).join('')+'</table>');
- const phh=p[20];
- if(phh&&phh!==0)h+=drop('Permit history ('+phh.length+')','<table class="ch">'+phh.map(q=>'<tr><td style="white-space:nowrap">'+esc(q[1]||'')+'</td><td>'+esc(q[0])+(q[3]?'<br><span style="color:#61707f">'+esc(q[3])+'</span>':'')+'</td><td style="text-align:right">'+esc(q[2])+'</td></tr>').join('')+'</table>');
- const prh=p[21];
- if(prh&&prh!==0)h+=drop('Property history ('+prh.length+')','<table class="ch">'+prh.map(q=>'<tr><td style="white-space:nowrap">'+esc(q[0])+'</td><td>'+esc(q[1])+(q[2]?'<br><span style="color:#61707f">'+esc(q[2])+'</span>':'')+'</td></tr>').join('')+'</table>');
- if(cad.length)h+=drop('Cadastral information ('+cad.length+' fields)','<table class="ch kv">'+cad.map(kv=>'<tr><td>'+esc(kv[0])+'</td><td>'+esc(kv[1])+'</td></tr>').join('')+'</table>');
- if(det&&det.assess&&det.assess.length)h+=drop('Assessment history ('+det.assess.length+')','<table class="ch"><tr><td><b>Year</b></td><td><b>Class</b></td><td style="text-align:right"><b>Land</b></td><td style="text-align:right"><b>Impr</b></td><td style="text-align:right"><b>Total</b></td></tr>'+det.assess.map(a=>'<tr><td>'+esc(a[0])+'</td><td>'+esc(a[1])+'</td><td style="text-align:right">'+(a[2]!=null?'$'+a[2].toLocaleString():'')+'</td><td style="text-align:right">'+(a[3]!=null?'$'+a[3].toLocaleString():'')+'</td><td style="text-align:right">'+(a[4]!=null?'$'+a[4].toLocaleString():'')+'</td></tr>').join('')+'</table>');
- if(det&&det.acs)h+=drop('ACS census','<table class="ch kv"><tr><td>Census tract</td><td>'+esc(det.acs[0])+'</td></tr><tr><td>Block group</td><td>'+esc(det.acs[1])+'</td></tr><tr><td>% renter-occupied (block group)</td><td>'+(det.acs[2]!=null?det.acs[2]+'%':'n/a')+'</td></tr></table>');
- if(!det&&DETAILS===null)h+='<div style="font-size:10.5px;color:#8a94a0;margin-top:4px">loading full cadastral / assessment / census records…</div>';
- h+='<div class="sec">Records</div><div style="font-size:11px;line-height:1.7">APN '+esc(apn)+'<br>'+[L2('https://maps.nashville.gov/ParcelViewer/?parcelID='+apn,'Parcel Viewer'),(pid?L2('https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+pid,'Property Card'):''),L2('https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+apn,'Comper'),L2(E+'/CaseAddress?$filter=apn%20eq%20%27'+apn+'%27','All permits')].filter(Boolean).join(' &middot; ')+'</div></div>';
+ h+=drop('Ownership history ('+ch.length+')',ch.length?'<table class="ch">'+ch.map(o=>{const oy=parseInt(String(o[0]).slice(-4));const pre=oy<yr;const badge=pre?'<span class="pre">pre-build</span>':(o[3]?'<span class="occ">owner-occ</span>':'<span class="ren">rental</span>');return '<tr><td style="white-space:nowrap">'+esc(o[0])+'</td><td>'+esc(o[1])+(o[2]>1000?'<br><span style="color:#61707f">$'+o[2].toLocaleString()+'</span>':'')+'</td><td style="text-align:right;white-space:nowrap">'+badge+'</td></tr>';}).join('')+'</table>':'');
+ const phh=p[20];h+=drop('Permit history ('+((phh&&phh!==0)?phh.length:0)+')',(phh&&phh!==0)?'<table class="ch">'+phh.map(q=>'<tr><td style="white-space:nowrap">'+esc(q[1]||'')+'</td><td>'+esc(q[0])+(q[3]?'<br><span style="color:#61707f">'+esc(q[3])+'</span>':'')+'</td><td style="text-align:right">'+esc(q[2])+'</td></tr>').join('')+'</table>':'');
+ const prh=p[21];h+=drop('Property history ('+((prh&&prh!==0)?prh.length:0)+')',(prh&&prh!==0)?'<table class="ch">'+prh.map(q=>'<tr><td style="white-space:nowrap">'+esc(q[0])+'</td><td>'+esc(q[1])+(q[2]?'<br><span style="color:#61707f">'+esc(q[2])+'</span>':'')+'</td></tr>').join('')+'</table>':'');
+ const zh=det?det.zoning:null;h+=drop('Zoning history ('+(zh?zh.length:0)+')',(zh&&zh.length)?'<table class="ch">'+zh.map(q=>'<tr><td style="white-space:nowrap">'+esc(q[0])+'</td><td><b>'+esc(q[1])+'</b>'+(q[2]?'<br><span style="color:#61707f">'+esc(q[2])+'</span>':'')+(q[3]?'<br><span style="color:#8a94a0">'+esc(q[3])+'</span>':'')+'</td></tr>').join('')+'</table>':'');
+ h+='<div class="sec">Full records</div>';
+ h+=drop('Cadastral information ('+cad.length+' fields)',cad.length?'<table class="ch">'+cad.map(kv=>'<tr><td style="color:#61707f;white-space:nowrap;width:42%">'+esc(kv[0])+'</td><td>'+esc(kv[1])+'</td></tr>').join('')+'</table>':'');
+ if(det&&det.assess&&det.assess.length)h+=drop('Assessment history ('+det.assess.length+')','<table class="ch"><tr><td><b>Yr</b></td><td><b>Class</b></td><td style="text-align:right"><b>Land</b></td><td style="text-align:right"><b>Impr</b></td><td style="text-align:right"><b>Total</b></td></tr>'+det.assess.map(a=>'<tr><td>'+esc(a[0])+'</td><td>'+esc(a[1])+'</td><td style="text-align:right">'+(a[2]!=null?'$'+a[2].toLocaleString():'')+'</td><td style="text-align:right">'+(a[3]!=null?'$'+a[3].toLocaleString():'')+'</td><td style="text-align:right">'+(a[4]!=null?'$'+a[4].toLocaleString():'')+'</td></tr>').join('')+'</table>');
+ if(cm){const keys=Object.keys(cm);h+=drop('Comper CAMA ('+keys.length+' fields)','<table class="ch">'+keys.map(k=>'<tr><td style="color:#61707f;white-space:nowrap;width:46%">'+esc(k)+'</td><td>'+esc(cm[k])+'</td></tr>').join('')+'</table>');}
+ if(det&&det.acs)h+=drop('ACS census','<table class="ch"><tr><td>Census tract</td><td>'+esc(det.acs[0])+'</td></tr><tr><td>Block group</td><td>'+esc(det.acs[1])+'</td></tr><tr><td>% renter-occupied (BG)</td><td>'+(det.acs[2]!=null?det.acs[2]+'%':'n/a')+'</td></tr></table>');
+ if(!det&&DETAILS===null)h+='<div style="font-size:10.5px;color:#8a94a0;margin-top:4px">loading full records…</div>';
+ h+='<div class="sec">Links</div><div style="font-size:11px;line-height:1.7">APN '+esc(apn)+'<br>'+[L2('https://maps.nashville.gov/ParcelViewer/?parcelID='+apn,'Parcel Viewer'),(pid?L2('https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+pid,'Property Card'):''),L2('https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+apn,'Comper'),L2(E+'/CaseAddress?$filter=apn%20eq%20%27'+apn+'%27','All permits')].filter(Boolean).join(' &middot; ')+'</div></div>';
  return h;}
-function nearest(e){const cp=e.containerPoint,src=visible();let best=null,bd=16*16;for(const p of src){const q=m.latLngToContainerPoint([p[0],p[1]]);const dx=q.x-cp.x,dy=q.y-cp.y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=p;}}if(best)L.popup({maxWidth:305}).setLatLng([best[0],best[1]]).setContent(popup(best)).openOn(m);}
+function nearest(e){const cp=e.containerPoint,src=visible();let best=null,bd=16*16;for(const p of src){const q=m.latLngToContainerPoint([p[0],p[1]]);const dx=q.x-cp.x,dy=q.y-cp.y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=p;}}if(best)L.popup({maxWidth:308}).setLatLng([best[0],best[1]]).setContent(popup(best)).openOn(m);}
 function render(){const a=A();if(layer)m.removeLayer(layer);layer=L.layerGroup();const vis=visible();for(const p of vis)mk(p,sel>=0).addTo(layer);layer.addTo(m);
  document.getElementById('legendTitle').textContent=a.ti;
  const order=[...a.BR.keys()].sort((x,y)=>a.cnt[y]-a.cnt[x]);
