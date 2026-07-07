@@ -50,7 +50,7 @@ function col(a,i){return a.COL[i]||'#c9ced6';}
 function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;');}
 function link(u,t){return u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(t)+'</a>':esc(t);}
 const m=L.map('map',{preferCanvas:true}).setView([36.166,-86.784],10);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20}).addTo(m);
+const positron=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20}).addTo(m);const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19});const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri, Maxar, Earthstar Geographics',maxZoom:20});const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20});L.control.layers({'Street (Positron)':positron,'OpenStreetMap':osm,'Aerial':aerial,'Dark':dark},null,{collapsed:false,position:'topleft'}).addTo(m);
 fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(gj=>{L.geoJSON(gj,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(m);}).catch(()=>{});
 const rndr=L.canvas({padding:.5});
 function mk(p,solo){const a=A(),i=p[a.ix];return L.circleMarker([p[0],p[1]],{renderer:rndr,radius:solo?5:3.4,weight:solo?.7:.4,color:'#fff',fillColor:col(a,i),fillOpacity:.82,interactive:false});}
