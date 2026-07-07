@@ -73,7 +73,7 @@ loadShapes();
 m.createPane('par');m.getPane('par').style.zIndex=360;const parRnd=L.canvas({pane:'par',padding:.5});
 let parcels=null;const ptog=document.getElementById('parcelsTog'),pcb=document.getElementById('pcb');pcb.checked=true;
 function loadParcels(){if(parcels){parcels.addTo(m);return;}ptog.querySelector('span').textContent='loading lots…';
- fetch('Subdivision_Parcels.geojson').then(r=>r.json()).then(gj=>{parcels=L.geoJSON(gj,{pane:'par',renderer:parRnd,interactive:false,style:{color:'#5a7d9a',weight:.5,fillColor:'#9cc0d8',fillOpacity:.22}});parcels.addTo(m);parcelIdx=gj.features.map(f=>({f,bb:bbox(f.geometry)}));ptog.querySelector('span').textContent='Parcel lots ('+gj.features.length.toLocaleString()+')';}).catch(()=>{ptog.querySelector('span').textContent='lots failed';});}
+ fetch('Subdivision_Parcels.geojson').then(r=>r.json()).then(gj=>{parcels=L.geoJSON(gj,{pane:'par',renderer:parRnd,interactive:false,style:{color:'#e8730c',weight:1,dashArray:'3,3',fill:false}});parcels.addTo(m);parcelIdx=gj.features.map(f=>({f,bb:bbox(f.geometry)}));ptog.querySelector('span').textContent='Parcel lots ('+gj.features.length.toLocaleString()+')';}).catch(()=>{ptog.querySelector('span').textContent='lots failed';});}
 ptog.onclick=()=>{pcb.checked=!pcb.checked;if(pcb.checked)loadParcels();else if(parcels)m.removeLayer(parcels);};
 loadParcels();
 m.on('click',e=>{
