@@ -38,7 +38,15 @@ const m=L.map('map',{preferCanvas:true}).setView([36.166,-86.784],10);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap, © CARTO',subdomains:'abcd',maxZoom:20}).addTo(m);
 fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(gj=>{L.geoJSON(gj,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(m);}).catch(()=>{});
 const rndr=L.canvas({padding:.5});
-function nearest(e,src){const cp=e.containerPoint;let best=null,bd=16*16;for(const p of src){const q=m.latLngToContainerPoint([p[0],p[1]]);const dx=q.x-cp.x,dy=q.y-cp.y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=p;}}if(best)L.popup({maxWidth:292}).setLatLng([best[0],best[1]]).setContent(popup(best)).openOn(m);}
+function nearestPt(e,src){const cp=e.containerPoint;let best=null,bd=16*16;for(const p of src){const q=m.latLngToContainerPoint([p[0],p[1]]);const dx=q.x-cp.x,dy=q.y-cp.y,d=dx*dx+dy*dy;if(d<bd){bd=d;best=p;}}return best;}
+// point-in-polygon hit testing so subdivisions + lots are clickable under the dots canvas
+function bbox(g){let mnx=1/0,mny=1/0,mxx=-1/0,mxy=-1/0;(function w(c){if(c&&typeof c[0]==='number'){if(c[0]<mnx)mnx=c[0];if(c[0]>mxx)mxx=c[0];if(c[1]<mny)mny=c[1];if(c[1]>mxy)mxy=c[1];return;}for(const x of c)w(x);})(g.coordinates);return[mnx,mny,mxx,mxy];}
+function pip(x,y,r){let inside=false;for(let i=0,j=r.length-1;i<r.length;j=i++){const xi=r[i][0],yi=r[i][1],xj=r[j][0],yj=r[j][1];if(((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi)+xi))inside=!inside;}return inside;}
+function inFeat(x,y,g){const polys=g.type==='Polygon'?[g.coordinates]:g.coordinates;for(const poly of polys){if(!pip(x,y,poly[0]))continue;let hole=false;for(let h=1;h<poly.length;h++)if(pip(x,y,poly[h])){hole=true;break;}if(!hole)return true;}return false;}
+function hitIdx(lng,lat,idx){if(!idx)return null;for(const it of idx){const b=it.bb;if(lng<b[0]||lng>b[2]||lat<b[1]||lat>b[3])continue;if(inFeat(lng,lat,it.f.geometry))return it.f;}return null;}
+function popSub(f){const p=f.properties;return '<div class="pp"><b>'+(p.NAME||'Subdivision')+'</b>'+(p.LOTS?'<br>'+p.LOTS+' lots':'')+(p.yr?'<br>Recorded '+p.yr:'')+(p.inst?'<br>Instrument '+p.inst:'')+'</div>';}
+function popPar(f){const p=f.properties;return '<div class="pp"><b>'+(p.addr||p.APN)+'</b><br>APN '+p.APN+(p.owner?'<br>'+p.owner:'')+(p.lu?'<br>'+p.lu:'')+(p.du?'<br>'+p.du+' dwelling unit(s)':'')+'</div>';}
+let shapeIdx=null,parcelIdx=null;
 function mk(p,solo){const a=A(),bi=p[a.ix],OTHER=a.BR.length-1;return L.circleMarker([p[0],p[1]],{renderer:rndr,radius:solo?5:(bi===OTHER?2.8:4),weight:solo?.7:.3,color:'#fff',fillColor:col(a,bi),fillOpacity:solo?.95:(bi===OTHER?.55:.9),interactive:false});}
 function visible(){const a=A();return PTS.filter(p=>sel<0||p[a.ix]===sel);}
 function render(){const a=A(),OTHER=a.BR.length-1;if(layer)m.removeLayer(layer);layer=L.layerGroup();const src=visible();for(const p of src)if(p[a.ix]===OTHER)mk(p,sel>=0).addTo(layer);for(const p of src)if(p[a.ix]!==OTHER)mk(p,sel>=0).addTo(layer);layer.addTo(m);
@@ -52,14 +60,22 @@ document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{mode=b.data
 m.createPane('shp');m.getPane('shp').style.zIndex=350;const shapeRnd=L.canvas({pane:'shp',padding:.5});
 let shapes=null;const stog=document.getElementById('shapesTog'),scb=document.getElementById('scb');scb.checked=true;
 function loadShapes(){if(shapes){shapes.addTo(m);return;}stog.querySelector('span').textContent='loading shapes…';
- fetch('Subdivisions_shapes.geojson').then(r=>r.json()).then(gj=>{shapes=L.geoJSON(gj,{pane:'shp',renderer:shapeRnd,style:{color:'#7b4c93',weight:.7,fillColor:'#b39ddb',fillOpacity:.15},onEachFeature:(f,l)=>l.bindTooltip((f.properties.NAME||'Subdivision')+(f.properties.LOTS?' · '+f.properties.LOTS+' lots':'')+(f.properties.yr?' · '+f.properties.yr:''),{sticky:true})});shapes.addTo(m);stog.querySelector('span').textContent='Subdivision shapes ('+gj.features.length.toLocaleString()+')';}).catch(()=>{stog.querySelector('span').textContent='shapes failed';});}
+ fetch('Subdivisions_shapes.geojson').then(r=>r.json()).then(gj=>{shapes=L.geoJSON(gj,{pane:'shp',renderer:shapeRnd,interactive:false,style:{color:'#7b4c93',weight:.7,fillColor:'#b39ddb',fillOpacity:.15}});shapes.addTo(m);shapeIdx=gj.features.map(f=>({f,bb:bbox(f.geometry)}));stog.querySelector('span').textContent='Subdivision shapes ('+gj.features.length.toLocaleString()+')';}).catch(()=>{stog.querySelector('span').textContent='shapes failed';});}
 stog.onclick=()=>{scb.checked=!scb.checked;if(scb.checked)loadShapes();else if(shapes)m.removeLayer(shapes);};
 loadShapes();
 // parcel-lot polygons (the actual parcels inside the subdivisions), above shapes, below dots
 m.createPane('par');m.getPane('par').style.zIndex=360;const parRnd=L.canvas({pane:'par',padding:.5});
 let parcels=null;const ptog=document.getElementById('parcelsTog'),pcb=document.getElementById('pcb');pcb.checked=true;
 function loadParcels(){if(parcels){parcels.addTo(m);return;}ptog.querySelector('span').textContent='loading lots…';
- fetch('Subdivision_Parcels.geojson').then(r=>r.json()).then(gj=>{parcels=L.geoJSON(gj,{pane:'par',renderer:parRnd,style:{color:'#5a7d9a',weight:.5,fillColor:'#9cc0d8',fillOpacity:.22},onEachFeature:(f,l)=>{const p=f.properties;l.bindTooltip((p.addr||p.APN)+(p.owner?' · '+p.owner:'')+(p.lu?' · '+p.lu:''),{sticky:true});}});parcels.addTo(m);ptog.querySelector('span').textContent='Parcel lots ('+gj.features.length.toLocaleString()+')';}).catch(()=>{ptog.querySelector('span').textContent='lots failed';});}
+ fetch('Subdivision_Parcels.geojson').then(r=>r.json()).then(gj=>{parcels=L.geoJSON(gj,{pane:'par',renderer:parRnd,interactive:false,style:{color:'#5a7d9a',weight:.5,fillColor:'#9cc0d8',fillOpacity:.22}});parcels.addTo(m);parcelIdx=gj.features.map(f=>({f,bb:bbox(f.geometry)}));ptog.querySelector('span').textContent='Parcel lots ('+gj.features.length.toLocaleString()+')';}).catch(()=>{ptog.querySelector('span').textContent='lots failed';});}
 ptog.onclick=()=>{pcb.checked=!pcb.checked;if(pcb.checked)loadParcels();else if(parcels)m.removeLayer(parcels);};
 loadParcels();
-m.on('click',e=>nearest(e,visible()));render();</script></body></html>
+m.on('click',e=>{
+ const best=nearestPt(e,visible());
+ if(best){L.popup({maxWidth:292}).setLatLng([best[0],best[1]]).setContent(popup(best)).openOn(m);return;}
+ const lng=e.latlng.lng,lat=e.latlng.lat;
+ let f=pcb.checked?hitIdx(lng,lat,parcelIdx):null;
+ if(f){L.popup({maxWidth:292}).setLatLng(e.latlng).setContent(popPar(f)).openOn(m);return;}
+ f=scb.checked?hitIdx(lng,lat,shapeIdx):null;
+ if(f){L.popup({maxWidth:292}).setLatLng(e.latlng).setContent(popSub(f)).openOn(m);}
+});render();</script></body></html>
