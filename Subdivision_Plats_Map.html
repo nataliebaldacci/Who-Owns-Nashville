@@ -51,7 +51,7 @@ document.querySelectorAll('.modes button').forEach(b=>b.onclick=()=>{mode=b.data
 m.createPane('shp');m.getPane('shp').style.zIndex=350;const shapeRnd=L.canvas({pane:'shp',padding:.5});
 let shapes=null;const stog=document.getElementById('shapesTog'),scb=document.getElementById('scb');scb.checked=true;
 function loadShapes(){if(shapes){shapes.addTo(m);return;}stog.querySelector('span').textContent='loading shapes…';
- fetch('Subdivisions_shapes.geojson').then(r=>r.json()).then(gj=>{shapes=L.geoJSON(gj,{pane:'shp',renderer:shapeRnd,style:{color:'#7b4c93',weight:.7,fillColor:'#b39ddb',fillOpacity:.15},onEachFeature:(f,l)=>l.bindTooltip((f.properties.NAME||'Subdivision')+(f.properties.dev?' · '+f.properties.dev:'')+(f.properties.LOTS?' · '+f.properties.LOTS+' lots':''),{sticky:true})});shapes.addTo(m);stog.querySelector('span').textContent='Subdivision shapes ('+gj.features.length.toLocaleString()+')';}).catch(()=>{stog.querySelector('span').textContent='shapes failed';});}
+ fetch('Subdivisions_shapes.geojson').then(r=>r.json()).then(gj=>{shapes=L.geoJSON(gj,{pane:'shp',renderer:shapeRnd,style:{color:'#7b4c93',weight:.7,fillColor:'#b39ddb',fillOpacity:.15},onEachFeature:(f,l)=>l.bindTooltip((f.properties.NAME||'Subdivision')+(f.properties.LOTS?' · '+f.properties.LOTS+' lots':'')+(f.properties.yr?' · '+f.properties.yr:''),{sticky:true})});shapes.addTo(m);stog.querySelector('span').textContent='Subdivision shapes ('+gj.features.length.toLocaleString()+')';}).catch(()=>{stog.querySelector('span').textContent='shapes failed';});}
 stog.onclick=()=>{scb.checked=!scb.checked;if(scb.checked)loadShapes();else if(shapes)m.removeLayer(shapes);};
 loadShapes();
 m.on('click',e=>nearest(e,visible()));render();</script></body></html>
