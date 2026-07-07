@@ -30,7 +30,7 @@ function popup(p){const [la,lo,bi,yr,apn,ad,bu,cn,ci,ow,pid]=p;const E='https://
 const m=L.map('map',{preferCanvas:true}).setView([36.166,-86.784],10);
 L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',subdomains:'abcd',maxZoom:20}).addTo(m);
 fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(gj=>{L.geoJSON(gj,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(m);}).catch(()=>{});
-const rndr=L.canvas({padding:.5});
+const rndr=L.canvas({padding:.5,tolerance:8});
 function mk(p,solo){const bi=p[2];return L.circleMarker([p[0],p[1]],{renderer:rndr,radius:solo?4.2:(bi===OTHER?2.3:3.4),weight:solo?.6:0,color:'#fff',fillColor:COL[bi],fillOpacity:solo?.95:(bi===OTHER?.5:.9)}).bindPopup(()=>popup(p),{maxWidth:270});}
 const groups={},YEARS=[];for(const p of PTS){const yr=p[3];if(!groups[yr]){groups[yr]=L.layerGroup();YEARS.push(yr);}mk(p).addTo(groups[yr]);}YEARS.sort((a,b)=>a-b);
 let selYear=2026,sel=-1;const shown=new Set();let soloLayer=null;
