@@ -46,11 +46,22 @@
 <script>
 var map=L.map('map',{preferCanvas:true}).setView([36.166,-86.784],10);
 var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
-  {attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:20}).addTo(map);
+  {attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:20});
 var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'});
 var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
-  {maxZoom:20,attribution:'Esri World Imagery'});
-L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{position:'topright'}).addTo(map);
+  {maxZoom:20,attribution:'Esri World Imagery (latest)'});
+function wb(id){return L.tileLayer('https://wayback.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/'+id+'/{z}/{y}/{x}',
+  {maxZoom:20,attribution:'Esri Wayback imagery'});}
+var wb2026=wb(64001),wb2024=wb(60013),wb2022=wb(7110),wb2020=wb(9549),wb2018=wb(8255),wb2016=wb(9175),wb2014=wb(5844);
+var params=new URLSearchParams(location.search);
+var focusApn=params.get('apn'); var focusName=params.get('name');
+// when a community is focused, land on aerial so dirt vs built homes is visible
+var base=focusApn?aerial:carto; base.addTo(map);
+L.control.layers({
+  'Aerial (latest)':aerial,'Aerial 2026':wb2026,'Aerial 2024':wb2024,'Aerial 2022':wb2022,
+  'Aerial 2020':wb2020,'Aerial 2018':wb2018,'Aerial 2016':wb2016,'Aerial 2014':wb2014,
+  'CARTO Positron':carto,'OpenStreetMap':osm
+},null,{position:'topright',collapsed:false}).addTo(map);
 
 // Davidson County boundary (dashed, OBJECTID=4)
 fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson')
@@ -63,8 +74,6 @@ fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boun
 var PAL=['#1c458c','#2a9d8f','#f0af1e','#d7263d','#8e44ad','#e07a5f','#3d9970','#c94f7c','#457b9d','#b5651d',
  '#6a4c93','#1b998b','#c1121f','#5f0f40','#0f4c5c','#9a8c98','#e36414','#606c38','#9d4edd','#2b9348',
  '#bc6c25','#8d99ae','#e63946','#588157','#7209b7','#4361ee'];
-var params=new URLSearchParams(location.search);
-var focusApn=params.get('apn'); var focusName=params.get('name');
 if(focusName){document.getElementById('ttl').textContent=focusName;
   document.getElementById('sub').textContent='Build-to-rent community · Davidson County';}
 
