@@ -123,7 +123,7 @@ function popupHtml(a){
     Construction value: ${cv}${a.BLDG_SQ_FT?(' · '+Math.round(a.BLDG_SQ_FT).toLocaleString()+' sq ft'):''}<br>
     APN ${apn} · Case ${a.CASE_NUMBER||''}
     <div class="tk">
-      <a href="https://maps.nashville.gov/ParcelViewer/?find=${apn}" target="_blank">Parcel Viewer</a>
+      <a href="https://maps.nashville.gov/ParcelViewer/?parcelID=${apn}" target="_blank">Parcel Viewer</a>
       <a href="https://www.padctn.org/prc/property/${apn}" target="_blank">Property Card</a>
       <a href="https://www.google.com/maps/search/?api=1&query=${q}" target="_blank">Aerial</a>
       <a href="https://www.google.com/maps?layer=c&cbll=${q}" target="_blank">Street View</a>
