@@ -1,76 +1,157 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Nashville Build-to-Rent Deed Index</title><style>
-  body{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#222;margin:0;padding:24px;background:#f4f4f4;}
-  .wrap{max-width:1120px;margin:0 auto;background:#fff;border:1px solid #cfcfcf;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:22px 26px 30px;}
-  h1{font-size:19px;margin:0 0 2px;color:#1a3a5c;}
-  .lead{font-size:12px;color:#555;margin:0 0 16px;line-height:1.5;}
-  .toc{font-size:12px;margin:0 0 20px;padding:10px 14px;background:#f7f9fb;border:1px solid #e0e6ec;border-radius:3px;}
-  .project{margin:0 0 30px;}
-  h2{font-size:15px;color:#1a3a5c;border-bottom:2px solid #1a3a5c;padding-bottom:4px;margin:0 0 8px;}
-  .tag{font-size:10px;font-weight:normal;color:#fff;background:#6b8299;border-radius:10px;padding:2px 9px;vertical-align:middle;margin-left:6px;}
-  .owner{background:#eef2f6;border:1px solid #d5dee6;border-radius:3px;padding:8px 12px;font-size:12px;margin:0 0 10px;line-height:1.6;}
-  .owner b{color:#1a3a5c;}
-  .meta{display:flex;justify-content:space-between;font-size:11.5px;color:#666;margin-bottom:6px;}
-  table{border-collapse:collapse;width:100%;font-size:11.5px;}
-  thead th{background:#1a3a5c;color:#fff;text-align:left;padding:7px 8px;font-weight:bold;border:1px solid #16324f;white-space:nowrap;}
-  tbody td{padding:6px 8px;border:1px solid #e0e0e0;vertical-align:top;}
-  tbody tr:nth-child(even){background:#f7f9fb;}
-  tbody tr:hover{background:#fdf6e3;}
-  td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
-  td.type{font-weight:bold;color:#333;white-space:nowrap;}
-  td.date{white-space:nowrap;}
-  a.inst{color:#0563c1;text-decoration:none;font-weight:bold;}
-  a.inst:hover{text-decoration:underline;}
-  .img{font-size:10px;color:#888;white-space:nowrap;}
-  .foot{font-size:10.5px;color:#777;margin-top:6px;line-height:1.55;}
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Nashville Build-to-Rent: Owners, Communities & Deeds — Who Owns Nashville</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/><link rel="apple-touch-icon" href="favicon.svg"/>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&family=EB+Garamond&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="won-theme.css">
+<style>
+  :root{--navy:#1c458c;--gold:#f0af1e;--ink:#1b2330;--mut:#61707f;--line:#e4e9f0;--green:#1f8166;--panel:#eef4fb;--bd:#d6ddea}
+  body{margin:0;background:#f6f8fb;color:var(--ink);font-family:'Montserrat',system-ui,sans-serif;line-height:1.5}
+  .top{display:flex;align-items:center;gap:12px;background:var(--navy);color:#fff;padding:14px 22px;border-bottom:4px solid var(--gold)}
+  .top a.brand{color:#fff;text-decoration:none;font-weight:800;font-size:18px;letter-spacing:-.2px}
+  .top a.brand small{display:block;font-size:9px;font-weight:700;color:var(--gold);letter-spacing:2px;text-transform:uppercase}
+  .top .rt{margin-left:auto;font-size:12px;color:#dbe6f5}
+  .wrap{max-width:1120px;margin:0 auto;padding:8px 22px 70px}
+  .kick{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--gold);font-weight:700;margin:18px 0 3px}
+  h1{font-size:27px;font-weight:800;color:var(--navy);margin:0 0 6px;letter-spacing:-.4px}
+  .lead{font-size:15px;color:var(--mut);margin:0 0 14px;max-width:960px;font-family:'EB Garamond',Garamond,serif}
+  .toc{font-size:12px;margin:0 0 22px;padding:10px 14px;background:var(--panel);border:1px solid var(--bd);border-radius:8px;color:#33414f}
+  .project{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 2px 8px rgba(20,50,90,.05);padding:16px 18px;margin:0 0 18px}
+  h2{font-size:16px;font-weight:800;color:var(--navy);margin:2px 0 8px;text-transform:uppercase;letter-spacing:.4px;border-bottom:2px solid var(--gold);padding-bottom:6px}
+  .tag{display:inline-block;font-size:9.5px;font-weight:700;color:#2a4b7c;background:#e7ecf4;border-radius:10px;padding:1px 8px;vertical-align:middle;margin-left:6px;text-transform:none;letter-spacing:0}
+  .owner{background:var(--panel);border:1px solid var(--bd);border-radius:8px;padding:9px 12px;font-size:12.5px;margin:0 0 10px;line-height:1.6}
+  .owner b{color:var(--navy)}
+  .meta{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);margin-bottom:6px;text-transform:uppercase;letter-spacing:.4px}
+  table{border-collapse:collapse;width:100%;margin:2px 0}
+  thead th{font-size:10.5px;text-transform:uppercase;letter-spacing:.5px;color:#5a6673;text-align:left;border-bottom:2px solid var(--navy);padding:6px 8px;white-space:nowrap}
+  tbody td{font-size:12px;padding:6px 8px;border-bottom:1px solid #edf0f5;vertical-align:top}
+  tbody tr:hover{background:#f7f9fc}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--navy);white-space:nowrap}
+  td.type{font-weight:700;color:#33414f;white-space:nowrap}
+  td.date{white-space:nowrap;color:var(--mut)}
+  a.inst{color:var(--navy);text-decoration:none;font-weight:700}
+  a.inst:hover{text-decoration:underline}
+  .img{font-size:9.5px;color:var(--text-faint,#8a94a0);white-space:nowrap}
+  .foot{font-size:10.5px;color:var(--mut);margin-top:6px;line-height:1.55}
+  .badge{color:#fff;border-radius:10px;padding:2px 8px;font-size:10px;white-space:nowrap;font-weight:700}
+  td.op{font-weight:800;color:var(--navy)} td.src{font-size:10px;color:var(--mut)}
+</style>
+</head><body>
+<div class="top"><a class="brand" href="index.html">Who Owns Nashville?<small>Who Builds</small></a><span class="rt">Davidson County &middot; primary government data</span></div>
+<div class="wrap">
+  <p class="kick">Build-to-rent</p>
+  <h1>Nashville Build-to-Rent: Owners, Communities &amp; Deeds</h1>
+  <p class="lead">Every institutional build-to-rent and scattered-site owner in Davidson County, traced through the Register of Deeds and Metro ePermits. The operator table maps each shell LLC to its real community, parent company, builder of record, and build status; the sections below carry the full chain of title, with every instrument number linked to its recorded image. Register's Office for Davidson County (davidsonportal.com) and Metro Codes ePermits.</p>
 
-  .badge{color:#fff;border-radius:10px;padding:2px 8px;font-size:10px;white-space:nowrap;}
-  td.op{font-weight:bold;color:#1a3a5c;} td.src{font-size:10px;color:#777;}
-</style></head>
-<body><div class="wrap"><h1>Nashville Build-to-Rent: Owners, Communities &amp; Deeds</h1>
-<p class="lead">Institutional build-to-rent, scattered-site SFR, and single-owner residential projects in Davidson County, Tennessee, traced through the Register of Deeds. For-sale homebuilder subdivisions are excluded; land-bank pipelines are shown condensed. Register's Office for Davidson County (davidsonportal.com/landrecords).</p>
+
 <div class="toc"><b>Projects (25):</b> Tessa Madison &nbsp;&middot;&nbsp; Westbrook Pointe / Adagio Townhomes &nbsp;&middot;&nbsp; Noir Townhomes &nbsp;&middot;&nbsp; Madison Trinity / 325 West Trinity Lane &nbsp;&middot;&nbsp; Inglenook Townhomes &nbsp;&middot;&nbsp; Hampton Heights &nbsp;&middot;&nbsp; Hillside Village &nbsp;&middot;&nbsp; The Orchards &nbsp;&middot;&nbsp; Homes at 422 38th Avenue North &nbsp;&middot;&nbsp; LMC Towne &nbsp;&middot;&nbsp; Cedars of Cane Ridge &nbsp;&middot;&nbsp; Crestbrook Meadows Apartments &nbsp;&middot;&nbsp; Elmington / CRP-ECG portfolio &nbsp;&middot;&nbsp; 147 Elmhurst Townhomes &nbsp;&middot;&nbsp; Thornton Grove &nbsp;&middot;&nbsp; Moda Vista &nbsp;&middot;&nbsp; Davenport Downs / Harborwood / Coarsey Farms &nbsp;&middot;&nbsp; Harmon West Meade &nbsp;&middot;&nbsp; TPG AG Essential Housing (land bank) &nbsp;&middot;&nbsp; Crest MFLP (Regent Homes rental hold) &nbsp;&middot;&nbsp; VB TAH (VineBrook Homes) &nbsp;&middot;&nbsp; 49 Tennessee Townhomes &nbsp;&middot;&nbsp; Mountain Springs Townhouses &nbsp;&middot;&nbsp; Starwood SFR XII Nashville (scattered-site + securitization) &nbsp;&middot;&nbsp; RESICAP Tennessee (scattered-site SFR)</div>
 
   <div class="project" id="operator-master">
     <h2>Operator Master &mdash; who owns each community <span class="tag">deed + permit data combined</span></h2>
     <div class="meta"><span>29 operators</span><span>Model: 1 Integrated &middot; 2 Contract &middot; 3 Partnership &middot; 4 One-off &middot; 5 Land bank</span></div>
     <table>
-      <thead><tr><th>Operator</th><th>Community</th><th>Model</th><th>Builder of record</th><th>Ultimate parent</th><th>Rows</th><th>Status (from permits)</th><th>Source</th></tr></thead>
+      <thead><tr><th>Community</th><th>Operator</th><th>Model</th><th>Builder of record</th><th>Ultimate parent</th><th>Rows</th><th>Status (from permits)</th><th>Source</th></tr></thead>
       <tbody>
-<tr><td class='op'>American Homes 4 Rent</td><td>AMH Mountain Springs</td><td>1 Integrated</td><td>ECG Residential</td><td>AMH</td><td class='num'>198</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
-<tr><td class='op'>American Homes 4 Rent</td><td>Am Homes Investments Mardon</td><td>1 Integrated</td><td>Mardon Construction</td><td>AMH</td><td class='num'>121</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
-<tr><td class='op'>American Homes 4 Rent</td><td>AMH TN Development</td><td>1 Integrated</td><td>AMH Development GC</td><td>AMH</td><td class='num'>83</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-mountain-springs'>AMH Mountain Springs</a></td><td>American Homes 4 Rent</td><td>1 Integrated</td><td>ECG Residential</td><td>AMH</td><td class='num'>198</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>Am Homes Investments Mardon</td><td>American Homes 4 Rent</td><td>1 Integrated</td><td>Mardon Construction</td><td>AMH</td><td class='num'>121</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-amh-dev'>AMH TN Development</a></td><td>American Homes 4 Rent</td><td>1 Integrated</td><td>AMH Development GC</td><td>AMH</td><td class='num'>83</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
 <tr><td class='op'>AHV Crestbrook</td><td>AHV Crestbrook</td><td>1 Integrated</td><td>AHV (self)</td><td>AHV Communities</td><td class='num'>56</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>AHV Communities</td><td>AHV Westbrook</td><td>1 Integrated</td><td>AHVTN (self)</td><td>AHV Communities</td><td class='num'>23</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>case-level (ePermits)</td></tr>
-<tr><td class='op'>ACPF</td><td>ACPF Spring Path</td><td>2 Contract</td><td>Elmington Residential</td><td>ACPF</td><td class='num'>500</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-westbrook'>AHV Westbrook</a></td><td>AHV Communities</td><td>1 Integrated</td><td>AHVTN (self)</td><td>AHV Communities</td><td class='num'>23</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>ACPF Spring Path</td><td>ACPF</td><td>2 Contract</td><td>Elmington Residential</td><td>ACPF</td><td class='num'>500</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
 <tr><td class='op'>Normandy (local BTR)</td><td>Normandy (local BTR)</td><td>2 Contract</td><td>Ole South Properties</td><td>Normandy II GP (local)</td><td class='num'>348</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>RSD West Trinity</td><td>RSD West Trinity</td><td>2 Contract</td><td>[VERIFY]</td><td>RSD</td><td class='num'>264</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>KSSK</td><td>KSSK</td><td>2 Contract</td><td>[VERIFY]</td><td>KSSK</td><td class='num'>104</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Core</td><td>Core</td><td>2 Contract</td><td>[VERIFY]</td><td>Core Spaces</td><td class='num'>96</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Madison Nashville Trinity</td><td>Madison Nashville Trinity</td><td>2 Contract</td><td>[VERIFY]</td><td>Madison Nashville Trinity</td><td class='num'>81</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Porchlight / Landeavor</td><td>Porchlight / Landeavor</td><td>2 Contract</td><td>[VERIFY]</td><td>Landeavor</td><td class='num'>63</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>TPG / Angelo Gordon</td><td>TPG-AG Meritage Steffisburg</td><td>3 Partnership</td><td>Meritage Homes</td><td>TPG-AG</td><td class='num'>500</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
-<tr><td class='op'>CRP / ECG</td><td>CRP / ECG</td><td>3 Partnership</td><td>Elmington Residential</td><td>Carlyle + Elmington</td><td class='num'>303</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Crescent BTR</td><td>Crescent BTR Harmon</td><td>3 Partnership</td><td>David Weekley Homes</td><td>Crescent Communities</td><td class='num'>174</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>case-level (ePermits)</td></tr>
-<tr><td class='op'>Brookfield</td><td>Brookfield Cane Ridge</td><td>3 Partnership</td><td>Ashton Woods</td><td>Brookfield</td><td class='num'>153</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
-<tr><td class='op'>TPG / Angelo Gordon</td><td>TPG-AG Lennar Pemberton</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>TPG-AG</td><td class='num'>152</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-madison-trinity'>RSD West Trinity</a></td><td>RSD West Trinity</td><td>2 Contract</td><td>[VERIFY]</td><td>RSD</td><td class='num'>264</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-hampton'>KSSK</a></td><td>KSSK</td><td>2 Contract</td><td>[VERIFY]</td><td>KSSK</td><td class='num'>104</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-noir'>Core</a></td><td>Core</td><td>2 Contract</td><td>[VERIFY]</td><td>Core Spaces</td><td class='num'>96</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-madison-trinity'>Madison Nashville Trinity</a></td><td>Madison Nashville Trinity</td><td>2 Contract</td><td>[VERIFY]</td><td>Madison Nashville Trinity</td><td class='num'>81</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-inglenook'>Porchlight / Landeavor</a></td><td>Porchlight / Landeavor</td><td>2 Contract</td><td>[VERIFY]</td><td>Landeavor</td><td class='num'>63</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-tpg-ag'>TPG-AG Meritage Steffisburg</a></td><td>TPG / Angelo Gordon</td><td>3 Partnership</td><td>Meritage Homes</td><td>TPG-AG</td><td class='num'>500</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-crp-ecg'>CRP / ECG</a></td><td>CRP / ECG</td><td>3 Partnership</td><td>Elmington Residential</td><td>Carlyle + Elmington</td><td class='num'>303</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-harmon'>Crescent BTR Harmon</a></td><td>Crescent BTR</td><td>3 Partnership</td><td>David Weekley Homes</td><td>Crescent Communities</td><td class='num'>174</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-cane-ridge'>Brookfield Cane Ridge</a></td><td>Brookfield</td><td>3 Partnership</td><td>Ashton Woods</td><td>Brookfield</td><td class='num'>153</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-tpg-ag'>TPG-AG Lennar Pemberton</a></td><td>TPG / Angelo Gordon</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>TPG-AG</td><td class='num'>152</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
 <tr><td class='op'>Pulte</td><td>Pulte</td><td>3 Partnership</td><td>Pulte (self)</td><td>PulteGroup</td><td class='num'>99</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
 <tr><td class='op'>Lennar</td><td>Lennar</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>Lennar</td><td class='num'>98</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Kennedy Lewis / Lennar</td><td>KLLB AIV Lennar</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>Kennedy Lewis+Lennar</td><td class='num'>91</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-kllb'>KLLB AIV Lennar</a></td><td>Kennedy Lewis / Lennar</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>Kennedy Lewis+Lennar</td><td class='num'>91</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
 <tr><td class='op'>Century Communities</td><td>Century Communities</td><td>3 Partnership</td><td>Century (self)</td><td>Century Communities</td><td class='num'>62</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
 <tr><td class='op'>Invitation / ResiBuilt</td><td>Invitation / ResiBuilt</td><td>3 Partnership</td><td>Paran Homes</td><td>Invitation Homes</td><td class='num'>59</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Invitation BTR (Orchards/Larkin/State St)</td><td>Invitation BTR (Orchards/Larkin/State St)</td><td>3 Partnership</td><td>Paran Homes</td><td>Invitation Homes</td><td class='num'>53</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-orchards'>Invitation BTR (Orchards/Larkin/State St)</a></td><td>Invitation BTR (Orchards/Larkin/State St)</td><td>3 Partnership</td><td>Paran Homes</td><td>Invitation Homes</td><td class='num'>53</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
 <tr><td class='op'>Tricon</td><td>Tricon</td><td>3 Partnership</td><td>[VERIFY]</td><td>Blackstone / Tricon</td><td class='num'>51</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
 <tr><td class='op'>Domain Timberlake</td><td>Domain Timberlake</td><td>3 Partnership</td><td>[VERIFY]</td><td>Domain</td><td class='num'>30</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>VineBrook (VB TAH)</td><td>VineBrook (VB TAH)</td><td>4 One-off</td><td>Century (bought finished)</td><td>NexPoint / VineBrook</td><td class='num'>106</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Starwood</td><td>Starwood</td><td>4 One-off</td><td>ECG / Elmington</td><td>Starwood</td><td class='num'>97</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-vbtah'>VineBrook (VB TAH)</a></td><td>VineBrook (VB TAH)</td><td>4 One-off</td><td>Century (bought finished)</td><td>NexPoint / VineBrook</td><td class='num'>106</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-starwood'>Starwood</a></td><td>Starwood</td><td>4 One-off</td><td>ECG / Elmington</td><td>Starwood</td><td class='num'>97</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
 <tr><td class='op'>ARRIVED</td><td>ARRIVED</td><td>4 One-off</td><td>[VERIFY]</td><td>Arrived</td><td class='num'>13</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
-<tr><td class='op'>Ava Madison (Tessa Madison)</td><td>Ava Madison (Tessa Madison)</td><td>5 Land bank</td><td>(land bank)</td><td>Ava Madison</td><td class='num'>200</td><td><span class='badge' style='background:#8a6d3b'>Pre-construction (land bank)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'><a class='inst' href='#sec-tessa-madison'>Ava Madison (Tessa Madison)</a></td><td>Ava Madison (Tessa Madison)</td><td>5 Land bank</td><td>(land bank)</td><td>Ava Madison</td><td class='num'>200</td><td><span class='badge' style='background:#8a6d3b'>Pre-construction (land bank)</span></td><td class='src'>parcel (cadastral)</td></tr>
       </tbody>
     </table>
   </div>
 
 
-  <div class="project">
+  <div class="project" id="sec-kllb">
+    <h2>City Vista Townhomes <span class="tag">Land-bank &rarr; Lennar takedown</span></h2>
+    <div class="owner">
+      <b>Owner:</b> KLLB AIV LLC (Kennedy Lewis land bank) &rarr; Lennar Homes of TN LLC &nbsp;|&nbsp; <b>Owner address:</b> c/o Lennar, 205 Powell Pl, Brentwood, TN 37027<br>
+      <b>Location:</b> City Vista, Nashville, Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> KLLB AIV bought the assembled site from Rethink Community for $17,385,000 (Oct. 2023), then conveyed finished townhome lots to Lennar Homes of TN in staged takedowns (2025&ndash;2026) &nbsp;|&nbsp; <b>Ultimate parent:</b> Kennedy Lewis Investment Management / Lennar
+    </div>
+    <div class="meta"><span>Showing 1 to 13 of 13 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/10/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310120079929" target="_blank">202310120079929</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>KLLB AIV LLC</td><td class="num">$17,385,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/10/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310120079930" target="_blank">202310120079930</a></td><td>KLLB AIV LLC<br>LENNAR HOMES OF TN LLC<br>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>KLLB AIV LLC<br>LENNAR HOMES OF TN LLC<br>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2023/10/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310120079931" target="_blank">202310120079931</a></td><td>KLLB AIV LLC<br>LENNAR HOMES OF TN LLC</td><td>KLLB AIV LLC<br>LENNAR HOMES OF TN LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/05/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202405090034179" target="_blank">202405090034179</a></td><td>KLLB AIV LLC<br>LENNAR HOMES OF TN LLC</td><td>CITY VISTA TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/05/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202505140037975" target="_blank">202505140037975</a></td><td>KLLB AIV LLC<br>LENNAR HOMES OF TN LLC</td><td>CITY VISTA TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2025/10/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510300086475" target="_blank">202510300086475</a></td><td>KLLB AIV LLC</td><td>CITY VISTA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/12/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512110098808" target="_blank">202512110098808</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$2,010,041.44</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/12/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512110098809" target="_blank">202512110098809</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$2,010,041.44</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/12/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512190101169" target="_blank">202512190101169</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$4,020,082.76</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/02/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202602120011395" target="_blank">202602120011395</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$1,340,027.59</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2026/03/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202603110019475" target="_blank">202603110019475</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC<br>CITY VISTA TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2026/04/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604150030644" target="_blank">202604150030644</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$1,116,689.66</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/06/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606110053172" target="_blank">202606110053172</a></td><td>KLLB AIV LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$1,116,689.66</td>
+      </tr>
+      </tbody>
+    </table>
+    <p class="foot">Source: Register's Office for Davidson County, Tennessee (davidsonportal.com/landrecords). DEEDWARRSP = special warranty deed; DEEDWARR = warranty deed; DEEDMAST = master deed (condominium/HPR declaration); AGRMTWARR = warranty agreement; ESMT = easement; PLAT-LG = plat. KLLB AIV = Kennedy Lewis land-bank affiliate that acquires and holds finished lots, then sells them to Lennar Homes of TN on a takedown schedule.</p>
+  </div>
+  <div class="project" id="sec-tessa-madison">
     <h2>Tessa Madison <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Ava Madison LLC (Two Capital Partners) &nbsp;|&nbsp; <b>Owner address:</b> 1132 Hibiscus Ln, Nolensville, TN 37135 (also c/o Two Capital Partners, Atlanta, GA)<br>
@@ -139,7 +220,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-westbrook">
     <h2>Westbrook Pointe / Adagio Townhomes <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> AHV Westbrook &amp; AHV Newsome BFR Owner LLC (AHV Communities) &nbsp;|&nbsp; <b>Owner address:</b> 150 Paularino Ave Ste D250, Costa Mesa, CA 92626<br>
@@ -224,7 +305,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-noir">
     <h2>Noir Townhomes <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Core PBSFR Nashville Herron LLC (Core Spaces) &nbsp;|&nbsp; <b>Owner address:</b> 1400 N Kingsbury St Fl 3, Chicago, IL 60642<br>
@@ -273,7 +354,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-madison-trinity">
     <h2>Madison Trinity / 325 West Trinity Lane <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Madison Nashville Trinity Owner LLC &nbsp;|&nbsp; <b>Owner address:</b> 4210 Yancey Rd, Charlotte, NC 28217<br>
@@ -338,7 +419,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-inglenook">
     <h2>Inglenook Townhomes <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Porchlight East Hill LLC (Porchlight, local) &nbsp;|&nbsp; <b>Owner address:</b> 2908 Poston Ave, Nashville, TN 37203<br>
@@ -547,7 +628,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-hampton">
     <h2>Hampton Heights <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> KSSK LLC / Jai Jalaram Enterprises LLC &nbsp;|&nbsp; <b>Owner address:</b> 1516 Hampton St, Nashville, TN 37207<br>
@@ -644,7 +725,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-hillside">
     <h2>Hillside Village <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Hillside Property Partners LLC &nbsp;|&nbsp; <b>Owner address:</b> 1728 General George Patton Dr Ste 200, Brentwood, TN 37027<br>
@@ -685,7 +766,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-orchards">
     <h2>The Orchards <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Larkin Springs TN Owner IV LLC / Orchards TN Owner IV LLC &nbsp;|&nbsp; <b>Owner address:</b> 3953 Maple Ave Ste 300, Dallas, TX 75219<br>
@@ -734,7 +815,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-422-38th">
     <h2>Homes at 422 38th Avenue North <span class="tag">BFR (Lennar / Upward America)</span></h2>
     <div class="owner">
       <b>Owner:</b> Upward America Southeast Property Owner LP &nbsp;|&nbsp; <b>Owner address:</b> 205 Powell Pl, Brentwood, TN 37027 (also Charlotte, NC)<br>
@@ -759,7 +840,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-lmc">
     <h2>LMC Towne <span class="tag">Institutional multifamily</span></h2>
     <div class="owner">
       <b>Owner:</b> LMC Towne Property Owner LLC (Lennar Multifamily Communities) &nbsp;|&nbsp; <b>Owner address:</b> 5505 Waterford District Dr, Miami, FL 33126<br>
@@ -824,7 +905,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-cane-ridge">
     <h2>Cedars of Cane Ridge <span class="tag">Land-bank lot takedown</span></h2>
     <div class="owner">
       <b>Owner:</b> Brookfield Holdings Cane Ridge LLC (land bank) &rarr; Ashton Nashville Residential LLC (Ashton Woods, builder) &nbsp;|&nbsp; <b>Owner address:</b> Brookfield: 3200 Park Center Dr Ste 1000, Costa Mesa, CA 92626 &nbsp;/&nbsp; Ashton Woods: 370 Mallory Station Rd Ste 500, Franklin, TN 37067<br>
@@ -933,7 +1014,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-crestbrook-meadows">
     <h2>Crestbrook Meadows Apartments <span class="tag">Existing institutional rental &mdash; 40-yr chain</span></h2>
     <div class="owner">
       <b>Owner:</b> Crestbrook Owner LLC / Crestbrook TIC II Owner LLC (current) &nbsp;|&nbsp; <b>Owner address:</b> 400 Blvd of the Americas Ste 405, Lakewood, NJ 08701 (prior owner Crestbrook Real Property Holdings LLC, Windham, CT)<br>
@@ -1262,7 +1343,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-crp-ecg">
     <h2>Elmington / CRP-ECG portfolio <span class="tag">BFR construction (key records)</span></h2>
     <div class="owner">
       <b>Owner:</b> CRP/ECG entities (Elmington Capital Group / Carlyle Group) &nbsp;|&nbsp; <b>Owner address:</b> 118 16th Ave S Ste 200, Nashville, TN 37203 (Carlyle Group, 1001 Pennsylvania Ave NW, Washington DC)<br>
@@ -1371,7 +1452,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-elmhurst">
     <h2>147 Elmhurst Townhomes <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Rethink Community Nashville JV LLC &nbsp;|&nbsp; <b>Owner address:</b> 707 Westchester Ave Ste 401, White Plains, NY 10604 (Rethinkforward Inc, 1831 12th Ave S, Nashville)<br>
@@ -1452,7 +1533,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-thornton">
     <h2>Thornton Grove <span class="tag">Land-bank &rarr; NVR/Ryan Homes (condensed)</span></h2>
     <div class="owner">
       <b>Owner:</b> Thornton Grove Green LLC (Grandview Partners) &nbsp;|&nbsp; <b>Owner address:</b> c/o Grandview Partners, 1 E. Putnam Ave Fl 3, Greenwich, CT 06830<br>
@@ -1525,7 +1606,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-moda">
     <h2>Moda Vista <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Nashville Moda I &amp; II LLC (Moda Homes) &nbsp;|&nbsp; <b>Owner address:</b> 340 W Butterfield Rd Ste 2D, Elmhurst, IL 60126<br>
@@ -1598,7 +1679,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-amh-dev">
     <h2>Davenport Downs / Harborwood / Coarsey Farms <span class="tag">BFR construction (AMH Development Program)</span></h2>
     <div class="owner">
       <b>Owner:</b> AMH TN Development LLC (American Homes 4 Rent, NYSE: AMH) &nbsp;|&nbsp; <b>Owner address:</b> 280 E Pilot Road, Las Vegas, NV 89119 (also Calabasas, CA)<br>
@@ -1671,7 +1752,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-harmon">
     <h2>Harmon West Meade <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Crescent BTR Nashville Sonya Drive LLC (Crescent Communities) &nbsp;|&nbsp; <b>Owner address:</b> 601 S. Tryon St Ste 800, Charlotte, NC 28202<br>
@@ -1720,7 +1801,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-tpg-ag">
     <h2>TPG AG Essential Housing (land bank) <span class="tag">Land bank &rarr; Meritage / Lennar</span></h2>
     <div class="owner">
       <b>Owner:</b> TPG AG EHC entities (TPG Angelo Gordon 'Essential Housing') &nbsp;|&nbsp; <b>Owner address:</b> 245 Park Ave 26th Fl, New York, NY 10167; and 8585 E Hartford Dr, Scottsdale, AZ<br>
@@ -1781,7 +1862,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-crest-mflp">
     <h2>Crest MFLP (Regent Homes rental hold) <span class="tag">BFR construction</span></h2>
     <div class="owner">
       <b>Owner:</b> Crest MFLP LLC &nbsp;|&nbsp; <b>Owner address:</b> 6901 Lenox Village Dr Ste 107, Nashville, TN 37211<br>
@@ -1822,7 +1903,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-vbtah">
     <h2>VB TAH (VineBrook Homes) <span class="tag">SFR REIT acquisition</span></h2>
     <div class="owner">
       <b>Owner:</b> VB TAH LLC (VineBrook Homes / NexPoint; VB = VineBrook, TAH = Tennessee Asset Holdings) &nbsp;|&nbsp; <b>Owner address:</b> 300 Crescent Ct Ste 700, Dallas, TX 75201<br>
@@ -1847,7 +1928,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-49-tn">
     <h2>49 Tennessee Townhomes <span class="tag">BFR construction (Elmington &rarr; Starwood SFR)</span></h2>
     <div class="owner">
       <b>Owner:</b> ECG 49TN LLC (Elmington) &rarr; SFR XII Nashville Owner 1 LP (Starwood Capital) &nbsp;|&nbsp; <b>Owner address:</b> SFR XII: 591 W Putnam Ave, Greenwich, CT 06830 (Starwood); mailbox PO Box 4900 c/o Ryan LLC, Scottsdale, AZ<br>
@@ -1884,7 +1965,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-mountain-springs">
     <h2>Mountain Springs Townhouses <span class="tag">BFR construction (Elmington &rarr; AMH)</span></h2>
     <div class="owner">
       <b>Owner:</b> ECG Mountain Springs LLC (Elmington) &rarr; AMH Mountain Springs Development LLC (American Homes 4 Rent) &nbsp;|&nbsp; <b>Owner address:</b> 280 Pilot Rd Ste 200, Las Vegas, NV 89119 (AMH)<br>
@@ -1917,7 +1998,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-starwood">
     <h2>Starwood SFR XII Nashville (scattered-site + securitization) <span class="tag">SFR REIT (scattered-site + bulk)</span></h2>
     <div class="owner">
       <b>Owner:</b> SFR XII Nashville Owner 1/2 LP, SFR XII NM, STAR Borrower SFR5/SFR6, STAR 2022-SFR3 (Starwood Capital) &nbsp;|&nbsp; <b>Owner address:</b> 591 W Putnam Ave, Greenwich, CT 06830 (Starwood); mailbox PO Box 4900 c/o Ryan LLC, Scottsdale, AZ<br>
@@ -1978,7 +2059,7 @@
       </tbody>
     </table>
   </div>
-  <div class="project">
+  <div class="project" id="sec-resicap">
     <h2>RESICAP Tennessee (scattered-site SFR) <span class="tag">SFR operator (scattered-site)</span></h2>
     <div class="owner">
       <b>Owner:</b> RESICAP Tennessee Owner II/III LLC (project notes map RESICAP Tennessee to Invitation Homes' Nashville reentry &mdash; verify; RESICAP LLC itself is Atlanta-based) &nbsp;|&nbsp; <b>Owner address:</b> 3953 Maple Ave Ste 300, Dallas, TX 75219; and 3630 Peachtree Rd NE Ste 1500, Atlanta, GA 30326<br>
@@ -2036,4 +2117,5 @@
     </table>
   </div>
 <p class="foot">Instrument types: DEEDWARR/DEEDWARRSP = warranty/special warranty deed; DEEDQC = quitclaim; DEEDMAST = master deed (condo/HPR); DOT = deed of trust; DOTAMEND/DOTMODAGR = amended/modified DOT; DOTASSN = assignment; AGRMTTRUST/AGRMTWARR = trust/warranty agreement; UCCFX = fixture filing; RELPART = partial release; REL = release; NOC = notice of completion; ESMT = easement; ROW = right-of-way; PLAT-LG = plat; REST = restrictions; LIEN* = liens. Book/page refs predate instrument numbers and are not linkable. Multi-grantor rows: grantor shown is the first party of record.</p>
+
 </div></body></html>

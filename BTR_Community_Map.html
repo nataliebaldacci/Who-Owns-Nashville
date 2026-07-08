@@ -1,0 +1,124 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Build-to-Rent Communities Map — Davidson County</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body{margin:0;height:100%}
+  #map{position:absolute;top:0;bottom:0;left:0;right:0}
+  .title{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;
+    background:rgba(255,255,255,.92);border:1px solid #c8d2e0;border-radius:6px;
+    padding:8px 16px;font-family:Garamond,'EB Garamond',serif;text-align:center;
+    box-shadow:0 1px 6px rgba(0,0,0,.15);max-width:90%}
+  .title h1{margin:0;font-size:18px;color:#1a3a5c;font-weight:700}
+  .title .sub{font-size:12px;color:#55617a;margin-top:2px}
+  .legend{position:absolute;bottom:22px;left:12px;z-index:1000;background:rgba(255,255,255,.94);
+    border:1px solid #c8d2e0;border-radius:6px;padding:8px 11px;font-family:Garamond,serif;font-size:12.5px;color:#1a3a5c;box-shadow:0 1px 6px rgba(0,0,0,.15)}
+  .legend b{display:block;margin-bottom:5px;font-size:12px}
+  .legend i{width:12px;height:12px;display:inline-block;margin-right:6px;border-radius:2px;vertical-align:-1px;opacity:.85}
+  .modes{position:absolute;top:10px;right:12px;z-index:1000;font-family:Garamond,serif}
+  .modes button{display:block;width:100%;margin-bottom:4px;padding:5px 10px;border:1px solid #c8d2e0;
+    background:#fff;color:#1a3a5c;border-radius:5px;cursor:pointer;font-family:Garamond,serif;font-size:12.5px}
+  .modes button.on{background:#1c458c;color:#fff;border-color:#1c458c}
+  .stat{position:absolute;bottom:12px;right:12px;z-index:1000;background:rgba(255,255,255,.92);
+    border:1px solid #c8d2e0;border-radius:5px;padding:4px 9px;font-family:Garamond,serif;font-size:12px;color:#55617a}
+  .leaflet-popup-content{font-family:Garamond,'EB Garamond',serif;font-size:12.5px;color:#1a2233;max-width:360px}
+  .leaflet-popup-content b{color:#1a3a5c}
+  .leaflet-popup-content a{color:#1c458c}
+  .pk{color:#55617a}
+  .home{position:absolute;bottom:12px;left:12px;z-index:1000;font-family:Garamond,serif;font-size:12px}
+  .home a{color:#1c458c;text-decoration:none;background:rgba(255,255,255,.92);border:1px solid #c8d2e0;border-radius:5px;padding:4px 9px}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="title"><h1 id="ttl">Build-to-Rent Communities</h1><div class="sub" id="sub">Davidson County · primary cadastral + deed data</div></div>
+<div class="modes">
+  <button id="mStatus" class="on">Color: built vs pipeline</button>
+  <button id="mOp">Color: operator</button>
+</div>
+<div class="legend" id="legend"></div>
+<div class="stat" id="stat">loading parcels…</div>
+<div class="home"><a href="BTR_Community_Crosswalk.html">&larr; back to crosswalk</a></div>
+<script>
+var map=L.map('map',{preferCanvas:true}).setView([36.166,-86.784],10);
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+  {attribution:'&copy; OpenStreetMap &copy; CARTO',subdomains:'abcd',maxZoom:20}).addTo(map);
+var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap'});
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',
+  {maxZoom:20,attribution:'Esri World Imagery'});
+L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{position:'topright'}).addTo(map);
+
+// Davidson County boundary (dashed, OBJECTID=4)
+fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson')
+ .then(r=>r.json()).then(b=>{
+   L.geoJSON(b,{filter:f=>!f.properties||f.properties.OBJECTID==4||f.properties.OBJECTID===undefined,
+     style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+ }).catch(()=>{});
+
+// palette for operators
+var PAL=['#1c458c','#2a9d8f','#f0af1e','#d7263d','#8e44ad','#e07a5f','#3d9970','#c94f7c','#457b9d','#b5651d',
+ '#6a4c93','#1b998b','#c1121f','#5f0f40','#0f4c5c','#9a8c98','#e36414','#606c38','#9d4edd','#2b9348',
+ '#bc6c25','#8d99ae','#e63946','#588157','#7209b7','#4361ee'];
+var params=new URLSearchParams(location.search);
+var focusApn=params.get('apn'); var focusName=params.get('name');
+if(focusName){document.getElementById('ttl').textContent=focusName;
+  document.getElementById('sub').textContent='Build-to-rent community · Davidson County';}
+
+var esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function centroid(coords){var pts=coords[0],x=0,y=0;for(var i=0;i<pts.length;i++){x+=pts[i][0];y+=pts[i][1];}return[y/pts.length,x/pts.length];}
+function popup(p){
+  var L2=p.links||{};var row=(lbl,url)=>url?'<a href="'+esc(url)+'" target="_blank">'+lbl+'</a>':'';
+  var links=[row('Parcel Viewer',L2['Parcel Viewer']),row('Owner Deed',L2['Owner Deed']),
+    row('Plat / Subdivision',L2['Plat / Subdivision']),row('Permits',L2['Permits (ePermit)']),
+    row('Permit history',L2['Permit history'])].filter(Boolean).join(' &middot; ');
+  return '<b>'+esc(p.operator)+'</b><br><span class="pk">'+esc(p.PropAddr)+'</span><br>'+
+    '<span class="pk">Owner:</span> '+esc(p.current_owner)+'<br>'+
+    '<span class="pk">Model:</span> '+esc(p.btr_model||'—')+'<br>'+
+    '<span class="pk">Status:</span> '+esc(p.status)+'<br>'+
+    '<span class="pk">APN:</span> '+esc(p.APN)+'<br>'+links;
+}
+var mode='status', ops=[], opColor={}, layer, gj;
+function statusColor(p){return /Current|built/i.test(p.status)?'#2a9d8f':'#f0af1e';}
+function color(p){return mode==='status'?statusColor(p):(opColor[p.operator]||'#8d99ae');}
+function styleF(f){return{color:'#333',weight:.6,fillColor:color(f.properties),fillOpacity:.72,opacity:.8};}
+function legend(){
+  var el=document.getElementById('legend');
+  if(mode==='status'){el.innerHTML='<b>Construction status</b>'+
+    '<div><i style="background:#2a9d8f"></i>Built home</div>'+
+    '<div><i style="background:#f0af1e"></i>Pipeline (vacant / in development)</div>';}
+  else{var h='<b>Operator</b>';ops.slice(0,14).forEach(o=>{h+='<div><i style="background:'+opColor[o]+'"></i>'+esc(o)+'</div>';});
+    if(ops.length>14)h+='<div class="pk">+'+(ops.length-14)+' more</div>';el.innerHTML=h;}
+}
+function render(){if(layer)map.removeLayer(layer);
+  layer=L.geoJSON(gj,{style:styleF,onEachFeature:(f,l)=>l.bindPopup(popup(f.properties))}).addTo(map);legend();}
+
+fetch('BTR_Lifecycle_Polygons.geojson').then(r=>r.json()).then(data=>{
+  gj=data;
+  ops=[...new Set(data.features.map(f=>f.properties.operator))].sort();
+  ops.forEach((o,i)=>opColor[o]=PAL[i%PAL.length]);
+  render();
+  document.getElementById('stat').textContent=data.features.length.toLocaleString()+' parcels';
+  // focus
+  if(focusApn){
+    var tgt=data.features.find(f=>f.properties.APN===focusApn);
+    if(tgt){
+      var op=tgt.properties.operator, c0=centroid(tgt.geometry.coordinates);
+      var grp=data.features.filter(f=>f.properties.operator===op).filter(f=>{
+        var c=centroid(f.geometry.coordinates);
+        return Math.abs(c[0]-c0[0])<0.012 && Math.abs(c[1]-c0[1])<0.012;});
+      var b=L.latLngBounds(grp.map(f=>centroid(f.geometry.coordinates)));
+      map.fitBounds(b.pad(0.25),{maxZoom:17});
+      document.getElementById('sub').textContent=op+' · '+grp.length+' parcels in this community';
+    } else { map.fitBounds(L.geoJSON(data).getBounds()); }
+  } else { map.fitBounds(L.geoJSON(data).getBounds()); }
+}).catch(e=>{document.getElementById('stat').textContent='failed to load parcels';});
+
+document.getElementById('mStatus').onclick=function(){mode='status';this.classList.add('on');document.getElementById('mOp').classList.remove('on');render();};
+document.getElementById('mOp').onclick=function(){mode='op';this.classList.add('on');document.getElementById('mStatus').classList.remove('on');render();};
+</script>
+</body>
+</html>
