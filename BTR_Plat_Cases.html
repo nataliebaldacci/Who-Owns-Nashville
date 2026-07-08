@@ -21,7 +21,7 @@ table{border-collapse:collapse;width:100%;font-size:12px}
 thead th{background:var(--navy);color:#fff;text-align:left;padding:8px 9px;position:sticky;top:0;white-space:nowrap;font-weight:600}
 td{border-bottom:1px solid var(--line);padding:6px 9px;vertical-align:top}
 tbody tr:nth-child(even){background:var(--cream)} tbody tr:hover td{background:#fff7dd}
-.nm{font-weight:700;color:var(--navy);white-space:nowrap} .cn{color:#8a94a0;font-size:10.5px}
+.nm{font-weight:700;color:var(--navy);white-space:nowrap;text-decoration:none} .nm:hover{text-decoration:underline} .cn{color:#8a94a0;font-size:10.5px}
 .loc{max-width:260px} .ppl{font-size:11px}
 .lk a{display:inline-block;margin:1px 3px 1px 0;padding:2px 7px;border:1px solid var(--line);border-radius:11px;
   font-size:10px;color:var(--navy);text-decoration:none;background:#f4f8ff;white-space:nowrap}
@@ -76,7 +76,7 @@ function links(id){
 var DATA=[], view=[], page=0, PER=100;
 function row(r){
   return '<tr>'+
-   '<td><span class="nm">'+esc(r.nm||r.cn)+'</span><br><span class="cn">'+esc(r.cn)+' · '+esc(r.st)+'</span></td>'+
+   '<td><a class="nm" target="_blank" href="https://epermits.nashville.gov/?#/permit/'+r.id+'">'+esc(r.nm||r.cn)+'</a><br><span class="cn">'+esc(r.cn)+' · '+esc(r.st)+'</span></td>'+
    '<td>'+esc((r.dt||'').split(' ')[0])+'</td>'+
    '<td class="loc">'+esc(r.loc)+'</td>'+
    '<td class="ppl">'+esc(r.po)+'</td>'+
