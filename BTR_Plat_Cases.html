@@ -1,0 +1,114 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Subdivision Plat Cases — Davidson County</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#1c458c;--gold:#f0af1e;--cream:#fdf6e4;--bg:#eef4fb;--ink:#20303f;--line:#d6ddea}
+body{margin:0;font-family:'Montserrat',Arial,sans-serif;background:var(--bg);color:var(--ink)}
+header{background:linear-gradient(135deg,#1c458c,#1a3a5c);color:#fff;padding:24px 22px}
+header .kick{color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+header h1{margin:6px 0 4px;font-size:26px;font-weight:800}
+header p{margin:0;max-width:920px;color:#dfe8f5;font-size:14px}
+header a.back{color:var(--gold);font-size:12px;text-decoration:none;font-weight:600}
+.controls{padding:14px 22px 4px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.controls input{flex:1;min-width:240px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit;font-size:14px}
+.controls .count{font-size:12.5px;color:#5a6673;font-weight:600;white-space:nowrap}
+.wrap{margin:10px 22px 30px;overflow-x:auto;background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 1px 4px rgba(28,69,140,.08)}
+table{border-collapse:collapse;width:100%;font-size:12px}
+thead th{background:var(--navy);color:#fff;text-align:left;padding:8px 9px;position:sticky;top:0;white-space:nowrap;font-weight:600}
+td{border-bottom:1px solid var(--line);padding:6px 9px;vertical-align:top}
+tbody tr:nth-child(even){background:var(--cream)} tbody tr:hover td{background:#fff7dd}
+.nm{font-weight:700;color:var(--navy);white-space:nowrap} .cn{color:#8a94a0;font-size:10.5px}
+.loc{max-width:260px} .ppl{font-size:11px}
+.lk a{display:inline-block;margin:1px 3px 1px 0;padding:2px 7px;border:1px solid var(--line);border-radius:11px;
+  font-size:10px;color:var(--navy);text-decoration:none;background:#f4f8ff;white-space:nowrap}
+.lk a:hover{background:var(--gold);color:#1a3a5c;border-color:var(--gold)}
+.lk a.portal{background:var(--navy);color:#fff;border-color:var(--navy);font-weight:600}
+.pager{padding:0 22px 30px;display:flex;gap:8px;align-items:center;font-size:12.5px;color:#5a6673}
+.pager button{padding:6px 12px;border:1px solid var(--line);background:#fff;border-radius:7px;cursor:pointer;font-family:inherit;font-size:12.5px;color:var(--navy)}
+.pager button:disabled{opacity:.4;cursor:default}
+.hint{color:#8a94a0;font-size:11px}
+</style>
+</head>
+<body>
+<header>
+  <div class="kick">Davidson County · Metro Planning · Primary Government Data</div>
+  <h1>Subdivision Plat Cases</h1>
+  <p>Every Metro Planning Commission subdivision final plat on record (ePermits). Search by subdivision name, street, owner, applicant, developer, or surveyor. Each row links to the live ePermits case and its people, contractors, related cases, and attachments. <a class="back" href="index.html">&larr; back to site</a></p>
+</header>
+<div class="controls">
+  <input id="q" type="text" placeholder="Search name, location, owner, applicant, developer, surveyor…" autocomplete="off">
+  <span class="count" id="count">loading…</span>
+</div>
+<div class="wrap">
+  <table>
+    <thead><tr>
+      <th>Case</th><th>Date</th><th>Location</th><th>Property owner</th><th>Applicant</th><th>Developer</th><th>Surveyor</th><th>Links</th>
+    </tr></thead>
+    <tbody id="tb"></tbody>
+  </table>
+</div>
+<div class="pager">
+  <button id="prev">&larr; Prev</button>
+  <span id="pg"></span>
+  <button id="next">Next &rarr;</button>
+  <span class="hint">100 per page</span>
+</div>
+<script>
+var P="https://epermits.nashville.gov/api/permit/1.0/";
+var esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function links(id){
+  var e=encodeURIComponent, f="?$filter=caseID%20eq%20";
+  var L=[
+    ['portal','Portal','https://epermits.nashville.gov/?#/permit/'+id],
+    ['','Case',P+'Case/'+id],
+    ['','People',P+'CasePeople'+f+id],
+    ['','Contractors',P+"CaseContractors?$filter=caseID%20eq%20%27"+id+"%27"],
+    ['','Related',P+'CaseRelated'+f+id],
+    ['','Attachments',P+'CaseAttachment'+f+id],
+    ['','Fees',P+'CaseFee'+f+id+'%20and%20isWaived%20ne%20Y']
+  ];
+  return L.map(x=>'<a class="'+x[0]+'" target="_blank" href="'+x[2]+'">'+x[1]+'</a>').join('');
+}
+var DATA=[], view=[], page=0, PER=100;
+function row(r){
+  return '<tr>'+
+   '<td><span class="nm">'+esc(r.nm||r.cn)+'</span><br><span class="cn">'+esc(r.cn)+' · '+esc(r.st)+'</span></td>'+
+   '<td>'+esc((r.dt||'').split(' ')[0])+'</td>'+
+   '<td class="loc">'+esc(r.loc)+'</td>'+
+   '<td class="ppl">'+esc(r.po)+'</td>'+
+   '<td class="ppl">'+esc(r.ap)+(r.al?'<br><span class="cn">'+esc(r.al)+'</span>':'')+'</td>'+
+   '<td class="ppl">'+esc(r.dv)+'</td>'+
+   '<td class="ppl">'+esc(r.sv)+'</td>'+
+   '<td class="lk">'+links(r.id)+'</td></tr>';
+}
+function render(){
+  var tot=view.length, pages=Math.max(1,Math.ceil(tot/PER));
+  if(page>=pages)page=pages-1; if(page<0)page=0;
+  var slice=view.slice(page*PER,page*PER+PER);
+  document.getElementById('tb').innerHTML=slice.map(row).join('');
+  document.getElementById('count').textContent=tot.toLocaleString()+' of '+DATA.length.toLocaleString()+' plat cases';
+  document.getElementById('pg').textContent='Page '+(page+1)+' of '+pages;
+  document.getElementById('prev').disabled=page<=0;
+  document.getElementById('next').disabled=page>=pages-1;
+}
+function search(q){
+  q=q.trim().toLowerCase();
+  if(!q){view=DATA;}
+  else{var terms=q.split(/\s+/);
+    view=DATA.filter(r=>{
+      var hay=(r.nm+' '+r.cn+' '+r.loc+' '+r.po+' '+r.ap+' '+r.pw+' '+r.dv+' '+r.sv).toLowerCase();
+      return terms.every(t=>hay.indexOf(t)>=0);});}
+  page=0; render();
+}
+document.getElementById('q').addEventListener('input',e=>search(e.target.value));
+document.getElementById('prev').onclick=()=>{page--;render();window.scrollTo(0,0);};
+document.getElementById('next').onclick=()=>{page++;render();window.scrollTo(0,0);};
+fetch('plat_cases.json').then(r=>r.json()).then(d=>{DATA=d;view=d;render();})
+ .catch(e=>{document.getElementById('count').textContent='failed to load data';});
+</script>
+</body>
+</html>
