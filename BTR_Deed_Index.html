@@ -1,0 +1,2039 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Nashville Build-to-Rent Deed Index</title><style>
+  body{font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#222;margin:0;padding:24px;background:#f4f4f4;}
+  .wrap{max-width:1120px;margin:0 auto;background:#fff;border:1px solid #cfcfcf;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.08);padding:22px 26px 30px;}
+  h1{font-size:19px;margin:0 0 2px;color:#1a3a5c;}
+  .lead{font-size:12px;color:#555;margin:0 0 16px;line-height:1.5;}
+  .toc{font-size:12px;margin:0 0 20px;padding:10px 14px;background:#f7f9fb;border:1px solid #e0e6ec;border-radius:3px;}
+  .project{margin:0 0 30px;}
+  h2{font-size:15px;color:#1a3a5c;border-bottom:2px solid #1a3a5c;padding-bottom:4px;margin:0 0 8px;}
+  .tag{font-size:10px;font-weight:normal;color:#fff;background:#6b8299;border-radius:10px;padding:2px 9px;vertical-align:middle;margin-left:6px;}
+  .owner{background:#eef2f6;border:1px solid #d5dee6;border-radius:3px;padding:8px 12px;font-size:12px;margin:0 0 10px;line-height:1.6;}
+  .owner b{color:#1a3a5c;}
+  .meta{display:flex;justify-content:space-between;font-size:11.5px;color:#666;margin-bottom:6px;}
+  table{border-collapse:collapse;width:100%;font-size:11.5px;}
+  thead th{background:#1a3a5c;color:#fff;text-align:left;padding:7px 8px;font-weight:bold;border:1px solid #16324f;white-space:nowrap;}
+  tbody td{padding:6px 8px;border:1px solid #e0e0e0;vertical-align:top;}
+  tbody tr:nth-child(even){background:#f7f9fb;}
+  tbody tr:hover{background:#fdf6e3;}
+  td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;}
+  td.type{font-weight:bold;color:#333;white-space:nowrap;}
+  td.date{white-space:nowrap;}
+  a.inst{color:#0563c1;text-decoration:none;font-weight:bold;}
+  a.inst:hover{text-decoration:underline;}
+  .img{font-size:10px;color:#888;white-space:nowrap;}
+  .foot{font-size:10.5px;color:#777;margin-top:6px;line-height:1.55;}
+
+  .badge{color:#fff;border-radius:10px;padding:2px 8px;font-size:10px;white-space:nowrap;}
+  td.op{font-weight:bold;color:#1a3a5c;} td.src{font-size:10px;color:#777;}
+</style></head>
+<body><div class="wrap"><h1>Nashville Build-to-Rent: Owners, Communities &amp; Deeds</h1>
+<p class="lead">Institutional build-to-rent, scattered-site SFR, and single-owner residential projects in Davidson County, Tennessee, traced through the Register of Deeds. For-sale homebuilder subdivisions are excluded; land-bank pipelines are shown condensed. Register's Office for Davidson County (davidsonportal.com/landrecords).</p>
+<div class="toc"><b>Projects (25):</b> Tessa Madison &nbsp;&middot;&nbsp; Westbrook Pointe / Adagio Townhomes &nbsp;&middot;&nbsp; Noir Townhomes &nbsp;&middot;&nbsp; Madison Trinity / 325 West Trinity Lane &nbsp;&middot;&nbsp; Inglenook Townhomes &nbsp;&middot;&nbsp; Hampton Heights &nbsp;&middot;&nbsp; Hillside Village &nbsp;&middot;&nbsp; The Orchards &nbsp;&middot;&nbsp; Homes at 422 38th Avenue North &nbsp;&middot;&nbsp; LMC Towne &nbsp;&middot;&nbsp; Cedars of Cane Ridge &nbsp;&middot;&nbsp; Crestbrook Meadows Apartments &nbsp;&middot;&nbsp; Elmington / CRP-ECG portfolio &nbsp;&middot;&nbsp; 147 Elmhurst Townhomes &nbsp;&middot;&nbsp; Thornton Grove &nbsp;&middot;&nbsp; Moda Vista &nbsp;&middot;&nbsp; Davenport Downs / Harborwood / Coarsey Farms &nbsp;&middot;&nbsp; Harmon West Meade &nbsp;&middot;&nbsp; TPG AG Essential Housing (land bank) &nbsp;&middot;&nbsp; Crest MFLP (Regent Homes rental hold) &nbsp;&middot;&nbsp; VB TAH (VineBrook Homes) &nbsp;&middot;&nbsp; 49 Tennessee Townhomes &nbsp;&middot;&nbsp; Mountain Springs Townhouses &nbsp;&middot;&nbsp; Starwood SFR XII Nashville (scattered-site + securitization) &nbsp;&middot;&nbsp; RESICAP Tennessee (scattered-site SFR)</div>
+
+  <div class="project" id="operator-master">
+    <h2>Operator Master &mdash; who owns each community <span class="tag">deed + permit data combined</span></h2>
+    <div class="meta"><span>29 operators</span><span>Model: 1 Integrated &middot; 2 Contract &middot; 3 Partnership &middot; 4 One-off &middot; 5 Land bank</span></div>
+    <table>
+      <thead><tr><th>Operator</th><th>Community</th><th>Model</th><th>Builder of record</th><th>Ultimate parent</th><th>Rows</th><th>Status (from permits)</th><th>Source</th></tr></thead>
+      <tbody>
+<tr><td class='op'>American Homes 4 Rent</td><td>AMH Mountain Springs</td><td>1 Integrated</td><td>ECG Residential</td><td>AMH</td><td class='num'>198</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>American Homes 4 Rent</td><td>Am Homes Investments Mardon</td><td>1 Integrated</td><td>Mardon Construction</td><td>AMH</td><td class='num'>121</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>American Homes 4 Rent</td><td>AMH TN Development</td><td>1 Integrated</td><td>AMH Development GC</td><td>AMH</td><td class='num'>83</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>AHV Crestbrook</td><td>AHV Crestbrook</td><td>1 Integrated</td><td>AHV (self)</td><td>AHV Communities</td><td class='num'>56</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>AHV Communities</td><td>AHV Westbrook</td><td>1 Integrated</td><td>AHVTN (self)</td><td>AHV Communities</td><td class='num'>23</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>ACPF</td><td>ACPF Spring Path</td><td>2 Contract</td><td>Elmington Residential</td><td>ACPF</td><td class='num'>500</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>Normandy (local BTR)</td><td>Normandy (local BTR)</td><td>2 Contract</td><td>Ole South Properties</td><td>Normandy II GP (local)</td><td class='num'>348</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>RSD West Trinity</td><td>RSD West Trinity</td><td>2 Contract</td><td>[VERIFY]</td><td>RSD</td><td class='num'>264</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>KSSK</td><td>KSSK</td><td>2 Contract</td><td>[VERIFY]</td><td>KSSK</td><td class='num'>104</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Core</td><td>Core</td><td>2 Contract</td><td>[VERIFY]</td><td>Core Spaces</td><td class='num'>96</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Madison Nashville Trinity</td><td>Madison Nashville Trinity</td><td>2 Contract</td><td>[VERIFY]</td><td>Madison Nashville Trinity</td><td class='num'>81</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Porchlight / Landeavor</td><td>Porchlight / Landeavor</td><td>2 Contract</td><td>[VERIFY]</td><td>Landeavor</td><td class='num'>63</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>TPG / Angelo Gordon</td><td>TPG-AG Meritage Steffisburg</td><td>3 Partnership</td><td>Meritage Homes</td><td>TPG-AG</td><td class='num'>500</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>CRP / ECG</td><td>CRP / ECG</td><td>3 Partnership</td><td>Elmington Residential</td><td>Carlyle + Elmington</td><td class='num'>303</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Crescent BTR</td><td>Crescent BTR Harmon</td><td>3 Partnership</td><td>David Weekley Homes</td><td>Crescent Communities</td><td class='num'>174</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>Brookfield</td><td>Brookfield Cane Ridge</td><td>3 Partnership</td><td>Ashton Woods</td><td>Brookfield</td><td class='num'>153</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>TPG / Angelo Gordon</td><td>TPG-AG Lennar Pemberton</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>TPG-AG</td><td class='num'>152</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>Pulte</td><td>Pulte</td><td>3 Partnership</td><td>Pulte (self)</td><td>PulteGroup</td><td class='num'>99</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Lennar</td><td>Lennar</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>Lennar</td><td class='num'>98</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Kennedy Lewis / Lennar</td><td>KLLB AIV Lennar</td><td>3 Partnership</td><td>Lennar Homes of TN</td><td>Kennedy Lewis+Lennar</td><td class='num'>91</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>case-level (ePermits)</td></tr>
+<tr><td class='op'>Century Communities</td><td>Century Communities</td><td>3 Partnership</td><td>Century (self)</td><td>Century Communities</td><td class='num'>62</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Invitation / ResiBuilt</td><td>Invitation / ResiBuilt</td><td>3 Partnership</td><td>Paran Homes</td><td>Invitation Homes</td><td class='num'>59</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Invitation BTR (Orchards/Larkin/State St)</td><td>Invitation BTR (Orchards/Larkin/State St)</td><td>3 Partnership</td><td>Paran Homes</td><td>Invitation Homes</td><td class='num'>53</td><td><span class='badge' style='background:#2e7d32'>Built (some held/sold)</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Tricon</td><td>Tricon</td><td>3 Partnership</td><td>[VERIFY]</td><td>Blackstone / Tricon</td><td class='num'>51</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Domain Timberlake</td><td>Domain Timberlake</td><td>3 Partnership</td><td>[VERIFY]</td><td>Domain</td><td class='num'>30</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>VineBrook (VB TAH)</td><td>VineBrook (VB TAH)</td><td>4 One-off</td><td>Century (bought finished)</td><td>NexPoint / VineBrook</td><td class='num'>106</td><td><span class='badge' style='background:#6b8299'>Under construction / pipeline</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Starwood</td><td>Starwood</td><td>4 One-off</td><td>ECG / Elmington</td><td>Starwood</td><td class='num'>97</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>ARRIVED</td><td>ARRIVED</td><td>4 One-off</td><td>[VERIFY]</td><td>Arrived</td><td class='num'>13</td><td><span class='badge' style='background:#2e7d32'>Built &amp; held</span></td><td class='src'>parcel (cadastral)</td></tr>
+<tr><td class='op'>Ava Madison (Tessa Madison)</td><td>Ava Madison (Tessa Madison)</td><td>5 Land bank</td><td>(land bank)</td><td>Ava Madison</td><td class='num'>200</td><td><span class='badge' style='background:#8a6d3b'>Pre-construction (land bank)</span></td><td class='src'>parcel (cadastral)</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+
+  <div class="project">
+    <h2>Tessa Madison <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Ava Madison LLC (Two Capital Partners) &nbsp;|&nbsp; <b>Owner address:</b> 1132 Hibiscus Ln, Nolensville, TN 37135 (also c/o Two Capital Partners, Atlanta, GA)<br>
+      <b>Location:</b> 500 Peeples Court, Madison, TN 37115 &nbsp;|&nbsp; <b>Financing / structure:</b> IH Construction Lender LLC (Invitation Homes) &mdash; $60,717,222 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 203 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 14 of 14 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/08/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202208020087653" target="_blank">202208020087653</a></td><td>NIXON JACK<br>WRITESMAN AUSTIN M</td><td>AVA MADISON LLC</td><td class="num">$750,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/08/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202208020087654" target="_blank">202208020087654</a></td><td>HOOPER BETTY YOW TRUSTEE<br>YOW FAMILY TRUST</td><td>AVA MADISON LLC</td><td class="num">$1,100,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/01/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202301050000859" target="_blank">202301050000859</a></td><td>AVA MADISON LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/04/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202304190028776" target="_blank">202304190028776</a></td><td>AVA MADISON LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2023/04/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202304280031530" target="_blank">202304280031530</a></td><td>AVA MADISON LLC</td><td>AVA MADISON LLC</td><td class="num">$10</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/05/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305110035290" target="_blank">202305110035290</a></td><td>AVA MADISON LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/05/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305110035291" target="_blank">202305110035291</a></td><td>AVA MADISON LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/05/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305110035298" target="_blank">202305110035298</a></td><td>AVA MADISON LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2024/03/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202403060015516" target="_blank">202403060015516</a></td><td>AVA MADISON LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/11/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511250094212" target="_blank">202511250094212</a></td><td>AVA MADISON LLC</td><td>TESSA MADISON</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/12/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512300103728" target="_blank">202512300103728</a></td><td>AVA MADISON LLC</td><td>TESSA MADISON</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2026/04/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604100029370" target="_blank">202604100029370</a></td><td>AVA MADISON LLC</td><td>FOSTER MATT TRUSTEE<br>IH CONSTRUCTION LENDER LLC</td><td class="num">$60,717,222</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2026/04/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604130029940" target="_blank">202604130029940</a></td><td>AVA MADISON LLC</td><td>IH CONSTRUCTION LENDER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2026/04/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604130029941" target="_blank">202604130029941</a></td><td>AVA MADISON LLC</td><td>IH CONSTRUCTION LENDER LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Westbrook Pointe / Adagio Townhomes <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> AHV Westbrook &amp; AHV Newsome BFR Owner LLC (AHV Communities) &nbsp;|&nbsp; <b>Owner address:</b> 150 Paularino Ave Ste D250, Costa Mesa, CA 92626<br>
+      <b>Location:</b> McCrory Lane area, Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> Arbor Realty SR Inc &mdash; $44,830,000 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 78 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 18 of 18 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">CH</td><td class="img">PDF / TIFF</td><td class="date">1982/02/12</td>
+        <td>5851/757</td><td>AHV CORPORATION INC</td><td></td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2022/10/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210270116471" target="_blank">202210270116471</a></td><td>CANTRELL SANDRA EATHERLY SUC TRUSTEE<br>J D RIVERGATE LAND TRUST</td><td>AHV NEWSOME BFR OWNER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/10/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210270116524" target="_blank">202210270116524</a></td><td>CANTRELL SANDRA EATHERLY SUC TRUSTEE<br>J D RIVERGATE LAND TRUST</td><td>AHV NEWSOME BFR OWNER LLC</td><td class="num">$4,100,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/05/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305150035776" target="_blank">202305150035776</a></td><td>CANTRELL SANDRA EATHERLY SUC TRUSTEE<br>J D RIVERGATE LAND TRUST</td><td>AHV WESTBROOK BFR OWNER LLC</td><td class="num">$4,110,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2024/05/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202405160036425" target="_blank">202405160036425</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>HARPETH VALLEY UTILITIES DISTRICT OF DAVIDSON AND WILLIAMSON COUNTY</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2025/03/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202503200020762" target="_blank">202503200020762</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>VANHOOSECO<br>KIRK COLLEEN</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/05/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202505050034845" target="_blank">202505050034845</a></td><td>AHV NEWSOME BFR OWNER LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2025/06/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202506020043275" target="_blank">202506020043275</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>VANHOOSECO<br>KIRK COLLEEN</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENSTL</td><td class="img">PDF / TIFF</td><td class="date">2025/07/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202507020052358" target="_blank">202507020052358</a></td><td>AHV HOLDINGS LLC</td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/09/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202509160073900" target="_blank">202509160073900</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/10/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510270084966" target="_blank">202510270084966</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>COMCAST CABLE COMMUNICATIONS MANAGEMENT LLC</td><td class="num">$1</td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2025/10/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510300086479" target="_blank">202510300086479</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>WESTBROOK POINTE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/11/04</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511040087876" target="_blank">202511040087876</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>ARBOR REALTY SR INC<br>NIELSEN JOHN TRUSTEE</td><td class="num">$44,830,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2026/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202602100010070" target="_blank">202602100010070</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>HARPETH VALLEY UTILITIES DISTRICT</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2026/02/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202602270015659" target="_blank">202602270015659</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2026/04/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604270036397" target="_blank">202604270036397</a></td><td>AHV WESTBROOK BFR OWNER LLC</td><td>ADAGIO TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2026/05/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202605010038908" target="_blank">202605010038908</a></td><td>MCCRORY LANE PARTNERS LLC</td><td>AHV NEWSOME BFR OWNER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2026/05/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202605210046597" target="_blank">202605210046597</a></td><td>AHV NEWSOME BFR OWNER LLC</td><td>HARPETH VALLEY UTILITIES DISTRICT</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Noir Townhomes <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Core PBSFR Nashville Herron LLC (Core Spaces) &nbsp;|&nbsp; <b>Owner address:</b> 1400 N Kingsbury St Fl 3, Chicago, IL 60642<br>
+      <b>Location:</b> Herron / Nashville, Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> Busey Bank &mdash; $35,168,489 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 99 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 9 of 9 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2023/02/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202302160011433" target="_blank">202302160011433</a></td><td>ADVENT CAPITAL PARTNERS LLC</td><td>NOIR TOWNHOMES<br>CORE PBSFR NASHVILLE HERRON LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/02/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202302160011434" target="_blank">202302160011434</a></td><td>CVE INC</td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td class="num">$8,154,500</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/02/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202302160011435" target="_blank">202302160011435</a></td><td>SPIVA/HILL MANAGEMENT AND INVESTMENT LLC</td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td class="num">$4,700,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2023/04/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202304140027485" target="_blank">202304140027485</a></td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td>NOIR TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2023/04/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202304140027503" target="_blank">202304140027503</a></td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td>BUSEY BANK<br>STACEY JENNIFER D TRUSTEE</td><td class="num">$35,168,489</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2023/04/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202304180028573" target="_blank">202304180028573</a></td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td>BUSEY BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2023/04/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202304180028574" target="_blank">202304180028574</a></td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td>BUSEY BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2023/06/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202306070043409" target="_blank">202306070043409</a></td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td>NOIR TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2026/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202602100010195" target="_blank">202602100010195</a></td><td>CORE PBSFR NASHVILLE HERRON LLC</td><td>BEACON APARTMENTS OWNER LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Madison Trinity / 325 West Trinity Lane <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Madison Nashville Trinity Owner LLC &nbsp;|&nbsp; <b>Owner address:</b> 4210 Yancey Rd, Charlotte, NC 28217<br>
+      <b>Location:</b> 325 West Trinity Lane, Nashville, TN &nbsp;|&nbsp; <b>Financing / structure:</b> First Financial Bank NA &mdash; $24,711,000 (initial WesBanco $4,000,000, released Feb 2026) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 80 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 13 of 13 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/12/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202112300171808" target="_blank">202112300171808</a></td><td>TALBOTS VIEW LLC</td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td class="num">$8,100,000</td>
+      </tr>
+      <tr>
+        <td class="type">ROW</td><td class="img">PDF / TIFF</td><td class="date">2024/02/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202402160010950" target="_blank">202402160010950</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ROW</td><td class="img">PDF / TIFF</td><td class="date">2024/02/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202402160010951" target="_blank">202402160010951</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2024/07/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202407250056429" target="_blank">202407250056429</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>NOAH MARY LUCILLE TRUSTEE<br>WESBANCO BANK INC</td><td class="num">$4,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2024/07/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202407250056430" target="_blank">202407250056430</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>WESBANCO BANK INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2024/10/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202410070077910" target="_blank">202410070077910</a></td><td>MADISON NASHVILLE TRINITY OWNER</td><td>325 WEST TRINITY LANE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2025/06/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202506130045765" target="_blank">202506130045765</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>325 WEST TRINITY LANE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/07/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202507220057986" target="_blank">202507220057986</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>MADISON TRINITY</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/09/04</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202509040070787" target="_blank">202509040070787</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2026/01/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202601290006266" target="_blank">202601290006266</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>FIRST FINANCIAL BANK NA<br>STRINGHAM JACK F II TRUSTEE</td><td class="num">$24,711,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2026/01/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202601290006267" target="_blank">202601290006267</a></td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td>FIRST FINANCIAL BANK NA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2026/02/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202602200013538" target="_blank">202602200013538</a></td><td>WESBANCO BANK INC</td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2026/02/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202602200013539" target="_blank">202602200013539</a></td><td>WESBANCO BANK INC</td><td>MADISON NASHVILLE TRINITY OWNER LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Inglenook Townhomes <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Porchlight East Hill LLC (Porchlight, local) &nbsp;|&nbsp; <b>Owner address:</b> 2908 Poston Ave, Nashville, TN 37203<br>
+      <b>Location:</b> East Hill / Inglenook, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> First Carolina Bank &mdash; $20,676,750 (plus Construction Loan Services II LLC) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 63 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 49 of 49 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">CHARTER</td><td class="img">PDF / TIFF</td><td class="date">2018/12/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201812210124474" target="_blank">201812210124474</a></td><td>STATE OF TENNESSEE</td><td>PORCHLIGHT PROPERTIES LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2018/12/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201812270125657" target="_blank">201812270125657</a></td><td>FLUM BILL</td><td>PORCHLIGHT PROPERTIES LLC</td><td class="num">$260,000</td>
+      </tr>
+      <tr>
+        <td class="type">LIENSTL</td><td class="img">PDF / TIFF</td><td class="date">2019/07/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201907310075174" target="_blank">201907310075174</a></td><td>PORCHLIGHT CONSULTING INC</td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2021/01/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202101110004719" target="_blank">202101110004719</a></td><td>PORCHLIGHT PROPERTIES LLC</td><td>WILLIAMS VIRGINIA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2021/02/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202102030015967" target="_blank">202102030015967</a></td><td>TOM FORD CONSTRUCTION CO LLC</td><td>PORCHLIGHT PROPERTIES LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2021/06/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106030074305" target="_blank">202106030074305</a></td><td>WILLIAMS VIRGINIA</td><td>PORCHLIGHT PROPERTIES LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/04/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202404050024308" target="_blank">202404050024308</a></td><td>ELVIRA AVE LLC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num">$25,016,033</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/04/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202404050024309" target="_blank">202404050024309</a></td><td>ELVIRA AVE LLC</td><td>PORCHLIGHT EAST HILL LLC<br>INGLENOOK TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTAMEND</td><td class="img">PDF / TIFF</td><td class="date">2024/04/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202404050024310" target="_blank">202404050024310</a></td><td>PORCHLIGHT EAST HILL LLC</td><td>CONSTRUCTION LOAN SERVICES II LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066558" target="_blank">202408290066558</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066559" target="_blank">202408290066559</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066560" target="_blank">202408290066560</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066561" target="_blank">202408290066561</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066562" target="_blank">202408290066562</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066563" target="_blank">202408290066563</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066564" target="_blank">202408290066564</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066565" target="_blank">202408290066565</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066566" target="_blank">202408290066566</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066567" target="_blank">202408290066567</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066568" target="_blank">202408290066568</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066569" target="_blank">202408290066569</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066570" target="_blank">202408290066570</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066571" target="_blank">202408290066571</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066572" target="_blank">202408290066572</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066573" target="_blank">202408290066573</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066574" target="_blank">202408290066574</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066575" target="_blank">202408290066575</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066576" target="_blank">202408290066576</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066577" target="_blank">202408290066577</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066578" target="_blank">202408290066578</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066579" target="_blank">202408290066579</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066580" target="_blank">202408290066580</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066581" target="_blank">202408290066581</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066582" target="_blank">202408290066582</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066583" target="_blank">202408290066583</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066584" target="_blank">202408290066584</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066585" target="_blank">202408290066585</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066586" target="_blank">202408290066586</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066587" target="_blank">202408290066587</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066588" target="_blank">202408290066588</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066589" target="_blank">202408290066589</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066590" target="_blank">202408290066590</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">NOC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408290066591" target="_blank">202408290066591</a></td><td>MC2 GROUP INC</td><td>PORCHLIGHT EAST HILL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/12/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412160097294" target="_blank">202412160097294</a></td><td>INGLENOOK TOWNHOMES CORP</td><td>PORCHLIGHT EAST HILL LLC<br>INGLENOOK TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENSTL</td><td class="img">PDF / TIFF</td><td class="date">2025/08/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202508250067737" target="_blank">202508250067737</a></td><td>PORCHLIGHT NASHVILLE</td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/08/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202508270068523" target="_blank">202508270068523</a></td><td>PORCHLIGHT PROPERTIES LLC</td><td>WALLEN KRISTI<br>WALLEN SHANE</td><td class="num">$985,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/10/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510200083173" target="_blank">202510200083173</a></td><td>PORCHLIGHT EAST HILL LLC</td><td>FIRST CAROLINA BANK<br>NIELSON JOHN TRUSTEE</td><td class="num">$20,676,750</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2025/10/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510200083335" target="_blank">202510200083335</a></td><td>PORCHLIGHT EAST HILL LLC</td><td>FIRST CAROLINA BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENLWD</td><td class="img">PDF / TIFF</td><td class="date">2026/04/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604230033789" target="_blank">202604230033789</a></td><td>PORCHLIGHT NASHVILLE LLC</td><td>STATE OF TENNESSEE DEPARTMENT OF LABOR AND WORKFORCE</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Hampton Heights <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> KSSK LLC / Jai Jalaram Enterprises LLC &nbsp;|&nbsp; <b>Owner address:</b> 1516 Hampton St, Nashville, TN 37207<br>
+      <b>Location:</b> Hampton St, East Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Ascend Federal Credit Union &mdash; $15,485,000 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 58 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 21 of 21 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2013/04/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201304300042752" target="_blank">201304300042752</a></td><td>JOHNSON EDITH H</td><td>KSSK LLC</td><td class="num">$385,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2013/04/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201304300042753" target="_blank">201304300042753</a></td><td>KSSK LLC</td><td>ANDERSON SAMUEL F TRUSTEE<br>JOHNSON EDITH</td><td class="num">$370,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2014/01/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201401080002151" target="_blank">201401080002151</a></td><td>KSSK LLC</td><td>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2015/10/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201510230107906" target="_blank">201510230107906</a></td><td>KSSK LLC</td><td>HANNON ROBERT C TRUSTEE<br>CAPSTAR BANK</td><td class="num">$350,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2015/10/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201510230107907" target="_blank">201510230107907</a></td><td>KSSK LLC</td><td>CAPSTAR BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2015/10/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201510260108821" target="_blank">201510260108821</a></td><td>JOHNSON EDITH</td><td>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2016/03/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201603150024547" target="_blank">201603150024547</a></td><td>EFS INVESTMENT PARTNERS LLC</td><td>KSSK LLC</td><td class="num">$20,000</td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2017/01/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201701110003368" target="_blank">201701110003368</a></td><td>KSSK LLC</td><td>PATEL DEAN<br>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2017/08/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201708160083967" target="_blank">201708160083967</a></td><td>KSSK LLC</td><td>ELITE NASHVILLE DEVELOPMENT LLC</td><td class="num">$60,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2017/08/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201708160083976" target="_blank">201708160083976</a></td><td>KSSK LLC</td><td>TAYLOR ERIC</td><td class="num">$60,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2022/10/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210310117345" target="_blank">202210310117345</a></td><td>KSSK LLC</td><td>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">CHARTER</td><td class="img">PDF / TIFF</td><td class="date">2023/10/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310310084970" target="_blank">202310310084970</a></td><td>STATE OF TENNESSEE</td><td>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502100009732" target="_blank">202502100009732</a></td><td>KSSK LLC</td><td>ASCEND FEDERAL CREDIT UNION<br>JERNIGAN MATT TRUSTEE</td><td class="num">$15,485,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2025/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502100009733" target="_blank">202502100009733</a></td><td>KSSK LLC</td><td>JAI JALARAM ENTERPRISES LLC<br>ASCEND FEDERAL CREDIT UNION</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2025/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502100009734" target="_blank">202502100009734</a></td><td>JAI JALARAM ENTERPRISES LLC</td><td>KSSK LLC<br>ASCEND FEDERAL CREDIT UNION</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2025/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502100010050" target="_blank">202502100010050</a></td><td>KSSK LLC</td><td>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/02/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502180011709" target="_blank">202502180011709</a></td><td>KSSK LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2025/03/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202503030015605" target="_blank">202503030015605</a></td><td>OLD NATIONAL BANK</td><td>KSSK LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/03/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202503110018495" target="_blank">202503110018495</a></td><td>KSSK LLC</td><td>HAMPTON HEIGHTS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/05/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202505150038264" target="_blank">202505150038264</a></td><td>KSSK LLC</td><td>HAMPTON HEIGHTS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTMODAGR</td><td class="img">PDF / TIFF</td><td class="date">2025/09/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202509110072787" target="_blank">202509110072787</a></td><td>JAI JALARAM ENTERPRISES LLC</td><td>KSSK LLC<br>ASCEND FEDERAL CREDIT UNION</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Hillside Village <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Hillside Property Partners LLC &nbsp;|&nbsp; <b>Owner address:</b> 1728 General George Patton Dr Ste 200, Brentwood, TN 37027<br>
+      <b>Location:</b> Hillside Rd, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Reliant Bank / United Community Bank &mdash; $11,250,000 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 38 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 7 of 7 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2021/10/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202110110136217" target="_blank">202110110136217</a></td><td>FERDOWSI FARZIN</td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2022/01/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202201130005470" target="_blank">202201130005470</a></td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td>WILSON JOHN R TRUSTEE<br>RELIANT BANK<br>UNITED COMMUNITY BANK</td><td class="num">$11,250,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOTAMEND</td><td class="img">PDF / TIFF</td><td class="date">2024/03/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202403050015305" target="_blank">202403050015305</a></td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td>UNITED COMMUNITY BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/10/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202410310084650" target="_blank">202410310084650</a></td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td>HILLSIDE VILLAGE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/11/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202411130088350" target="_blank">202411130088350</a></td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td>HILLSIDE VILLAGE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2024/12/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412090095559" target="_blank">202412090095559</a></td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td>HILLSIDE VILLAGE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/10/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510070079990" target="_blank">202510070079990</a></td><td>HILLSIDE PROPERTY PARTNERS LLC</td><td>HILLSIDE ROAD SITEWORK LLC</td><td class="num">$10,000</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>The Orchards <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Larkin Springs TN Owner IV LLC / Orchards TN Owner IV LLC &nbsp;|&nbsp; <b>Owner address:</b> 3953 Maple Ave Ste 300, Dallas, TX 75219<br>
+      <b>Location:</b> Larkin Springs Rd, Madison &nbsp;|&nbsp; <b>Financing / structure:</b> Western Alliance Bank &mdash; $15,028,935 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 47 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 9 of 9 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/03/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202203250034417" target="_blank">202203250034417</a></td><td>MONARCH DEVELOPMENT CRE LLC</td><td>LARKIN SPRINGS TN OWNER IV LLC</td><td class="num">$2,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2022/03/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202203250034418" target="_blank">202203250034418</a></td><td>MONARCH DEVELOPMENT CRE LLC</td><td>LARKIN SPRINGS TN OWNER IV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/03/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202203250034419" target="_blank">202203250034419</a></td><td>MONARCH DEVELOPMENT CRE LLC</td><td>LARKIN SPRINGS TN OWNER IV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REST</td><td class="img">PDF / TIFF</td><td class="date">2023/06/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202306210047162" target="_blank">202306210047162</a></td><td>ORCHARDS TN OWNER IV LLC</td><td>LARKIN SPRINGS TN OWNER IV LLC<br>ORCHARDS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">CHARTERFGN</td><td class="img">PDF / TIFF</td><td class="date">2024/02/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202402230012354" target="_blank">202402230012354</a></td><td>STATE OF DELAWARE</td><td>LARKIN SPRINGS TN OWNER IV LLC<br>ORCHARDS TN OWNER IV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2024/02/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202402230012356" target="_blank">202402230012356</a></td><td>ORCHARDS TN OWNER IV LLC</td><td>LARKIN SPRINGS TN OWNER IV LLC<br>BENNETT PATRICK TRUSTEE<br>WESTERN ALLIANCE BANK</td><td class="num">$15,028,935</td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2024/04/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202404120026198" target="_blank">202404120026198</a></td><td>LARKIN SPRINGS TN OWNER IV LLC</td><td>ORCHARDS PHASE 2</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2024/12/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412270100381" target="_blank">202412270100381</a></td><td>LARKIN SPRINGS TN OWNER IV LLC</td><td>ORCHARDS PHASE 3A</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2026/05/04</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202605040039149" target="_blank">202605040039149</a></td><td>LARKIN SPRINGS TN OWNER IV LLC</td><td>ORCHARDS PHASE 3B</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Homes at 422 38th Avenue North <span class="tag">BFR (Lennar / Upward America)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Upward America Southeast Property Owner LP &nbsp;|&nbsp; <b>Owner address:</b> 205 Powell Pl, Brentwood, TN 37027 (also Charlotte, NC)<br>
+      <b>Location:</b> 422 38th Ave N, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Acquisition assemblage from 422 38th LLC / 422 39th LLC &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 11 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 3 of 3 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/04/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202204080040977" target="_blank">202204080040977</a></td><td>422 38TH LLC</td><td>UPWARD AMERICA SOUTHEAST PROPERTY OWNER LP</td><td class="num">$5,130,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2022/04/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202204080040978" target="_blank">202204080040978</a></td><td>422 38TH LLC<br>422 39TH LLC</td><td>UPWARD AMERICA SOUTHEAST PROPERTY OWNER LP<br>HOMES AT 422 38TH AVENUE NORTH</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/05/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202205050052076" target="_blank">202205050052076</a></td><td>422 38TH LLC</td><td>UPWARD AMERICA SOUTHEAST PROPERTY OWNER LP</td><td class="num">$570,000</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>LMC Towne <span class="tag">Institutional multifamily</span></h2>
+    <div class="owner">
+      <b>Owner:</b> LMC Towne Property Owner LLC (Lennar Multifamily Communities) &nbsp;|&nbsp; <b>Owner address:</b> 5505 Waterford District Dr, Miami, FL 33126<br>
+      <b>Location:</b> Gateway, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Wintrust Bank &mdash; $45,000,000 (2020); refinanced by GS GO II Feeder LLC (Goldman Sachs) &mdash; $50,000,000 (2026) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> multifamily (2 parcels)
+    </div>
+    <div class="meta"><span>Showing 1 to 13 of 13 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2020/11/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202011300138693" target="_blank">202011300138693</a></td><td>LMC 808 GATEWAY HOLDINGS LLC</td><td>LMC TOWNE PROPERTY OWNER LLC</td><td class="num">$10,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2020/12/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202012080142591" target="_blank">202012080142591</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>RILEY YALE TRUSTEE<br>WINTRUST BANK NA</td><td class="num">$45,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2020/12/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202012080142592" target="_blank">202012080142592</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>WINTRUST BANK NA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2021/05/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202105260071170" target="_blank">202105260071170</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>COMCAST CABLE COMMUNICATIONS MANAGEMENT LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTMODAGR</td><td class="img">PDF / TIFF</td><td class="date">2024/11/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202411220091357" target="_blank">202411220091357</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>WINTRUST BANK NA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2024/12/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412270100226" target="_blank">202412270100226</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>CSSI INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2025/01/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202501020000213" target="_blank">202501020000213</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>ENERGY COMMAND CORP</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2025/02/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502240013351" target="_blank">202502240013351</a></td><td>ENERGY COMMAND CORP</td><td>LMC TOWNE PROPERTY OWNER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2026/04/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604280037208" target="_blank">202604280037208</a></td><td>WINTRUST BANK NA</td><td>LMC TOWNE PROPERTY OWNER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2026/04/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604280037209" target="_blank">202604280037209</a></td><td>CSSI INC</td><td>LMC TOWNE PROPERTY OWNER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2026/04/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604280037210" target="_blank">202604280037210</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>BROOKS SKY TRUSTEE<br>GS GO II FEEDER LLC</td><td class="num">$50,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2026/04/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604280037211" target="_blank">202604280037211</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>GS GO II FEEDER LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2026/04/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604280037212" target="_blank">202604280037212</a></td><td>LMC TOWNE PROPERTY OWNER LLC</td><td>GS GO II FEEDER LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Cedars of Cane Ridge <span class="tag">Land-bank lot takedown</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Brookfield Holdings Cane Ridge LLC (land bank) &rarr; Ashton Nashville Residential LLC (Ashton Woods, builder) &nbsp;|&nbsp; <b>Owner address:</b> Brookfield: 3200 Park Center Dr Ste 1000, Costa Mesa, CA 92626 &nbsp;/&nbsp; Ashton Woods: 370 Mallory Station Rd Ste 500, Franklin, TN 37067<br>
+      <b>Location:</b> Cane Ridge, Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> Land bank finances lots; builder takes down in phased deeds, each paired with a partial release (RELPART) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> Brookfield 88 / Ashton 45 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 24 of 24 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2023/08/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202308140063215" target="_blank">202308140063215</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2024/12/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412050094476" target="_blank">202412050094476</a></td><td>TURNER PAMELA J<br>TURNER WILLIAM W JR</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2024/12/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412050094477" target="_blank">202412050094477</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2024/12/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412060095000" target="_blank">202412060095000</a></td><td>BROOKFIELD HOLDINGS LLC</td><td>CEDARS OF CANE RIDGE PHASE 1</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2025/01/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202501060001048" target="_blank">202501060001048</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/01/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202501060001049" target="_blank">202501060001049</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$800,486.80</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2025/03/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202503060016938" target="_blank">202503060016938</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/03/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202503060016939" target="_blank">202503060016939</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$1,734,388.07</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/06/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202506030043540" target="_blank">202506030043540</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$533,657.87</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2025/06/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202506030043541" target="_blank">202506030043541</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/07/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202507110054929" target="_blank">202507110054929</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$1,192,298.03</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2025/07/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202507110054930" target="_blank">202507110054930</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/09/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202509090071964" target="_blank">202509090071964</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$1,725,955.90</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2025/09/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202509090071965" target="_blank">202509090071965</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/11/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511170091179" target="_blank">202511170091179</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$1,317,280.32</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2025/11/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511170091180" target="_blank">202511170091180</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/11/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511200092627" target="_blank">202511200092627</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/03/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202603310025492" target="_blank">202603310025492</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$705,922.37</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2026/03/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202603310025493" target="_blank">202603310025493</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2026/04/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604200032230" target="_blank">202604200032230</a></td><td>BROOKFIELD HOLDINGS LLC<br>CALDWELL MATTHEW</td><td>CEDARS OF CANE RIDGE PHASE 2</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/06/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606050050786" target="_blank">202606050050786</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$933,901.27</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2026/06/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606050050787" target="_blank">202606050050787</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/06/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606050050967" target="_blank">202606050050967</a></td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td class="num">$1,639,823.64</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2026/06/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606050050968" target="_blank">202606050050968</a></td><td>ASHTON NASHVILLE RESIDENTIAL LLC</td><td>BROOKFIELD HOLDINGS CANE RIDGE LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Crestbrook Meadows Apartments <span class="tag">Existing institutional rental &mdash; 40-yr chain</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Crestbrook Owner LLC / Crestbrook TIC II Owner LLC (current) &nbsp;|&nbsp; <b>Owner address:</b> 400 Blvd of the Americas Ste 405, Lakewood, NJ 08701 (prior owner Crestbrook Real Property Holdings LLC, Windham, CT)<br>
+      <b>Location:</b> Crestbrook Meadows, Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> New York Community Bank &mdash; $15,000,000 (2022); prior agency loans via Fannie Mae / Freddie Mac &nbsp;|&nbsp; <b>Current Davidson holdings:</b> current owner 4 / prior holder 52 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 79 of 79 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DB</td><td class="img">PDF / TIFF</td><td class="date">1984/10/15</td>
+        <td>6403/205</td><td>CRESTBROOK MEADOWS TOWNHOMES</td><td>CRESTBROOK MEADOWS TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">CH</td><td class="img">PDF / TIFF</td><td class="date">1985/08/27</td>
+        <td>6640/943</td><td>CRESTBROOK MEADOWS HOMEOWNERS ASSN INC</td><td></td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">CH</td><td class="img">PDF / TIFF</td><td class="date">1985/08/29</td>
+        <td>6642/998</td><td>CRESTBROOK MEADOWS HOMEOWNERS ASSN INC</td><td></td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DB</td><td class="img">PDF / TIFF</td><td class="date">1985/08/29</td>
+        <td>6643/1</td><td>CRESTBROOK MEADOWS TOWNHOMES</td><td>CRESTBROOK MEADOWS TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DB</td><td class="img">PDF / TIFF</td><td class="date">1993/12/29</td>
+        <td>9203/158</td><td>TIDWELL CLAYTON W<br>HARDY JAMES B</td><td>CRESTBROOK PARTNERS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DB</td><td class="img">PDF / TIFF</td><td class="date">1994/01/05</td>
+        <td>9210/643</td><td>TIDWELL CLAYTON W<br>HARDY JAMES B</td><td>CRESTBROOK PARTNERS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">1998/11/06</td>
+        <td>11194/935</td><td>CRESTBROOK PARTNERS<br>HARWELL PROPERTIES<br>TIDWELL C W<br>TIDWELL H S<br>TIDWELL MICHAEL S<br>HEARTHSTONE MANOR PARTNERS II<br>LINDLEY DEBRA HARDY<br>HARDY MICHAEL W<br>BAGWELL DARE TIDWELL</td><td>FIRST AMERICAN NATIONAL BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTAMEND</td><td class="img">PDF / TIFF</td><td class="date">1998/11/06</td>
+        <td>11194/943</td><td>CRESTBROOK PARTNERS<br>HARWELL PROPERTIES<br>TIDWELL C W<br>TIDWELL H S<br>TIDWELL MICHAEL S<br>HEARTHSTONE MANOR PARTNERS II<br>LINDLEY DEBRA HARDY<br>HARDY MICHAEL W<br>BAGWELL DARE TIDWELL</td><td>FIRST AMERICAN NATIONAL BANK</td><td class="num">$58,331.67</td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2004/02/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200402090015296" target="_blank">200402090015296</a></td><td>HARDY MICHAEL W<br>CRESTBROOK PARTNERS</td><td>UNITED STATES OF AMERICA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2004/06/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200406020064642" target="_blank">200406020064642</a></td><td>UNITED STATES OF AMERICA</td><td>HARDY MICHAEL W<br>CRESTBROOK PARTNERS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2004/08/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200408200101082" target="_blank">200408200101082</a></td><td>CRESTBROOK PARTNERS<br>TIDWELL MIKE S<br>BAGWELL DARE TIDWELL</td><td>BAKER THOMAS F IV TRUSTEE<br>FIRST TENNESSEE BANK NA</td><td class="num">$1,200,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2004/08/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200408200101083" target="_blank">200408200101083</a></td><td>CRESTBROOK PARTNERS<br>TIDWELL MIKE S<br>BAGWELL DARE TIDWELL</td><td>FIRST TENNESSEE BANK NA</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2005/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200508290103497" target="_blank">200508290103497</a></td><td>CRESTBROOK PARTNERS<br>TIDWELL MIKE S<br>BAGWELL DARE TIDWELL</td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num">$2,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2005/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200508290103498" target="_blank">200508290103498</a></td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td>CARVER C MARK TRUSTEE<br>TITAN CAPITAL ID LLC</td><td class="num">$2,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOTASSN</td><td class="img">PDF / TIFF</td><td class="date">2005/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200508290103499" target="_blank">200508290103499</a></td><td>TITAN CAPITAL ID LLC<br>CRESTBROOK MEADOWS REALTY CO LLC</td><td>METROPOLITAN NATIONAL BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2005/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200508290103500" target="_blank">200508290103500</a></td><td>CRESTBROOK MEADOWS REALTY CO LLC<br>METROPOLITAN NATIONAL BANK<br>TITAN CAPITAL ID LLC</td><td>METROPOLITAN NATIONAL BANK<br>TITAN CAPITAL ID LLC<br>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2005/08/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200508290103501" target="_blank">200508290103501</a></td><td>TITAN CAPITAL ID LLC</td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2005/10/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200510050120175" target="_blank">200510050120175</a></td><td>FIRST TENNESSEE BANK NA</td><td>CRESTBROOK PARTNERS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2005/10/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200510050120176" target="_blank">200510050120176</a></td><td>FIRST TENNESSEE BANK NA</td><td>CRESTBROOK PARTNERS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2006/04/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200604180044059" target="_blank">200604180044059</a></td><td>CRESTBROOK MEADOWS REALTY CO LLC<br>LAMPLIGHTER REALTY CO LLC<br>ARCHWOOD REALTY CO LLC</td><td>MCNAMEE MARC T TRUSTEE<br>BRT REALTY TRUST</td><td class="num">$11,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2006/05/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200605020050673" target="_blank">200605020050673</a></td><td>BRT REALTY TRUST</td><td>CRESTBROOK MEADOWS REALTY CO LLC<br>LAMPLIGHTER REALTY CO LLC<br>ARCHWOOD REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2007/01/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200701290011596" target="_blank">200701290011596</a></td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td>ABC FLOORING</td><td class="num">$950.10</td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2007/01/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200701290011597" target="_blank">200701290011597</a></td><td>ARCHWOOD REALTY CO LLC<br>CAPITAL FILING SERVICE INC AGENT<br>BROOKSIDE PROPERTIES INC<br>CRESTBROOK MEADOWS TOWNHOMES</td><td>ABC FLOORING</td><td class="num">$1,155</td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2007/02/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200702260023357" target="_blank">200702260023357</a></td><td>ABC FLOORING</td><td>CRESTBROOK MEADOWS REALTY CO</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2007/07/27</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200707270089509" target="_blank">200707270089509</a></td><td>GABLES AT SOUTHERN HILLS LP<br>CRESTBROOK MEADOWS REALTY CO LLC<br>LAMPLIGHTER REALTY CO LLC<br>ARCHWOOD REALTY CO LLC<br>HIGHLAND RIDGE REALTY CO LLC<br>ENON SPRINGS INVESTORS LTD<br>371 WALLACE ROAD REALTY CO LLC<br>THREE SEVENTY ONE WALLACE ROAD REALTY CO LLC<br>ENON SPRINGS REALTY CO LLC</td><td>MCNAMEE MARC T TRUSTEE<br>BRT REALTY TRUST</td><td class="num">$500,000</td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2007/10/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200710220124665" target="_blank">200710220124665</a></td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td>OCONNOR PETER F<br>A ACTION STEAMER</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2008/01/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200801160004869" target="_blank">200801160004869</a></td><td>CRESTBROOK MEADOWS REALTY LLC</td><td>RZ CLEANING ENTERPRISES INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENSTL</td><td class="img">PDF / TIFF</td><td class="date">2008/03/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200803200028328" target="_blank">200803200028328</a></td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2008/04/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200804180039869" target="_blank">200804180039869</a></td><td>CRESTBROOK REALTY</td><td>MAY LANDSCAPING LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTASSN</td><td class="img">PDF / TIFF</td><td class="date">2008/07/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200807070069677" target="_blank">200807070069677</a></td><td>BRT REALTY TRUST</td><td>CRESTBROOK MEADOWS REALTY CO LLC<br>LAMPLIGHTER REALTY CO LLC<br>ARCHWOOD REALTY CO LLC<br>TRB CRESTBROOK LLC<br>TRB CUMBERLAND LLC<br>TRB ARCHWOOD LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDTRS</td><td class="img">PDF / TIFF</td><td class="date">2008/07/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200807070069678" target="_blank">200807070069678</a></td><td>MCNAMEE MARC T TRUSTEE</td><td>CRESTBROOK MEADOWS REALTY CO LLC<br>LAMPLIGHTER REALTY CO LLC<br>ARCHWOOD REALTY CO LLC<br>TRB CRESTBROOK LLC<br>TRB CUMBERLAND LLC<br>TRB ARCHWOOD LLC</td><td class="num">$8,600,000</td>
+      </tr>
+      <tr>
+        <td class="type">RELSTL</td><td class="img">PDF / TIFF</td><td class="date">2008/07/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200807150072360" target="_blank">200807150072360</a></td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2008/12/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200812120119791" target="_blank">200812120119791</a></td><td>TITAN CAPITAL ID LLC</td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFXREL</td><td class="img">PDF / TIFF</td><td class="date">2008/12/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200812120119792" target="_blank">200812120119792</a></td><td>TITAN CAPITAL ID LLC</td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2009/07/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200907310071768" target="_blank">200907310071768</a></td><td>TRB CRESTBROOK LLC</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num">$1,850,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2009/07/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200907310071769" target="_blank">200907310071769</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>MCNAMEE MARC T TRUSTEE<br>BRT REALTY TRUST</td><td class="num">$1,295,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2009/07/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=200907310071770" target="_blank">200907310071770</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>BRT REALTY TRUST</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2011/08/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201108310067377" target="_blank">201108310067377</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>FIRST AMERICAN TITLE CO TRUSTEE<br>CENTERLINE MORTGAGE CAPITAL INC</td><td class="num">$1,815,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOTASSN</td><td class="img">PDF / TIFF</td><td class="date">2011/08/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201108310067378" target="_blank">201108310067378</a></td><td>CENTERLINE MORTGAGE CAPITAL INC</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC<br>FANNIE MAE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFS</td><td class="img">PDF / TIFF</td><td class="date">2011/08/31</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201108310067379" target="_blank">201108310067379</a></td><td>FANNIE MAE</td><td>CENTERLINE MORTGAGE CAPITAL INC<br>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2014/02/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201402260016313" target="_blank">201402260016313</a></td><td>CRESTBROOK REAL PROPERTY</td><td>ABSOLUTE CARPETS INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2014/05/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201405140041515" target="_blank">201405140041515</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC<br>CRESTBROOK MEADOWS APARTMENTS</td><td>EDDYS PAINTING</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2015/10/05</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201510050100991" target="_blank">201510050100991</a></td><td>COMER KEYNOSHA L</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2016/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201602100012675" target="_blank">201602100012675</a></td><td>PEOPLES WILLIE R III</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2016/02/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201602100012826" target="_blank">201602100012826</a></td><td>COMER KEYNOSHA L</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFXCON</td><td class="img">PDF / TIFF</td><td class="date">2016/03/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201603170025551" target="_blank">201603170025551</a></td><td>FANNIE MAE</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2016/03/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201603290029156" target="_blank">201603290029156</a></td><td>WOODSON TONYA<br>BANKS TROKIA</td><td>CRESTBROOK MEADOWS APARTMENTS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2016/09/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201609190097904" target="_blank">201609190097904</a></td><td>POINTER NICHOLAS</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2016/12/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201612070128401" target="_blank">201612070128401</a></td><td>MURRAY JOHN</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2017/05/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201705300053300" target="_blank">201705300053300</a></td><td>CLEMONS DELYSHA</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENSTL</td><td class="img">PDF / TIFF</td><td class="date">2017/11/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201711030112868" target="_blank">201711030112868</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS</td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2017/11/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201711060113963" target="_blank">201711060113963</a></td><td>LOVE KARA<br>LOVE MARTAVIUS</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2018/02/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201802280018532" target="_blank">201802280018532</a></td><td>CARTER CARISSA</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">RELSTL</td><td class="img">PDF / TIFF</td><td class="date">2018/05/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201805240049698" target="_blank">201805240049698</a></td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td>CRESTBROOK MEADOWS REALTY CO LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2018/06/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201806110055487" target="_blank">201806110055487</a></td><td>CRESTBROOK MEADOWS</td><td>POINTER NICHOLAS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2018/07/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201807130068035" target="_blank">201807130068035</a></td><td>SMITH IVORY</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2018/09/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201809140091232" target="_blank">201809140091232</a></td><td>GRADY LATOYA<br>GRADY LATOYIA</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2019/02/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201902250016848" target="_blank">201902250016848</a></td><td>TROUTT LATRISHA</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2019/04/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201904220036731" target="_blank">201904220036731</a></td><td>WILLIAMS CRYSTAL</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2019/08/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201908130080682" target="_blank">201908130080682</a></td><td>EDDYS PAINTING</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">RELSTL</td><td class="img">PDF / TIFF</td><td class="date">2019/08/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201908220084518" target="_blank">201908220084518</a></td><td>STATE OF TENNESSEE DEPARTMENT OF REVENUE</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2019/09/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201909060090299" target="_blank">201909060090299</a></td><td>BRT APARTMENTS CORP</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">AFFIDAVIT</td><td class="img">PDF / TIFF</td><td class="date">2019/09/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201909060090300" target="_blank">201909060090300</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2019/09/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201909060090301" target="_blank">201909060090301</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>HUNT MORTGAGE PARTNERS LLC<br>OLD REPUBLIC TITLE CO OF TN TRUSTEE</td><td class="num">$3,350,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOTASSN</td><td class="img">PDF / TIFF</td><td class="date">2019/09/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201909060090302" target="_blank">201909060090302</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC<br>HUNT MORTGAGE PARTNERS LLC</td><td>FEDERAL HOME LOAN MORTGAGE CORP</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2019/09/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201909090090631" target="_blank">201909090090631</a></td><td>BROOKS MICHAEL</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2019/10/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201910210107569" target="_blank">201910210107569</a></td><td>FANNIE MAE</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFXREL</td><td class="img">PDF / TIFF</td><td class="date">2019/10/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201910210107570" target="_blank">201910210107570</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>FANNIE MAE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTASSN</td><td class="img">PDF / TIFF</td><td class="date">2020/02/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202002030012289" target="_blank">202002030012289</a></td><td>FEDERAL HOME LOAN MORTGAGE CORP</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC<br>U S BANK NA TRUSTEE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">JDGMT</td><td class="img">PDF / TIFF</td><td class="date">2021/08/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202108260115164" target="_blank">202108260115164</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2022/08/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202208080090227" target="_blank">202208080090227</a></td><td>ABSOLUTE FLOORING INC</td><td>CRESTBROOK REAL PROPERTY</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/09/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202209230105784" target="_blank">202209230105784</a></td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td>CRESTBROOK OWNER LLC<br>CRESTBROOK TIC II OWNER LLC</td><td class="num">$7,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2022/09/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202209290107696" target="_blank">202209290107696</a></td><td>ROTHWOOD OWNER LLC<br>ROTHWOOD TIC II OWNER LLC<br>CRESTBROOK OWNER LLC<br>CRESTBROOK TIC II OWNER LLC</td><td>NEW YORK COMMUNITY BANK<br>RILEY YALE TRUSTEE</td><td class="num">$15,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2022/09/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202209290107795" target="_blank">202209290107795</a></td><td>CRESTBROOK OWNER LLC<br>CRESTBROOK TIC II OWNER LLC<br>ROTHWOOD OWNER LLC<br>ROTHWOOD TIC II OWNER LLC</td><td>NEW YORK COMMUNITY BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2022/09/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202209290107796" target="_blank">202209290107796</a></td><td>ROTHWOOD OWNER LLC<br>ROTHWOOD TIC II OWNER LLC<br>CRESTBROOK OWNER LLC</td><td>NEW YORK COMMUNITY BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2023/03/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202303020015179" target="_blank">202303020015179</a></td><td>U S BANK NA TRUSTEE</td><td>CRESTBROOK REAL PROPERTY HOLDINGS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2024/12/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412160097375" target="_blank">202412160097375</a></td><td>COX THERESA</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2024/12/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202412160097376" target="_blank">202412160097376</a></td><td>MEDLIN NANCY</td><td>CRESTBROOK MEADOWS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENCVWARR</td><td class="img">PDF / TIFF</td><td class="date">2026/06/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606220055957" target="_blank">202606220055957</a></td><td>MALDONADO BRIANNA</td><td>CRESTBROOK OWNERS LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Elmington / CRP-ECG portfolio <span class="tag">BFR construction (key records)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> CRP/ECG entities (Elmington Capital Group / Carlyle Group) &nbsp;|&nbsp; <b>Owner address:</b> 118 16th Ave S Ste 200, Nashville, TN 37203 (Carlyle Group, 1001 Pennsylvania Ave NW, Washington DC)<br>
+      <b>Location:</b> Charlotte Park, Old Franklin, Cane Ridge/Hobson Pike, Hays Hill, Hillside, Southcrest, Parke West, Stacks on Main &nbsp;|&nbsp; <b>Financing / structure:</b> Capstar / Synovus / Renasant / ServisFirst / Old National / GS GO II Feeder (Goldman); institutional buyers incl. SFR XII Nashville Owner (Invitation Homes), ACPF Spring Path Antioch, GLOF I REIT &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 313 parcels across 8 entities
+    </div>
+    <div class="meta"><span>Showing 1 to 24 of 24 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2020/03/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202003060025664" target="_blank">202003060025664</a></td><td>ALTERMAN SALLY SCHWARTZ</td><td>CRP/ECG CHARLOTTE PARK LLC</td><td class="num">$2,600,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2020/03/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202003060025665" target="_blank">202003060025665</a></td><td>CRP/ECG CHARLOTTE PARK LLC</td><td>BROWN KIM A TRUSTEE<br>CAPSTAR BANK</td><td class="num">$12,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2020/03/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202003090026133" target="_blank">202003090026133</a></td><td>CRP/ECG CHARLOTTE PARK LLC</td><td>CAPSTAR BANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2020/07/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202007090074684" target="_blank">202007090074684</a></td><td>CRP/ECG CHARLOTTE PARK LLC</td><td>CHARLOTTE PARK TOWNHOUSES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2020/09/04</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202009040101464" target="_blank">202009040101464</a></td><td>JCK DEV</td><td>CRP/ECG OLD FRANKLIN LLC</td><td class="num">$2,380,866.87</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2020/09/04</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202009040101465" target="_blank">202009040101465</a></td><td>CRP/ECG OLD FRANKLIN LLC</td><td>RILEY YALE TRUSTEE<br>SYNOVUS BANK</td><td class="num">$18,292,966</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2021/06/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106300088453" target="_blank">202106300088453</a></td><td>TWO PIKES LLC</td><td>CRP/ECG CANE RIDGE LLC</td><td class="num">$1,280,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2021/06/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106300088454" target="_blank">202106300088454</a></td><td>CRP/ECG CANE RIDGE LLC</td><td>BEARDSLEY TERESA A TRUSTEE<br>SYNOVUS BANK</td><td class="num">$23,593,022</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2021/09/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109220127027" target="_blank">202109220127027</a></td><td>CRP/ECG CHARLOTTE PARK LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$13,920,344</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2022/07/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202207200083189" target="_blank">202207200083189</a></td><td>CRP/ECG CANE RIDGE LLC</td><td>HOBSON PIKE TOWNHOUSES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/10/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210120111826" target="_blank">202210120111826</a></td><td>MCADAMS RICHARD</td><td>CRP/ECG HAYS HILL LLC</td><td class="num">$3,771,300</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2022/10/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210120111828" target="_blank">202210120111828</a></td><td>CRP/ECG HAYS HILL LLC</td><td>BROWN KIM A TRUSTEE<br>CAPSTAR BANK</td><td class="num">$10,790,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/10/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210280116787" target="_blank">202210280116787</a></td><td>CRP/ECG OLD FRANKLIN LLC</td><td>ACPF SPRING PATH ANTIOCH LLC</td><td class="num">$4,330,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/10/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310230082663" target="_blank">202310230082663</a></td><td>PARK AT HILLSIDE LLC</td><td>CRP/ECG HILLSIDE ZONE 7 LLC</td><td class="num">$8,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2023/10/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310230082666" target="_blank">202310230082666</a></td><td>CRP/ECG HILLSIDE ZONE 7 LLC</td><td>HILLSIDE TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2023/10/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310230082747" target="_blank">202310230082747</a></td><td>CRP/ECG HILLSIDE ZONE 7 LLC</td><td>ARNOLD LINDSEY R TRUSTEE<br>RENASANT BANK</td><td class="num">$26,341,436</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/01/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202401250004967" target="_blank">202401250004967</a></td><td>CRP/ECG OLD FRANKLIN LLC</td><td>ACPF SPRING PATH ANTIOCH LLC</td><td class="num">$23,088,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/09/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202409260074668" target="_blank">202409260074668</a></td><td>SOUTHCREST RESERVE INVESTMENT PARTNERS LLC</td><td>CRP/ECG SOUTHCREST RESERVE OWNER LLC</td><td class="num">$24,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2024/09/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202409260074669" target="_blank">202409260074669</a></td><td>CRP/ECG SOUTHCREST RESERVE OWNER LLC</td><td>SERVISFIRST BANK</td><td class="num">$16,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/10/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202410020076424" target="_blank">202410020076424</a></td><td>PARKE WEST VENTURE PARTNERS LLC</td><td>CRP/ECG PARKE WEST OWNER LLC</td><td class="num">$72,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2024/10/02</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202410020076425" target="_blank">202410020076425</a></td><td>CRP/ECG PARKE WEST OWNER LLC</td><td>GLOF I REIT LLC<br>SPRUILL JAMES E TRUSTEE</td><td class="num">$49,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/11/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511260094580" target="_blank">202511260094580</a></td><td>535 MAIN ST OWNER LLC</td><td>CRP/ECG STACKS ON MAIN OWNER LLC</td><td class="num">$68,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/11/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511260094581" target="_blank">202511260094581</a></td><td>CRP/ECG STACKS ON MAIN OWNER LLC</td><td>GS GO II FEEDER LLC<br>SPRUILL JAMES E TRUSTEE</td><td class="num">$52,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/12/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512300103736" target="_blank">202512300103736</a></td><td>CRP/ECG CANE RIDGE LLC</td><td>ENTWISTLE B WALKER TRUSTEE<br>OLD NATIONAL BANK</td><td class="num">$25,000,000</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>147 Elmhurst Townhomes <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Rethink Community Nashville JV LLC &nbsp;|&nbsp; <b>Owner address:</b> 707 Westchester Ave Ste 401, White Plains, NY 10604 (Rethinkforward Inc, 1831 12th Ave S, Nashville)<br>
+      <b>Location:</b> Elmhurst Ave, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> FirstBank &mdash; $11,873,665; land sold to KLLB AIV / Lennar ($17,385,000) and Millrose Properties Tennessee ($8,851,945) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 21 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 17 of 17 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2021/06/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106240085597" target="_blank">202106240085597</a></td><td>DEONARINE DEONARINE</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/06/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106240085598" target="_blank">202106240085598</a></td><td>DEONARINE DEONARINE</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num">$475,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086169" target="_blank">202106250086169</a></td><td>TTF INVESTMENTS LLC</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086170" target="_blank">202106250086170</a></td><td>TTF INVESTMENTS LLC</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num">$8,750,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086171" target="_blank">202106250086171</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>FIRSTBANK<br>ROBERTS S MADISON IV TRUSTEE</td><td class="num">$11,873,665</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086172" target="_blank">202106250086172</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>FIRSTBANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086173" target="_blank">202106250086173</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>FIRSTBANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086198" target="_blank">202106250086198</a></td><td>HOWARD JERI LYN</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num">$510,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086199" target="_blank">202106250086199</a></td><td>HOWARD JERI LYN</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106250086470" target="_blank">202106250086470</a></td><td>WHITSET DAVID</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num">$300,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2022/11/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202211090120319" target="_blank">202211090120319</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>PIEDMONT NATURAL GAS CO INC</td><td class="num">$18,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOTMODAGR</td><td class="img">PDF / TIFF</td><td class="date">2023/07/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202307210056392" target="_blank">202307210056392</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>FIRSTBANK</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/10/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202310120079929" target="_blank">202310120079929</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>KLLB AIV LLC</td><td class="num">$17,385,000</td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2025/03/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202503190019646" target="_blank">202503190019646</a></td><td>FIRSTBANK</td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/04/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504230031217" target="_blank">202504230031217</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>147 ELMHURST AVENUE TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/04/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504230031218" target="_blank">202504230031218</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>LENNAR HOMES OF TN LLC<br>WHITE T CHAD TRUSTEE</td><td class="num">$1,200,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/04/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604060027414" target="_blank">202604060027414</a></td><td>RETHINK COMMUNITY NASHVILLE JV LLC</td><td>MILLROSE PROPERTIES TENNESSEE LLC</td><td class="num">$8,851,945</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Thornton Grove <span class="tag">Land-bank &rarr; NVR/Ryan Homes (condensed)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Thornton Grove Green LLC (Grandview Partners) &nbsp;|&nbsp; <b>Owner address:</b> c/o Grandview Partners, 1 E. Putnam Ave Fl 3, Greenwich, CT 06830<br>
+      <b>Location:</b> Thornton Grove, Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> NVR Inc (Ryan Homes) $1,550,000 + Peoples Bank of Middle TN $2,000,000; ~200 individual NVR/Ryan lot takedowns omitted; note two rental sales to Quantis LLC ($80,000 each) and a Meritage easement &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 38 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 15 of 15 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2018/03/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201803290029388" target="_blank">201803290029388</a></td><td>CONE THOMAS FITE TRUSTEE</td><td>THORNTON GROVE GREEN LLC</td><td class="num">$1,945,624.50</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2018/03/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201803290029390" target="_blank">201803290029390</a></td><td>BRICK CHURCH PROPERTIES LP</td><td>THORNTON GROVE GREEN LLC</td><td class="num">$425,734.50</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2018/03/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201803290029392" target="_blank">201803290029392</a></td><td>THORNTON GROVE GREEN LLC</td><td>NVR INC<br>SIDWELL K THOMAS TRUSTEE</td><td class="num">$1,550,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2018/10/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201810170103038" target="_blank">201810170103038</a></td><td>THORNTON GROVE GREEN LLC</td><td>RITTENBERRY MICHAEL A TRUSTEE<br>PEOPLES BANK OF MIDDLE TN</td><td class="num">$2,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2020/05/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202005150051025" target="_blank">202005150051025</a></td><td>THORNTON GROVE GREEN LLC</td><td>THORNTON GROVE PHASE 1A</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2020/06/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202006080058652" target="_blank">202006080058652</a></td><td>THORNTON GROVE GREEN LLC</td><td>THORNTON GROVE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2020/04/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202004150039408" target="_blank">202004150039408</a></td><td>THORNTON GROVE GREEN LLC</td><td>PEOPLES BANK OF MIDDLE TN</td><td class="num">$1,836,980</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2020/06/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202006180064087" target="_blank">202006180064087</a></td><td>THORNTON GROVE GREEN LLC</td><td>NVR INC (sample lot takedown)</td><td class="num">$304,000</td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2021/09/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109080120324" target="_blank">202109080120324</a></td><td>THORNTON GROVE GREEN LLC</td><td>THORNTON GROVE PHASE 2A</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2022/04/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202204200045367" target="_blank">202204200045367</a></td><td>THORNTON GROVE GREEN LLC</td><td>THORNTON GROVE PHASE 3A</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2024/01/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202401240004749" target="_blank">202401240004749</a></td><td>THORNTON GROVE GREEN LLC</td><td>THORNTON GROVE PHASE 4A</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/10/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202410220081955" target="_blank">202410220081955</a></td><td>THORNTON GROVE GREEN LLC</td><td>QUANTIS LLC-2957 THORNTON GROVE BLVD SERIES</td><td class="num">$80,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/10/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202410220081956" target="_blank">202410220081956</a></td><td>THORNTON GROVE GREEN LLC</td><td>QUANTIS LLC-2953 THORNTON GROVE BLVD SERIES</td><td class="num">$80,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/04/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504240031577" target="_blank">202504240031577</a></td><td>THORNTON GROVE GREEN LLC</td><td>MERITAGE HOMES OF TN INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2026/03/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202603160020835" target="_blank">202603160020835</a></td><td>THORNTON GROVE GREEN LLC</td><td>THORNTON GROVE HOA INC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Moda Vista <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Nashville Moda I &amp; II LLC (Moda Homes) &nbsp;|&nbsp; <b>Owner address:</b> 340 W Butterfield Rd Ste 2D, Elmhurst, IL 60126<br>
+      <b>Location:</b> 3320 Curtis St, Bordeaux, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> ICM Lot Lender/Investor A LLC $18,965,000; NVR Inc (Ryan Homes) lot loans; FC Moda Vista LLC (Forman Capital) $8,496,499 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 8 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 15 of 15 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/11/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511190092419" target="_blank">202511190092419</a></td><td>CLARKSVILLE PIKE LLC<br>CURTIS STREET DEVELOPMENT LLC<br>3320 CURTIS ST LLC</td><td>NASHVILLE MODA I LLC</td><td class="num">$7,600,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/11/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202511200092741" target="_blank">202511200092741</a></td><td>NASHVILLE MODA I LLC</td><td>ROGERS WILL R IV TRUSTEE<br>ICM LOT LENDER A LLC</td><td class="num">$18,965,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/12/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512010094989" target="_blank">202512010094989</a></td><td>NASHVILLE MODA I LLC</td><td>NVR INC<br>TENNESSEE SETTLEMENT SERVICES LLC TRUSTEE<br>RYAN HOMES</td><td class="num">$3,135,825</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/12/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512010094990" target="_blank">202512010094990</a></td><td>NASHVILLE MODA I LLC</td><td>NVR INC<br>TENNESSEE SETTLEMENT SERVICES LLC TRUSTEE<br>RYAN HOMES</td><td class="num">$207,900</td>
+      </tr>
+      <tr>
+        <td class="type">DOTSUBAGR</td><td class="img">PDF / TIFF</td><td class="date">2025/12/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512030095984" target="_blank">202512030095984</a></td><td>NVR INC</td><td>NASHVILLE MODA I LLC<br>ICM LOT LENDER A LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTASSN</td><td class="img">PDF / TIFF</td><td class="date">2025/12/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512220101587" target="_blank">202512220101587</a></td><td>ICM LOT LENDER A LLC</td><td>NASHVILLE MODA I LLC<br>ICM LOT INVESTOR A LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2026/05/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202605010038889" target="_blank">202605010038889</a></td><td>KENTUCKY-TENNESSEE CONFERENCE ASSOCIATION OF SEVENTH-DAY ADVENTISTS INC</td><td>NASHVILLE MODA I LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2026/05/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202605130043239" target="_blank">202605130043239</a></td><td>NASHVILLE MODA I LLC</td><td>LAWRENCE AVENUE LAND CONDOMINIUM</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/06/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606240056844" target="_blank">202606240056844</a></td><td>FARRICIELLI ALICIA TRUSTEE<br>GF CASA TRUST</td><td>NASHVILLE MODA II LLC</td><td class="num">$900,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/06/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606240056846" target="_blank">202606240056846</a></td><td>BROWN KELVIN</td><td>NASHVILLE MODA II LLC</td><td class="num">$750,000</td>
+      </tr>
+      <tr>
+        <td class="type">RELPART</td><td class="img">PDF / TIFF</td><td class="date">2026/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606250057311" target="_blank">202606250057311</a></td><td>ICM LOT INVESTOR A LLC</td><td>NASHVILLE MODA I LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2026/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606250057542" target="_blank">202606250057542</a></td><td>DE LA CRUZ ELICELA GARCIA<br>REYES HEBER VALENCIA</td><td>NASHVILLE MODA II LLC</td><td class="num">$1,600,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2026/06/25</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606250057653" target="_blank">202606250057653</a></td><td>NASHVILLE MODA II LLC</td><td>FC MODA VISTA LLC<br>ROGERS WILL R IV TRUSTEE</td><td class="num">$8,496,498.78</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2026/07/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202607010059606" target="_blank">202607010059606</a></td><td>NASHVILLE MODA II LLC</td><td>FC MODA VISTA LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">UCCFX</td><td class="img">PDF / TIFF</td><td class="date">2026/07/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202607010059607" target="_blank">202607010059607</a></td><td>NASHVILLE MODA II LLC</td><td>FC MODA VISTA LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Davenport Downs / Harborwood / Coarsey Farms <span class="tag">BFR construction (AMH Development Program)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> AMH TN Development LLC (American Homes 4 Rent, NYSE: AMH) &nbsp;|&nbsp; <b>Owner address:</b> 280 E Pilot Road, Las Vegas, NV 89119 (also Calabasas, CA)<br>
+      <b>Location:</b> Antioch / Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> AMH self-funded build-to-rent development program (no third-party construction lender of record) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 300 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 15 of 15 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2018/03/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201803090022483" target="_blank">201803090022483</a></td><td>AHMED OMER</td><td>AMH TN DEVELOPMENT LLC</td><td class="num">$695,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2018/08/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201808300086081" target="_blank">201808300086081</a></td><td>AMH TN DEVELOPMENT LLC</td><td>AMERICAN HOMES INVESTMENTS LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2019/09/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201909160093729" target="_blank">201909160093729</a></td><td>AMH DAVENPORT DEVELOPMENT TRS LLC</td><td>AMH TN DEVELOPMENT LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2019/11/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201911080115785" target="_blank">201911080115785</a></td><td>MCKISS LLC</td><td>AMH TN DEVELOPMENT LLC</td><td class="num">$1,060,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2020/01/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202001150005589" target="_blank">202001150005589</a></td><td>ROBERTSON HEATHER ELIZABETH COARSEY</td><td>AMH TN DEVELOPMENT LLC</td><td class="num">$1,700,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2020/02/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202002280022651" target="_blank">202002280022651</a></td><td>HAGAR LARRY HOUSTON<br>HAGAR RONALD E<br>HIX SYLVIA E</td><td>AMH TN DEVELOPMENT LLC</td><td class="num">$713,000</td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2021/04/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202104060044959" target="_blank">202104060044959</a></td><td>AMH TN DEVELOPMENT LLC</td><td>DAVENPORT DOWNS PHASE 3 SECTION 1B</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2021/07/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202107220098369" target="_blank">202107220098369</a></td><td>AMH TN DEVELOPMENT LLC</td><td>DAVENPORT DOWNS PHASE 3 SECTION 1A</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REST</td><td class="img">PDF / TIFF</td><td class="date">2021/11/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202111030146825" target="_blank">202111030146825</a></td><td>AMH TN DEVELOPMENT LLC</td><td>HARBORWOOD</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2022/04/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202204060039609" target="_blank">202204060039609</a></td><td>AMH TN DEVELOPMENT LLC</td><td>DAVENPORT DOWNS PHASE 3 SECTION 2</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2022/04/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202204290050267" target="_blank">202204290050267</a></td><td>AMH TN DEVELOPMENT LLC</td><td>HARBORWOOD</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">PLAT-LG</td><td class="img">PDF / TIFF</td><td class="date">2023/05/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305100034819" target="_blank">202305100034819</a></td><td>AMH TN DEVELOPMENT LLC</td><td>COARSEY FARMS</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2023/08/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202308090061858" target="_blank">202308090061858</a></td><td>CROUCH JOHN S<br>CROUCH REGINA T</td><td>AMH TN DEVELOPMENT LLC</td><td class="num">$80,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2023/11/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202311130088296" target="_blank">202311130088296</a></td><td>AMH TN DEVELOPMENT LLC</td><td>DAVENPORT DOWNS OWNERS ASSOCIATION INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REST</td><td class="img">PDF / TIFF</td><td class="date">2025/10/06</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202510060079512" target="_blank">202510060079512</a></td><td>AMH TN DEVELOPMENT LLC</td><td>COARSEY FARMS</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Harmon West Meade <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Crescent BTR Nashville Sonya Drive LLC (Crescent Communities) &nbsp;|&nbsp; <b>Owner address:</b> 601 S. Tryon St Ste 800, Charlotte, NC 28202<br>
+      <b>Location:</b> Sonya Drive, West Meade, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Land assembled from Southfield Properties ($1.925M) and AM Investors No 2 / Norwood Manor ($5.775M); no construction-loan DOT of record &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 178 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 9 of 9 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/04/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202404300031509" target="_blank">202404300031509</a></td><td>SOUTHFIELD PROPERTIES</td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td class="num">$1,925,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/04/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202404300031510" target="_blank">202404300031510</a></td><td>AM INVESTORS NO 2 LLC<br>NORWOOD MANOR LLC</td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td class="num">$5,775,000</td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2024/05/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202405070033459" target="_blank">202405070033459</a></td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td>METROPOLITAN GOVERNMENT OF NASHVILLE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/05/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202405130035139" target="_blank">202405130035139</a></td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td>HARMON WEST MEADE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2024/08/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408130061154" target="_blank">202408130061154</a></td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td>HARMON WEST MEADE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/04/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504290033021" target="_blank">202504290033021</a></td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td>HARMON WEST MEADE</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">ESMT</td><td class="img">PDF / TIFF</td><td class="date">2025/07/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202507140055135" target="_blank">202507140055135</a></td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td>HARPETH VALLEY UTILITIES DISTRICT</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2025/12/04</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512040096525" target="_blank">202512040096525</a></td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC</td><td>BONILLA CONSTRUCTION LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">REL</td><td class="img">PDF / TIFF</td><td class="date">2026/04/13</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604130029910" target="_blank">202604130029910</a></td><td>BONILLA CONSTRUCTION LLC</td><td>CRESCENT BTR NASHVILLE SONYA DRIVE LLC<br>SIMPSON PHILLIPS CONSTRUCTION LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>TPG AG Essential Housing (land bank) <span class="tag">Land bank &rarr; Meritage / Lennar</span></h2>
+    <div class="owner">
+      <b>Owner:</b> TPG AG EHC entities (TPG Angelo Gordon 'Essential Housing') &nbsp;|&nbsp; <b>Owner address:</b> 245 Park Ave 26th Fl, New York, NY 10167; and 8585 E Hartford Dr, Scottsdale, AZ<br>
+      <b>Location:</b> Multiple Davidson sites &nbsp;|&nbsp; <b>Financing / structure:</b> Institutional land bank: buys land (Willow Branch, NP 81, Rhythm Development, Nir Homes) and conveys finished lots to Meritage Homes of TN and Lennar (Pemberton Townhomes) &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 177 parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 12 of 12 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/02/14</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502140011190" target="_blank">202502140011190</a></td><td>WILLOW BRANCH PARTNERS LLC</td><td>TPG AG EHC III MTH MULTI STATE 4 LLC</td><td class="num">$1,076,203</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/02/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502280015176" target="_blank">202502280015176</a></td><td>TPG AG EHC III MTH MULTI STATE 4 LLC</td><td>MERITAGE HOMES OF TN INC</td><td class="num">$866,253.41</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/04/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504030025422" target="_blank">202504030025422</a></td><td>RHYTHM DEVELOPMENT GP</td><td>TPG AG EHC SD LEN MULTI STATE 1 LLC</td><td class="num">$1,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/04/03</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504030025424" target="_blank">202504030025424</a></td><td>TPG AG EHC SD LEN MULTI STATE 1 LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/04/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504290032940" target="_blank">202504290032940</a></td><td>NP 81 LLC</td><td>TPG AG EHC III MTH MULTI STATE 2 LLC</td><td class="num">$4,600,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/04/29</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202504290032941" target="_blank">202504290032941</a></td><td>TPG AG EHC III MTH MULTI STATE 2 LLC</td><td>MERITAGE HOMES OF TN INC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2025/08/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202508190066340" target="_blank">202508190066340</a></td><td>TPG AG EHC SD LEN MULTI STATE 1 LLC</td><td>LENNAR HOMES OF TN LLC<br>PEMBERTON TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/12/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512160099988" target="_blank">202512160099988</a></td><td>NIR HOMES INC<br>SHREIBMAN AMNON<br>SHREIBMAN RUTH</td><td>TPG AG EHC III MTH MULTI STATE 1 LLC</td><td class="num">$3,132,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTWARR</td><td class="img">PDF / TIFF</td><td class="date">2025/12/16</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512160099989" target="_blank">202512160099989</a></td><td>MERITAGE HOMES OF TN INC</td><td>TPG AG EHC III MTH MULTI STATE 1 LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/05/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202605150043921" target="_blank">202605150043921</a></td><td>TPG AG EHC SD MULTI STATE 1 LLC</td><td>LENNAR HOMES OF TN LLC</td><td class="num">$704,227</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2026/06/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606230056707" target="_blank">202606230056707</a></td><td>LENNAR HOMES OF TN LLC</td><td>TPG AG EHC SD LEN MULTI STATE 1 LLC<br>PEMBERTON TOWNHOMES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2026/06/26</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202606260058009" target="_blank">202606260058009</a></td><td>TPG AG EHC III MTH MULTI STATE 2 LLC</td><td>MERITAGE HOMES OF TN INC</td><td class="num">$1,045,252</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Crest MFLP (Regent Homes rental hold) <span class="tag">BFR construction</span></h2>
+    <div class="owner">
+      <b>Owner:</b> Crest MFLP LLC &nbsp;|&nbsp; <b>Owner address:</b> 6901 Lenox Village Dr Ste 107, Nashville, TN 37211<br>
+      <b>Location:</b> Lenox Village / Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Buys finished homes from Regent Homes LLC ($4.09M + $2.04M); Wilson Bank &amp; Trust $15,000,000 loan &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 19 parcels (single family)
+    </div>
+    <div class="meta"><span>Showing 1 to 7 of 7 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/05/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305190037838" target="_blank">202305190037838</a></td><td>REGENT HOMES LLC</td><td>CREST MFLP LLC</td><td class="num">$4,089,200</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2023/05/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305190037839" target="_blank">202305190037839</a></td><td>CREST MFLP LLC</td><td>MCDEARMAN JOHN C III TRUSTEE<br>WILSON BANK AND TRUST</td><td class="num">$15,000,000</td>
+      </tr>
+      <tr>
+        <td class="type">AGRMTTRUST</td><td class="img">PDF / TIFF</td><td class="date">2023/05/19</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202305190037840" target="_blank">202305190037840</a></td><td>CREST MFLP LLC</td><td>WILSON BANK AND TRUST</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/12/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202312200098115" target="_blank">202312200098115</a></td><td>REGENT HOMES LLC</td><td>CREST MFLP LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2024/07/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202407110052109" target="_blank">202407110052109</a></td><td>REGENT HOMES LLC</td><td>CREST MFLP LLC</td><td class="num">$2,035,200</td>
+      </tr>
+      <tr>
+        <td class="type">DOTAMEND</td><td class="img">PDF / TIFF</td><td class="date">2024/07/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202407110052110" target="_blank">202407110052110</a></td><td>CREST MFLP LLC</td><td>WILSON BANK AND TRUST</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DOTAMEND</td><td class="img">PDF / TIFF</td><td class="date">2024/07/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202407110052111" target="_blank">202407110052111</a></td><td>CREST MFLP LLC</td><td>WILSON BANK AND TRUST</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>VB TAH (VineBrook Homes) <span class="tag">SFR REIT acquisition</span></h2>
+    <div class="owner">
+      <b>Owner:</b> VB TAH LLC (VineBrook Homes / NexPoint; VB = VineBrook, TAH = Tennessee Asset Holdings) &nbsp;|&nbsp; <b>Owner address:</b> 300 Crescent Ct Ste 700, Dallas, TX 75201<br>
+      <b>Location:</b> Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> Bought a finished community from Century Communities of TN for $24,500,000; JPMorgan Chase Bank NA loan $16,196,729 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 106 parcels (condos + vacant residential land)
+    </div>
+    <div class="meta"><span>Showing 1 to 3 of 3 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">REST</td><td class="img">PDF / TIFF</td><td class="date">2025/12/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512300103699" target="_blank">202512300103699</a></td><td>CENTURY COMMUNITIES OF TN LLC</td><td>VB TAH LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2025/12/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512300103700" target="_blank">202512300103700</a></td><td>CENTURY COMMUNITIES OF TN LLC</td><td>VB TAH LLC</td><td class="num">$24,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2025/12/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202512300103701" target="_blank">202512300103701</a></td><td>VB TAH LLC</td><td>FOSTER MATT TRUSTEE<br>JPMORGAN CHASE BANK NA</td><td class="num">$16,196,728.50</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>49 Tennessee Townhomes <span class="tag">BFR construction (Elmington &rarr; Starwood SFR)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> ECG 49TN LLC (Elmington) &rarr; SFR XII Nashville Owner 1 LP (Starwood Capital) &nbsp;|&nbsp; <b>Owner address:</b> SFR XII: 591 W Putnam Ave, Greenwich, CT 06830 (Starwood); mailbox PO Box 4900 c/o Ryan LLC, Scottsdale, AZ<br>
+      <b>Location:</b> 49th &amp; Tennessee Ave, The Nations, Nashville &nbsp;|&nbsp; <b>Financing / structure:</b> Built by Elmington on the Jackson Masonry site ($5.5M; Franklin Synergy Bank $15,550,000), sold to Starwood's SFR XII for $34,130,983 + $3,494,015; 2026 master deed to STAR 2022-SFR3 Borrower LP &nbsp;|&nbsp; <b>Current Davidson holdings:</b> Starwood SFR XII holds 37 Davidson parcels
+    </div>
+    <div class="meta"><span>Showing 1 to 6 of 6 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2019/04/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201904010029396" target="_blank">201904010029396</a></td><td>JACKSON MASONRY LLC</td><td>ECG 49TN LLC</td><td class="num">$5,500,000</td>
+      </tr>
+      <tr>
+        <td class="type">DOT</td><td class="img">PDF / TIFF</td><td class="date">2019/04/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201904010029397" target="_blank">201904010029397</a></td><td>ECG 49TN LLC</td><td>FRANKLIN SYNERGY BANK<br>HILL ASHLEY P III TRUSTEE</td><td class="num">$15,550,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2019/10/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201910010099627" target="_blank">201910010099627</a></td><td>ECG 49TN LLC</td><td>49 TENNESSEE TOWNHOUSES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2021/09/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109220127040" target="_blank">202109220127040</a></td><td>ECG 49TN LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$34,130,983</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2022/06/07</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202206070065182" target="_blank">202206070065182</a></td><td>ECG 49TN LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$3,494,015</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2026/04/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604100029131" target="_blank">202604100029131</a></td><td>ECG 49TN LLC</td><td>SFR XII NASHVILLE OWNER 1 LP<br>49 TENNESSEE TOWNHOMES<br>STAR 2022-SFR3 BORROWER LP</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Mountain Springs Townhouses <span class="tag">BFR construction (Elmington &rarr; AMH)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> ECG Mountain Springs LLC (Elmington) &rarr; AMH Mountain Springs Development LLC (American Homes 4 Rent) &nbsp;|&nbsp; <b>Owner address:</b> 280 Pilot Rd Ste 200, Las Vegas, NV 89119 (AMH)<br>
+      <b>Location:</b> Antioch / Davidson County &nbsp;|&nbsp; <b>Financing / structure:</b> Built by Elmington (bought from Belz/Becker-Lewis-Shlenker $1.49M), sold to AMH in tranches: $3,533,258 + $2,461,966 + $9,388,389 &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 187 parcels (single family)
+    </div>
+    <div class="meta"><span>Showing 1 to 5 of 5 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2018/02/15</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201802150015090" target="_blank">201802150015090</a></td><td>BELZ/BECKER-LEWIS-SHLENKER PROPERTIES</td><td>ECG MOUNTAIN SPRINGS LLC</td><td class="num">$1,491,470</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2018/09/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201809200093382" target="_blank">201809200093382</a></td><td>ECG MOUNTAIN SPRINGS LLC</td><td>MOUNTAIN SPRINGS TOWNHOUSES</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2018/09/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201809280096525" target="_blank">201809280096525</a></td><td>ECG MOUNTAIN SPRINGS LLC</td><td>AMH MOUNTAIN SPRINGS DEVELOPMENT LLC</td><td class="num">$3,533,258.33</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2019/01/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201901220006063" target="_blank">201901220006063</a></td><td>ECG MOUNTAIN SPRINGS LLC</td><td>AMH MOUNTAIN SPRINGS DEVELOPMENT LLC</td><td class="num">$2,461,965.92</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2019/07/12</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=201907120068249" target="_blank">201907120068249</a></td><td>ECG MOUNTAIN SPRINGS LLC</td><td>AMH MOUNTAIN SPRINGS DEVELOPMENT LLC</td><td class="num">$9,388,389.44</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>Starwood SFR XII Nashville (scattered-site + securitization) <span class="tag">SFR REIT (scattered-site + bulk)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> SFR XII Nashville Owner 1/2 LP, SFR XII NM, STAR Borrower SFR5/SFR6, STAR 2022-SFR3 (Starwood Capital) &nbsp;|&nbsp; <b>Owner address:</b> 591 W Putnam Ave, Greenwich, CT 06830 (Starwood); mailbox PO Box 4900 c/o Ryan LLC, Scottsdale, AZ<br>
+      <b>Location:</b> Davidson County (scattered) &nbsp;|&nbsp; <b>Financing / structure:</b> Scattered-site buys from iBuyers (Opendoor, Zillow) and wholesalers (Music City Financial, Music City Holdings, Cash4YourHome, HBG Holdings), plus bulk townhome buys from Elmington (Charlotte Park ~$28.8M, 49 Tennessee ~$37.6M); homes then quitclaimed into STAR 2022-SFR3 / STAR Borrower SFR5 / SFR6 securitization borrowers &nbsp;|&nbsp; <b>Current Davidson holdings:</b> ~232 parcels across Starwood shells
+    </div>
+    <div class="meta"><span>Showing 1 to 12 of 12 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/06/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202106240086129" target="_blank">202106240086129</a></td><td>ZILLOW HOMES PROPERTY TRUST</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$335,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/09/20</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109200125849" target="_blank">202109200125849</a></td><td>OPENDOOR PROPERTY J LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$380,100</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/07/08</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202107080092323" target="_blank">202107080092323</a></td><td>MUSIC CITY HOLDINGS LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$250,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/09/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109240128549" target="_blank">202109240128549</a></td><td>MUSIC CITY FINANCIAL LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$235,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/09/23</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109230128002" target="_blank">202109230128002</a></td><td>CASH4YOURHOME LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$227,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2021/08/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202108170111322" target="_blank">202108170111322</a></td><td>HBG HOLDINGS LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$256,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2021/09/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109220127027" target="_blank">202109220127027</a></td><td>CRP/ECG CHARLOTTE PARK LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$13,920,344</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2021/09/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202109220127040" target="_blank">202109220127040</a></td><td>ECG 49TN LLC</td><td>SFR XII NASHVILLE OWNER 1 LP</td><td class="num">$34,130,983</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2022/04/21</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202204210046282" target="_blank">202204210046282</a></td><td>SFR XII NASHVILLE OWNER 1 LP</td><td>STAR 2022-SFR3 BORROWER LP</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2025/01/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202501280006271" target="_blank">202501280006271</a></td><td>SFR XII NASHVILLE OWNER 1 LP</td><td>STAR BORROWER SFR5 LP</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDQC</td><td class="img">PDF / TIFF</td><td class="date">2025/08/01</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202508010061183" target="_blank">202508010061183</a></td><td>SFR XII NASHVILLE OWNER 1 LP</td><td>STAR BORROWER SFR6 LP</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">DEEDMAST</td><td class="img">PDF / TIFF</td><td class="date">2026/04/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202604100029130" target="_blank">202604100029130</a></td><td>SFR XII NASHVILLE OWNER 1 LP</td><td>CHARLOTTE PARK TOWNHOUSES<br>STAR 2022-SFR3 BORROWER LP</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="project">
+    <h2>RESICAP Tennessee (scattered-site SFR) <span class="tag">SFR operator (scattered-site)</span></h2>
+    <div class="owner">
+      <b>Owner:</b> RESICAP Tennessee Owner II/III LLC (project notes map RESICAP Tennessee to Invitation Homes' Nashville reentry &mdash; verify; RESICAP LLC itself is Atlanta-based) &nbsp;|&nbsp; <b>Owner address:</b> 3953 Maple Ave Ste 300, Dallas, TX 75219; and 3630 Peachtree Rd NE Ste 1500, Atlanta, GA 30326<br>
+      <b>Location:</b> Davidson County (scattered) &nbsp;|&nbsp; <b>Financing / structure:</b> Scattered-site buys from iBuyer Opendoor and wholesalers (NashRent, Music City Financial, Clean Foreclosures USA, Royal Cash Offer, Rebuilt Realty, On The Horizon Homes) plus individuals/estates; 2024-2025 liens to Trinity Summit Opportunity Fund / IFP Fund I / I Fund Cities &nbsp;|&nbsp; <b>Current Davidson holdings:</b> 65 parcels (single family + condo)
+    </div>
+    <div class="meta"><span>Showing 1 to 11 of 11 entries</span><span>Instrument numbers link to davidsonportal.com images</span></div>
+    <table>
+      <thead><tr><th>Instrument Type</th><th>Image?</th><th>Rec. Date</th><th>Record Info</th><th>Grantor</th><th>Grantee</th><th>Consideration</th></tr></thead>
+      <tbody>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/05/24</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202205240060151" target="_blank">202205240060151</a></td><td>OPENDOOR PROPERTY J LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$316,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/03/28</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202203280035321" target="_blank">202203280035321</a></td><td>NASHRENT LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$259,900</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/06/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202206100066300" target="_blank">202206100066300</a></td><td>MUSIC CITY FINANCIAL LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$427,500</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/05/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202205170056708" target="_blank">202205170056708</a></td><td>CLEAN FORECLOSURES USA LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$449,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/05/17</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202205170056735" target="_blank">202205170056735</a></td><td>ROYAL CASH OFFER LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$343,300</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/06/22</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202206220071098" target="_blank">202206220071098</a></td><td>REBUILT REALTY LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$310,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/07/18</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202207180081807" target="_blank">202207180081807</a></td><td>ON THE HORIZON HOMES LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num">$494,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARR</td><td class="img">PDF / TIFF</td><td class="date">2022/10/10</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202210100111022" target="_blank">202210100111022</a></td><td>OPENDOOR PROPERTY TRUST I</td><td>RESICAP TENNESSEE OWNER III LLC</td><td class="num">$325,000</td>
+      </tr>
+      <tr>
+        <td class="type">DEEDWARRSP</td><td class="img">PDF / TIFF</td><td class="date">2023/03/09</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202303090017200" target="_blank">202303090017200</a></td><td>RESICAP TENNESSEE OWNER II LLC</td><td>GOEKE CHELSEA BROOKE<br>GOEKE JOHN CHRISTIAN III</td><td class="num">$505,000</td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2024/08/30</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202408300066750" target="_blank">202408300066750</a></td><td>TRINITY SUMMIT OPPORTUNITY FUND LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num"></td>
+      </tr>
+      <tr>
+        <td class="type">LIENMISC</td><td class="img">PDF / TIFF</td><td class="date">2025/02/11</td>
+        <td><a class="inst" href="https://davidsonportal.com/gis/file.php?file=202502110010329" target="_blank">202502110010329</a></td><td>IFP FUND I LLC<br>I FUND CITIES LLC</td><td>RESICAP TENNESSEE OWNER II LLC</td><td class="num"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+<p class="foot">Instrument types: DEEDWARR/DEEDWARRSP = warranty/special warranty deed; DEEDQC = quitclaim; DEEDMAST = master deed (condo/HPR); DOT = deed of trust; DOTAMEND/DOTMODAGR = amended/modified DOT; DOTASSN = assignment; AGRMTTRUST/AGRMTWARR = trust/warranty agreement; UCCFX = fixture filing; RELPART = partial release; REL = release; NOC = notice of completion; ESMT = easement; ROW = right-of-way; PLAT-LG = plat; REST = restrictions; LIEN* = liens. Book/page refs predate instrument numbers and are not linkable. Multi-grantor rows: grantor shown is the first party of record.</p>
+</div></body></html>
