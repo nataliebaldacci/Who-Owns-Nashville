@@ -2,3 +2,7 @@
 *.bak
 *.bak_*
 *.chartjs_bak
+
+# chart_cookbook generated figures (regenerate by running the scripts)
+chart_cookbook/python/**/*.png
+chart_cookbook/python/**/*.html

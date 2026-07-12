@@ -1,0 +1,11 @@
+# Core stack (scripts 01-17, 20)
+pandas
+numpy
+matplotlib
+seaborn
+squarify        # treemap (06)
+plotly          # sankey (20)
+
+# Optional
+geopandas       # maps (18, 19)
+kaleido         # static PNG export for plotly sankey (20)
