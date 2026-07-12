@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**81 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**83 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -98,6 +98,8 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 
 - **`python/table/01_plottable_operators.py`** — Publication-ready table with plottable (Fortune Uwha liveability-table style). Top Davidson operators with color-coded circled metric cells (per-column colormap), grouped columns, 
 - **`python/table/02_plottable_images.py`** — Publication table with logos, in the plottable "add images in a column" style (Joseph Barbier / python-graph-gallery). Each operator row carries a circular badge in an Image column
+- **`python/table/03_plottable_incell_plots.py`** — Plottable table with in-cell graphs (python-graph-gallery "insert graphs in cells" chapter). Columns render mini-plots inside their cells: a progress donut and proportional bars wi
+- **`python/table/04_great_tables.py`** — Table with great_tables (python-graph-gallery great_tables chapter). The gt- inspired API builds a titled, footnoted, cell-highlighted table and exports it as a self-contained HTML
 
 ## Bokeh — interactive
 
