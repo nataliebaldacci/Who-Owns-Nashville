@@ -7,7 +7,10 @@ squarify        # treemap (06)
 plotly          # sankey (20)
 
 # Optional
-geopandas       # maps (18, 19)
+geopandas       # static maps (choropleth, bubble) — 18, 19
+folium          # interactive Leaflet maps — 27
+mapclassify     # choropleth classification schemes (quantiles, ckmeans)
+bokeh           # interactive choropleth with hover — 29
 kaleido         # static PNG export for plotly sankey (20)
 
 # Color-scheme libraries (styles/palettes.py + reference sheets)

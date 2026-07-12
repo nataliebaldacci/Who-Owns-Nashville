@@ -1,23 +1,21 @@
-"""
-Choropleth map — MAP
-Regions shaded by a value. Needs `geopandas` (pip install geopandas).
-Inspired by python-graph-gallery.com. This project already ships tract
-GeoJSON (e.g. Davidson_Institutional_Pct_by_Tract.geojson) you can load directly.
-"""
+"""Choropleth — MAP (static, geopandas). Davidson tracts shaded by institutional %.
+Uses the JCHS orange sequential ramp and quantile classes (mapclassify)."""
 import matplotlib; matplotlib.use("Agg")
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 import matplotlib.pyplot as plt
 import geopandas as gpd
-
-# Point this at one of the repo's GeoJSON layers:
-GEOJSON = "../../../Davidson_Institutional_Pct_by_Tract.geojson"
-VALUE_COL = "inst_pct"   # <-- set to the numeric field you want to shade by
-
-gdf = gpd.read_file(GEOJSON)
-fig, ax = plt.subplots(figsize=(8, 8))
-gdf.plot(column=VALUE_COL, cmap="OrRd", legend=True, linewidth=0.3,
-         edgecolor="#dddddd", ax=ax,
-         missing_kwds={"color": "#dddddd", "label": "No data"})
-ax.set_title("Institutional Ownership Share by Tract", fontweight="bold")
+from matplotlib.colors import LinearSegmentedColormap
+from styles.won_styles import RAMPS
+ROOT = os.path.join(os.path.dirname(__file__), "..", "..", "..")
+gdf = gpd.read_file(os.path.join(ROOT, "Davidson_Institutional_Pct_by_Tract.geojson"))
+cmap = LinearSegmentedColormap.from_list("jchs_orange", RAMPS["jchs_orange"])
+fig, ax = plt.subplots(figsize=(9, 8))
+gdf.plot(column="pct_institutional", cmap=cmap, scheme="quantiles", k=5,
+         legend=True, linewidth=0.3, edgecolor="#ffffff", ax=ax,
+         legend_kwds={"title": "Institutional %", "loc": "lower left", "fontsize": 8},
+         missing_kwds={"color": "#dddddd"})
+ax.set_title("Institutional Ownership Share by Census Tract — Davidson County",
+             fontweight="bold", fontsize=13)
 ax.axis("off")
-plt.tight_layout()
-plt.savefig("18_choropleth.png", dpi=150)
+plt.tight_layout(); plt.savefig("18_choropleth.png", dpi=150)
+print("wrote 18_choropleth.png")

@@ -118,9 +118,15 @@ regenerate on run); the contact sheet in `figures/` is committed as a preview.
 
 ## Notes
 
-- **Maps** (`map/`) need `geopandas` (`pip install geopandas`) and point at the
-  GeoJSON layers already in the repo root (e.g.
-  `Davidson_Institutional_Pct_by_Tract.geojson`, `Davidson_County_Boundary.geojson`).
+- **Maps** (`map/`) are wired to the repo's real GeoJSONs:
+  - `18_choropleth.py` — static geopandas choropleth of institutional % by tract
+    (JCHS orange ramp, quantile classes) from `Davidson_Institutional_Pct_by_Tract.geojson`.
+  - `19_bubble_map.py` — block-group centroids sized by institutional count over
+    the county outline.
+  - `27_folium_choropleth.py` — interactive Leaflet map with hover tooltips -> HTML.
+  - `29_bokeh_choropleth.py` — interactive Bokeh choropleth (LinearColorMapper +
+    HoverTool; swap in `LogColorMapper` for skewed data) -> self-contained HTML.
+  Need `geopandas folium mapclassify bokeh` (in requirements).
 - **Sankey** PNG export needs `kaleido` (`pip install kaleido`); without it the
   script still writes the interactive `.html`.
 - Colors use the Who Owns Nashville palette (navy `#1c458c`, gold `#f0af1e`,
