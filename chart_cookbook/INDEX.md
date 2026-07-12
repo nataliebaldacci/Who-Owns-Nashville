@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**92 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**93 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -127,6 +127,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/bokeh/b14_latex_distribution.py`** — Histogram + PDF with LaTeX/mathtext axis labels (Bokeh) — sale-price distribution.
 - **`python/bokeh/b15_selection_histogram.py`** — Selection histogram (Bokeh demo.bokeh.org/selection_histogram, standalone). A central scatter with a marginal histogram above (x) and to the right (y). Each histogram shows the ful
 - **`python/bokeh/b16_crossfilter.py`** — Crossfilter (demo.bokeh.org/crossfilter, standalone). Four Select widgets let you remap the scatter's X, Y, bubble Size and Color to any variable, so you can explore every pairwise
+- **`python/bokeh/b17_movies_filter.py`** — Interactive filtered scatter with sliders (demo.bokeh.org/movies, standalone). Sliders and a Select filter a large point cloud live; the scatter and its title count update via Cust
 
 ## CRS report figures
 
