@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**74 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**75 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -107,6 +107,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/composite/40_stacked_area_tilemap.py`** — Stacked-area small-multiples arranged as a map (Erin Davis 'viral map' style). One mini stacked-area per Davidson council district, positioned at the district
 - **`python/composite/41_economist_line_area.py`** — Economist-style two-panel line + stacked area (child-labour chart style) with flexitext titles and a red top bar. Left: institutional rate over time by tier.
 - **`python/composite/42_small_multiples_highlight.py`** — Small multiples with highlighted lines + annotations (Joseph Barbier unemployment style). 3x3 grid, one operator highlighted per panel over a greyed
+- **`python/composite/43_bump_small_multiples.py`** — Multi-panel highlighted bump/ranking lineplots (Abdoul Madjid water-rankings style). One panel per operator; each highlights that operator's RANK trajectory
 
 ## Styles & palettes
 
