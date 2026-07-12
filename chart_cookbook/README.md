@@ -27,6 +27,9 @@ chart_cookbook/
     correlation/    15_scatter  16_bubble  17_correlogram_heatmap
     map/            18_choropleth  19_bubble_map        (need geopandas)
     flow/           20_sankey_plotly                    (plotly; PNG needs kaleido)
+    bokeh/          b01..b14 interactive Bokeh charts (dodged, stacked, nested,
+                    crosstab, legend/mute, hover, markers, cmap+colorbar, log,
+                    slope, tiles, LaTeX) -> self-contained HTML
   chartjs/
     index.html      6 rebuilt in Chart.js (bar, horizontal bar, line+area,
                     stacked bar, bubble, doughnut)
@@ -134,6 +137,10 @@ regenerate on run); the contact sheet in `figures/` is committed as a preview.
     bins, styled legend, scale bar); optional contextily dark tiles.
   - `34_folium_dark_interactive.py` — interactive Leaflet map (CartoDB dark
     tiles + hover), matching the site's ACS maps.
+  - `35_choropleth_histogram.py` / `36_choropleth_barplot.py` /
+    `37_choropleth_binned_barplot.py` — choropleth with an inset distribution
+    that doubles as the legend (Python Graph Gallery / Joseph Barbier styles:
+    histogram, Sunset3 bars, and a binned seaborn barplot). Optional pyfonts.
 - **Boundary layers** — `styles/boundaries.py` registers every Davidson geography
   in the repo (census `tract` / `blockgroup`, plus local `community` /
   `council` / `zip`) and offers `aggregate_points(points, boundary)` to spatial-
