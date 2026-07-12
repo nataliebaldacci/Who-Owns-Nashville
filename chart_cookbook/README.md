@@ -127,6 +127,13 @@ regenerate on run); the contact sheet in `figures/` is committed as a preview.
   - `29_bokeh_choropleth.py` — interactive Bokeh choropleth (LinearColorMapper +
     HoverTool; swap in `LogColorMapper` for skewed data) -> self-contained HTML.
   Need `geopandas folium mapclassify bokeh` (in requirements).
+  - `32_palette_gallery.py` — the SAME block-group breakdown across ~36
+    popular palettes (cmocean / CARTOColors / Scientific / ColorBrewer +
+    matplotlib/seaborn); switch `BOUNDARY` to "block" for the finest cut.
+  - `33_atlanta_style_choropleth.py` — dark-basemap tract choropleth (plasma
+    bins, styled legend, scale bar); optional contextily dark tiles.
+  - `34_folium_dark_interactive.py` — interactive Leaflet map (CartoDB dark
+    tiles + hover), matching the site's ACS maps.
 - **Boundary layers** — `styles/boundaries.py` registers every Davidson geography
   in the repo (census `tract` / `blockgroup`, plus local `community` /
   `council` / `zip`) and offers `aggregate_points(points, boundary)` to spatial-
