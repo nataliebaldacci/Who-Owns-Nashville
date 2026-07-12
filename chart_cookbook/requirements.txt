@@ -23,3 +23,9 @@ morethemes      # report-grade matplotlib themes (economist, wsj, ft, nord ...)
 # drawarrow      # optional: nice annotation arrows
 # bokeh          # optional: Category10/20 are hardcoded in styles/palettes.py
 highlight_text  # annotated maps/ridgelines (38, and optional elsewhere)
+
+# Advanced annotated gallery pieces (Economist / TidyTuesday styles)
+flexitext       # mixed bold/regular titles (Economist line+area, etc.)
+adjustText      # auto-positioned non-overlapping labels (regression scatter)
+scikit-learn    # regression fit line (scatter)
+scipy           # spline smoothing (smoothed stacked area)

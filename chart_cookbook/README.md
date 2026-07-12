@@ -147,6 +147,13 @@ regenerate on run); the contact sheet in `figures/` is committed as a preview.
   `distribution/28_insee_pyramid` (styled horizontal histogram + callouts),
   `map/38_annotated_bubble_map` (highlight_text title + arrow + ellipse),
   `composite/39_heatmap_radial` (dot-heatmap + polar barplots).
+  `composite/40_stacked_area_tilemap` (mini stacked areas placed as the map),
+  `composite/41_economist_line_area` (two-panel line+area, flexitext, red bar),
+  `correlation/18_annotated_bubble_quadrant` (quadrant reference lines + callouts),
+  `correlation/19_scatter_regression_labels` (log fit + adjustText auto-labels),
+  `ranking/05_dumbbell_lollipop` (colormap segments + custom legend),
+  `evolution/29_line_end_labels` (highlighted lines + end labels),
+  `evolution/30_stacked_area_inline_labels` (spline-smoothed + inline annotations).
 - **Boundary layers** — `styles/boundaries.py` registers every Davidson geography
   in the repo (census `tract` / `blockgroup`, plus local `community` /
   `council` / `zip`) and offers `aggregate_points(points, boundary)` to spatial-
