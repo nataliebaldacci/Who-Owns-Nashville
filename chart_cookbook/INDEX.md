@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**83 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**84 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -58,6 +58,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/correlation/17_correlogram_heatmap.py`** — Correlogram / heatmap — CORRELATION Correlation matrix as a colored grid. Inspired by python-graph-gallery.com.
 - **`python/correlation/18_annotated_bubble_quadrant.py`** — Annotated quadrant bubble plot (Datawrapper climate-risk style). Block groups by institutional rate (x) vs poverty rate (y), bubble size = residential parcels, quadrant reference l
 - **`python/correlation/19_scatter_regression_labels.py`** — Scatter with regression fit + auto-positioned labels (Claus Wilke corruption style). Block groups: income (x) vs institutional rate (y), log fit, colored by poverty tercile, extrem
+- **`python/correlation/20_custom_legends.py`** — Custom legends in Matplotlib — a reference sheet (python-graph-gallery style). Six panels of the same scatter (corporate parcel size vs year built, colored by property type) each s
 - **`python/correlation/24_connected_scatter.py`** — Connected scatter — CORRELATION. Two variables tracked over time (path).
 
 ## Map — where, geographically
