@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**84 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**85 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -81,6 +81,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/map/41_geoplot_choropleth.py`** — Choropleth map with GeoPandas + GeoPlot (python-graph-gallery style). Loads a Davidson GeoJSON, uses a mapclassify Quantiles(k) binning scheme, and draws the choropleth with gplt.c
 - **`python/map/42_plotly_choropleth.py`** — Interactive choropleth with Plotly Express (python-graph-gallery style). Loads a Davidson GeoJSON, colors each census tract by institutional ownership rate with px.choropleth_map, 
 - **`python/map/43_basemap_bubble.py`** — Bubble map with Basemap (python-graph-gallery style). Basemap draws the background (county extent, land fill, coastline-style boundary) and matplotlib scatters one orange bubble pe
+- **`python/map/45_basemap_bubble_categorical.py`** — Categorical bubble map with Basemap (python-graph-gallery surf-tweets style). Basemap draws the background; matplotlib scatters one bubble per block group, sized by institutional p
 
 ## Flow — volume between stages
 
