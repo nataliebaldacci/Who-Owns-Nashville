@@ -60,6 +60,39 @@ apply_style("jchs")     # "won" | "hud" | "jchs" | "crs"
 looks: `crs_total_housing_units` (tan bars + blue ratio line, dual axis),
 `crs_new_vs_existing` (stacked bars), and `crs_starts_by_type` (stacked area).
 
+## Color-scheme libraries (thousands of palettes)
+
+Beyond the four house styles, `styles/palettes.py` gives one call, `get()`,
+that resolves any palette name across every major library:
+
+```python
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from styles.palettes import get, CURATED
+get("jchs")              # cookbook house style
+get("Category10")        # Bokeh categorical
+get("Set2", n=8)         # ColorBrewer (palettable)
+get("Bold", n=10)        # CARTOColors (palettable)
+get("Thermal", n=7)      # cmocean sequential (palettable)
+get("viridis", n=6)      # any matplotlib colormap, sampled
+get("Acadia")            # any of pypalettes' 2,500+ palettes
+```
+
+Resolution order: house styles → Bokeh → matplotlib colormap → palettable
+(searched across ColorBrewer / CARTOColors / cmocean / Scientific / Tableau /
+Wes Anderson / cubehelix) → pypalettes. `CURATED` maps housing tasks to good
+picks (categorical operators, sequential choropleth, diverging change).
+
+Browse them:
+- `python styles/palette_reference.py` → `figures/palette_reference.png`
+  (swatch sheet: house styles, categorical, sequential, diverging).
+- `python styles/morethemes_demo.py` → `figures/morethemes_demo.png`
+  (report-grade matplotlib themes: economist, wsj, ft, lumen …).
+
+Install the libraries with `pip install -r requirements.txt` (palettable,
+pypalettes, morethemes). Bokeh's Category10/20 are hardcoded, so bokeh itself
+isn't required. `pyfonts` and `drawarrow` are optional (fonts / annotation
+arrows) and listed commented-out in requirements.
+
 ## Running the Python scripts
 
 ```bash

@@ -9,3 +9,11 @@ plotly          # sankey (20)
 # Optional
 geopandas       # maps (18, 19)
 kaleido         # static PNG export for plotly sankey (20)
+
+# Color-scheme libraries (styles/palettes.py + reference sheets)
+palettable      # ColorBrewer, CARTOColors, cmocean, Scientific, Tableau, Wes Anderson ...
+pypalettes      # 2,500+ palettes (load_cmap / show_cmap)
+morethemes      # report-grade matplotlib themes (economist, wsj, ft, nord ...)
+# pyfonts        # optional: load Google Fonts into matplotlib
+# drawarrow      # optional: nice annotation arrows
+# bokeh          # optional: Category10/20 are hardcoded in styles/palettes.py
