@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**85 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**86 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -39,6 +39,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/evolution/30_stacked_area_inline_labels.py`** — Smoothed stacked area with inline labels (Gilbert Fontana wealth-chart style). Ownership composition over time, spline-smoothed, custom palette, big title, year total callouts, and
 - **`python/evolution/31_stacked_area_inflection_arrows.py`** — Stacked area with inline labels + inflection arrows (Joseph Barbier natural- disasters style). Ownership composition over years, custom palette, right-side inline labels, and drawa
 - **`python/evolution/32_small_multiples_lines.py`** — Small multiples for a line chart (python-graph-gallery anti-spaghetti style). A 3x3 grid, one panel per owner, each panel drawing every owner's acquisition curve in faint grey with
+- **`python/evolution/33_minimalist_area.py`** — Minimalist two-color area chart (Joseph Barbier "Japan population" style). One line + filled area, split into a green segment (positive) and a red segment (negative) around a zero 
 
 ## Distribution — spread of one variable
 
