@@ -30,6 +30,7 @@ chart_cookbook/
     bokeh/          b01..b14 interactive Bokeh charts (dodged, stacked, nested,
                     crosstab, legend/mute, hover, markers, cmap+colorbar, log,
                     slope, tiles, LaTeX) -> self-contained HTML
+    composite/      39 heatmap + radial-barchart multi-panel (operators x type)
   chartjs/
     index.html      6 rebuilt in Chart.js (bar, horizontal bar, line+area,
                     stacked bar, bubble, doughnut)
@@ -141,6 +142,11 @@ regenerate on run); the contact sheet in `figures/` is committed as a preview.
     `37_choropleth_binned_barplot.py` — choropleth with an inset distribution
     that doubles as the legend (Python Graph Gallery / Joseph Barbier styles:
     histogram, Sunset3 bars, and a binned seaborn barplot). Optional pyfonts.
+- **Annotated gallery pieces** (Joseph Barbier / Python Graph Gallery styles):
+  `distribution/27_ridgeline_annotated` (quantile bands + legend inset),
+  `distribution/28_insee_pyramid` (styled horizontal histogram + callouts),
+  `map/38_annotated_bubble_map` (highlight_text title + arrow + ellipse),
+  `composite/39_heatmap_radial` (dot-heatmap + polar barplots).
 - **Boundary layers** — `styles/boundaries.py` registers every Davidson geography
   in the repo (census `tract` / `blockgroup`, plus local `community` /
   `council` / `zip`) and offers `aggregate_points(points, boundary)` to spatial-

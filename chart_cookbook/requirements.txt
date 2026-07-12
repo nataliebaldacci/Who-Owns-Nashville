@@ -22,4 +22,4 @@ morethemes      # report-grade matplotlib themes (economist, wsj, ft, nord ...)
 # pyfonts        # optional: load Google Fonts into matplotlib
 # drawarrow      # optional: nice annotation arrows
 # bokeh          # optional: Category10/20 are hardcoded in styles/palettes.py
-# highlight_text  # optional: rich inline text annotations (choropleth credits)
+highlight_text  # annotated maps/ridgelines (38, and optional elsewhere)
