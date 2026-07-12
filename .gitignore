@@ -10,3 +10,4 @@ chart_cookbook/python/**/*.html
 # python bytecode
 __pycache__/
 *.pyc
+chart_cookbook/python/**/*.gif

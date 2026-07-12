@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**86 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**88 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -40,6 +40,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/evolution/31_stacked_area_inflection_arrows.py`** — Stacked area with inline labels + inflection arrows (Joseph Barbier natural- disasters style). Ownership composition over years, custom palette, right-side inline labels, and drawa
 - **`python/evolution/32_small_multiples_lines.py`** — Small multiples for a line chart (python-graph-gallery anti-spaghetti style). A 3x3 grid, one panel per owner, each panel drawing every owner's acquisition curve in faint grey with
 - **`python/evolution/33_minimalist_area.py`** — Minimalist two-color area chart (Joseph Barbier "Japan population" style). One line + filled area, split into a green segment (positive) and a red segment (negative) around a zero 
+- **`python/evolution/34_animated_stacked_area.py`** — Animated stacked-area chart with text that highlights key events (Joseph Barbier "space objects" style). A GIF that grows a two-band stacked area of the cumulative corporate SFR fo
 
 ## Distribution — spread of one variable
 
@@ -60,6 +61,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/correlation/18_annotated_bubble_quadrant.py`** — Annotated quadrant bubble plot (Datawrapper climate-risk style). Block groups by institutional rate (x) vs poverty rate (y), bubble size = residential parcels, quadrant reference l
 - **`python/correlation/19_scatter_regression_labels.py`** — Scatter with regression fit + auto-positioned labels (Claus Wilke corruption style). Block groups: income (x) vs institutional rate (y), log fit, colored by poverty tercile, extrem
 - **`python/correlation/20_custom_legends.py`** — Custom legends in Matplotlib — a reference sheet (python-graph-gallery style). Six panels of the same scatter (corporate parcel size vs year built, colored by property type) each s
+- **`python/correlation/21_bubble_4d.py`** — Four-dimensional bubble plot (gapminder style, matplotlib + seaborn). One point per Davidson block group encoding four variables at once: x = poverty rate, y = median household inc
 - **`python/correlation/24_connected_scatter.py`** — Connected scatter — CORRELATION. Two variables tracked over time (path).
 
 ## Map — where, geographically
