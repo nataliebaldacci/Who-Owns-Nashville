@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Who Owns Nashville — HUD-Style Sample</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* HUD-style boxed charts — see HUD_Style_Charts_Template.html for the reusable pattern */
+:root{
+  --hud-card:#F6F6F6;--hud-card-bd:#C8C7C7;--hud-frame:#545454;--hud-grid:#e6e6e6;
+  --hud-ink:#333;--hud-muted:#666;
+  --won-navy:#1c458c;--won-gold:#f0af1e;--won-blue:#4fa0bd;--won-red:#d7263d;
+}
+body{margin:0;padding:26px 20px 60px;background:#fff;color:var(--hud-ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+.hud-band{max-width:1180px;margin:0 auto 18px;background:var(--won-navy);color:#fff;
+  text-align:center;font-weight:700;letter-spacing:.5px;font-size:15px;padding:10px 12px;border-radius:2px;}
+.hud-sub{max-width:1180px;margin:-10px auto 18px;text-align:center;font-size:12px;color:var(--hud-muted);}
+.hud-grid{max-width:1180px;margin:0 auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;}
+@media (max-width:760px){.hud-grid{grid-template-columns:1fr;}}
+.hud-box{background:var(--hud-card);border:1px solid var(--hud-card-bd);padding:14px 14px 12px;box-sizing:border-box;}
+.hud-box .hud-title{text-align:center;font-weight:700;font-size:13px;color:var(--hud-ink);margin:2px 0 10px;}
+.hud-canvas-wrap{position:relative;height:250px;}
+.hud-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;border:1px solid #999;
+  background:#fff;padding:8px 12px;margin:12px auto 0;width:fit-content;max-width:100%;}
+.hud-legend .item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--hud-ink);cursor:pointer;}
+.hud-legend .item.off{opacity:.35;text-decoration:line-through;}
+.hud-legend .swatch{width:16px;height:10px;border-radius:1px;flex:0 0 auto;}
+.hud-src{font-size:11px;color:var(--hud-muted);margin:8px 2px 0;}
+</style>
+</head>
+<body>
+
+<div class="hud-band">WHO OWNS NASHVILLE — CORPORATE OWNERSHIP, DAVIDSON COUNTY</div>
+<div class="hud-sub">Built from primary Metro Nashville records. Sample layout using the HUD-style boxed containers.</div>
+
+<div class="hud-grid">
+  <div class="hud-box">
+    <div class="hud-title">Largest Corporate Operators — Parcels Held</div>
+    <div class="hud-canvas-wrap"><canvas id="c1"></canvas></div>
+    <div class="hud-legend" id="l1"></div>
+    <div class="hud-src">Source: Metro Ownership Parcels · current holdings (owner_leaderboard).</div>
+  </div>
+  <div class="hud-box">
+    <div class="hud-title">Top Operators — In-State vs Out-of-State Holdings</div>
+    <div class="hud-canvas-wrap"><canvas id="c2"></canvas></div>
+    <div class="hud-legend" id="l2"></div>
+    <div class="hud-src">Source: Metro Ownership Parcels · owner mailing state (TN vs non-TN).</div>
+  </div>
+  <div class="hud-box">
+    <div class="hud-title">Owner Type — Share of All Owners</div>
+    <div class="hud-canvas-wrap"><canvas id="c3"></canvas></div>
+    <div class="hud-legend" id="l3"></div>
+    <div class="hud-src">Source: Ownership History · 934,939 cleaned owners, priority-classified.</div>
+  </div>
+  <div class="hud-box">
+    <div class="hud-title">Out-of-State Deeds — Leading Origin States</div>
+    <div class="hud-canvas-wrap"><canvas id="c4"></canvas></div>
+    <div class="hud-legend" id="l4"></div>
+    <div class="hud-src">Source: Ownership History · 125,688 non-TN deed events (of 1,641,434).</div>
+  </div>
+</div>
+
+<script>
+/* ---- Plugin: white plot background + #545454 frame (the HUD inset) ---- */
+const hudPlotFrame={id:'hudPlotFrame',
+  beforeDraw(c){const{ctx,chartArea:a}=c;if(!a)return;ctx.save();ctx.fillStyle='#FFF';ctx.fillRect(a.left,a.top,a.right-a.left,a.bottom-a.top);ctx.restore();},
+  afterDraw(c){const{ctx,chartArea:a}=c;if(!a)return;ctx.save();ctx.lineWidth=2;ctx.strokeStyle='#545454';ctx.strokeRect(a.left+.5,a.top+.5,(a.right-a.left)-1,(a.bottom-a.top)-1);ctx.restore();}};
+
+/* ---- Plugin: HTML legend in the bordered box (handles multi-series AND single-series colored bars) ---- */
+function hudHtmlLegend(elId){return{id:'hudLeg_'+elId,afterUpdate(chart){
+  const box=document.getElementById(elId);if(!box)return;box.innerHTML='';
+  const ds=chart.data.datasets;
+  const perPoint = ds.length===1 && Array.isArray(ds[0].backgroundColor);
+  if(perPoint){
+    // one series, colored per bar → bars are self-labeled on the axis; hide the empty box
+    box.style.display='none';
+    return;
+  }
+  box.style.display='flex';
+  ds.forEach((d,i)=>{
+    const meta=chart.getDatasetMeta(i);
+    const row=document.createElement('div');row.className='item'+(meta.hidden?' off':'');
+    const sw=document.createElement('span');sw.className='swatch';
+    sw.style.background=d.borderColor||d.backgroundColor;row.appendChild(sw);
+    row.appendChild(document.createTextNode(d.label));
+    row.onclick=()=>{meta.hidden=!meta.hidden;chart.update();};box.appendChild(row);
+  });
+}};}
+
+/* ---- Shared HUD theme ---- */
+const HUD={responsive:true,maintainAspectRatio:false,layout:{padding:{top:4,right:10,bottom:2,left:2}},
+  plugins:{legend:{display:false},
+    tooltip:{backgroundColor:'#fff',titleColor:'#333',bodyColor:'#333',borderColor:'#999',borderWidth:1,
+      titleFont:{weight:'700',size:11},bodyFont:{size:11}}},
+  scales:{x:{grid:{color:'#e6e6e6',drawTicks:false},border:{display:false},ticks:{color:'#333',font:{size:10},maxRotation:45,minRotation:45}},
+          y:{grid:{color:'#e6e6e6',drawTicks:false},border:{display:false},ticks:{color:'#333',font:{size:10}},beginAtZero:true}}};
+const fmt=n=>n.toLocaleString();
+
+/* Operator brand palette (stable per operator) */
+const OP=['#e6194b','#2166ac','#1a9850','#f0af1e','#911eb4','#4fa0bd','#cf307a','#16a085'];
+
+/* ==== Chart 1: top operators by parcels (real) ==== */
+new Chart(c1,{type:'bar',
+  data:{labels:['Progress Residential','American Homes 4 Rent','Amherst Residential','Regent Homes','Normandy Group','CRG / ECG','Tricon Residential','RSD Development'],
+    datasets:[{label:'Parcels',data:[1215,1182,699,642,348,303,298,263],backgroundColor:OP,borderColor:OP,borderWidth:1,barPercentage:.72}]},
+  options:{...HUD,plugins:{...HUD.plugins,tooltip:{...HUD.plugins.tooltip,callbacks:{label:x=>' '+fmt(x.raw)+' parcels'}}}},
+  plugins:[hudPlotFrame,hudHtmlLegend('l1')]});
+
+/* ==== Chart 2: TN vs OOS stacked (real) ==== */
+new Chart(c2,{type:'bar',
+  data:{labels:['Progress','AMH','Amherst','Regent','Normandy','Tricon','Starwood'],
+    datasets:[
+      {label:'In-State (TN)',data:[290,274,204,584,346,65,21],backgroundColor:'#f0af1e',borderColor:'#f0af1e',borderWidth:1},
+      {label:'Out-of-State',data:[925,908,490,12,2,233,231],backgroundColor:'#1c458c',borderColor:'#1c458c',borderWidth:1}]},
+  options:{...HUD,scales:{x:{...HUD.scales.x,stacked:true},y:{...HUD.scales.y,stacked:true}}},
+  plugins:[hudPlotFrame,hudHtmlLegend('l2')]});
+
+/* ==== Chart 3: owner-type share of all owners (real) ==== */
+const owners={Individual:844084,Corporate:62114,Trust:22775,'Bank / Lender':3696,Government:2270};
+const oTot=Object.values(owners).reduce((a,b)=>a+b,0);
+new Chart(c3,{type:'bar',
+  data:{labels:Object.keys(owners),
+    datasets:[{label:'% of owners',data:Object.values(owners).map(v=>+(100*v/oTot).toFixed(1)),
+      backgroundColor:['#4fa0bd','#e6194b','#911eb4','#16a085','#8a94a0'],
+      borderColor:['#4fa0bd','#e6194b','#911eb4','#16a085','#8a94a0'],borderWidth:1,barPercentage:.7}]},
+  options:{...HUD,scales:{...HUD.scales,y:{...HUD.scales.y,ticks:{...HUD.scales.y.ticks,callback:v=>v+'%'}}},
+    plugins:{...HUD.plugins,tooltip:{...HUD.plugins.tooltip,callbacks:{label:x=>' '+x.raw+'% ('+fmt(Object.values(owners)[x.dataIndex])+' owners)'}}}},
+  plugins:[hudPlotFrame,hudHtmlLegend('l3')]});
+
+/* ==== Chart 4: out-of-state deed origins (real) ==== */
+new Chart(c4,{type:'bar',
+  data:{labels:['TX','CA','GA','FL','AZ','IL','KY','NY'],
+    datasets:[{label:'Deeds',data:[18952,17853,10397,9989,8185,5562,5046,4231],
+      backgroundColor:'#4fa0bd',borderColor:'#4fa0bd',borderWidth:1,barPercentage:.72}]},
+  options:{...HUD,plugins:{...HUD.plugins,tooltip:{...HUD.plugins.tooltip,callbacks:{label:x=>' '+fmt(x.raw)+' deeds'}}}},
+  plugins:[hudPlotFrame,hudHtmlLegend('l4')]});
+</script>
+</body>
+</html>
