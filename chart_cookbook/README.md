@@ -34,6 +34,32 @@ chart_cookbook/
     cookbook_preview.png   contact sheet of all rendered Python figures
 ```
 
+## House styles (color systems)
+
+`styles/won_styles.py` holds four palettes you can drop onto any script. Call
+`apply_style(name)` before creating the figure:
+
+```python
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from styles.won_styles import apply_style, palette
+apply_style("jchs")     # "won" | "hud" | "jchs" | "crs"
+```
+
+| Style | Colors | Source |
+|---|---|---|
+| `won`  | navy `#1c458c`, gold `#f0af1e`, blue `#4fa0bd` | Who Owns Nashville brand |
+| `hud`  | HUD default-theme series | HUD county charts |
+| `jchs` | slate `#508DA6`, burnt orange `#C14D00`, sage `#76AD99`, mustard `#E9C002`, plum `#653052` | Harvard Joint Center (State of the Nation's Housing) |
+| `crs`  | steel blue `#2E75B6`, orange `#ED7D31`, grey, gold; tan `#D2D1AB` for stock bars | Congressional Research Service report figures |
+
+`RAMPS` also holds JCHS + WON sequential ramps for choropleths. Run
+`python style_showcase.py` to see the same charts in all styles side by side
+(`figures/style_showcase.png`).
+
+**CRS report figures** (`python/crs_reports/`) rebuild three signature CRS
+looks: `crs_total_housing_units` (tan bars + blue ratio line, dual axis),
+`crs_new_vs_existing` (stacked bars), and `crs_starts_by_type` (stacked area).
+
 ## Running the Python scripts
 
 ```bash
