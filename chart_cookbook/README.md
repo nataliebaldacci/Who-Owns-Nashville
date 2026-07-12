@@ -127,6 +127,12 @@ regenerate on run); the contact sheet in `figures/` is committed as a preview.
   - `29_bokeh_choropleth.py` — interactive Bokeh choropleth (LinearColorMapper +
     HoverTool; swap in `LogColorMapper` for skewed data) -> self-contained HTML.
   Need `geopandas folium mapclassify bokeh` (in requirements).
+- **Boundary layers** — `styles/boundaries.py` registers every Davidson geography
+  in the repo (census `tract` / `blockgroup`, plus local `community` /
+  `council` / `zip`) and offers `aggregate_points(points, boundary)` to spatial-
+  join any point layer onto any boundary and choropleth the result:
+  - `30_boundaries_overview.py` — all five boundary sets side by side.
+  - `31_choropleth_by_zip.py` — corporate parcels aggregated to ZIP codes.
 - **Sankey** PNG export needs `kaleido` (`pip install kaleido`); without it the
   script still writes the interactive `.html`.
 - Colors use the Who Owns Nashville palette (navy `#1c458c`, gold `#f0af1e`,
