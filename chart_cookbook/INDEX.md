@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**80 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**81 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -92,6 +92,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/composite/41_economist_line_area.py`** — Economist-style two-panel line + stacked area (child-labour chart style) with flexitext titles and a red top bar. Left: institutional rate over time by tier. Right: parcel counts b
 - **`python/composite/42_small_multiples_highlight.py`** — Small multiples with highlighted lines + annotations (Joseph Barbier unemployment style). 3x3 grid, one operator highlighted per panel over a greyed backdrop of all others, with fi
 - **`python/composite/43_bump_small_multiples.py`** — Multi-panel highlighted bump/ranking lineplots (Abdoul Madjid water-rankings style). One panel per operator; each highlights that operator's RANK trajectory (by parcels acquired pe
+- **`python/composite/44_multi_choropleth_lollipop.py`** — Multiple choropleth maps with a lollipop plot for the legend (Joseph Barbier "happiness in Europe" style). Four small block-group choropleths on a dark background, each a different
 
 ## Tables
 
