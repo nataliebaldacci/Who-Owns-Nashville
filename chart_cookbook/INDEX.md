@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**90 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**91 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -125,6 +125,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/bokeh/b12_slope.py`** — Scatter with a Slope regression line annotation (Bokeh).
 - **`python/bokeh/b13_tile_map.py`** — Basemap tiles (Bokeh) — CartoDB Positron behind operator points (web mercator). Tiles load from CDN; renders in a browser like the site's Leaflet maps.
 - **`python/bokeh/b14_latex_distribution.py`** — Histogram + PDF with LaTeX/mathtext axis labels (Bokeh) — sale-price distribution.
+- **`python/bokeh/b15_selection_histogram.py`** — Selection histogram (Bokeh demo.bokeh.org/selection_histogram, standalone). A central scatter with a marginal histogram above (x) and to the right (y). Each histogram shows the ful
 
 ## CRS report figures
 
