@@ -11,6 +11,9 @@ geopandas       # static maps (choropleth, bubble) — 18, 19
 folium          # interactive Leaflet maps — 27
 mapclassify     # choropleth classification schemes (quantiles, ckmeans)
 bokeh           # interactive choropleth with hover — 29
+plotly          # interactive choropleth — 42 (write_html)
+# geoplot        # optional: polyplot/choropleth on Albers projection — 40, 41 (needs cartopy)
+# basemap        # optional/legacy: bubble map background — 43 (mpl_toolkits.basemap)
 # contextily     # optional: real basemap tiles behind static maps (needs network) — 33
 # seaborn is already above (rocket/mako/flare/crest palettes — 32)
 kaleido         # static PNG export for plotly sankey (20)

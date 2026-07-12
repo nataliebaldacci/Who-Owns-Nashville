@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**74 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**80 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -38,6 +38,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/evolution/29_line_end_labels.py`** — Line chart with labels at the end of each line (Cedric Scherer Big Mac style). Operator cumulative acquisitions over time; highlighted operators colored + end- labeled with leader 
 - **`python/evolution/30_stacked_area_inline_labels.py`** — Smoothed stacked area with inline labels (Gilbert Fontana wealth-chart style). Ownership composition over time, spline-smoothed, custom palette, big title, year total callouts, and
 - **`python/evolution/31_stacked_area_inflection_arrows.py`** — Stacked area with inline labels + inflection arrows (Joseph Barbier natural- disasters style). Ownership composition over years, custom palette, right-side inline labels, and drawa
+- **`python/evolution/32_small_multiples_lines.py`** — Small multiples for a line chart (python-graph-gallery anti-spaghetti style). A 3x3 grid, one panel per owner, each panel drawing every owner's acquisition curve in faint grey with
 
 ## Distribution — spread of one variable
 
@@ -48,6 +49,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/distribution/21_ridgeline.py`** — Ridgeline — DISTRIBUTION. Many groups' distributions stacked (price per year).
 - **`python/distribution/27_ridgeline_annotated.py`** — Annotated ridgeline with quantile bands + legend inset (rent-by-adjective style, Ansgar Wolsing / Joseph Barbier). Sale-price distribution by buyer type, each row filled by quantil
 - **`python/distribution/28_insee_pyramid.py`** — INSEE 'salary pyramid' style annotated histogram (Joseph Barbier translation). A horizontal histogram of Davidson home-value ranges with a per-bar color gradient, title/subtitle/cr
+- **`python/distribution/30_mirror_density_histogram.py`** — Mirror density + histogram (python-graph-gallery style): compare two distributions back-to-back around a zero baseline. Real data — corporate SFR acquisitions in Davidson County by
 
 ## Correlation — how variables relate
 
@@ -74,6 +76,10 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/map/37_choropleth_binned_barplot.py`** — Choropleth + binned seaborn barplot legend (Sao Paulo HDI style, Vinicius Oike / Joseph Barbier). Davidson tracts shaded by institutional %; the inset horizontal barplot bins the m
 - **`python/map/38_annotated_bubble_map.py`** — Annotated bubble map (eclipse-map style, Joseph Barbier). Davidson county outline + one bubble per block group, colored by institutional rate and sized by count, with a highlight_t
 - **`python/map/39_choropleth_custom_legend.py`** — Choropleth with a custom rectangle legend + arrow annotation (Joseph Barbier CO2-Europe style). Davidson tracts shaded by institutional %, BrwnYl ramp, a hand-built swatch legend, 
+- **`python/map/40_geoplot_polyplot.py`** — Draw a map straight from a GeoJSON with GeoPandas + GeoPlot (python-graph- gallery "polyplot" style). Loads a Davidson boundary layer into a GeoDataFrame and draws the polygons wit
+- **`python/map/41_geoplot_choropleth.py`** — Choropleth map with GeoPandas + GeoPlot (python-graph-gallery style). Loads a Davidson GeoJSON, uses a mapclassify Quantiles(k) binning scheme, and draws the choropleth with gplt.c
+- **`python/map/42_plotly_choropleth.py`** — Interactive choropleth with Plotly Express (python-graph-gallery style). Loads a Davidson GeoJSON, colors each census tract by institutional ownership rate with px.choropleth_map, 
+- **`python/map/43_basemap_bubble.py`** — Bubble map with Basemap (python-graph-gallery style). Basemap draws the background (county extent, land fill, coastline-style boundary) and matplotlib scatters one orange bubble pe
 
 ## Flow — volume between stages
 
