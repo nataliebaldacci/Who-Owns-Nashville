@@ -27,9 +27,14 @@ chart_cookbook/
     correlation/    15_scatter  16_bubble  17_correlogram_heatmap
     map/            18_choropleth  19_bubble_map        (need geopandas)
     flow/           20_sankey_plotly                    (plotly; PNG needs kaleido)
-    bokeh/          b01..b14 interactive Bokeh charts (dodged, stacked, nested,
-                    crosstab, legend/mute, hover, markers, cmap+colorbar, log,
-                    slope, tiles, LaTeX) -> self-contained HTML
+    bokeh/          b01..b22 interactive Bokeh charts -> self-contained HTML.
+                    b01-b14 basics (dodged, stacked, nested, crosstab, legend/
+                    mute, hover, markers, cmap+colorbar, log, slope, tiles,
+                    LaTeX); b15-b19 standalone rebuilds of the demo.bokeh.org
+                    server apps (selection_histogram, crossfilter, movies-style
+                    slider filter, population pyramid, gapminder) via CustomJS;
+                    b20-b22 docs examples (labelled scatter, hbar intervals,
+                    mixed bar+line)
     composite/      39 heatmap + radial-barchart multi-panel (operators x type)
   chartjs/
     index.html      6 rebuilt in Chart.js (bar, horizontal bar, line+area,

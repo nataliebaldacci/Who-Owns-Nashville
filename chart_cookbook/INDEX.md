@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**93 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**98 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -128,6 +128,11 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/bokeh/b15_selection_histogram.py`** — Selection histogram (Bokeh demo.bokeh.org/selection_histogram, standalone). A central scatter with a marginal histogram above (x) and to the right (y). Each histogram shows the ful
 - **`python/bokeh/b16_crossfilter.py`** — Crossfilter (demo.bokeh.org/crossfilter, standalone). Four Select widgets let you remap the scatter's X, Y, bubble Size and Color to any variable, so you can explore every pairwise
 - **`python/bokeh/b17_movies_filter.py`** — Interactive filtered scatter with sliders (demo.bokeh.org/movies, standalone). Sliders and a Select filter a large point cloud live; the scatter and its title count update via Cust
+- **`python/bokeh/b18_population_pyramid.py`** — Population pyramid with a Select (demo.bokeh.org/population, standalone). A back-to-back horizontal bar chart: one group's bars grow left (negative), the other's grow right, sharin
+- **`python/bokeh/b19_gapminder.py`** — Gapminder-style animated bubble with a year Slider (demo.bokeh.org/gapminder, standalone). Bubbles move as you drag the slider through the years. The official demo is a Bokeh serve
+- **`python/bokeh/b20_elements_labels.py`** — Scatter with hover tooltips and per-point labels (Bokeh docs "elements" example). Each point carries a text label via LabelSet and a hover tooltip, and color encodes a third variab
+- **`python/bokeh/b21_intervals_hbar.py`** — Interval chart with hbar (Bokeh docs "intervals" example). Each row is drawn as a horizontal bar spanning a min-to-max range with left/right, so the chart reads as a set of interva
+- **`python/bokeh/b22_mixed_bar_line.py`** — Combined bar + line chart over nested categorical factors (Bokeh docs "mixed" example). Vbars sit on nested (era, decade) factors while a line rides the top-level (era) summary, mi
 
 ## CRS report figures
 
