@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>HUD-Style Boxed Charts — Template</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+/* ============================================================
+   HUD-style boxed charts — drop-in pattern for Who Owns Nashville
+   Recreates HUD's "little module unit" look with Chart.js:
+     - outer grey card  #F6F6F6 + 1px #C8C7C7 border
+     - inset white plot area framed in #545454
+     - #e6e6e6 gridlines, small system-sans labels
+     - bordered legend box beneath the plot
+   Copy the <style>, the two plugins, and HUD_THEME into any page.
+   ============================================================ */
+:root{
+  --hud-card:#F6F6F6;
+  --hud-card-bd:#C8C7C7;
+  --hud-frame:#545454;
+  --hud-grid:#e6e6e6;
+  --hud-ink:#333333;
+  --hud-muted:#666666;
+  /* Who Owns Nashville brand series colors (swap freely) */
+  --won-navy:#1c458c;
+  --won-gold:#f0af1e;
+  --won-blue:#4fa0bd;
+  --won-red:#d7263d;
+}
+body{
+  margin:0;padding:26px 20px 60px;
+  background:#ffffff;color:var(--hud-ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+}
+/* Blue section band, like HUD's "HOUSING MARKET CONDITIONS" */
+.hud-band{
+  max-width:1180px;margin:0 auto 18px;
+  background:var(--won-navy);color:#fff;
+  text-align:center;font-weight:700;letter-spacing:.5px;
+  font-size:15px;padding:10px 12px;border-radius:2px;
+}
+.hud-grid{
+  max-width:1180px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:22px;
+}
+@media (max-width:760px){ .hud-grid{grid-template-columns:1fr;} }
+
+/* THE BOX — this is the container you liked */
+.hud-box{
+  background:var(--hud-card);
+  border:1px solid var(--hud-card-bd);
+  border-radius:0;
+  padding:14px 14px 12px;
+  box-sizing:border-box;
+}
+.hud-box .hud-title{
+  text-align:center;font-weight:700;font-size:13px;
+  color:var(--hud-ink);margin:2px 0 10px;
+}
+.hud-canvas-wrap{position:relative;height:230px;}
+/* Bordered legend box beneath the plot */
+.hud-legend{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px 22px;
+  border:1px solid #999999;background:#fff;
+  padding:8px 12px;margin:12px auto 0;width:fit-content;max-width:100%;
+}
+.hud-legend .item{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--hud-ink);cursor:pointer;}
+.hud-legend .item.off{opacity:.35;text-decoration:line-through;}
+.hud-legend .swatch{width:16px;height:10px;border-radius:1px;flex:0 0 auto;}
+.hud-source{
+  max-width:1180px;margin:8px auto 0;
+  font-size:11px;color:var(--hud-muted);
+}
+.hud-source.grid-note{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;}
+@media (max-width:760px){ .hud-source.grid-note{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<div class="hud-band">HOUSING &amp; OWNERSHIP CONDITIONS — DAVIDSON COUNTY</div>
+
+<div class="hud-grid">
+  <!-- Each chart is one self-contained module unit -->
+  <div>
+    <div class="hud-box">
+      <div class="hud-title">Corporate-Owned SF Homes by Operator Tier</div>
+      <div class="hud-canvas-wrap"><canvas id="c1"></canvas></div>
+      <div class="hud-legend" id="l1"></div>
+    </div>
+  </div>
+  <div>
+    <div class="hud-box">
+      <div class="hud-title">Corporate Acquisitions, 3-Mo vs 12-Mo Trend</div>
+      <div class="hud-canvas-wrap"><canvas id="c2"></canvas></div>
+      <div class="hud-legend" id="l2"></div>
+    </div>
+  </div>
+</div>
+<div class="hud-source grid-note">
+  <div>Data Source: Metro Nashville Ownership Parcels (illustrative figures).</div>
+  <div>Data Source: Metro Nashville ParcelHistory deed records (illustrative figures).</div>
+</div>
+
+<script>
+/* ---- Plugin 1: white plot background + #545454 frame (the HUD inset) ---- */
+const hudPlotFrame = {
+  id:'hudPlotFrame',
+  beforeDraw(chart){
+    const {ctx,chartArea:a} = chart;
+    if(!a) return;
+    ctx.save();
+    ctx.fillStyle='#FFFFFF';
+    ctx.fillRect(a.left,a.top,a.right-a.left,a.bottom-a.top);
+    ctx.restore();
+  },
+  afterDraw(chart){
+    const {ctx,chartArea:a} = chart;
+    if(!a) return;
+    ctx.save();
+    ctx.lineWidth=2;ctx.strokeStyle='#545454';
+    ctx.strokeRect(a.left+.5,a.top+.5,(a.right-a.left)-1,(a.bottom-a.top)-1);
+    ctx.restore();
+  }
+};
+
+/* ---- Plugin 2: HTML legend in the bordered box (click to toggle) ---- */
+function hudHtmlLegend(elId){
+  return {
+    id:'hudHtmlLegend_'+elId,
+    afterUpdate(chart){
+      const box=document.getElementById(elId);
+      if(!box) return;
+      box.innerHTML='';
+      chart.data.datasets.forEach((ds,i)=>{
+        const meta=chart.getDatasetMeta(i);
+        const row=document.createElement('div');
+        row.className='item'+(meta.hidden?' off':'');
+        const sw=document.createElement('span');
+        sw.className='swatch';
+        sw.style.background=Array.isArray(ds.backgroundColor)?ds.borderColor:(ds.borderColor||ds.backgroundColor);
+        row.appendChild(sw);
+        row.appendChild(document.createTextNode(ds.label));
+        row.onclick=()=>{ meta.hidden=!meta.hidden; chart.update(); };
+        box.appendChild(row);
+      });
+    }
+  };
+}
+
+/* ---- Shared HUD theme (spread into any chart's options) ---- */
+const HUD_THEME = {
+  responsive:true, maintainAspectRatio:false,
+  layout:{padding:{top:4,right:8,bottom:2,left:2}},
+  plugins:{
+    legend:{display:false},           // we draw our own bordered legend
+    tooltip:{
+      backgroundColor:'#fff',titleColor:'#333',bodyColor:'#333',
+      borderColor:'#999',borderWidth:1,displayColors:true,
+      titleFont:{weight:'700',size:11},bodyFont:{size:11}
+    }
+  },
+  scales:{
+    x:{
+      grid:{color:'#e6e6e6',drawTicks:false},
+      border:{display:false},
+      ticks:{color:'#333',font:{size:10},maxRotation:45,minRotation:45}
+    },
+    y:{
+      grid:{color:'#e6e6e6',drawTicks:false},
+      border:{display:false},
+      ticks:{color:'#333',font:{size:10}}
+    }
+  }
+};
+
+/* ============ CHART 1 — stacked/grouped bars (operator tiers) ============ */
+new Chart(document.getElementById('c1'),{
+  type:'bar',
+  data:{
+    labels:['Small (1–9)','Large (10–99)','Institutional (100+)'],
+    datasets:[
+      {label:'Parcels', data:[7100,9400,8600],
+       backgroundColor:'#4fa0bd', borderColor:'#4fa0bd', borderWidth:1, barPercentage:.6},
+      {label:'Operators', data:[5200,540,22],
+       backgroundColor:'#f0af1e', borderColor:'#f0af1e', borderWidth:1, barPercentage:.6}
+    ]
+  },
+  options:{...HUD_THEME,
+    scales:{...HUD_THEME.scales, y:{...HUD_THEME.scales.y, beginAtZero:true}}},
+  plugins:[hudPlotFrame, hudHtmlLegend('l1')]
+});
+
+/* ============ CHART 2 — two lines (3-mo vs 12-mo YoY) ============ */
+const months=['Nov-23','Jan-24','Mar-24','May-24','Jul-24','Sep-24','Nov-24','Jan-25','Mar-25','May-25','Jul-25','Sep-25'];
+new Chart(document.getElementById('c2'),{
+  type:'line',
+  data:{
+    labels:months,
+    datasets:[
+      {label:'3-Month Year-Over-Year',
+       data:[2.5,2.4,1.7,1.6,1.5,1.1,.9,1.0,-.7,-1.1,-1.7,-1.6],
+       borderColor:'#4fa0bd', backgroundColor:'#4fa0bd',
+       borderWidth:2, pointStyle:'rectRot', pointRadius:4, tension:.25},
+      {label:'12-Month Year-Over-Year',
+       data:[1.0,1.1,1.7,1.9,1.8,1.6,1.4,1.2,.7,.3,-.1,-.4],
+       borderColor:'#f0af1e', backgroundColor:'#f0af1e',
+       borderWidth:2, pointStyle:'rectRot', pointRadius:4, tension:.25}
+    ]
+  },
+  options:{...HUD_THEME,
+    scales:{...HUD_THEME.scales,
+      y:{...HUD_THEME.scales.y, ticks:{...HUD_THEME.scales.y.ticks, callback:v=>v+'%'}}}},
+  plugins:[hudPlotFrame, hudHtmlLegend('l2')]
+});
+</script>
+</body>
+</html>
