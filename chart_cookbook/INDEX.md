@@ -3,7 +3,7 @@
 _Auto-generated catalog of every script, grouped by category. Visual previews live in `figures/`. See `README.md` for palettes, styles, boundary helpers._
 
 
-**89 Python scripts** + Chart.js gallery + style/palette/boundary modules.
+**90 Python scripts** + Chart.js gallery + style/palette/boundary modules.
 
 
 ## Reference / layout
@@ -42,6 +42,7 @@ _Auto-generated catalog of every script, grouped by category. Visual previews li
 - **`python/evolution/33_minimalist_area.py`** — Minimalist two-color area chart (Joseph Barbier "Japan population" style). One line + filled area, split into a green segment (positive) and a red segment (negative) around a zero 
 - **`python/evolution/34_animated_stacked_area.py`** — Animated stacked-area chart with text that highlights key events (Joseph Barbier "space objects" style). A GIF that grows a two-band stacked area of the cumulative corporate SFR fo
 - **`python/evolution/35_percent_stacked_area.py`** — Percent (100%) stacked area chart (python-graph-gallery style). Each year's values are normalized to sum to 100%, so the chart reads as a changing MIX rather than a growing total. 
+- **`python/evolution/36_streamgraph_customized.py`** — Customized streamgraph — colors, order and smoothing (python-graph-gallery X-Men "mutant moneyball" style). Demonstrates the full customization workflow on a streamgraph: (1) color
 
 ## Distribution — spread of one variable
 
