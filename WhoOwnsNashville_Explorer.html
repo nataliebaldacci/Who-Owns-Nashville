@@ -28,8 +28,8 @@
     <h1>Who Owns Nashville?</h1>
     <p class="sub">Search any owner. The map highlights every home in that owner's <b>portfolio</b> — all the LLCs and shells linked to the same entity by name + mailing address.</p>
     <div id="search"><input id="q" placeholder="e.g. Progress, AMH, Barrett…" /><button id="go">Search</button></div>
-    <button id="reset">← show all 20,045</button>
-    <div id="panel"><p class="hint">20,045 corporate-owned homes (May 2026 pre-framework cut) · 5,131 owner portfolios (metacorps). Start typing an owner name.</p></div>
+    <button id="reset">← show all 18,888</button>
+    <div id="panel"><p class="hint">18,888 corporate-owned homes (pre-framework cut) · 6,966 owner portfolios (metacorps). Start typing an owner name.</p></div>
     <div id="legend"></div>
   </div>
   <div id="map"></div>
@@ -62,7 +62,7 @@ map.on('load',()=>{
     map.addLayer({id:'dots',type:'circle',source:'s',paint:{
       'circle-radius':['interpolate',['linear'],['zoom'],9,2,13,4,16,6],
       'circle-color':COLOR,'circle-opacity':0.82,'circle-stroke-width':0.4,'circle-stroke-color':'#fff'}});
-    document.getElementById('cnt').textContent='20,045 corporate-owned homes';
+    document.getElementById('cnt').textContent='18,888 corporate-owned homes';
     map.on('click','dots',e=>{const p=e.features[0].properties;const m=META[p.m]||{};
       new maplibregl.Popup().setLngLat(e.features[0].geometry.coordinates.slice()).setHTML(
         '<b>'+p.o+'</b><br>'+(p.a||'')+' '+(p.z||'')+'<br>Parent: '+p.p+
@@ -114,6 +114,6 @@ function search(){
 document.getElementById('go').onclick=search;
 document.getElementById('q').addEventListener('keydown',e=>{if(e.key==='Enter')search();});
 document.getElementById('reset').onclick=()=>{map.setFilter('dots',null);map.flyTo({center:[-86.784,36.166],zoom:10});
-  document.getElementById('cnt').textContent='20,045 corporate-owned homes';
-  panel('<p class="hint">20,045 corporate-owned homes · 5,131 owner portfolios. Start typing an owner name.</p>');};
+  document.getElementById('cnt').textContent='18,888 corporate-owned homes';
+  panel('<p class="hint">18,888 corporate-owned homes · 6,966 owner portfolios. Start typing an owner name.</p>');};
 </script></body></html>

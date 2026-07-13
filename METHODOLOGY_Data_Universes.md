@@ -54,7 +54,7 @@ First, 18,071 rows failed the feature-type exclusion, and 18,064 of them were mu
 
 The same test exposed classification errors on both sides. The project's enrichment sent 1,196 community-property trusts to the corporate column and missed 756 truncated living-trust names. The canonical classifier carried the substring bugs described under M1. Both classifiers were corrected against the disagreement list, and twenty real owner names from that list now run as permanent regression tests.
 
-The reconciliation also resolved the legacy number. The 20,045 institutional homes on the older pages was the corporate count on the broad, pre-framework universe (20,873 at the current snapshot). One filter vintage, carried forward by copy, explains every stray count this project ever published.
+The reconciliation also placed the legacy numbers. The 20,044 and 20,045 counts on the older pages are corporate counts on the broad, pre-framework universe at earlier snapshots; the same cut produces 20,873 on the current snapshot, so the magnitude is consistent with that vintage even though the exact pull dates are not recorded. The audit also found page text drifting from page data: the owner explorer displayed 20,045 homes and 5,131 portfolios while its own embedded dataset held 18,888 homes across 6,966 portfolios. Both pages now state the numbers their own data produces, labeled as pre-framework cuts, until they are re-cut from the file of record.
 
 ## The file of record
 
