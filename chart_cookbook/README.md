@@ -43,6 +43,32 @@ chart_cookbook/
     cookbook_preview.png   contact sheet of all rendered Python figures
 ```
 
+## Locked palette (official — CARTOColors / Palettable)
+
+`styles/locked_palette.py` is the **single source of truth** for cookbook colors:
+
+```python
+import sys, os; sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
+from styles.locked_palette import NAVY, GOLD, PRISM, OPERATOR_COLORS, op_color, ramp
+op_color("Progress Residential")   # '#CC503E'  (Prism red)
+op_color("AMH")                    # '#1D6996'  (Prism blue) — tolerant of short forms
+ramp("institutional")              # SunsetDark_7 as a matplotlib colormap
+```
+
+| Role | Palette | Notes |
+|---|---|---|
+| brand primary / callout | `NAVY #1c458c` / `GOLD #f0af1e` | |
+| **operators** | Prism_10 shades, hand-assigned | **Progress = red `#CC503E`, American Homes = blue `#1D6996`**; use `op_color(name)` |
+| generic chart series | `PRISM` (Prism_10) | non-operator categories |
+| institutional / corporate share | `SunsetDark_7` | alt: `YlOrRd_6` |
+| tenure / ownership | `Blues_6` | |
+| cost / rent burden | `BuPu_6` | |
+| diverging (change) | `Geyser_7` | alt: `RdBu_9` |
+
+Run `python styles/locked_palette.py` to regenerate `figures/locked_palette.png`
+(the reference sheet). The four house styles below (`won`/`hud`/`jchs`/`crs`)
+remain available for legacy figures.
+
 ## House styles (color systems)
 
 `styles/won_styles.py` holds four palettes you can drop onto any script. Call

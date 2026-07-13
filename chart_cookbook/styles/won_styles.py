@@ -29,7 +29,16 @@ PALETTES = {
     "jchs": ["#508DA6", "#C14D00", "#76AD99", "#E9C002", "#653052", "#002060", "#5A5A5A"],
     # CRS / congress.gov Highcharts (Office-family) palette
     "crs":  ["#2E75B6", "#ED7D31", "#A5A5A5", "#FFC000", "#4472C4", "#70AD47", "#C00000"],
+    # LOCKED cookbook categorical series (CARTOColors Prism_10) — see styles/locked_palette.py
+    "prism": ['#5F4690', '#1D6996', '#38A6A5', '#0F8554', '#73AF48',
+              '#EDAD08', '#E17C05', '#CC503E', '#94346E', '#6F4070'],
 }
+
+# Locked palette re-exports (single source of truth: styles/locked_palette.py)
+try:
+    from styles.locked_palette import OPERATOR_COLORS, op_color, PRISM, RAMPS, DIVERGING, ramp  # noqa: F401
+except Exception:   # allow use when imported without the package root on sys.path
+    OPERATOR_COLORS = op_color = PRISM = RAMPS = DIVERGING = ramp = None
 
 # A few named accents scripts may want by hand
 ACCENTS = {
