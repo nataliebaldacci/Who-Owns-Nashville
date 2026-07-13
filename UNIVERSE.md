@@ -133,6 +133,31 @@ Every map/page states its cut in one line, e.g.:
 
 ---
 
+## Reconciliation findings (2026-07-13, baseline vs county)
+
+Run against `Nashville_Framework_Homes_BASELINE_2026-07-07.parquet` (225,471
+rows), the gap to the county's 205,933 decomposed fully:
+
+1. **18,071 rows fail the FeatureType exclusion** — 18,064 Multistory Condo
+   (land-use: 18,025 Residential Condo). DUCOUNT dropped **zero** rows: the
+   baseline was already DUCOUNT-filtered.
+2. **~1,333 rows carry land uses outside the 5-value list** (Mobile Home 407,
+   Office 319, Rural Combo 77, Dormitory 76, …) — the baseline never applied
+   the LUDESC list. Applying the FULL clause locally yields **206,067**;
+   the ~134 remaining vs 205,933 is one-day snapshot drift. No duplicates.
+3. **Legacy "20,045" explained**: Corporate counted on the broad universe
+   (20,873 at this vintage). One filter vintage, not a data error.
+4. **Classifier fixes** (both sides had bugs; canonical corrected in
+   `canonical_universes.py` with regression tests from real disagreements):
+   canonical had `HUD`→HUDSON and `BANK`→BANKS substring hits and missed
+   `SECRETARY OF …`; the file's `owner_type` sent community-property trusts to
+   Corporate (1,196), missed `REV LIVING TR` variants (756) and
+   LP/ASSOC/PLLC entities (182), and hit `LOAN` inside surnames (23).
+
+Derivation of the U1 file of record from the baseline:
+`derive_canonical_framework.py` → `Nashville_Framework_Homes_CANONICAL_*.parquet`
+(full clause + fixed-classifier `owner_type_canonical` column).
+
 ## Known legacy cuts to reconcile (pre-dating this spec)
 
 | Dataset / page | Cut it used | Issue |

@@ -65,11 +65,17 @@ ENTITY_TOKENS = [
     " CO ", "CO.", "COMPANY", "PARTNER", "ASSOC", "HOMES", "HOLDING",
     "CAPITAL", "INVEST", "FUND", "SOLUTION", "SFR", "ASSET", "BORROW", " JV",
 ]
+# Word-boundary matters: tokens are matched inside a space-padded name, so
+# " HUD " cannot hit HUDSON/HUDMON surnames and " BANK " cannot hit BANKS/
+# EUBANKS (bugs surfaced by the 2026-07-13 baseline reconciliation).
 GOVERNMENT_TOKENS = ["CITY OF", "HOUSING AUTH", "STATE OF", "COUNTY OF",
-                     "HUD", "MDHA", "UNITED STATES", "METROPOLITAN GOV",
-                     "METRO GOV"]
-TRUST_TOKENS = ["TRUST", "REVOCABLE", "LIVING TR", "FAMILY TR"]
-BANK_TOKENS = ["BANK", "MORTGAGE", "LENDER", "FEDERAL NATIONAL",
+                     " HUD ", "MDHA", "UNITED STATES", "METROPOLITAN GOV",
+                     "METRO GOV", "SECRETARY OF", "VETERANS AFFAIRS"]
+# COMMUNITY PROPERTY (with or without the often-truncated 'TRUST') is a marital
+# trust arrangement -> Trust; ' TR ' catches the county's clipped 'REV LIVING TR'.
+TRUST_TOKENS = ["TRUST", "TRUSTEE", "REVOCABLE", "LIVING TR", "FAMILY TR",
+                " TR ", "COMMUNITY PROPERTY"]
+BANK_TOKENS = [" BANK ", "MORTGAGE", "LENDER", "FEDERAL NATIONAL",
                "FANNIE MAE", "FREDDIE MAC", "FEDERAL HOME LOAN"]
 
 
@@ -136,6 +142,26 @@ if __name__ == "__main__":
         ("JONES LIVING TR", "Trust"),
         ("OPENDOOR PROPERTY TRUST I", "Trust"),   # known edge: trust token wins
         ("YAMASA CO., LTD", "Entity"),
+        # regression cases from the 2026-07-13 baseline reconciliation
+        ("HUDSON SFR PROPERTY HOLDINGS II LLC", "Entity"),
+        ("HUDSON TAYLOR & MADISON", "Individual"),
+        ("HUDSON FAMILY TRUST", "Trust"),
+        ("HUDMON STANTON CHARLES", "Individual"),
+        ("BANKS DANIEL & KRISTEN", "Individual"),
+        ("EUBANKS BRYSON NICHOLAS & HUNT MILLER", "Individual"),
+        ("FIRST HORIZON BANK", "Bank-Lender"),
+        ("SECRETARY OF VETERANS AFFAIRS", "Government"),
+        ("SECRETARY OF HOUSING AND URBAN DEVELOPME", "Government"),
+        ("LAIRD COMMUNITY PROPERTY TRUST", "Trust"),
+        ("BLUMENTHAL TENNESSEE COMMUNITY PROPERTY", "Trust"),
+        ("THOMAS JEFF & MARY FAMILY REV LIVING TR", "Trust"),
+        ("CRESPO FREDDIE O & KAREN A TRUSTEES", "Trust"),
+        ("TRACELAND FARM LP", "Entity"),
+        ("NASHBORO VILLAGE NINETEEN CONDOMINIUM ASSOCIATION", "Entity"),
+        ("NASHVILLE METRO HOLDINGS LLC", "Entity"),
+        ("DANG HAI & TRAN LOAN ANH", "Individual"),
+        ("FEDERAL HOME LOAN MORTGAGE CORP", "Bank-Lender"),
+        ("METROPOLITAN GOVERNMENT OF NASHVILLE", "Government"),
     ]
     ok = True
     for name, want in tests:
