@@ -56,6 +56,20 @@ EXPECTED = {   # July 6, 2026 snapshot — drift alarms, not gospel
     "deed_events_corporate": 199_158,  # M1 (23-token list) on U3
 }
 
+# Materialized U1 file of record (derive_canonical_framework.py on the
+# 2026-07-07 baseline; fixed canonical classifier). The +134 vs the county's
+# 205,933 is one-day snapshot drift; class deltas vs the funnel's published
+# split are classifier-choice residue (funnel used the 15-token list and a
+# looser bank test) — THESE are the authoritative local numbers.
+CANONICAL_U1 = {
+    "file": "Nashville_Framework_Homes_CANONICAL_2026-07-07.parquet",
+    "rows": 206_067,
+    "owner_split": {"Individual": 173_132, "Entity": 16_567, "Trust": 15_944,
+                    "Government": 377, "Bank-Lender": 47},
+    "landuse": {"SINGLE FAMILY": 156_644, "RESIDENTIAL CONDO": 36_936,
+                "DUPLEX": 7_068, "ZERO LOT LINE": 5_419},
+}
+
 # ---- Stage 3 / M1: ownership type -------------------------------------------
 # Canonical (Historical_Owners superset). The funnel's live query used a
 # 15-token subset; new cuts use this list. Tokens with spaces/dots are

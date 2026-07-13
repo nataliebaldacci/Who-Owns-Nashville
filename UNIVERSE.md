@@ -158,6 +158,16 @@ Derivation of the U1 file of record from the baseline:
 `derive_canonical_framework.py` → `Nashville_Framework_Homes_CANONICAL_*.parquet`
 (full clause + fixed-classifier `owner_type_canonical` column).
 
+**MATERIALIZED 2026-07-13.** `Nashville_Framework_Homes_CANONICAL_2026-07-07.parquet`:
+**206,067 rows** (county July-6 query 205,933; +134 = one-day snapshot drift).
+Land use: SF 156,644 · Res Condo 36,936 · Duplex 7,068 · Zero Lot Line 5,419.
+Owner split (fixed canonical classifier): Individual 173,132 · **Entity 16,567**
+· Trust 15,944 · Government 377 · Bank-Lender 47. Deltas vs the funnel's
+published split (172,407/16,769/16,188/408/161) are classifier residue — the
+funnel used the 15-token list and a looser bank test that counted BANKS-surname
+individuals. **The canonical parquet's numbers are authoritative for local
+work; regenerate the funnel page's split from it at the next site update.**
+
 ## Known legacy cuts to reconcile (pre-dating this spec)
 
 | Dataset / page | Cut it used | Issue |
