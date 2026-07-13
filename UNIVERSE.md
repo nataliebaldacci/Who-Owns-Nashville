@@ -168,6 +168,32 @@ funnel used the 15-token list and a looser bank test that counted BANKS-surname
 individuals. **The canonical parquet's numbers are authoritative for local
 work; regenerate the funnel page's split from it at the next site update.**
 
+## Master-audit ground truth (2026-07-13, live county query)
+
+The full project audit (10 parallel auditors over 98,375 files and 22 session
+transcripts) confirmed this spec and added ground-truth values:
+
+| Measure | Value |
+|---|---|
+| All Davidson parcels | 286,721 |
+| Framework universe | 205,933 |
+| **Dwelling units in framework** | **215,041** |
+| Non-owner-occupied | 42,631 |
+| Out-of-state | 11,929 |
+| Entity-owned (guarded regex) | **16,615** |
+
+Notes. The audit's guarded-regex entity count (16,615) sits between this spec's
+canonical-classifier count (16,567) and the funnel page's 15-token count
+(16,769); the three differ only in token lists and the same universe underlies
+all three. Site pages built on their own replayable pulls may show ±1–2
+drift (205,934 / 215,043 / 16,616 are the same measures at other pull dates);
+pages now document the drift rather than silently disagreeing. The audit also
+designates `holdings_data.js` (77 buckets, 8,923 parcels) as the canonical
+owner rollup for the live site, confirms `BTR_Current_vs_Pipeline.geojson`
+(3,494) as the canonical BTR footprint, and marks the securitized-parcel count
+as 1,833 (`SEC_Pipeline` Stage 5), with 4,194 explicitly NOT a securitized
+count (mislabeled portfolio column).
+
 ## Known legacy cuts to reconcile (pre-dating this spec)
 
 | Dataset / page | Cut it used | Issue |
