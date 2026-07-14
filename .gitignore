@@ -1,2 +1,6 @@
+.DS_Store
+*.bak
+*.bak_*
+*.chartjs_bak
 __pycache__/
 *.pyc
