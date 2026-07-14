@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>National SFR Securitized Homes by Owner — Who Finances Nashville</title>
+<title>National SFR Securitized Homes by Deal — Who Finances Nashville</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='5' fill='%231c458c'/%3E%3Ccircle cx='16' cy='16' r='7' fill='%23f0af1e'/%3E%3C/svg%3E"/>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
@@ -14,10 +14,14 @@
   .title-card{position:absolute;top:70px;left:50%;transform:translateX(-50%);background:rgba(255,255,255,0.94);padding:9px 18px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;text-align:center;max-width:90%}
   .title-card h1{margin:0;font-size:16px;font-weight:bold;color:#1a3a5c}
   .title-card p{margin:4px 0 0;font-size:12px;color:#555;font-style:italic}
-  .legend{position:absolute;bottom:26px;left:14px;background:rgba(255,255,255,0.95);padding:11px 15px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12.5px;max-width:300px}
+  .filter-row{margin-top:7px;display:flex;align-items:center;justify-content:center;gap:8px;font-family:'Montserrat',sans-serif}
+  .filter-row label{font-size:11px;font-weight:700;color:#1a3a5c;letter-spacing:0.5px}
+  #dealSelect{font-family:'EB Garamond','Garamond',serif;font-size:13px;padding:3px 6px;border:1px solid #9db3cc;border-radius:3px;background:#fff;color:#1a3a5c;max-width:340px}
+  .legend{position:absolute;bottom:26px;left:14px;background:rgba(255,255,255,0.95);padding:11px 15px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12.5px;max-width:300px;max-height:45vh;overflow-y:auto}
   .legend h3{margin:0 0 7px;font-size:13px;font-weight:bold;color:#1a3a5c}
   .legend-item{display:flex;align-items:center;margin:3px 0}
   .legend-swatch{width:13px;height:13px;border-radius:50%;margin-right:9px;border:1px solid #333;flex:none}
+  .legend .deal-meta{margin:6px 0 0;padding-top:6px;border-top:1px solid #d8e0ea;font-size:11.5px;color:#555;font-style:italic}
   .leaflet-popup-content{font-family:'EB Garamond','Garamond',serif;font-size:12px;max-width:360px}
   .leaflet-popup-content table td{padding:1px 5px;vertical-align:top;font-size:11.5px}
   .leaflet-popup-content table td:first-child{color:#666;font-style:italic;white-space:nowrap}
@@ -27,8 +31,9 @@
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">National SFR Securitized Homes</div></div>
 <div id="map"></div>
 <div class="title-card">
-  <h1>Securitized Single-Family Rental Homes, by Owner</h1>
-  <p>Homes pledged as collateral in institutional SFR securitizations, colored by parent brand. Nashville sits inside a national mortgage machine.</p>
+  <h1>Securitized Single-Family Rental Homes, by Deal</h1>
+  <p>Homes pledged as collateral in institutional SFR securitizations. Nashville sits inside a national mortgage machine.</p>
+  <div class="filter-row"><label for="dealSelect">FILTER BY DEAL</label><select id="dealSelect"><option value="__all__">All deals</option></select></div>
 </div>
 <div id="legend" class="legend"><h3>Parent brand</h3></div>
 <div id="status">Loading…</div>
@@ -40,29 +45,121 @@ const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attr
 const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
 L.control.layers({"CARTO Positron":positron,"OpenStreetMap":osm,"Aerial (Esri)":aerial},null,{position:'topright',collapsed:false}).addTo(map);
 function usd(v){v=Number(v);return isFinite(v)&&v>0?'$'+v.toLocaleString(undefined,{maximumFractionDigits:0}):'—';}
-fetch('National_SFR_Securitized_by_Owner.geojson').then(r=>r.json()).then(gj=>{
+
+// --- Deal normalization -------------------------------------------------
+// The register data identifies each securitization by its dedicated borrower
+// entity, but spellings vary (truncation at 35 chars, typos like "2041 1 IH"
+// for 2024-1, "LLLC", missing entity numbers). Collapse the variants into one
+// canonical deal label so the filter groups whole deals together.
+const PROG_AMOUNT_TO_NUM={76323696:19,763236992:19,763237000:19,342950000:24,342950016:24,426772000:23,632332000:20,632332032:20,789891000:7,789891008:7,789891:7,464787000:21,464787008:21,675330000:14,617587000:2,758308000:3,699695000:9,710294000:12,518967000:16,774310000:25,617548000:26,488360000:27};
+function dealFor(p){
+  const b=(p.borrower||'').toUpperCase().replace(/\s+/g,' ').trim();
+  const amt=Math.round(Number(p.amount)||0);
+  if(!b)return 'Unidentified borrower';
+  if(b.startsWith('AMH 2014 2'))return 'AMH 2014-SFR2';
+  if(b.startsWith('ALTO ASSET COMPANY 3'))return 'Alto Asset Company 3';
+  if(b.startsWith('ALTO ASSET COMPANY 5'))return 'Alto Asset Company 5';
+  if(b.startsWith('ALTO ASSET COMPANY'))return amt===498971000?'Alto Asset Company 5':'Alto Asset Company';
+  let m=b.match(/^BAF ASSETS (\d+)/);if(m)return 'BAF Assets '+m[1];
+  if(b.startsWith('ILE BLUEROCK'))return 'ILE Bluerock Program Portfolio';
+  if(b.startsWith('RESIDENTIAL HOME BUYER NASHVILLE'))return 'Residential Home Buyer Nashville';
+  m=b.match(/^FKH SFR PROPCO ([A-Z])/);if(m)return 'FKH SFR PropCo '+m[1];
+  m=b.match(/^PURCHASING FUND 2023 (\d)/);if(m)return 'Purchasing Fund 2023-'+m[1];
+  if(b.includes('IH BORROWER')){
+    if(b.startsWith('2017'))return 'IH 2017-1';
+    if(b.startsWith('2018'))return 'IH 2018-4';
+    return 'IH 2024-1'; // covers "2024 1", "2024-1", "20241" and the "2041 1" typo (all $891.9M / GACC)
+  }
+  if(b.startsWith('FYR SFR'))return 'FYR SFR Borrower';
+  if(b.startsWith('HOME SFR BORROWER IV'))return 'Home SFR Borrower IV';
+  if(b.startsWith('HOME SFR BORROWER'))return 'Home SFR Borrower';
+  if(b.startsWith('OLYMPUS BORROWER'))return 'Olympus Borrower 1';
+  m=b.match(/^PR BORROWER (\d+)/);if(m)return 'Progress Borrower '+m[1];
+  m=b.match(/^PROGRESS RESID?ENTIAL? ?BORROWER (\d+)/);if(m)return 'Progress Borrower '+parseInt(m[1],10);
+  if(b.startsWith('PROGRESS RES')){
+    const n=PROG_AMOUNT_TO_NUM[amt];
+    if(n)return 'Progress Borrower '+n;
+    if((p.date||'')==='2022-09-29')return 'Progress Borrower 23';
+    return 'Progress Residential (deal unmatched)';
+  }
+  if(b.startsWith('TRUE NORTH'))return b.includes(' C')?'True North Property Owner C':'True North Property Owner B';
+  if(b.startsWith('NEW RESIDENTIAL BORROWER 2022')){
+    if(b.endsWith('SFR1'))return 'New Residential 2022-SFR1';
+    if(b.endsWith('SFR2'))return 'New Residential 2022-SFR2';
+    return amt===267752000?'New Residential 2022-SFR1':'New Residential 2022-SFR2';
+  }
+  m=b.match(/^STAR BORROWER SFR(\d)/);if(m)return 'Starwood SFR'+m[1];
+  m=b.match(/^HPA II BORROWER (\d{4}) (\d)/);if(m)return 'HPA II '+m[1]+'-'+m[2];
+  if(b.startsWith('SFR II BORROWER 20'))return 'Tricon SFR II 2021-3'; // "2020 3" rows carry 2021-3's $902.2M loan
+  if(b.startsWith('SFR BORROWER 2021 2'))return 'Tricon SFR 2021-2';
+  if(b.startsWith('SFR BORROWER 2022'))return 'Tricon SFR 2022-1';
+  if(b.startsWith('SFR JV-2 2024-2'))return 'Tricon SFR JV-2 2024-2';
+  if(b.startsWith('SFR JV-HD 2024-1'))return 'Tricon SFR JV-HD 2024-1';
+  m=b.match(/^TRICON SFR (\d{4})[ -](\d)/);if(m)return 'Tricon SFR '+m[1]+'-'+m[2];
+  if(b.startsWith('TRICON SFR BORROWER'))return 'Tricon SFR 2024-3'; // same $550.5M / BofA loan, 2024-08-08
+  if(b.startsWith('VINEBROOK'))return 'VineBrook Homes Borrower 1';
+  return b.charAt(0)+b.slice(1).toLowerCase();
+}
+// ------------------------------------------------------------------------
+
+let allFeatures=[],layer=null,total=0;
+const statusEl=document.getElementById('status'),legendEl=document.getElementById('legend'),selectEl=document.getElementById('dealSelect');
+
+function buildPopup(p){
+  return `<table>
+    <tr><td>Property</td><td><strong>${p.address||''}</strong><br>${p.city||''}, ${p.state||''} ${p.zip||''}</td></tr>
+    <tr><td>Deal</td><td><strong>${p._deal||''}</strong></td></tr>
+    <tr><td>Owner</td><td>${p.parent_brand||''}</td></tr>
+    <tr><td>Borrower</td><td>${p.borrower||''}</td></tr>
+    <tr><td>Lender</td><td>${p.lender||''}</td></tr>
+    <tr><td>Loan type</td><td>${p.loan_type||''}</td></tr>
+    <tr><td>Loan date</td><td>${p.date||''}</td></tr>
+    <tr><td>Loan amount</td><td>${usd(p.amount)}</td></tr>
+    <tr><td>Parcel</td><td>${p.parcelid||''}</td></tr>
+  </table>`;
+}
+
+function render(dealKey){
+  if(layer){map.removeLayer(layer);layer=null;}
+  const feats=dealKey==='__all__'?allFeatures:allFeatures.filter(f=>f.properties._deal===dealKey);
   const counts={},cols={};
-  const layer=L.geoJSON(gj,{
+  layer=L.geoJSON({type:'FeatureCollection',features:feats},{
     pointToLayer:(f,ll)=>{const b=f.properties.parent_brand||'Other';const c=f.properties.color||'#888';counts[b]=(counts[b]||0)+1;cols[b]=c;
-      return L.circleMarker(ll,{radius:3,fillColor:c,color:'#222',weight:0.3,opacity:0.9,fillOpacity:0.75});},
-    onEachFeature:(f,lyr)=>{const p=f.properties;
-      lyr.bindPopup(`<table>
-        <tr><td>Property</td><td><strong>${p.address||''}</strong><br>${p.city||''}, ${p.state||''} ${p.zip||''}</td></tr>
-        <tr><td>Owner</td><td><strong>${p.parent_brand||''}</strong></td></tr>
-        <tr><td>Borrower</td><td>${p.borrower||''}</td></tr>
-        <tr><td>Lender</td><td>${p.lender||''}</td></tr>
-        <tr><td>Loan type</td><td>${p.loan_type||''}</td></tr>
-        <tr><td>Loan date</td><td>${p.date||''}</td></tr>
-        <tr><td>Loan amount</td><td>${usd(p.amount)}</td></tr>
-        <tr><td>Parcel</td><td>${p.parcelid||''}</td></tr>
-      </table>`,{maxWidth:360});}
+      return L.circleMarker(ll,{radius:dealKey==='__all__'?3:4,fillColor:c,color:'#222',weight:0.3,opacity:0.9,fillOpacity:dealKey==='__all__'?0.75:0.9});},
+    onEachFeature:(f,lyr)=>{lyr.bindPopup(buildPopup(f.properties),{maxWidth:360});}
   }).addTo(map);
   try{map.fitBounds(layer.getBounds(),{padding:[30,30]});}catch(e){}
-  const lg=document.getElementById('legend');
+  legendEl.innerHTML='<h3>Parent brand</h3>';
   Object.entries(counts).sort((a,b)=>b[1]-a[1]).forEach(([n,c])=>{
     const row=document.createElement('div');row.className='legend-item';
-    row.innerHTML=`<span class="legend-swatch" style="background:${cols[n]}"></span><span><strong>${c.toLocaleString()}</strong> ${n}</span>`;lg.appendChild(row);});
-  document.getElementById('status').textContent=gj.features.length.toLocaleString()+' securitized homes';
-}).catch(e=>{document.getElementById('status').textContent='Error loading data';});
+    row.innerHTML=`<span class="legend-swatch" style="background:${cols[n]}"></span><span><strong>${c.toLocaleString()}</strong> ${n}</span>`;legendEl.appendChild(row);});
+  if(dealKey!=='__all__'&&feats.length){
+    const p=feats.find(f=>Number(f.properties.amount)>0&&f.properties.lender)?.properties||feats[0].properties;
+    const meta=document.createElement('div');meta.className='deal-meta';
+    meta.innerHTML=`<strong>${dealKey}</strong><br>Lender: ${p.lender||'—'}<br>Loan: ${usd(p.amount)}${p.date&&p.date!=='01/01/1899'?'<br>Recorded: '+p.date:''}`;
+    legendEl.appendChild(meta);
+  }
+  statusEl.textContent=dealKey==='__all__'
+    ?total.toLocaleString()+' securitized homes • '+new Set(allFeatures.map(f=>f.properties._deal)).size+' deals'
+    :feats.length.toLocaleString()+' of '+total.toLocaleString()+' homes • '+dealKey;
+}
+
+fetch('National_SFR_Securitized_by_Owner.geojson').then(r=>r.json()).then(gj=>{
+  allFeatures=gj.features;total=allFeatures.length;
+  const byBrand={};
+  allFeatures.forEach(f=>{
+    const p=f.properties;p._deal=dealFor(p);
+    const brand=p.parent_brand||'Other';
+    (byBrand[brand]=byBrand[brand]||{})[p._deal]=(byBrand[brand][p._deal]||0)+1;
+  });
+  Object.keys(byBrand).sort().forEach(brand=>{
+    const og=document.createElement('optgroup');og.label=brand;
+    Object.entries(byBrand[brand]).sort((a,b)=>b[1]-a[1]).forEach(([deal,c])=>{
+      const o=document.createElement('option');o.value=deal;o.textContent=`${deal} (${c.toLocaleString()})`;og.appendChild(o);});
+    selectEl.appendChild(og);
+  });
+  selectEl.addEventListener('change',()=>render(selectEl.value));
+  render('__all__');
+}).catch(e=>{statusEl.textContent='Error loading data';});
 </script>
 </body></html>
