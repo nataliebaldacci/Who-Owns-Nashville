@@ -46,6 +46,48 @@ const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/W
 L.control.layers({"CARTO Positron":positron,"OpenStreetMap":osm,"Aerial (Esri)":aerial},null,{position:'topright',collapsed:false}).addTo(map);
 function usd(v){v=Number(v);return isFinite(v)&&v>0?'$'+v.toLocaleString(undefined,{maximumFractionDigits:0}):'—';}
 
+// --- SEC document links per deal -----------------------------------------
+// Direct ABS-15G filing folders where the deal maps unambiguously to the
+// EDGAR index (EDGAR_SFR_Securitizations_Index.csv); every deal also gets a
+// targeted EDGAR full-text search on its borrower entity.
+const DEAL_SEC={
+ 'Tricon SFR 2022-1':['ABS-15G filing','https://www.sec.gov/Archives/edgar/data/1909233/000090514822000298/'],
+ 'Tricon SFR 2023-2':['ABS-15G filing','https://www.sec.gov/Archives/edgar/data/1997329/000153949723001846/'],
+ 'Tricon SFR 2025-1':['ABS-15G filing','https://www.sec.gov/Archives/edgar/data/2053466/000153949725000443/'],
+ 'Starwood SFR6':['ABS-15G filing','https://www.sec.gov/Archives/edgar/data/2071723/000153949725001794/'],
+ 'True North Property Owner B':['ABS-15G filing (PROG 2022-SFR2)','https://www.sec.gov/Archives/edgar/data/1865478/000153949722000552/'],
+ 'True North Property Owner C':['ABS-15G filing (PROG 2023-SFR2)','https://www.sec.gov/Archives/edgar/data/1865478/000153949723001571/'],
+ 'Olympus Borrower 1':['ABS-15G filing (PROG 2021-SFR11)','https://www.sec.gov/Archives/edgar/data/1896015/000153949721002034/'],
+ 'New Residential 2022-SFR2':['ABS-15G filing (NRMLT 2022-SFR2)','https://www.sec.gov/Archives/edgar/data/1924098/000153949722001288/'],
+ 'FKH SFR PropCo G':['FKH depositor ABS-15G list','https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001818422&type=ABS-15G&dateb=&owner=include&count=40'],
+ 'FKH SFR PropCo H':['FKH depositor ABS-15G list','https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001818422&type=ABS-15G&dateb=&owner=include&count=40'],
+ 'FKH SFR PropCo I':['FKH depositor ABS-15G list','https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001818422&type=ABS-15G&dateb=&owner=include&count=40'],
+ 'FKH SFR PropCo J':['FKH depositor ABS-15G list','https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=0001818422&type=ABS-15G&dateb=&owner=include&count=40']
+};
+// search-query overrides where the display label differs from the entity name in filings
+const SEC_QUERY={
+ 'IH 2017-1':'2017-1 IH Borrower','IH 2018-4':'2018-4 IH Borrower','IH 2024-1':'2024-1 IH Borrower',
+ 'AMH 2014-SFR2':'AMH 2014-SFR2','Starwood SFR4':'STAR Borrower SFR4','Starwood SFR5':'STAR Borrower SFR5','Starwood SFR6':'STAR 2025-SFR6',
+ 'Tricon SFR II 2021-3':'SFR II Borrower 2021-3','Tricon SFR 2021-2':'SFR Borrower 2021-2','Tricon SFR 2022-1':'SFR Borrower 2022-1',
+ 'Home SFR Borrower':'Home SFR Borrower','Home SFR Borrower IV':'Home SFR Borrower IV',
+ 'Progress Residential (deal unmatched)':'Progress Residential Borrower',
+ 'VineBrook Homes Borrower 1':'VineBrook Homes Borrower'
+};
+function secQuery(deal){
+ if(SEC_QUERY[deal])return SEC_QUERY[deal];
+ const m=/^Progress Borrower (\d+)$/.exec(deal);
+ if(m)return 'Progress Residential Borrower '+m[1];
+ return deal;
+}
+function secLinksHTML(deal){
+ const out=[];
+ const d=DEAL_SEC[deal];
+ if(d)out.push('<a target="_blank" href="'+d[1]+'">'+d[0]+'</a>');
+ out.push('<a target="_blank" href="https://www.sec.gov/edgar/search/#/q=%22'+encodeURIComponent(secQuery(deal))+'%22">Search EDGAR</a>');
+ return out.join(' · ');
+}
+// --------------------------------------------------------------------------
+
 // --- Deal normalization -------------------------------------------------
 // The register data identifies each securitization by its dedicated borrower
 // entity, but spellings vary (truncation at 35 chars, typos like "2041 1 IH"
@@ -116,6 +158,7 @@ function buildPopup(p){
     <tr><td>Loan date</td><td>${p.date||''}</td></tr>
     <tr><td>Loan amount</td><td>${usd(p.amount)}</td></tr>
     <tr><td>Parcel</td><td>${p.parcelid||''}</td></tr>
+    <tr><td>SEC docs</td><td>${secLinksHTML(p._deal)}</td></tr>
   </table>`;
 }
 
@@ -136,7 +179,7 @@ function render(dealKey){
   if(dealKey!=='__all__'&&feats.length){
     const p=feats.find(f=>Number(f.properties.amount)>0&&f.properties.lender)?.properties||feats[0].properties;
     const meta=document.createElement('div');meta.className='deal-meta';
-    meta.innerHTML=`<strong>${dealKey}</strong><br>Lender: ${p.lender||'—'}<br>Loan: ${usd(p.amount)}${p.date&&p.date!=='01/01/1899'?'<br>Recorded: '+p.date:''}`;
+    meta.innerHTML=`<strong>${dealKey}</strong><br>Lender: ${p.lender||'—'}<br>Loan: ${usd(p.amount)}${p.date&&p.date!=='01/01/1899'?'<br>Recorded: '+p.date:''}<br>SEC docs: ${secLinksHTML(dealKey)}`;
     legendEl.appendChild(meta);
   }
   statusEl.textContent=dealKey==='__all__'
