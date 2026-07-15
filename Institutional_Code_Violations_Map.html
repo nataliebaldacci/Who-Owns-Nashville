@@ -5,6 +5,9 @@
 html,body{height:100%;margin:0;font-family:Garamond,Georgia,serif;background:#fff}
 #wrap{display:flex;flex-direction:column;min-height:100%}
 #maphead{text-align:center;padding:10px 8px 4px}#maphead h1{font-size:18px;margin:0}#maphead p{font-size:12px;margin:2px 0 0;color:#444;max-width:820px;margin-left:auto;margin-right:auto}
+.pp-case{display:block;margin-top:7px;background:#d7263d;color:#fff!important;text-align:center;padding:8px 8px;border-radius:5px;font-weight:800;text-decoration:none;font-size:12.5px;box-shadow:0 1px 4px rgba(0,0,0,.28)}.pp-case:hover{background:#a80f26}
+.pp-case small{display:block;font-weight:700;font-size:8.5px;letter-spacing:1.3px;opacity:.85;margin-bottom:2px}
+.pp-tk{font-size:11.5px;margin-top:5px}.pp-tk a{color:#1c458c}
 #mapbox{position:relative;height:62vh}#map{position:absolute;inset:0}#chart{height:360px;border-top:1px solid #ddd;width:100%}
 .legend{position:absolute;bottom:22px;right:10px;z-index:1000;background:rgba(255,255,255,.92);font-size:12px;padding:8px 10px;border-radius:6px;box-shadow:0 1px 4px rgba(0,0,0,.3)}
 .legend i{width:11px;height:11px;display:inline-block;margin-right:6px;border-radius:50%;opacity:.85}
@@ -24,11 +27,11 @@ var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r
 var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap'});
 var aer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri'});
 L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aer},null,{position:'topright',collapsed:false}).addTo(map);
-fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){L.geoJSON(g,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);}).catch(()=>{});
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){L.geoJSON(g,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'}}).addTo(map);}).catch(()=>{});
 var grp=L.featureGroup().addTo(map);
 function esc(s){return (s||'').replace(/[&<>]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];});}
 PTS.forEach(function(p){
- var pop='<div class="pp"><span class="op" style="color:'+(PAL[p.op]||'#333')+'">'+esc(p.op)+'</span><br><b>'+esc(p.addr)+'</b><br><span class="d">'+esc(p.date)+(p.stat?' · '+esc(p.stat):'')+'</span><br>'+esc(p.prob)+'</div>';
+ var pop='<div class="pp"><span class="op" style="color:'+(PAL[p.op]||'#333')+'">'+esc(p.op)+'</span><br><b>'+esc(p.addr)+'</b><br><span class="d">'+esc(p.date)+(p.stat?' · '+esc(p.stat):'')+'</span><br>'+esc(p.prob)+'<a class="pp-case" target="_blank" href="https://epermits.nashville.gov/#/search?searchType=permit&searchCode=ADDR&searchText='+encodeURIComponent(p.addr)+'"><small>VIOLATION RECORDS</small>Search Codes cases at '+esc(p.addr)+' →</a>'+'<div class="pp-tk"><a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+p.lat+','+p.lon+'">Street View</a></div></div>';
  L.circleMarker([+p.lat,+p.lon],{radius:4,fillOpacity:.8,opacity:1,weight:.5,color:'#333',fillColor:PAL[p.op]||'#888'}).bindPopup(pop,{maxWidth:300}).addTo(grp);});
 if(PTS.length)map.fitBounds(grp.getBounds().pad(.05));setTimeout(()=>map.invalidateSize(),400);
 document.getElementById('legend').innerHTML='<b>Operator</b><br>'+Object.keys(PAL).map(k=>'<i style="background:'+PAL[k]+'"></i>'+k).join('<br>');
