@@ -51,30 +51,40 @@
  </div>
  <div class="lab">Show</div>
  <div class="chips" id="modeChips">
-  <span class="chip on" data-v="count">Counts</span><span class="chip" data-v="share">Share of homes</span>
+  <span class="chip" data-v="count">Counts</span><span class="chip on" data-v="share">% of baseline</span>
  </div>
- <div class="note">Owner types, occupancy, and absentee status come from the canonical framework file (206,065 single-family, condo, duplex, and zero-lot-line homes, resolved parcel by parcel). Tract and block-group popups add ACS 2020&ndash;2024 single-family renter share. Subdivisions shown only where 25+ framework homes fall inside.</div>
+ <div class="lab">Basemap</div>
+ <div class="chips" id="baseChips">
+  <span class="chip on" data-v="dark">Dark</span><span class="chip" data-v="light">Light</span>
+ </div>
+ <div class="note">Every metric is shown against the framework baseline: all parcels with DUCount 1&ndash;2 and land use Single Family, Residential Condo, Duplex, or Zero Lot Line &mdash; 206,065 homes, resolved parcel by parcel in the canonical framework file. Owner types, occupancy, and absentee status come from the same file. Tract and block-group popups add ACS 2020&ndash;2024 single-family renter share. Subdivisions shown only where 25+ framework homes fall inside.</div>
 </div>
 <div class="panel" id="legend"></div>
 <div class="panel" id="stats"></div>
 <script>
 var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var darkBase=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var lightBase=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19});
+var countyLine=null;
 fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){
  var feat=(g.features||[]).find(f=>f.properties&&f.properties.OBJECTID===4)||g.features[0];if(!feat)return;
- L.geoJSON(feat,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+ countyLine=L.geoJSON(feat,{style:{color:'#ffffff',weight:2.5,fillOpacity:0},interactive:false}).addTo(map);
 }).catch(function(){});
 
-var GEO='tract',MET='corp',MODE='count',D=null,layer=null;
+var GEO='tract',MET='corp',MODE='share',D=null,layer=null,BASE='dark';
 var METL={corp:'Corporate-owned homes',trust:'Trust-owned homes',noo:'Non-owner-occupied homes',oos:'Out-of-state-owned homes',n:'Framework homes'};
-var RAMP=['#fdeaec','#f7b8bf','#ee7f8b','#df4257','#b31230','#7a0010'];
+var RAMP=['#0d0887','#7e03a8','#cc4778','#f89441','#f0f921'];   // Plasma 5-class, per the Atlanta tract map
 function val(f){return MODE==='share'&&MET!=='n'?(f.n?100*f[MET]/f.n:0):f[MET];}
 function breaks(vals){
  var s=vals.slice().sort(function(a,b){return a-b;});
- return [1,2,3,4,5].map(function(k){return s[Math.floor(s.length*k/6)]||0;});
+ var q=[1,2,3,4].map(function(k){return s[Math.floor(s.length*k/5)]||0;});
+ if(MODE==='share'&&MET!=='n')q=q.map(function(v){return Math.round(v);});   // rounded % classes like the reference
+ // de-duplicate ascending
+ for(var i=1;i<q.length;i++)if(q[i]<=q[i-1])q[i]=q[i-1]+(MODE==='share'?1:1);
+ return q;
 }
 var BR=[];
-function colorOf(v){for(var i=0;i<BR.length;i++)if(v<=BR[i])return RAMP[i];return RAMP[5];}
+function colorOf(v){for(var i=0;i<BR.length;i++)if(v<=BR[i])return RAMP[i];return RAMP[4];}
 function fmt(v){return MODE==='share'&&MET!=='n'?v.toFixed(1)+'%':Math.round(v).toLocaleString();}
 
 fetch('owner_counts_geo.json').then(r=>r.json()).then(function(j){D=j;render();});
@@ -86,12 +96,15 @@ function render(){
  layer=L.geoJSON({type:'FeatureCollection',features:feats.map(function(f){
    return {type:'Feature',properties:f,geometry:f.geom};})},{
   style:function(ft){var f=ft.properties;
-   return {color:'#7a8794',weight:GEO==='subdivision'?0.4:0.8,fillColor:colorOf(val(f)),fillOpacity:0.72};},
+   return {color:BASE==='dark'?'#ffffff':'#7a8794',opacity:BASE==='dark'?0.55:1,
+           weight:GEO==='subdivision'?0.4:0.9,fillColor:colorOf(val(f)),fillOpacity:0.82};},
   onEachFeature:function(ft,lyr){
    var f=ft.properties;
-   lyr.bindTooltip('<b>'+f.name+'</b><br>'+METL[MET]+': '+fmt(val(f)),{sticky:true});
+   var tip='<b>'+f.name+'</b><br>'+METL[MET]+': '+(MET==='n'?f.n.toLocaleString()
+     :(f[MET].toLocaleString()+' of '+f.n.toLocaleString()+' baseline homes ('+(f.n?(100*f[MET]/f.n).toFixed(1):0)+'%)'));
+   lyr.bindTooltip(tip,{sticky:true});
    var g='<div class="lp"><b>'+f.name+'</b><div class="g">'
-    +'<span>Framework homes</span><span>'+f.n.toLocaleString()+'</span>'
+    +'<span>Baseline homes</span><span>'+f.n.toLocaleString()+'</span>'
     +'<span>Corporate</span><span>'+f.corp.toLocaleString()+' ('+(f.n?(100*f.corp/f.n).toFixed(1):0)+'%)</span>'
     +'<span>Trust</span><span>'+f.trust.toLocaleString()+' ('+(f.n?(100*f.trust/f.n).toFixed(1):0)+'%)</span>'
     +'<span>Non-owner-occ.</span><span>'+f.noo.toLocaleString()+' ('+(f.n?(100*f.noo/f.n).toFixed(1):0)+'%)</span>'
@@ -102,7 +115,9 @@ function render(){
   }}).addTo(map);
  // legend
  var lg=document.getElementById('legend');
- var rows='<div style="font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin-bottom:4px">'+METL[MET]+(MODE==='share'&&MET!=='n'?' (%)':'')+'</div>';
+ var gname={tract:'Census Tract',bg:'Block Group',community:'Community',council:'Council District',subdivision:'Subdivision'}[GEO];
+ var rows='<div style="font-weight:800;font-size:11px;color:#20303f;margin-bottom:4px">'+(MODE==='share'&&MET!=='n'?('Percent by '+gname):METL[MET])+'</div>'
+  +'<div style="font-size:9.5px;color:#8a94a0;margin-bottom:5px">'+METL[MET]+(MODE==='share'&&MET!=='n'?' / baseline homes':'')+'</div>';
  var prev=0;
  for(var i=0;i<RAMP.length;i++){
   var hi=i<BR.length?BR[i]:null;
@@ -114,7 +129,7 @@ function render(){
  var tot=feats.reduce(function(s,f){return s+f.n;},0),mv=feats.reduce(function(s,f){return s+(MET==='n'?0:f[MET]);},0);
  document.getElementById('stats').innerHTML=[
   [feats.length.toLocaleString(),'Areas'],[tot.toLocaleString(),'Homes'],
-  MET!=='n'?[mv.toLocaleString(),METL[MET]]:null,
+  MET!=='n'?[mv.toLocaleString()+' of '+tot.toLocaleString(),METL[MET]]:null,
   MET!=='n'?[(tot?(100*mv/tot).toFixed(1):0)+'%','Countywide share']:null]
   .filter(Boolean).map(function(t){return '<div class="tile"><div class="v">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>';}).join('');
 }
@@ -125,4 +140,7 @@ function chipRow(sel,fn){document.querySelectorAll(sel+' .chip').forEach(functio
 chipRow('#geoChips',function(v){GEO=v;});
 chipRow('#metChips',function(v){MET=v;});
 chipRow('#modeChips',function(v){MODE=v;});
+chipRow('#baseChips',function(v){BASE=v;
+ if(v==='dark'){map.removeLayer(lightBase);darkBase.addTo(map);if(countyLine)countyLine.setStyle({color:'#ffffff'});}
+ else{map.removeLayer(darkBase);lightBase.addTo(map);if(countyLine)countyLine.setStyle({color:'#1a3a5c'});}});
 </script></body></html>
