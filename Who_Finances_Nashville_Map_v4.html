@@ -119,6 +119,7 @@
  details.hx summary::-webkit-details-marker{display:none}
  details.hx summary:before{content:"\25B8 ";color:#8a94a0}
  details.hx[open] summary:before{content:"\25BE "}
+ details.hx.dealx summary{color:#d7263d;text-transform:uppercase;letter-spacing:.6px;font-size:9.5px;font-weight:800}
  details.hx table{width:100%;border-collapse:collapse;font-size:10.5px;margin-top:3px}
  details.hx th{font-family:'Montserrat',sans-serif;font-size:8px;text-transform:uppercase;color:#8a94a0;text-align:left;border-bottom:1px solid #d8dee7;padding:2px 4px 2px 0}
  details.hx td{padding:2px 4px 2px 0;border-bottom:1px solid #f2f4f7;vertical-align:top}
@@ -227,14 +228,28 @@ fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
 }).catch(function(){});
 
 // ---------- ParcelHistory: lazy per-parcel history, fetched on open ----------
+// Metro ArcGIS sends no CORS headers, so fetch() dies in the browser; JSONP works.
 var PH='https://maps.nashville.gov/arcgis2/rest/services/Parcels/ParcelHistory/MapServer/';
+var _phSeq=0;
+function phJsonp(url){
+ return new Promise(function(res,rej){
+  var cb='__ph'+(++_phSeq);
+  var s=document.createElement('script');
+  var t=setTimeout(function(){cleanup();rej(new Error('Metro GIS did not respond'));},15000);
+  function cleanup(){clearTimeout(t);delete window[cb];if(s.parentNode)s.parentNode.removeChild(s);}
+  window[cb]=function(d){cleanup();res(d);};
+  s.onerror=function(){cleanup();rej(new Error('Metro GIS unreachable'));};
+  s.src=url+'&callback='+cb;
+  document.head.appendChild(s);
+ });
+}
 function phQuery(layer,keyField,val){
- return fetch(PH+layer+'/query?where='+encodeURIComponent(keyField+"='"+val+"'")+'&outFields=*&returnGeometry=false&f=json')
-  .then(function(r){return r.json();}).then(function(j){return (j.features||[]).map(function(f){return f.attributes;});});
+ return phJsonp(PH+layer+'/query?where='+encodeURIComponent(keyField+"='"+val+"'")+'&outFields=*&returnGeometry=false&f=json')
+  .then(function(j){return (j.features||[]).map(function(f){return f.attributes;});});
 }
 function phQueryNum(layer,keyField,val){
- return fetch(PH+layer+'/query?where='+encodeURIComponent(keyField+'='+val)+'&outFields=*&returnGeometry=false&f=json')
-  .then(function(r){return r.json();}).then(function(j){return (j.features||[]).map(function(f){return f.attributes;});});
+ return phJsonp(PH+layer+'/query?where='+encodeURIComponent(keyField+'='+val)+'&outFields=*&returnGeometry=false&f=json')
+  .then(function(j){return (j.features||[]).map(function(f){return f.attributes;});});
 }
 function dstr(ms){if(ms==null||ms==='')return '';var d=new Date(+ms);return isNaN(d)?String(ms):(d.getUTCMonth()+1)+'/'+d.getUTCDate()+'/'+d.getUTCFullYear();}
 function instLink(inst){var d=String(inst||'').replace(/\D/g,'');
@@ -248,7 +263,7 @@ function tbl(head,rows){
 function wireHistory(el,p){
  el.querySelectorAll('details.hx').forEach(function(d){
   d.addEventListener('toggle',function(){
-   if(!d.open||d.dataset.loaded)return;
+   if(!d.open||d.dataset.loaded||!d.dataset.kind)return;
    d.dataset.loaded='1';
    var body=d.querySelector('.hxbody');body.innerHTML='<div style="color:#8a94a0;font-size:11px">Loading&hellip;</div>';
    var kind=d.dataset.kind,pid=p.pid,apn=p.apn;
@@ -281,7 +296,9 @@ function wireHistory(el,p){
               dstr(a.DATE_ISSUED),a.CONSTVAL?money(a.CONSTVAL):'',esc((a.SCOPE||'').slice(0,40))];}));});
    else job=Promise.resolve('');
    job.then(function(html){body.innerHTML=html;})
-      .catch(function(e){body.innerHTML='<div style="color:#c0392b;font-size:11px">Could not load: '+esc(e.message||e)+'</div>';});
+      .catch(function(e){delete d.dataset.loaded; // allow a retry on next open
+       body.innerHTML='<div style="color:#c0392b;font-size:11px">Could not load ('+esc(e.message||e)+'). '
+        +(p.apn?'<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+esc(String(p.apn))+'">Open in Parcel Viewer</a>':'')+'</div>';});
   });
  });
 }
@@ -343,7 +360,8 @@ function popup(p){
    +'<span>Date acquired</span><b>'+na(p.cacq)+'</b>'
    +'<span>Purchase price</span><b>'+money(p.cprice)+'</b>'
    +'</div>';
- h+='<div class="sect deal">As of the securitization ('+na(p.acq)+')</div><div class="g">'
+ // collapsed by default — the popup runs long with both records open
+ h+='<details class="hx dealx"><summary>As of the securitization ('+na(p.acq)+')</summary><div class="g" style="margin-top:4px">'
    +'<span>Owner as of deal</span><b>'+na(p.d_owner||p.own)+'</b>'
    +'<span>Year purchased</span><b>'+na(p.d_year||p.acq)+'</b>'
    +'<span>Purchase price</span><b>'+money(ALLOC[String(p.pid)])+'</b>'
@@ -352,7 +370,7 @@ function popup(p){
    +'<span>Zoning at deal</span><b>'+na(p.d_zone||p.czone)+'</b>'
    +'<span>Class at deal</span><b>'+na(p.d_class||p['class'])+'</b>'
    +'<span>Property type</span><b>'+(p.d_type?titlecase(p.d_type):structLabel(p))+'</b>'
-   +'</div>';
+   +'</div></details>';
  // full link toolkit (no keyed/third-party-credential links on the public page)
  h+='<div class="links">'+linkKit(p.apn,p.pid,p.acct,p.lat,p.lon,dig)+'</div>';
  // history dropdowns, loaded on demand from the ParcelHistory service
