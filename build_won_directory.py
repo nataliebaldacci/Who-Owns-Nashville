@@ -83,7 +83,7 @@ ag=collections.defaultdict(lambda:{'kind':'','owners':set()})
 sos=pd.read_excel(BASE+'TNSOS_Resolved_STEMS_20260714.xlsx')
 for _,r in sos.iterrows():
     nm=clean_name(r.get('registered_agent_name'))
-    if not nm: continue
+    if not nm or nm in ('NAN','NONE','NULL') or len(nm)<4: continue
     gid=name2group.get(clean_name(r['input_owner']))
     if gid is None: continue
     ag[nm]['kind']='SOS registered agent'; ag[nm]['owners'].add(int(gid))

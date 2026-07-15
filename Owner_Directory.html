@@ -1,0 +1,185 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Owner Directory — Who Owns Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{margin:0;height:100%;font-family:'EB Garamond',Garamond,serif;background:#f4f6f9;color:#20303f}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ #wrap{max-width:1180px;margin:0 auto;padding:16px 14px 60px}
+ #tiles{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+ .tile{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:10px 18px;text-align:center;flex:1;min-width:120px}
+ .tile .v{font-family:'Montserrat',sans-serif;font-size:20px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums}
+ .tile .l{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin-top:2px}
+ #tabs{display:flex;gap:6px;margin-bottom:10px}
+ .tab{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:8px 18px;border-radius:8px;cursor:pointer}
+ .tab.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ #controls{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;align-items:center}
+ #q{flex:1;min-width:240px;font-family:'EB Garamond',serif;font-size:15px;padding:9px 12px;border:1px solid #cdd6e3;border-radius:8px}
+ .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:5px 11px;border-radius:15px;cursor:pointer}
+ .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ #list{background:#fff;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.12);overflow:hidden}
+ .row{display:flex;align-items:baseline;gap:10px;padding:9px 14px;border-bottom:1px solid #eef0f3;cursor:pointer}
+ .row:hover{background:#f2f6fc}
+ .row .nm{font-family:'Montserrat',sans-serif;font-weight:700;font-size:13.5px;color:#20303f;flex:1;min-width:0}
+ .row .nm small{display:block;font-family:'EB Garamond',serif;font-size:12px;color:#8a94a0;font-weight:400}
+ .row .ct{font-family:'Montserrat',sans-serif;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;white-space:nowrap}
+ .badge{font-family:'Montserrat',sans-serif;font-weight:800;font-size:9px;padding:2px 8px;border-radius:9px;letter-spacing:.4px;white-space:nowrap}
+ .b-CONFIRMED{background:#e3f4ec;color:#1e7a48}.b-EXTENDS{background:#fdf1d8;color:#8a6100}
+ .b-CONFLICT{background:#fdeef0;color:#d7263d}.b-UNLABELED{background:#eef1f6;color:#8a94a0}
+ .b-HUB{background:#fdeef0;color:#d7263d}
+ .b-parent{background:#eaf2ff;color:#1c458c}
+ #more{display:block;width:100%;font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;background:#eef1f6;color:#1c458c;border:0;padding:10px;cursor:pointer}
+ /* detail card */
+ #detail{background:#fff;border-radius:10px;box-shadow:0 2px 10px rgba(0,0,0,.15);padding:18px 22px;margin-bottom:12px;display:none}
+ #detail h2{font-family:'Montserrat',sans-serif;font-size:21px;margin:0 0 2px;color:#1a3a5c;letter-spacing:-.3px}
+ #detail .sub{font-size:13px;color:#66707c;margin-bottom:8px}
+ #detail .sect{font-family:'Montserrat',sans-serif;font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:#1c458c;margin:12px 0 5px;border-top:1px solid #e9ecf1;padding-top:9px}
+ #detail .aka span{display:inline-block;background:#f2f6fc;border:1px solid #dbe6f5;border-radius:5px;padding:2px 8px;margin:2px 3px 2px 0;font-size:12.5px}
+ #detail .addr a,#detail .ownlink{display:block;padding:3px 0;font-size:13px;color:#1c458c;text-decoration:none;cursor:pointer}
+ #detail .addr a:hover,#detail .ownlink:hover{text-decoration:underline}
+ #detail .links a{font-family:'Montserrat',sans-serif;font-size:11.5px;font-weight:700;color:#1c458c;margin-right:14px}
+ #back{font-family:'Montserrat',sans-serif;font-weight:800;font-size:11.5px;color:#8a94a0;cursor:pointer;margin-bottom:8px;display:none}
+ #back:hover{color:#1c458c}
+ .note{font-size:12px;color:#8a94a0;font-style:italic;margin:8px 2px}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>OWNER DIRECTORY</small></a><div class="htitle">Owners &middot; Addresses &middot; Agents</div></div>
+<div id="wrap">
+  <div id="tiles"></div>
+  <div id="tabs">
+    <span class="tab on" data-t="owners">Owners</span><span class="tab" data-t="addresses">Addresses</span><span class="tab" data-t="agents">Agents &amp; people</span>
+  </div>
+  <div id="back">&larr; Back to list</div>
+  <div id="detail"></div>
+  <div id="controls">
+    <input id="q" placeholder="Search owners, LLCs, addresses, people&hellip;"/>
+    <span class="chip" data-f="parented">Curated parents</span>
+    <span class="chip" data-f="multi">2+ entities</span>
+    <span class="chip" data-f="CONFLICT">Conflicts</span>
+    <span class="chip" data-f="EXTENDS">Extensions</span>
+  </div>
+  <div id="list">Loading the directory&hellip;</div>
+  <div class="note">Groups built by the owner-linking pipeline (name standardization &middot; fuzzy matching &middot; shared non-service addresses &middot; TN SOS principal offices &middot; landlord-registration case people), reconciled against the curated parent crosswalk. CONFIRMED = both methods agree; EXTENDS = pipeline candidates for a curated family; CONFLICT = needs review. Full method: <a href="https://github.com/nataliebaldacci/Who-Owns-Nashville/blob/main/_OWNER_ROLLUP_METHODOLOGY.md">methodology log</a>.</div>
+</div>
+<script>
+let D=null,OW=[],ADDR={},AG=[],ownerById={},addrOwners={};
+let tab='owners',filt=null,shown=300;
+const esc=s=>String(s==null?'':s).replace(/</g,'&lt;');
+const num=n=>Number(n).toLocaleString();
+fetch('owner_directory.json').then(r=>r.json()).then(d=>{
+ D=d;OW=d.owners;AG=d.agents;
+ OW.forEach(o=>ownerById[o[0]]=o);
+ d.addresses.forEach(a=>{ADDR[a[0]]=a;a[3].forEach(()=>{});});
+ d.addresses.forEach(a=>addrOwners[a[0]]=a[3]);
+ tiles();route();window.addEventListener('hashchange',route);
+});
+function tiles(){
+ const parented=OW.filter(o=>o[2]).length,hubs=D.addresses.filter(a=>a[2]).length;
+ document.getElementById('tiles').innerHTML=[
+  [num(OW.length),'Owner groups'],[num(parented),'Tied to curated parents'],
+  [num(D.addresses.length),'Mailing addresses'],[num(hubs),'Service hubs flagged'],
+  [num(AG.length),'Agents & people']]
+  .map(t=>`<div class="tile"><div class="v">${t[0]}</div><div class="l">${t[1]}</div></div>`).join('');
+}
+// ---------- routing ----------
+function route(){
+ const h=location.hash.slice(1);
+ if(h.startsWith('owner/'))return showOwner(+h.split('/')[1]);
+ if(h.startsWith('address/'))return showAddress(h.slice(8));
+ if(h.startsWith('agent/'))return showAgent(decodeURIComponent(h.slice(6)));
+ document.getElementById('detail').style.display='none';
+ document.getElementById('back').style.display='none';
+ renderList();
+}
+function goList(){location.hash='';}
+document.getElementById('back').onclick=goList;
+// ---------- list ----------
+function matches(o,q){
+ if(!q)return true;
+ if(o[1].toLowerCase().includes(q))return true;
+ return o[5].some(m=>m.toLowerCase().includes(q));
+}
+function renderList(){
+ const q=document.getElementById('q').value.trim().toLowerCase();
+ const el=document.getElementById('list');
+ let rows='';
+ if(tab==='owners'){
+  let src=OW;
+  if(filt==='parented')src=src.filter(o=>o[2]);
+  else if(filt==='multi')src=src.filter(o=>o[5].length>1);
+  else if(filt)src=src.filter(o=>o[3]===filt);
+  const hits=src.filter(o=>matches(o,q)).slice(0,shown);
+  rows=hits.map(o=>`<div class="row" onclick="location.hash='owner/${o[0]}'">
+    <span class="nm">${esc(o[1])}${o[5].length>1?`<small>${o[5].length} linked entities</small>`:''}</span>
+    ${o[2]?'<span class="badge b-parent">PARENT</span>':''}
+    <span class="badge b-${o[3]}">${o[3]}</span>
+    <span class="ct">${num(o[4])}</span></div>`).join('');
+ }else if(tab==='addresses'){
+  const hits=D.addresses.filter(a=>!q||a[1].toLowerCase().includes(q)).sort((x,y)=>y[3].length-x[3].length).slice(0,shown);
+  rows=hits.map(a=>`<div class="row" onclick="location.hash='address/${a[0]}'">
+    <span class="nm">${esc(a[1])}</span>${a[2]?'<span class="badge b-HUB">SERVICE HUB</span>':''}
+    <span class="ct">${num(a[3].length)} owner${a[3].length===1?'':'s'}</span></div>`).join('');
+ }else{
+  const hits=AG.filter(a=>!q||a[0].toLowerCase().includes(q)).sort((x,y)=>y[2].length-x[2].length).slice(0,shown);
+  rows=hits.map(a=>`<div class="row" onclick="location.hash='agent/${encodeURIComponent(a[0])}'">
+    <span class="nm">${esc(a[0])}<small>${esc(a[1])}</small></span>
+    <span class="ct">${num(a[2].length)} owner${a[2].length===1?'':'s'}</span></div>`).join('');
+ }
+ el.innerHTML=rows+(rows?`<button id="more" onclick="shown+=300;renderList()">Show more</button>`:'<div class="row">No matches.</div>');
+}
+document.getElementById('q').addEventListener('input',()=>{shown=300;renderList();});
+document.querySelectorAll('#tabs .tab').forEach(t=>t.onclick=function(){
+ tab=this.dataset.t;shown=300;
+ document.querySelectorAll('#tabs .tab').forEach(x=>x.classList.toggle('on',x===this));
+ goList();renderList();});
+document.querySelectorAll('#controls .chip').forEach(c=>c.onclick=function(){
+ filt=(filt===this.dataset.f)?null:this.dataset.f;shown=300;
+ document.querySelectorAll('#controls .chip').forEach(x=>x.classList.toggle('on',x.dataset.f===filt));
+ renderList();});
+// ---------- detail views ----------
+function card(html){
+ const d=document.getElementById('detail');d.innerHTML=html;d.style.display='block';
+ document.getElementById('back').style.display='block';
+ window.scrollTo(0,0);
+}
+function showOwner(id){
+ const o=ownerById[id];if(!o)return goList();
+ const aka=o[5].length?o[5]:[o[1]];
+ const addrs=o[6].map(s=>ADDR[s]).filter(Boolean);
+ const q=encodeURIComponent('"'+o[1]+'"');
+ card(`<h2>${esc(o[1])}</h2>
+  <div class="sub">${o[2]?`Curated parent: <b>${esc(o[2])}</b> · `:''}<span class="badge b-${o[3]}">${o[3]}</span> · ${num(o[4])} current parcels · ${aka.length} linked entit${aka.length===1?'y':'ies'}</div>
+  <div class="sect">Also filed as</div>
+  <div class="aka">${aka.map(m=>`<span>${esc(m)}</span>`).join('')}</div>
+  <div class="sect">Mailing addresses on deeds</div>
+  <div class="addr">${addrs.length?addrs.map(a=>`<a href="#address/${a[0]}">${esc(a[1])}${a[2]?' <span class="badge b-HUB">SERVICE HUB</span>':''}</a>`).join(''):'<span style="color:#8a94a0">none recorded</span>'}</div>
+  <div class="sect">Look up</div>
+  <div class="links">
+   <a target="_blank" href="https://tnbear.tn.gov/Ecommerce/FilingSearch.aspx">TN SOS business search</a>
+   <a target="_blank" href="https://www.sec.gov/edgar/search/#/q=${q}">EDGAR full-text</a>
+   <a target="_blank" href="https://www.google.com/search?q=${q}">Google</a>
+  </div>`);
+}
+function showAddress(slug){
+ const a=ADDR[slug];if(!a)return goList();
+ const owners=a[3].map(i=>ownerById[i]).filter(Boolean).sort((x,y)=>y[4]-x[4]);
+ card(`<h2>${esc(a[1])}</h2>
+  <div class="sub">${a[2]?'<span class="badge b-HUB">SERVICE HUB</span> — registered-agent / tax-representative address; sharing it does <b>not</b> imply common ownership. ':''}${owners.length} owner group${owners.length===1?'':'s'} use this mailing address.</div>
+  <div class="sect">Owners at this address</div>
+  ${owners.map(o=>`<span class="ownlink" onclick="location.hash='owner/${o[0]}'">${esc(o[1])} — ${num(o[4])} parcels ${o[2]?'<span class="badge b-parent">PARENT</span>':''}</span>`).join('')}
+  <div class="sect">Look up</div>
+  <div class="links"><a target="_blank" href="https://www.google.com/maps/place/${encodeURIComponent(a[1])}">Map it</a>
+  <a target="_blank" href="https://www.google.com/search?q=${encodeURIComponent('"'+a[1]+'"')}">Google</a></div>`);
+}
+function showAgent(name){
+ const a=AG.find(x=>x[0]===name);if(!a)return goList();
+ const owners=a[2].map(i=>ownerById[i]).filter(Boolean).sort((x,y)=>y[4]-x[4]);
+ card(`<h2>${esc(a[0])}</h2>
+  <div class="sub">${esc(a[1])} · linked to ${owners.length} owner group${owners.length===1?'':'s'}</div>
+  <div class="sect">Owner groups</div>
+  ${owners.map(o=>`<span class="ownlink" onclick="location.hash='owner/${o[0]}'">${esc(o[1])} — ${num(o[4])} parcels</span>`).join('')}`);
+}
+</script></body></html>
