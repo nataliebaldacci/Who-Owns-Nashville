@@ -34,6 +34,11 @@
  .lp .g{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:4px 0;font-size:12px}
  .lp .g span:nth-child(odd){color:#8a94a0}
  .lp a{color:#1c458c}
+ #zoomBanner{top:70px;left:50%;transform:translateX(-50%);padding:9px 16px;text-align:center;font-family:'Montserrat',sans-serif;max-width:92%}
+ #zoomBanner b{font-size:13px;color:#1a3a5c;display:block;margin-bottom:2px}
+ #zoomBanner span{font-size:11.5px;color:#66707c;font-weight:600}
+ #zoomBanner button{display:inline-block;margin-left:10px;font-family:'Montserrat',sans-serif;font-weight:800;font-size:11.5px;background:#f0af1e;color:#1c458c;border:0;border-radius:6px;padding:6px 12px;cursor:pointer}
+ #zoomBanner button:hover{background:#d99a10}
 </style></head><body>
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>THE FRAMEWORK</small></a><div class="htitle">Framework vs. County &middot; Parcel Filter Explorer</div></div>
 <div id="map"></div>
@@ -68,6 +73,7 @@
 </div>
 
 <div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span></div>
+<div class="panel" id="zoomBanner"><b>The counts below cover the whole county, live.</b><span>Parcel shapes draw at street zoom &mdash; zoom in anywhere, or</span><button id="goBtn">Take me to a neighborhood &rarr;</button></div>
 <div class="panel" id="stats">loading&hellip;</div>
 
 <script>
@@ -155,6 +161,7 @@ var MINZOOM=15,PAGE=1000,MAXPAGES=4;
 var parcelLyr=L.layerGroup().addTo(map),pSeq=0;
 function drawParcels(){
  var seq=++pSeq;
+ document.getElementById('zoomBanner').style.display=map.getZoom()<MINZOOM?'block':'none';
  if(map.getZoom()<MINZOOM){parcelLyr.clearLayers();svcNote('Zoom to street level to draw the matching parcel outlines.');return;}
  var b=map.getBounds();
  var geom=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].join(',');
@@ -164,7 +171,7 @@ function drawParcels(){
   jsonp(CAD+'/4/query?where='+encodeURIComponent(whereClause())
    +'&geometry='+geom+'&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects'
    +'&outFields=ParID,APN,Owner,Ownstate,LUDesc,DUCount,Zoning,TotlAppr,PropAddr,Ownaddr1'
-   +'&returnGeometry=true&outSR=4326&resultRecordCount='+PAGE+'&resultOffset='+(page*PAGE)+'&f=json')
+   +'&returnGeometry=true&outSR=4326&geometryPrecision=6&resultRecordCount='+PAGE+'&resultOffset='+(page*PAGE)+'&f=json')
   .then(function(j){
    if(seq!==pSeq)return;
    if(j.error){svcNote('Parcel query error: '+(j.error.message||j.error.code),true);return;}
@@ -247,6 +254,7 @@ function chipRow(sel,key){document.querySelectorAll(sel+' .chip').forEach(functi
  F[key]=this.getAttribute('data-v');
  document.querySelectorAll(sel+' .chip').forEach(function(x){x.classList.remove('on');});
  this.classList.add('on');update();};});}
+document.getElementById('goBtn').onclick=function(){map.setView([36.052,-86.664],16);};  // Antioch 37013
 chipRow('#uniChips','uni');chipRow('#duChips','du');chipRow('#luChips','lu');
 chipRow('#otChips','ot');chipRow('#occChips','occ');chipRow('#locChips','loc');
 document.querySelectorAll('#baseToggle .chip').forEach(function(ch){ch.onclick=function(){
