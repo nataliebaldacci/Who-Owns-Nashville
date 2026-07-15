@@ -67,7 +67,6 @@
 <script>
 const COLORS={'Corporate/Business':'#b3282d','Individual':'#26456b','Government/Institutional':'#8a8f98','Trust':'#e0952a'};
 const ORDER=['Corporate/Business','Individual','Government/Institutional','Trust'];
-const PATRIOT="5D050659143EB96630FB38B91DE12E40&SECRETKEY=A92169630C9BC3C00A1C0F9F140E6DAEC21C8E62DCFF9FC443FB1BE70DDF6AA4268527B9DDE2ECC2C7EE9BB5BF728C06F0DF4019BBECDEBD2A6DD0BBE28A419D8F929E1F3E8DF478E56619995BEFCA8E369276689D791197DC1284F14B3252DBFB2A19A2E451EEA832D6D96488DDC673EBA4B37BD741223B656A793D93209C0F";
 // owner rollup crosswalk (name -> clean operator/parent); landbank corrections included
 const CW=[[/WALTON TENNESSEE|WALTON INTERNATIONAL/,'Walton Global'],[/\bKLLB\b/,'Kennedy Lewis (KLLB)'],[/TPG AG EHC/,'TPG Angelo Gordon'],
  [/AMH TN DEVELOPMENT|AMERICAN HOMES 4 RENT|\bAH4R\b/,'American Homes 4 Rent'],[/PHILLIPS BUILDERS|\bMERITAGE\b/,'Meritage Homes'],
@@ -143,7 +142,6 @@ function popup(f){
     ${lnk('Parcel Viewer','https://maps.nashville.gov/ParcelViewer/?parcelID='+A)}
     ${lnk('Property Card','https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+A)}
     ${lnk('Comper','https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+A)}
-    ${lnk('Aerial','https://portal.patriotproperties.com/?APIKEY='+PATRIOT+'&LAT='+cy+'&LONG='+cx)}
     ${lnk('Street View','https://www.google.com/maps?q&layer=c&cbll='+cy+','+cx)}
     ${lnk('Land Records','https://davidsonportal.com/landrecords/')}
     ${lnk('Owner History','https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+A)}

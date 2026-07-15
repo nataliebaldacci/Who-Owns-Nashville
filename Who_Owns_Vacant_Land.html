@@ -101,7 +101,7 @@ var BASES={gray:carto,streets:osm,aerial:aerial};
 function setBase(k){Object.keys(BASES).forEach(function(b){if(map.hasLayer(BASES[b]))map.removeLayer(BASES[b]);});BASES[k].addTo(map);}
 function median(a){if(!a.length)return null;a=a.slice().sort(function(x,y){return x-y;});var m=Math.floor(a.length/2);return a.length%2?a[m]:(a[m-1]+a[m])/2;}
 map.createPane('mask'); var _mp=map.getPane('mask'); _mp.style.zIndex=350; _mp.style.pointerEvents='none';
-fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
   var f=(b.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);
   var feat=f.length?f[0]:((b.features||[])[0]); if(!feat) return;
   L.geoJSON(feat,{style:{color:"#1a3a5c",weight:2,fillOpacity:0,dashArray:"4,4"},interactive:false}).addTo(map);
@@ -111,7 +111,6 @@ fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boun
   L.polygon([outer].concat(holes),{pane:'mask',stroke:false,fillColor:'#e9edf1',fillOpacity:.85,interactive:false}).addTo(map);
 }).catch(function(){});
 function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
-var PATRIOT="5D050659143EB96630FB38B91DE12E40&SECRETKEY=A92169630C9BC3C00A1C0F9F140E6DAEC21C8E62DCFF9FC443FB1BE70DDF6AA4268527B9DDE2ECC2C7EE9BB5BF728C06F0DF4019BBECDEBD2A6DD0BBE28A419D8F929E1F3E8DF478E56619995BEFCA8E369276689D791197DC1284F14B3252DBFB2A19A2E451EEA832D6D96488DDC673EBA4B37BD741223B656A793D93209C0F";
 function popup(p){
   var apn=esc(p.apn).replace(/[^0-9A-Za-z]/g,''), lat=esc(p.lat), lon=esc(p.lon);
   var h='<div class="lp"><b><a href="#" class="lp-owner" title="Show every parcel this owner holds">'+esc(p.own)+'</a></b>'+(p.op?'<br><span style="color:#d7263d;font-weight:600">'+esc(p.op)+'</span>':'');
@@ -119,8 +118,7 @@ function popup(p){
   h+='<div class="g"><span>Land use</span><span>'+esc(p.lu||'—')+'</span><span>Acres</span><span>'+(p.ac||0).toLocaleString()+'</span><span>Assess. class</span><span>'+esc(CLSL[p.cls]||p.cls||'—')+' ('+esc(p.cls||'')+')</span><span>Owner</span><span>'+(CAT[p.cat]||{}).l+(p.oos?' &middot; out-of-state':'')+'</span></div>';
   var tk=[];
   if(apn) tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a>');
-  if(lat&&lon){ tk.push('<a target="_blank" href="https://portal.patriotproperties.com/?APIKEY='+PATRIOT+'&LAT='+lat+'&LONG='+lon+'">Aerial</a>');
-    tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+lat+','+lon+'">Street View</a>'); }
+  if(lat&&lon){ tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+lat+','+lon+'">Street View</a>'); }
   if(tk.length) h+='<div style="font-size:11.5px;margin:3px 0">'+tk.join(' &middot; ')+'</div>';
   h+='<div style="font-size:11.5px"><a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetOwnerHistory?onlyactive=false&pin='+esc(p.pid)+'">Owner history</a> &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetPropertyHistory?onlyactive=false&pin='+esc(p.pid)+'">Property history</a></div>';
   return h+'</div>';
