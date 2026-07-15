@@ -1,0 +1,216 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Framework vs. County — Parcel Filter Explorer</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.97);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+ #filters{top:66px;left:12px;padding:10px 12px;width:262px;max-height:calc(100% - 210px);overflow-y:auto}
+ .lab{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin:6px 0 4px}
+ .lab:first-child{margin-top:0}
+ .chips{display:flex;gap:5px;flex-wrap:wrap}
+ .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:5px 10px;border-radius:15px;cursor:pointer}
+ .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ .chip.oos.on{background:#d7263d;border-color:#d7263d}
+ #filters .note{font-size:10.5px;color:#9aa4b0;font-style:italic;margin-top:8px;line-height:1.35}
+ #baseToggle{top:66px;right:10px;padding:6px 8px;display:flex;gap:5px;z-index:1001}
+ #stats{bottom:16px;left:50%;transform:translateX(-50%);padding:0;display:flex;overflow:hidden;max-width:calc(100% - 40px)}
+ #stats .tile{padding:8px 18px;text-align:center;border-right:1px solid #e9ecf1}
+ #stats .tile:last-child{border-right:none}
+ #stats .tile .v{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;line-height:1.15}
+ #stats .tile.diff .v{color:#d7263d}
+ #stats .tile .l{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:2px}
+ .lp{font-family:'EB Garamond',serif;font-size:12.5px;max-width:300px}
+ .lp b{font-family:'Montserrat',sans-serif;color:#1c458c}
+ .lp .g{display:grid;grid-template-columns:auto 1fr;gap:1px 8px;margin:4px 0;font-size:12px}
+ .lp .g span:nth-child(odd){color:#8a94a0}
+ .lp a{color:#1c458c}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>THE FRAMEWORK</small></a><div class="htitle">Framework vs. County &middot; Parcel Filter Explorer</div></div>
+<div id="map"></div>
+
+<div class="panel" id="filters">
+  <div class="lab">Universe</div>
+  <div class="chips" id="uniChips">
+    <span class="chip on" data-v="fw">Framework rule</span><span class="chip" data-v="raw">All DUCount 1&ndash;2</span>
+  </div>
+  <div class="lab">Dwelling units</div>
+  <div class="chips" id="duChips">
+    <span class="chip on" data-v="all">1 or 2</span><span class="chip" data-v="1">1</span><span class="chip" data-v="2">2</span>
+  </div>
+  <div class="lab">Land use</div>
+  <div class="chips" id="luChips">
+    <span class="chip on" data-v="all">All</span><span class="chip" data-v="sf">Single Family</span><span class="chip" data-v="condo">Res. Condo</span><span class="chip" data-v="duplex">Duplex</span><span class="chip" data-v="zll">Zero Lot Line</span><span class="chip" data-v="null">Null</span>
+  </div>
+  <div class="lab">Ownership type</div>
+  <div class="chips" id="otChips">
+    <span class="chip on" data-v="all">All</span><span class="chip" data-v="corp">Corporate</span><span class="chip" data-v="indiv">Individual</span><span class="chip" data-v="trust">Trust</span><span class="chip" data-v="gov">Government</span>
+  </div>
+  <div class="lab">Occupancy status</div>
+  <div class="chips" id="occChips">
+    <span class="chip on" data-v="all">All</span><span class="chip" data-v="oo">Owner-occupied</span><span class="chip" data-v="noo">Non-owner</span>
+  </div>
+  <div class="lab">Owner location</div>
+  <div class="chips" id="locChips">
+    <span class="chip on" data-v="all">All</span><span class="chip" data-v="in">In-state</span><span class="chip oos" data-v="oos">Out-of-state</span>
+  </div>
+  <div class="note">County side is computed live from Metro's cadastral layer with SQL mirrors of each filter (ownership from owner-name patterns; occupancy approximated by owner mailing address = property address). Framework side is the canonical 21st Century Housing framework file (owner types, occupancy, and absentee status resolved parcel by parcel, 7/7/26). The gap between the two numbers is the point: it is what naive county filters get wrong.</div>
+</div>
+
+<div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span></div>
+<div class="panel" id="stats">loading&hellip;</div>
+
+<script>
+var map=L.map('map',{center:[36.166,-86.784],zoom:11});
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri, Maxar',maxZoom:19});
+var BASES={gray:carto,streets:osm,aerial:aerial};
+function setBase(k){Object.keys(BASES).forEach(function(b){if(map.hasLayer(BASES[b]))map.removeLayer(BASES[b]);});BASES[k].addTo(map);}
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){
+ var feat=(g.features||[]).find(f=>f.properties&&f.properties.OBJECTID===4)||g.features[0];if(!feat)return;
+ L.geoJSON(feat,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+}).catch(function(){});
+
+// ---------------- filters -> SQL (county) and crosstab keys (framework) ----
+var F={uni:'fw',du:'all',lu:'all',ot:'all',occ:'all',loc:'all'};
+var CORP_SQL="(Owner LIKE '%LLC%' OR Owner LIKE '%L L C%' OR Owner LIKE '% LP' OR Owner LIKE '% LP %' OR Owner LIKE '%L P%' OR Owner LIKE '% INC%' OR Owner LIKE '%CORP%' OR Owner LIKE '%COMPANY%' OR Owner LIKE '%LTD%' OR Owner LIKE '%HOLDINGS%' OR Owner LIKE '%PARTNERS%' OR Owner LIKE '%PROPERTIES%' OR Owner LIKE '%INVESTMENT%' OR Owner LIKE '%CAPITAL%' OR Owner LIKE '%HOMES LLC%' OR Owner LIKE '%GP%' OR Owner LIKE '%VENTURE%')";
+var TRUST_SQL="(Owner LIKE '%TRUST%' OR Owner LIKE '%TRUSTEE%' OR Owner LIKE '% TR %' OR Owner LIKE '% TR')";
+var GOV_SQL="(Owner LIKE '%METRO%' OR Owner LIKE '%METROPOLITAN GOVERNMENT%' OR Owner LIKE '%STATE OF%' OR Owner LIKE '%HOUSING AUTH%' OR Owner LIKE '%UNITED STATES%' OR Owner LIKE '%BOARD OF%')";
+var LU_SQL={sf:"LUDesc='SINGLE FAMILY'",condo:"LUDesc='RESIDENTIAL CONDO'",duplex:"LUDesc='DUPLEX'",zll:"LUDesc='ZERO LOT LINE'","null":"LUDesc IS NULL"};
+var FW_LU="(LUDesc IN ('SINGLE FAMILY','RESIDENTIAL CONDO','DUPLEX','ZERO LOT LINE') OR LUDesc IS NULL)";
+var FW_FT="Featuretype NOT IN ('Multistory Condo','Multistory Common Area','Common Area','Open Space')";
+function whereClause(){
+ var w=[];
+ w.push(F.du==='all'?'(DUCount=1 OR DUCount=2)':('DUCount='+F.du));
+ if(F.uni==='fw'){w.push(FW_LU);w.push(FW_FT);}
+ if(F.lu!=='all')w.push(LU_SQL[F.lu]);
+ if(F.ot==='corp')w.push(CORP_SQL+' AND NOT '+TRUST_SQL+' AND NOT '+GOV_SQL);
+ else if(F.ot==='trust')w.push(TRUST_SQL+' AND NOT '+GOV_SQL);
+ else if(F.ot==='gov')w.push(GOV_SQL);
+ else if(F.ot==='indiv')w.push('NOT '+CORP_SQL+' AND NOT '+TRUST_SQL+' AND NOT '+GOV_SQL);
+ if(F.occ==='oo')w.push('PropAddr = Ownaddr1');
+ else if(F.occ==='noo')w.push('PropAddr <> Ownaddr1');
+ if(F.loc==='oos')w.push("Ownstate <> 'TN'");
+ else if(F.loc==='in')w.push("Ownstate = 'TN'");
+ return w.join(' AND ');
+}
+// framework count from the precomputed crosstab (lu|du|ot|occ|loc)
+var CT=null;
+fetch('framework_crosstab.json').then(r=>r.json()).then(function(j){CT=j;update();}).catch(function(){});
+function fwCount(){
+ if(!CT)return null;
+ if(F.uni==='raw'&&F.lu==='null')return 0;      // framework has no null-LU rows; county might
+ var n=0;
+ Object.keys(CT.cells).forEach(function(k){
+  var p=k.split('|'); // lu,du,ot,occ,loc
+  if(F.lu!=='all'&&p[0]!==F.lu)return;
+  if(F.du!=='all'&&p[1]!==F.du)return;
+  if(F.ot!=='all'&&p[2]!==F.ot)return;
+  if(F.occ!=='all'&&p[3]!==F.occ)return;
+  if(F.loc!=='all'&&p[4]!==F.loc)return;
+  n+=CT.cells[k];
+ });
+ return n;
+}
+
+// ---------------- live county polygons (Metro map server renders them) -----
+var CAD='https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer';
+var overlay=null,imgSeq=0;
+function refreshOverlay(){
+ var b=map.getBounds(),sz=map.getSize();
+ var p1=L.CRS.EPSG3857.project(b.getSouthWest()),p2=L.CRS.EPSG3857.project(b.getNorthEast());
+ var url=CAD+'/export?f=image&format=png32&transparent=true&dpi=96&bboxSR=3857&imageSR=3857'
+  +'&bbox='+[p1.x,p1.y,p2.x,p2.y].join(',')
+  +'&size='+sz.x+','+sz.y
+  +'&layers=show:4&layerDefs='+encodeURIComponent(JSON.stringify({4:whereClause()}));
+ var seq=++imgSeq;
+ var img=new Image();
+ img.onload=function(){
+  if(seq!==imgSeq)return;               // stale response
+  var o=L.imageOverlay(url,b,{opacity:.8,interactive:false}).addTo(map);
+  if(overlay)map.removeLayer(overlay);
+  overlay=o;
+ };
+ img.src=url;
+}
+map.on('moveend',refreshOverlay);
+
+// ---------------- live county count ----------------------------------------
+var cSeq=0;
+function refreshCount(){
+ var seq=++cSeq;
+ document.getElementById('stats').dataset.pending='1';
+ renderStats(null);
+ fetch(CAD+'/4/query?where='+encodeURIComponent(whereClause())+'&returnCountOnly=true&f=json')
+  .then(r=>r.json()).then(function(j){
+   if(seq!==cSeq)return;
+   renderStats(typeof j.count==='number'?j.count:null);
+  }).catch(function(){if(seq===cSeq)renderStats(null);});
+}
+function renderStats(county){
+ var fw=fwCount();
+ var tiles=[
+  ['County parcels',county==null?'…':county.toLocaleString()],
+  ['Framework homes',fw==null?'…':fw.toLocaleString()]
+ ];
+ if(county!=null&&fw!=null){
+  tiles.push(['Difference',(county-fw).toLocaleString(),'diff']);
+  if(county>0)tiles.push(['Framework share',(100*fw/county).toFixed(1)+'%']);
+ }
+ document.getElementById('stats').innerHTML=tiles.map(function(t){
+  return '<div class="tile'+(t[2]?' '+t[2]:'')+'"><div class="v">'+t[1]+'</div><div class="l">'+t[0]+'</div></div>';}).join('');
+}
+
+// ---------------- identify on click ----------------------------------------
+function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+map.on('click',function(e){
+ var url=CAD+'/4/query?geometry='+e.latlng.lng+','+e.latlng.lat
+  +'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json';
+ var pop=L.popup({maxWidth:320}).setLatLng(e.latlng).setContent('<div class="lp" style="color:#8a94a0">Looking up parcel&hellip;</div>').openOn(map);
+ fetch(url).then(r=>r.json()).then(function(j){
+  var ft=(j.features||[])[0];
+  if(!ft){pop.setContent('<div class="lp" style="color:#8a94a0">No parcel here.</div>');return;}
+  var a=ft.attributes||{};
+  function g(){for(var i=0;i<arguments.length;i++){var k=arguments[i];for(var kk in a)if(kk.toLowerCase()===k.toLowerCase()&&a[kk]!=null&&a[kk]!=='')return a[kk];}return null;}
+  var pid=g('ParID'),apn=g('APN');
+  var h='<div class="lp"><b>'+esc(g('PropAddr')||'Parcel '+pid)+'</b>'
+   +'<div class="g">'
+   +'<span>Owner</span><span>'+esc(g('Owner')||'—')+'</span>'
+   +'<span>Owner addr</span><span>'+esc([g('Ownaddr1'),g('Owncity'),g('Ownstate')].filter(Boolean).join(', ')||'—')+'</span>'
+   +'<span>Land use</span><span>'+esc(g('LUDesc')||'(null)')+'</span>'
+   +'<span>Feature type</span><span>'+esc(g('Featuretype')||'—')+'</span>'
+   +'<span>Dwelling units</span><span>'+esc(g('DUCount')||'—')+'</span>'
+   +'<span>Zoning</span><span>'+esc(g('Zoning')||'—')+'</span>'
+   +'<span>Appraised</span><span>'+(g('TotlAppr')?('$'+Number(g('TotlAppr')).toLocaleString()):'—')+'</span>'
+   +'</div>'
+   +(pid?'<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(pid)+'">Parcel Report</a>':'')
+   +(apn?' &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+esc(apn)+'">Parcel Viewer</a>':'')
+   +'</div>';
+  pop.setContent(h);
+ }).catch(function(){pop.setContent('<div class="lp" style="color:#c0392b">Could not reach the parcel service.</div>');});
+});
+
+// ---------------- wiring ---------------------------------------------------
+function update(){refreshOverlay();refreshCount();}
+function chipRow(sel,key){document.querySelectorAll(sel+' .chip').forEach(function(ch){ch.onclick=function(){
+ F[key]=this.getAttribute('data-v');
+ document.querySelectorAll(sel+' .chip').forEach(function(x){x.classList.remove('on');});
+ this.classList.add('on');update();};});}
+chipRow('#uniChips','uni');chipRow('#duChips','du');chipRow('#luChips','lu');
+chipRow('#otChips','ot');chipRow('#occChips','occ');chipRow('#locChips','loc');
+document.querySelectorAll('#baseToggle .chip').forEach(function(ch){ch.onclick=function(){
+ setBase(this.getAttribute('data-base'));
+ document.querySelectorAll('#baseToggle .chip').forEach(function(x){x.classList.remove('on');});
+ this.classList.add('on');};});
+update();
+</script></body></html>
