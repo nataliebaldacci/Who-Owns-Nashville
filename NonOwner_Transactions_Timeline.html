@@ -55,7 +55,10 @@
  <span class="chip oos" data-g="loc" data-v="oos">Out-of-state</span>
  <span class="chip" data-g="loc" data-v="in">In-state</span>
 </div>
-<div class="panel" id="legendbox"><i style="background:#d7263d"></i>Corporate buyer&ensp;<i style="background:#4fa0bd"></i>Individual / other</div>
+<div class="panel" id="legendbox">
+ <div style="margin-bottom:5px"><span class="chip on" id="cbBuyer">Color: buyer type</span> <span class="chip" id="cbLoc">Color: in/out of state</span></div>
+ <div id="legendrow"><i style="background:#d7263d"></i>Corporate buyer&ensp;<i style="background:#4fa0bd"></i>Individual / other</div>
+</div>
 <div class="panel" id="controls">
  <button id="playBtn">&#9654; Play</button>
  <span id="yr">2026</span>
@@ -64,7 +67,7 @@
 </div>
 </div>
 <script>
-var YEAR=2026,MODE='cum',BUYER='all',LOC='all',PLAYING=null,AGG=[],aggBy={};
+var YEAR=2026,MODE='cum',BUYER='all',LOC='all',CMODE='buyer',PLAYING=null,AGG=[],aggBy={};
 var PN=0,PLAT=null,PMX=null,PMY=null,PYR=null,PFL=null;
 
 // ---------------- map ----------------
@@ -101,10 +104,12 @@ var DotLayer=L.Layer.extend({
    if(LOC==='in'&&isO)continue;
    var x=PMX[i]*scale-pb.min.x,yy=PMY[i]*scale-pb.min.y;
    if(x<-4||yy<-4||x>W+4||yy>H+4)continue;
-   (isC?corp:ind).push(x,yy);
+   // color grouping depends on the color-by mode
+   ((CMODE==='buyer'?isC:isO)?corp:ind).push(x,yy);
   }
-  ctx.fillStyle='#4fa0bd';for(var j=0;j<ind.length;j+=2)ctx.fillRect(ind[j]-r/2,ind[j+1]-r/2,r,r);
-  ctx.fillStyle='#d7263d';for(j=0;j<corp.length;j+=2)ctx.fillRect(corp[j]-r/2,corp[j+1]-r/2,r,r);
+  var hot=CMODE==='buyer'?'#d7263d':'#d7263d', cold=CMODE==='buyer'?'#4fa0bd':'#1e7a48';
+  ctx.fillStyle=cold;for(var j=0;j<ind.length;j+=2)ctx.fillRect(ind[j]-r/2,ind[j+1]-r/2,r,r);
+  ctx.fillStyle=hot;for(j=0;j<corp.length;j+=2)ctx.fillRect(corp[j]-r/2,corp[j+1]-r/2,r,r);
   this._n=(corp.length+ind.length)/2;
  }
 });
@@ -203,6 +208,15 @@ function stats(){
 }
 function update(){document.getElementById('yr').textContent=YEAR;dots.redraw();drawChart();stats();}
 document.getElementById('slider').addEventListener('input',function(){YEAR=+this.value;update();});
+function setCmode(m){CMODE=m;
+ document.getElementById('cbBuyer').classList.toggle('on',m==='buyer');
+ document.getElementById('cbLoc').classList.toggle('on',m==='loc');
+ document.getElementById('legendrow').innerHTML=m==='buyer'
+  ?'<i style="background:#d7263d"></i>Corporate buyer&ensp;<i style="background:#4fa0bd"></i>Individual / other'
+  :'<i style="background:#d7263d"></i>Out-of-state owner&ensp;<i style="background:#1e7a48"></i>In-state owner';
+ update();}
+document.getElementById('cbBuyer').onclick=function(){setCmode('buyer');};
+document.getElementById('cbLoc').onclick=function(){setCmode('loc');};
 document.getElementById('cumChip').onclick=function(){MODE='cum';this.classList.add('on');document.getElementById('yrChip').classList.remove('on');update();};
 document.getElementById('yrChip').onclick=function(){MODE='yr';this.classList.add('on');document.getElementById('cumChip').classList.remove('on');update();};
 document.querySelectorAll('#filters .chip').forEach(function(c){c.onclick=function(){
