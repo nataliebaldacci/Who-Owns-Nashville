@@ -3,6 +3,8 @@
 <title>Owner Directory — Who Owns Nashville?</title>
 <link rel="icon" type="image/svg+xml" href="favicon.svg"/>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
  html,body{margin:0;height:100%;font-family:'EB Garamond',Garamond,serif;background:#f4f6f9;color:#20303f}
  #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
@@ -154,6 +156,8 @@ function showOwner(id){
   <div class="sub">${o[2]?`Curated parent: <b>${esc(o[2])}</b> · `:''}<span class="badge b-${o[3]}">${o[3]}</span> · ${num(o[4])} current parcels · ${aka.length} linked entit${aka.length===1?'y':'ies'}</div>
   <div class="sect">Also filed as</div>
   <div class="aka">${aka.map(m=>`<span>${esc(m)}</span>`).join('')}</div>
+  <div class="sect" id="omapSect" style="display:none">Parcels on the map <span id="omapNote" style="font-weight:400;text-transform:none;letter-spacing:0;color:#8a94a0"></span></div>
+  <div id="ownerMap" style="height:260px;border-radius:8px;display:none;margin-bottom:4px"></div>
   <div class="sect">Mailing addresses on deeds</div>
   <div class="addr">${addrs.length?addrs.map(a=>`<a href="#address/${a[0]}">${esc(a[1])}${a[2]?' <span class="badge b-HUB">SERVICE HUB</span>':''}</a>`).join(''):'<span style="color:#8a94a0">none recorded</span>'}</div>
   <div class="sect">Look up</div>
@@ -162,6 +166,38 @@ function showOwner(id){
    <a target="_blank" href="https://www.sec.gov/edgar/search/#/q=${q}">EDGAR full-text</a>
    <a target="_blank" href="https://www.google.com/search?q=${q}">Google</a>
   </div>`);
+ drawOwnerMap(id);
+}
+// ---------- owner parcels mini-map (owner_parcels.bin: lat/lon/group id) ----------
+let OPN=0,OPLAT=null,OPLON=null,OPGID=null,OP_P=null,omap=null;
+function loadOwnerParcels(){
+ if(OP_P)return OP_P;
+ OP_P=fetch('owner_parcels.bin').then(r=>r.arrayBuffer()).then(buf=>{
+  const dv=new DataView(buf);OPN=dv.getUint32(0,true);
+  const coords=new Float32Array(buf,4,OPN*2);
+  OPGID=new Uint32Array(buf.slice(4+OPN*8,4+OPN*8+OPN*4));
+  OPLAT=new Float32Array(OPN);OPLON=new Float32Array(OPN);
+  for(let i=0;i<OPN;i++){OPLAT[i]=coords[i*2];OPLON[i]=coords[i*2+1];}
+ }).catch(()=>{});
+ return OP_P;
+}
+function drawOwnerMap(gid){
+ loadOwnerParcels().then(()=>{
+  if(!OPN)return;
+  const pts=[];
+  for(let i=0;i<OPN;i++)if(OPGID[i]===gid)pts.push([OPLAT[i],OPLON[i]]);
+  const sect=document.getElementById('omapSect'),el=document.getElementById('ownerMap');
+  if(!sect||!el)return;
+  if(!pts.length){sect.style.display='none';el.style.display='none';return;}
+  sect.style.display='block';el.style.display='block';
+  document.getElementById('omapNote').textContent=' — '+pts.length.toLocaleString()+' parcel'+(pts.length===1?'':'s')+' geolocated';
+  if(omap){omap.remove();omap=null;}
+  omap=L.map('ownerMap',{preferCanvas:true,zoomControl:true});
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© CARTO',maxZoom:19}).addTo(omap);
+  const grp=L.featureGroup(pts.slice(0,4000).map(p=>L.circleMarker(p,{radius:4,color:'#7a0010',weight:1,fillColor:'#d7263d',fillOpacity:.8})));
+  grp.addTo(omap);
+  omap.fitBounds(grp.getBounds().pad(0.2),{maxZoom:15});
+ });
 }
 function showAddress(slug){
  const a=ADDR[slug];if(!a)return goList();

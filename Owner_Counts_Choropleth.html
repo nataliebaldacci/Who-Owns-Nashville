@@ -1,0 +1,128 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Owner Counts by Geography — Who Owns Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.96);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+ #ctrl{top:66px;left:12px;padding:10px 12px;width:270px}
+ .lab{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin:6px 0 4px}
+ .lab:first-child{margin-top:0}
+ .chips{display:flex;gap:5px;flex-wrap:wrap}
+ .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:5px 10px;border-radius:15px;cursor:pointer}
+ .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ #ctrl .note{font-size:10.5px;color:#9aa4b0;font-style:italic;margin-top:8px;line-height:1.35}
+ #legend{bottom:16px;left:12px;padding:9px 12px;font-size:11.5px;font-family:'Montserrat',sans-serif}
+ #legend .r{display:flex;align-items:center;gap:6px;line-height:1.6}
+ #legend i{display:inline-block;width:16px;height:11px;border:1px solid rgba(0,0,0,.2)}
+ #stats{top:66px;right:10px;padding:0;display:flex;overflow:hidden}
+ #stats .tile{padding:7px 15px;text-align:center;border-right:1px solid #e9ecf1}
+ #stats .tile:last-child{border-right:none}
+ #stats .tile .v{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums}
+ #stats .tile .l{font-family:'Montserrat',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:1px}
+ .lp{font-family:'EB Garamond',serif;font-size:12.5px}
+ .lp b{font-family:'Montserrat',sans-serif;color:#1c458c;font-size:13px}
+ .lp .g{display:grid;grid-template-columns:auto 1fr;gap:1px 10px;margin-top:4px;font-size:12px}
+ .lp .g span:nth-child(odd){color:#8a94a0}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>BY GEOGRAPHY</small></a><div class="htitle">Owner Counts by Geography</div></div>
+<div id="map"></div>
+<div class="panel" id="ctrl">
+ <div class="lab">Geography</div>
+ <div class="chips" id="geoChips">
+  <span class="chip on" data-v="tract">Tracts</span><span class="chip" data-v="bg">Block groups</span>
+  <span class="chip" data-v="community">Communities</span><span class="chip" data-v="council">Council districts</span>
+  <span class="chip" data-v="subdivision">Subdivisions</span>
+ </div>
+ <div class="lab">Owner metric</div>
+ <div class="chips" id="metChips">
+  <span class="chip on" data-v="corp">Corporate</span><span class="chip" data-v="trust">Trust</span>
+  <span class="chip" data-v="noo">Non-owner-occ.</span><span class="chip" data-v="oos">Out-of-state</span>
+  <span class="chip" data-v="n">All homes</span>
+ </div>
+ <div class="lab">Show</div>
+ <div class="chips" id="modeChips">
+  <span class="chip on" data-v="count">Counts</span><span class="chip" data-v="share">Share of homes</span>
+ </div>
+ <div class="note">Owner types, occupancy, and absentee status come from the canonical framework file (206,065 single-family, condo, duplex, and zero-lot-line homes, resolved parcel by parcel). Tract and block-group popups add ACS 2020&ndash;2024 single-family renter share. Subdivisions shown only where 25+ framework homes fall inside.</div>
+</div>
+<div class="panel" id="legend"></div>
+<div class="panel" id="stats"></div>
+<script>
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){
+ var feat=(g.features||[]).find(f=>f.properties&&f.properties.OBJECTID===4)||g.features[0];if(!feat)return;
+ L.geoJSON(feat,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+}).catch(function(){});
+
+var GEO='tract',MET='corp',MODE='count',D=null,layer=null;
+var METL={corp:'Corporate-owned homes',trust:'Trust-owned homes',noo:'Non-owner-occupied homes',oos:'Out-of-state-owned homes',n:'Framework homes'};
+var RAMP=['#fdeaec','#f7b8bf','#ee7f8b','#df4257','#b31230','#7a0010'];
+function val(f){return MODE==='share'&&MET!=='n'?(f.n?100*f[MET]/f.n:0):f[MET];}
+function breaks(vals){
+ var s=vals.slice().sort(function(a,b){return a-b;});
+ return [1,2,3,4,5].map(function(k){return s[Math.floor(s.length*k/6)]||0;});
+}
+var BR=[];
+function colorOf(v){for(var i=0;i<BR.length;i++)if(v<=BR[i])return RAMP[i];return RAMP[5];}
+function fmt(v){return MODE==='share'&&MET!=='n'?v.toFixed(1)+'%':Math.round(v).toLocaleString();}
+
+fetch('owner_counts_geo.json').then(r=>r.json()).then(function(j){D=j;render();});
+function render(){
+ if(!D)return;
+ if(layer){map.removeLayer(layer);layer=null;}
+ var feats=D[GEO];
+ BR=breaks(feats.map(val));
+ layer=L.geoJSON({type:'FeatureCollection',features:feats.map(function(f){
+   return {type:'Feature',properties:f,geometry:f.geom};})},{
+  style:function(ft){var f=ft.properties;
+   return {color:'#7a8794',weight:GEO==='subdivision'?0.4:0.8,fillColor:colorOf(val(f)),fillOpacity:0.72};},
+  onEachFeature:function(ft,lyr){
+   var f=ft.properties;
+   lyr.bindTooltip('<b>'+f.name+'</b><br>'+METL[MET]+': '+fmt(val(f)),{sticky:true});
+   var g='<div class="lp"><b>'+f.name+'</b><div class="g">'
+    +'<span>Framework homes</span><span>'+f.n.toLocaleString()+'</span>'
+    +'<span>Corporate</span><span>'+f.corp.toLocaleString()+' ('+(f.n?(100*f.corp/f.n).toFixed(1):0)+'%)</span>'
+    +'<span>Trust</span><span>'+f.trust.toLocaleString()+' ('+(f.n?(100*f.trust/f.n).toFixed(1):0)+'%)</span>'
+    +'<span>Non-owner-occ.</span><span>'+f.noo.toLocaleString()+' ('+(f.n?(100*f.noo/f.n).toFixed(1):0)+'%)</span>'
+    +'<span>Out-of-state</span><span>'+f.oos.toLocaleString()+' ('+(f.n?(100*f.oos/f.n).toFixed(1):0)+'%)</span>'
+    +(f.acs?('<span>ACS SF renter share</span><span>'+f.acs.renter_share+'%</span><span>ACS SF units</span><span>'+f.acs.sf_units.toLocaleString()+'</span>'):'')
+    +'</div></div>';
+   lyr.bindPopup(g,{maxWidth:300});
+  }}).addTo(map);
+ // legend
+ var lg=document.getElementById('legend');
+ var rows='<div style="font-weight:800;font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin-bottom:4px">'+METL[MET]+(MODE==='share'&&MET!=='n'?' (%)':'')+'</div>';
+ var prev=0;
+ for(var i=0;i<RAMP.length;i++){
+  var hi=i<BR.length?BR[i]:null;
+  rows+='<div class="r"><i style="background:'+RAMP[i]+'"></i>'+(hi!=null?(fmt(prev)+' – '+fmt(hi)):(fmt(prev)+'+'))+'</div>';
+  prev=hi;
+ }
+ lg.innerHTML=rows;
+ // stats
+ var tot=feats.reduce(function(s,f){return s+f.n;},0),mv=feats.reduce(function(s,f){return s+(MET==='n'?0:f[MET]);},0);
+ document.getElementById('stats').innerHTML=[
+  [feats.length.toLocaleString(),'Areas'],[tot.toLocaleString(),'Homes'],
+  MET!=='n'?[mv.toLocaleString(),METL[MET]]:null,
+  MET!=='n'?[(tot?(100*mv/tot).toFixed(1):0)+'%','Countywide share']:null]
+  .filter(Boolean).map(function(t){return '<div class="tile"><div class="v">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>';}).join('');
+}
+function chipRow(sel,fn){document.querySelectorAll(sel+' .chip').forEach(function(c){c.onclick=function(){
+ fn(this.dataset.v);
+ document.querySelectorAll(sel+' .chip').forEach(function(x){x.classList.toggle('on',x===c);});
+ render();};});}
+chipRow('#geoChips',function(v){GEO=v;});
+chipRow('#metChips',function(v){MET=v;});
+chipRow('#modeChips',function(v){MODE=v;});
+</script></body></html>
