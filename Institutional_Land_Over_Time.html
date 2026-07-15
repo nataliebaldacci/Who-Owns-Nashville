@@ -35,12 +35,11 @@
  #legend .sw{width:11px;height:11px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.3)}
  #legend b{font-family:'Montserrat',sans-serif;font-size:11.5px}
  #legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto;font-size:11px;color:#1c458c;font-variant-numeric:tabular-nums}
- #legend .row.off{opacity:.32}
- #legend .row .cb{width:13px;height:13px;flex:0 0 auto;border:1.5px solid #9db3cc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#fff;background:#fff}
- #legend .row:not(.off) .cb{background:#1c458c;border-color:#1c458c}
+ #legend .row .rk{color:#b9c2cf;font-family:'Montserrat',sans-serif;font-weight:700;width:18px;flex:0 0 auto;font-size:11px;text-align:right}
  #opSearch{width:100%;box-sizing:border-box;font-family:'EB Garamond',serif;font-size:13px;padding:5px 8px;border:1px solid #cdd6e3;border-radius:6px;margin-bottom:6px}
- #bulk{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
- #bulk .chip{font-size:9.5px;padding:3px 8px}
+ #isoNote{font-size:11.5px;color:#d7263d;font-family:'Montserrat',sans-serif;font-weight:700;margin-bottom:6px;display:none;cursor:pointer}
+ #isoNote:hover{text-decoration:underline}
+ #legend .hint{font-size:10.5px;color:#9aa4b0;margin-top:6px;font-style:italic}
  #title{top:66px;left:12px;max-width:300px;padding:10px 14px}
  #title h1{margin:0;font-size:15px;font-family:'Montserrat',sans-serif;color:#1a3a5c}
  #title p{margin:4px 0 0;font-size:12px;color:#555;line-height:1.4}
@@ -51,16 +50,13 @@
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>OVER TIME</small></a><div class="htitle">Institutional Land Acquisition &middot; 1990&ndash;2026</div></div>
 <div id="map"></div>
 <div class="panel" id="title"><h1>Institutional Land Over Time</h1>
- <p>Every deed event by an institutional operator or major builder, 1990&ndash;2026, attributed to its parent through the owner rollup. Press play, or drag the year. Check operators on and off to filter the owners you see; click a dot for the deed name.</p>
+ <p>Every deed event by an institutional operator or major builder, 1990&ndash;2026, attributed to its parent through the owner rollup. Press play, or drag the year. Click an owner in the list to show only their parcels; click a dot for the deed name.</p>
  <p style="font-family:'Montserrat',sans-serif;font-size:11px;color:#20303f;margin-top:6px"><b>Shape = role:</b>&ensp;&#9679; landlord / SFR operator&ensp;&#9632; builder&ensp;&#9670; land banker&ensp;&#9650; iBuyer</p></div>
-<div class="panel" id="legend"><div class="lab">Filter the owners you see</div>
- <input id="opSearch" placeholder="Search operators&hellip;"/>
- <div id="bulk">
-  <span class="chip" data-b="all">All</span><span class="chip" data-b="none">None</span>
-  <span class="chip" data-b="landlord">&#9679; Landlords</span><span class="chip" data-b="builder">&#9632; Builders</span>
-  <span class="chip" data-b="landbank">&#9670; Land bankers</span><span class="chip" data-b="ibuyer">&#9650; iBuyers</span>
- </div>
- <div id="legrows"></div></div>
+<div class="panel" id="legend"><div class="lab">Top owners</div>
+ <input id="opSearch" placeholder="Search owners&hellip;"/>
+ <div id="isoNote"></div>
+ <div id="legrows"></div>
+ <div class="hint">Click an owner to show only their parcels. Click again to clear.</div></div>
 <div class="panel" id="stats"></div>
 <div class="panel" id="timebar">
  <button id="playBtn">&#9654; Play</button>
@@ -97,7 +93,7 @@ function drawShape(ctx,shape,x,y,r){
  if(shape==='ibuyer'){ctx.beginPath();ctx.moveTo(x,y-r*1.3);ctx.lineTo(x+r*1.25,y+r);ctx.lineTo(x-r*1.25,y+r);ctx.closePath();ctx.fill();return;}
  ctx.beginPath();ctx.arc(x,y,r,0,6.2832);ctx.fill();
 }
-var YEAR=2026,MODE='cum',VIS=null,PLAYING=null;   // VIS=null means all operators visible
+var YEAR=2026,MODE='cum',ISO=null,PLAYING=null;   // ISO = owner isolated by the sidebar list
 var PTS=[],OPS=[],opColor={},opCount={};
 var D2R=Math.PI/180;
 
@@ -148,9 +144,8 @@ var DotLayer=L.Layer.extend({
  }
 });
 var dots=new DotLayer().addTo(map);
-function visible(op){return !VIS||VIS.has(op);}
 function keep(p){
- if(!visible(p.op))return false;
+ if(ISO&&p.op!==ISO)return false;
  return MODE==='cum'?p.y<=YEAR:p.y===YEAR;
 }
 // click: nearest kept point within 12px
@@ -169,36 +164,39 @@ map.on('click',function(e){
   +'Deed name: '+best.n+'<br>Year: '+best.y
   +'<br><a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+best.pid+'">Parcel Report</a></div>').openOn(map);
 });
+function pickOwner(o){
+ ISO=(ISO===o)?null:o;
+ draw();
+ if(ISO){ // zoom to this owner's footprint
+  var minLa=90,maxLa=-90,minLo=180,maxLo=-180,n=0;
+  PTS.forEach(function(p){if(p.op===ISO){n++;
+   if(p.lat<minLa)minLa=p.lat;if(p.lat>maxLa)maxLa=p.lat;
+   if(p.lon<minLo)minLo=p.lon;if(p.lon>maxLo)maxLo=p.lon;}});
+  if(n)map.fitBounds([[minLa,minLo],[maxLa,maxLo]],{padding:[40,40],maxZoom:14});
+ }
+}
 function legend(){
  var el=document.getElementById('legrows');
  var q=(document.getElementById('opSearch').value||'').toLowerCase();
- el.innerHTML=OPS.filter(function(o){return !q||o.toLowerCase().indexOf(q)>=0;}).map(function(o){
-  var off=!visible(o);
+ el.innerHTML=OPS.filter(function(o){return !q||o.toLowerCase().indexOf(q)>=0;}).map(function(o,i){
   var vis=PTS.reduce(function(s,p){return s+(p.op===o&&(MODE==='cum'?p.y<=YEAR:p.y===YEAR)?1:0);},0);
-  return '<div class="row'+(off?' off':'')+'" data-o="'+o.replace(/"/g,'&quot;')+'">'
-   +'<span class="cb">'+(off?'':'&#10003;')+'</span>'
+  return '<div class="row'+(o===ISO?' sel':'')+'" data-o="'+o.replace(/"/g,'&quot;')+'">'
+   +'<span class="rk">'+(i+1)+'</span>'
    +'<span style="color:'+opColor[o]+';font-size:13px;width:14px;text-align:center;flex:0 0 auto">'+GLYPH[classOf(o)]+'</span>'
    +'<b>'+o+'</b><span class="n">'+vis.toLocaleString()+'</span></div>';}).join('');
- el.querySelectorAll('.row').forEach(function(r){r.onclick=function(){
-  var o=this.getAttribute('data-o');
-  if(!VIS)VIS=new Set(OPS);           // all visible -> materialize, then toggle
-  if(VIS.has(o))VIS.delete(o);else VIS.add(o);
-  if(VIS.size===OPS.length)VIS=null;  // everything back on
-  draw();};});
+ el.querySelectorAll('.row').forEach(function(r){r.onclick=function(){pickOwner(this.getAttribute('data-o'));};});
+ var note=document.getElementById('isoNote');
+ if(ISO){note.style.display='block';note.textContent='Showing only: '+ISO+'  \u2715 clear';}
+ else note.style.display='none';
 }
 document.getElementById('opSearch').addEventListener('input',legend);
-document.querySelectorAll('#bulk .chip').forEach(function(c){c.onclick=function(){
- var b=this.dataset.b;
- if(b==='all')VIS=null;
- else if(b==='none')VIS=new Set();
- else VIS=new Set(OPS.filter(function(o){return classOf(o)===b;}));
- draw();};});
+document.getElementById('isoNote').onclick=function(){ISO=null;draw();};
 function stats(){
  var n=0,ops={},parc={};
  PTS.forEach(function(p){if(keep(p)){n++;ops[p.op]=1;parc[p.pid]=1;}});
  document.getElementById('stats').innerHTML=[
   [n.toLocaleString(),'Deed events'],[Object.keys(parc).length.toLocaleString(),'Parcels'],
-  [Object.keys(ops).length,'Operators'],[VIS===null?'All owners':(VIS.size+' selected'),'Showing']]
+  [Object.keys(ops).length,'Operators'],[ISO||'All owners','Showing']]
   .map(function(t){return '<div class="tile"><div class="v">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>';}).join('');
 }
 function draw(){document.getElementById('yr').textContent=YEAR;dots.redraw();legend();stats();}
