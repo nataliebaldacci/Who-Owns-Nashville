@@ -1,0 +1,60 @@
+Number,Deal,Sponsor,Size_USD,Closing_Date,Closing_Year,Rated,Deal_Type
+1,IHSFR 2018-SFR4,Invitation Homes,"$960,304,000",11/7/18,2018,Y,Single-borrower Deal
+2,PROG 2018-SFR3,Progress Residential,"$1,033,188,000",10/4/18,2018,Y,Single-borrower Deal
+3,PROG 2018-SFR2,Progress Residential,"$379,136,000",8/2/18,2018,Y,Single-borrower Deal
+4,CAFL 2018-1,CoreVest American Finance,"$236,784,337",7/6/18,2018,Y,Multi-borrower Deal
+5,IHSFR 2018-SFR3,Invitation Homes,"$1,300,383,000",6/28/18,2018,Y,Single-borrower Deal
+6,HPA 2018-1,Home Partners of America,"$460,170,754",6/7/18,2018,Y,Single-borrower Deal
+7,IHSFR 2018-SFR2,Invitation Homes,"$1,057,225,000",5/8/18,2018,Y,Single-borrower Deal
+8,TAH 2018-SFR1,Tricon American Homes,"$339,965,000",4/18/18,2018,Y,Single-borrower Deal
+9,PROG 2018-SFR1,Progress Residential,"$343,250,000",2/22/18,2018,Y,Single-borrower Deal
+10,IHSFR 2018-SFR1,Invitation Homes,"$916,571,000",2/8/18,2018,Y,Single-borrower Deal
+11,TAH 2017-SFR2,Tricon American Homes,"$394,200,000",12/20/17,2017,Y,Single-borrower Deal
+12,CAFL 2017-2,CoreVest American Finance (Freddie Mac FRESR),"$202,726,620",12/18/17,2017,Y,Multi-borrower Deal
+13,PROG 2017-SFR2,Progress Residential,"$271,087,000",12/1/17,2017,Y,Single-borrower Deal
+14,IHSFR 2017-SFR2,Invitation Homes,"$865,027,000",11/9/17,2017,Y,Single-borrower Deal
+15,CAFL 2017-1,CoreVest American Finance,"$207,208,633",10/31/17,2017,Y,Multi-borrower Deal
+16,SWH 2017-1,Starwood Waypoint Homes,"$771,240,000",9/29/17,2017,Y,Single-borrower Deal
+17,TAH 2017-1,Tricon American Homes,"$499,000,000",8/23/17,2017,Y,Single-borrower Deal
+18,PROG-2017-SFR1,Progress Residential,"$459,000,000",7/26/17,2017,Y,Single-borrower Deal
+19,HPA 2017-1,Home Partners of America,"$336,000,000",6/29/17,2017,Y,Single-borrower Deal
+20,FNGT 2017-T1,Fannie Mae / Invitation Homes,"$1,000,000,000",4/28/17,2017,Y,Single-borrower Deal
+21,RCO 2016-SFR1,RCO Mortgage,"$114,000,000",12/16/16,2016,Y,Multi-borrower Deal
+22,PROG 2016-SFR2,Progress Residential,"$616,000,000",12/6/16,2016,Y,Single-borrower Deal
+23,CAFL 2016-2,Colony American Finance,"$188,000,000",11/15/16,2016,Y,Multi-borrower Deal
+24,CSH 2016-2,Colony Starwood Homes,"$611,000,000",11/3/16,2016,Y,Single-borrower Deal
+25,TAH 2016-SFR1,Tricon American Homes,"$382,000,000",10/25/16,2016,Y,Single-borrower Deal
+26,AMSR 2016-SFR1,Amherst SFR Assets,"$489,000,000",10/14/16,2016,Y,Single-borrower Deal
+27,HPA 2016-2,Home Partners of America,"$343,000,000",9/13/16,2016,Y,Single-borrower Deal
+28,PROG 2016-1,Progress Residential,"$877,000,000",8/4/16,2016,Y,Single-borrower Deal
+29,B2R 2016-1,B2R Finance,"$199,000,000",8/4/16,2016,Y,Multi-borrower Deal
+30,CSH 2016-1,Colony Starwood Homes,"$536,000,000",6/7/16,2016,Y,Single-borrower Deal
+31,CAFL 2016-1,Colony American Finance,"$255,000,000",5/20/16,2016,Y,Multi-borrower Deal
+32,HPA 2016-1,Home Partners of America,"$509,000,000",2/4/16,2016,Y,Single-borrower Deal
+33,B2R 2015-2,B2R Finance,"$301,000,000",11/24/15,2015,Y,Multi-borrower Deal
+34,PROG 2015-3,Progress Residential,"$450,000,000",11/3/15,2015,Y,Single-borrower Deal
+35,CAFL 2015-1,Colony American Finance,"$252,000,000",10/29/15,2015,Y,Multi-borrower Deal
+36,AH4R 2015-SFR2,American Homes 4 Rent,"$478,000,000",9/22/15,2015,Y,Single-borrower Deal
+37,IH 2015-SFR3,Invitation Homes,"$1,194,000,000",6/25/15,2015,Y,Single-borrower Deal
+38,CAH 2015-1,Colony American,"$674,000,000",6/11/15,2015,Y,Single-borrower Deal
+39,PROG 2015-SFR2,Progress Residential,"$439,000,000",6/2/15,2015,Y,Single-borrower Deal
+40,TAH 2015-1,Tricon American Homes,"$380,000,000",5/12/15,2015,Y,Single-borrower Deal
+41,FKL 2015-SFR1,First Key Lending,"$241,000,000",4/23/15,2015,Y,Multi-borrower Deal
+42,B2R 2015-1,B2R Finance,"$230,000,000",4/22/15,2015,Y,Multi-borrower Deal
+43,IH 2015-SFR2,Invitation Homes,"$637,000,000",4/10/15,2015,Y,Single-borrower Deal
+44,AH4R 2015-SFR1,American Homes 4 Rent,"$553,000,000",3/6/15,2015,Y,Single-borrower Deal
+45,PROG 2015-SFR1,Progress Residential,"$559,000,000",2/3/15,2015,Y,Single-borrower Deal
+46,IH 2015-SFR1,Invitation Homes,"$541,000,000",1/29/15,2015,Y,Single-borrower Deal
+47,SWAY 2014-1,SWAY,"$531,000,000",12/19/14,2014,Y,Single-borrower Deal
+48,AH4R 2014-SFR3,American Homes 4 Rent,"$528,000,000",11/25/14,2014,Y,Single-borrower Deal
+49,IH 2014-SFR3,Invitation Homes,"$769,000,000",11/12/14,2014,Y,Single-borrower Deal
+50,PROG 2014-SFR1,Progress Residential,"$473,000,000",9/30/14,2014,Y,Single-borrower Deal
+51,AH4R 2014-SFR2,American Homes 4 Rent,"$513,000,000",9/19/14,2014,Y,Single-borrower Deal
+52,ARP 2014-1,American Residential Properties,"$342,000,000",8/26/14,2014,Y,Single-borrower Deal
+53,IH 2014-SFR2,Invitation Homes,"$720,000,000",8/14/14,2014,Y,Single-borrower Deal
+54,SBY 2014-1,Silver Bay Realty,"$313,000,000",8/12/14,2014,Y,Single-borrower Deal
+55,CAH 2014-2,Colony American,"$559,000,000",6/30/14,2014,Y,Single-borrower Deal
+56,IH 2014-SFR1,Invitation Homes,"$994,000,000",5/30/14,2014,Y,Single-borrower Deal
+57,AH4R 2014-SFR1,American Homes 4 Rent,"$481,000,000",5/21/14,2014,Y,Single-borrower Deal
+58,CAH 2014-1,Colony American Homes,"$514,000,000",4/10/14,2014,Y,Single-borrower Deal
+59,IH 2013-SFR1,Invitation Homes,"$479,000,000",11/19/13,2013,Y,Single-borrower Deal

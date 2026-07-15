@@ -26,6 +26,17 @@
   .leaflet-popup-content table td{padding:1px 5px;vertical-align:top;font-size:11.5px}
   .leaflet-popup-content table td:first-child{color:#666;font-style:italic;white-space:nowrap}
   #status{position:absolute;bottom:26px;right:14px;background:rgba(255,255,255,0.95);padding:6px 12px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.2);z-index:1000;font-size:12px;color:#555}
+  #fredBtn{font-family:'Montserrat',sans-serif;font-size:10.5px;font-weight:700;background:#fff;color:#1c458c;border:1px solid #9db3cc;border-radius:3px;padding:3px 8px;cursor:pointer}
+  #fredBtn:hover{background:#eef4ff}
+  #fredModal{display:none;position:absolute;top:8%;left:50%;transform:translateX(-50%);width:min(880px,95%);max-height:80%;overflow:auto;background:#fff;border-radius:6px;box-shadow:0 4px 24px rgba(0,0,0,0.35);z-index:1300;padding:16px 20px}
+  #fredModal h2{margin:0 0 2px;font-size:16px;color:#1a3a5c;font-family:'Montserrat',sans-serif}
+  #fredModal .src{font-size:11.5px;color:#777;font-style:italic;margin-bottom:9px}
+  #fredModal .x{position:absolute;top:10px;right:16px;cursor:pointer;font-size:20px;color:#999;font-family:sans-serif}
+  #fredModal table{width:100%;border-collapse:collapse;font-size:12.5px}
+  #fredModal th{font-family:'Montserrat',sans-serif;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;color:#8a94a0;text-align:left;padding:4px 8px 4px 0;border-bottom:1.5px solid #20303f;position:sticky;top:0;background:#fff}
+  #fredModal td{padding:4px 8px 4px 0;border-bottom:1px solid #eef0f3}
+  #fredModal td.n{text-align:right;font-variant-numeric:tabular-nums}
+  #fredModal tr.onmap td{background:#fdf6e3}
 </style>
 </head><body>
 <div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO FINANCES</small></a><div class="htitle">National SFR Securitized Homes</div></div>
@@ -33,7 +44,13 @@
 <div class="title-card">
   <h1>Securitized Single-Family Rental Homes, by Deal</h1>
   <p>Homes pledged as collateral in institutional SFR securitizations. Nashville sits inside a national mortgage machine.</p>
-  <div class="filter-row"><label for="dealSelect">FILTER BY DEAL</label><select id="dealSelect"><option value="__all__">All deals</option></select></div>
+  <div class="filter-row"><label for="dealSelect">FILTER BY DEAL</label><select id="dealSelect"><option value="__all__">All deals</option></select><button id="fredBtn">Rated deals 2013&ndash;18</button></div>
+</div>
+<div id="fredModal">
+  <div class="x" onclick="document.getElementById('fredModal').style.display='none'">&times;</div>
+  <h2>Rated SFR securitizations, Nov 2013 &ndash; Nov 2018</h2>
+  <div class="src">All 59 rated single-family-rental securitizations, tabulated by Freddie Mac from Intex and Bloomberg. Highlighted rows correspond to deals whose collateral homes appear on this map.</div>
+  <div id="fredTable">Loading&hellip;</div>
 </div>
 <div id="legend" class="legend"><h3>Parent brand</h3></div>
 <div id="status">Loading…</div>
@@ -85,6 +102,34 @@ function secLinksHTML(deal){
  if(d)out.push('<a target="_blank" href="'+d[1]+'">'+d[0]+'</a>');
  out.push('<a target="_blank" href="https://www.sec.gov/edgar/search/#/q=%22'+encodeURIComponent(secQuery(deal))+'%22">Search EDGAR</a>');
  return out.join(' · ');
+}
+// --- Freddie Mac rated-deal baseline (Nov 2013 - Nov 2018, 59 deals) -------
+// Ground truth tabulated by Freddie Mac from Intex and Bloomberg. Map deals
+// are annotated where the match is unambiguous (exact loan amount and/or
+// recording date). This list is a floor for the pre-2019 era, rated deals only.
+const FREDDIE_MATCH={
+ 'AMH 2014-SFR2':'AH4R 2014-SFR2',   // $513M, closed 9/19/14
+ 'IH 2017-1':'FNGT 2017-T1',         // $1.0B Fannie Mae / Invitation Homes, closed 4/28/17 = recording date
+ 'IH 2018-4':'IHSFR 2018-SFR4'       // $960,304,000 exactly matches the recorded loan
+};
+let FRED={},FRED_ROWS=[];
+fetch('Freddie_Mac_SFR_Securitizations_2013-2018_clean.csv').then(r=>r.text()).then(t=>{
+ const lines=t.trim().split(/\r?\n/),hdr=lines[0].split(',');
+ for(let i=1;i<lines.length;i++){
+  const cells=lines[i].split(/,(?=(?:[^"]*"[^"]*")*[^"]*$)/).map(c=>c.replace(/^"|"$/g,''));
+  const row={};hdr.forEach((h,j)=>row[h]=cells[j]||'');
+  FRED[row.Deal]=row;FRED_ROWS.push(row);
+ }
+ const onmap=new Set(Object.values(FREDDIE_MATCH));
+ document.getElementById('fredTable').innerHTML='<table><tr><th>#</th><th>Deal</th><th>Sponsor</th><th>Size</th><th>Closed</th><th>Type</th></tr>'+
+  FRED_ROWS.map(r=>`<tr${onmap.has(r.Deal)?' class="onmap"':''}><td class="n">${r.Number}</td><td><strong>${r.Deal}</strong></td><td>${r.Sponsor}</td><td class="n">${r.Size_USD}</td><td>${r.Closing_Date}</td><td>${r.Deal_Type.replace(' Deal','')}</td></tr>`).join('')+'</table>';
+}).catch(()=>{document.getElementById('fredTable').textContent='Could not load the deal table.';});
+document.getElementById('fredBtn').onclick=()=>{
+ const m=document.getElementById('fredModal');m.style.display=m.style.display==='block'?'none':'block';};
+function freddieHTML(deal){
+ const code=FREDDIE_MATCH[deal];if(!code||!FRED[code])return '';
+ const r=FRED[code];
+ return `<br>Freddie Mac baseline: <strong>${code}</strong> · ${r.Size_USD} · closed ${r.Closing_Date} · ${r.Rated==='Y'?'rated ':''}${r.Deal_Type.toLowerCase()}${r.Sponsor?' · sponsor: '+r.Sponsor:''}`;
 }
 // --------------------------------------------------------------------------
 
@@ -179,7 +224,7 @@ function render(dealKey){
   if(dealKey!=='__all__'&&feats.length){
     const p=feats.find(f=>Number(f.properties.amount)>0&&f.properties.lender)?.properties||feats[0].properties;
     const meta=document.createElement('div');meta.className='deal-meta';
-    meta.innerHTML=`<strong>${dealKey}</strong><br>Lender: ${p.lender||'—'}<br>Loan: ${usd(p.amount)}${p.date&&p.date!=='01/01/1899'?'<br>Recorded: '+p.date:''}<br>SEC docs: ${secLinksHTML(dealKey)}`;
+    meta.innerHTML=`<strong>${dealKey}</strong><br>Lender: ${p.lender||'—'}<br>Loan: ${usd(p.amount)}${p.date&&p.date!=='01/01/1899'?'<br>Recorded: '+p.date:''}<br>SEC docs: ${secLinksHTML(dealKey)}${freddieHTML(dealKey)}`;
     legendEl.appendChild(meta);
   }
   statusEl.textContent=dealKey==='__all__'
