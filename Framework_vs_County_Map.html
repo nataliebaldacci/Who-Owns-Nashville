@@ -63,6 +63,7 @@
   <div class="chips" id="locChips">
     <span class="chip on" data-v="all">All</span><span class="chip" data-v="in">In-state</span><span class="chip oos" data-v="oos">Out-of-state</span>
   </div>
+  <div class="note" id="svcNote" style="color:#9aa4b0"></div>
   <div class="note">County side is computed live from Metro's cadastral layer with SQL mirrors of each filter (ownership from owner-name patterns; occupancy approximated by owner mailing address = property address). Framework side is the canonical 21st Century Housing framework file (owner types, occupancy, and absentee status resolved parcel by parcel, 7/7/26). The gap between the two numbers is the point: it is what naive county filters get wrong.</div>
 </div>
 
@@ -123,55 +124,77 @@ function fwCount(){
  return n;
 }
 
-// ---------------- live county polygons (Metro map server renders them) -----
+// ---------------- JSONP transport ------------------------------------------
+// Metro's ArcGIS server does not send CORS headers, so in-page fetch() is
+// blocked by the browser. ArcGIS REST supports JSONP (callback=), which works
+// from any origin. All queries below go through it.
 var CAD='https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer';
-var overlay=null,imgSeq=0,useDynamic=true;
-// explicit renderer + minScale 0 so parcels draw at EVERY zoom, overriding the
-// layer's default scale limits (which hide parcels until you zoom far in)
-function dynLayers(){
- return JSON.stringify([{id:101,source:{type:'mapLayer',mapLayerId:4},
-  definitionExpression:whereClause(),minScale:0,maxScale:0,
-  drawingInfo:{transparency:0,renderer:{type:'simple',symbol:{
-   type:'esriSFS',style:'esriSFSSolid',color:[215,38,61,60],
-   outline:{type:'esriSLS',style:'esriSLSSolid',color:[122,16,32,200],width:0.6}}}}}]);
+var _cbn=0;
+function jsonp(url,timeoutMs){
+ return new Promise(function(res,rej){
+  var name='__won_cb'+(++_cbn),done=false;
+  var s=document.createElement('script');
+  var t=setTimeout(function(){if(!done){done=true;cleanup();rej(new Error('timeout'));}},timeoutMs||20000);
+  function cleanup(){clearTimeout(t);delete window[name];if(s.parentNode)s.parentNode.removeChild(s);}
+  window[name]=function(d){if(!done){done=true;cleanup();res(d);}};
+  s.onerror=function(){if(!done){done=true;cleanup();rej(new Error('script error'));}};
+  s.src=url+(url.indexOf('?')>=0?'&':'?')+'callback='+name;
+  document.head.appendChild(s);
+ });
 }
-function exportURL(b,sz){
- var p1=L.CRS.EPSG3857.project(b.getSouthWest()),p2=L.CRS.EPSG3857.project(b.getNorthEast());
- var base=CAD+'/export?f=image&format=png32&transparent=true&dpi=96&bboxSR=3857&imageSR=3857'
-  +'&bbox='+[p1.x,p1.y,p2.x,p2.y].join(',')+'&size='+sz.x+','+sz.y;
- return useDynamic
-  ? base+'&dynamicLayers='+encodeURIComponent(dynLayers())
-  : base+'&layers=show:4&layerDefs='+encodeURIComponent(JSON.stringify({4:whereClause()}));
+function svcNote(msg,bad){
+ var el=document.getElementById('svcNote');
+ if(el){el.textContent=msg;el.style.color=bad?'#d7263d':'#9aa4b0';}
 }
-function refreshOverlay(){
- var b=map.getBounds(),sz=map.getSize();
- var url=exportURL(b,sz);
- var seq=++imgSeq;
- var img=new Image();
- img.onload=function(){
-  if(seq!==imgSeq)return;               // stale response
-  var o=L.imageOverlay(url,b,{opacity:.85,interactive:false}).addTo(map);
-  if(overlay)map.removeLayer(overlay);
-  overlay=o;
- };
- img.onerror=function(){
-  if(useDynamic){useDynamic=false;refreshOverlay();}  // server rejects dynamicLayers -> plain export
- };
- img.src=url;
+
+// ---------------- live county polygons, drawn per viewport ------------------
+// At street zoom the current view is queried live and each matching parcel is
+// drawn as its polygon outline; county-wide the counts still work and a banner
+// says to zoom in (230k polygons cannot be drawn at once).
+var MINZOOM=15,PAGE=1000,MAXPAGES=4;
+var parcelLyr=L.layerGroup().addTo(map),pSeq=0;
+function drawParcels(){
+ var seq=++pSeq;
+ if(map.getZoom()<MINZOOM){parcelLyr.clearLayers();svcNote('Zoom to street level to draw the matching parcel outlines.');return;}
+ var b=map.getBounds();
+ var geom=[b.getWest(),b.getSouth(),b.getEast(),b.getNorth()].join(',');
+ svcNote('Loading parcels in view…');
+ var got=[],page=0;
+ function step(){
+  jsonp(CAD+'/4/query?where='+encodeURIComponent(whereClause())
+   +'&geometry='+geom+'&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects'
+   +'&outFields=ParID,APN,Owner,Ownstate,LUDesc,DUCount,Zoning,TotlAppr,PropAddr,Ownaddr1'
+   +'&returnGeometry=true&outSR=4326&resultRecordCount='+PAGE+'&resultOffset='+(page*PAGE)+'&f=json')
+  .then(function(j){
+   if(seq!==pSeq)return;
+   if(j.error){svcNote('Parcel query error: '+(j.error.message||j.error.code),true);return;}
+   got=got.concat(j.features||[]);
+   if((j.features||[]).length===PAGE&&page+1<MAXPAGES){page++;step();return;}
+   parcelLyr.clearLayers();
+   got.forEach(function(f){
+    if(!f.geometry||!f.geometry.rings)return;
+    var latlngs=f.geometry.rings.map(function(r){return r.map(function(c){return [c[1],c[0]];});});
+    L.polygon(latlngs,{color:'#7a0010',weight:1.1,fillColor:'#d7263d',fillOpacity:.14})
+     .bindPopup(parcelPopup(f.attributes)).addTo(parcelLyr);
+   });
+   svcNote(got.length+' matching parcels drawn in this view'+(got.length>=PAGE*MAXPAGES?' (capped — zoom in further)':'')+'.');
+  }).catch(function(e){if(seq===pSeq)svcNote('Could not reach the Metro parcel service ('+e.message+').',true);});
+ }
+ step();
 }
-map.on('moveend',refreshOverlay);
+map.on('moveend',drawParcels);
 
 // ---------------- live county count ----------------------------------------
 var cSeq=0;
 function refreshCount(){
  var seq=++cSeq;
- document.getElementById('stats').dataset.pending='1';
  renderStats(null);
- fetch(CAD+'/4/query?where='+encodeURIComponent(whereClause())+'&returnCountOnly=true&f=json')
-  .then(r=>r.json()).then(function(j){
+ jsonp(CAD+'/4/query?where='+encodeURIComponent(whereClause())+'&returnCountOnly=true&f=json')
+  .then(function(j){
    if(seq!==cSeq)return;
-   renderStats(typeof j.count==='number'?j.count:null);
-  }).catch(function(){if(seq===cSeq)renderStats(null);});
+   if(j&&j.error){renderStats(null);svcNote('County count error: '+(j.error.message||j.error.code),true);return;}
+   renderStats(j&&typeof j.count==='number'?j.count:null);
+  }).catch(function(e){if(seq===cSeq){renderStats(null);svcNote('Could not reach the Metro parcel service ('+e.message+').',true);}});
 }
 function renderStats(county){
  var fw=fwCount();
@@ -187,37 +210,39 @@ function renderStats(county){
   return '<div class="tile'+(t[2]?' '+t[2]:'')+'"><div class="v">'+t[1]+'</div><div class="l">'+t[0]+'</div></div>';}).join('');
 }
 
-// ---------------- identify on click ----------------------------------------
+// ---------------- parcel popup ----------------------------------------------
 function esc(s){return String(s==null?'':s).replace(/</g,'&lt;');}
+function attrGet(a){for(var i=1;i<arguments.length;i++){var k=arguments[i];for(var kk in a)if(kk.toLowerCase()===String(k).toLowerCase()&&a[kk]!=null&&a[kk]!=='')return a[kk];}return null;}
+function parcelPopup(a){
+ var pid=attrGet(a,'ParID'),apn=attrGet(a,'APN');
+ return '<div class="lp"><b>'+esc(attrGet(a,'PropAddr')||('Parcel '+pid))+'</b>'
+  +'<div class="g">'
+  +'<span>Owner</span><span>'+esc(attrGet(a,'Owner')||'—')+'</span>'
+  +'<span>Owner addr</span><span>'+esc([attrGet(a,'Ownaddr1'),attrGet(a,'Owncity'),attrGet(a,'Ownstate')].filter(Boolean).join(', ')||'—')+'</span>'
+  +'<span>Land use</span><span>'+esc(attrGet(a,'LUDesc')||'(null)')+'</span>'
+  +'<span>Dwelling units</span><span>'+esc(attrGet(a,'DUCount')||'—')+'</span>'
+  +'<span>Zoning</span><span>'+esc(attrGet(a,'Zoning')||'—')+'</span>'
+  +'<span>Appraised</span><span>'+(attrGet(a,'TotlAppr')?('$'+Number(attrGet(a,'TotlAppr')).toLocaleString()):'—')+'</span>'
+  +'</div>'
+  +(pid?'<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(pid)+'">Parcel Report</a>':'')
+  +(apn?' &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+esc(apn)+'">Parcel Viewer</a>':'')
+  +'</div>';
+}
+// identify on click (works below street zoom too)
 map.on('click',function(e){
- var url=CAD+'/4/query?geometry='+e.latlng.lng+','+e.latlng.lat
-  +'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json';
+ if(map.getZoom()>=MINZOOM)return;   // at street zoom the drawn polygons have their own popups
  var pop=L.popup({maxWidth:320}).setLatLng(e.latlng).setContent('<div class="lp" style="color:#8a94a0">Looking up parcel&hellip;</div>').openOn(map);
- fetch(url).then(r=>r.json()).then(function(j){
+ jsonp(CAD+'/4/query?geometry='+e.latlng.lng+','+e.latlng.lat
+  +'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json')
+ .then(function(j){
   var ft=(j.features||[])[0];
   if(!ft){pop.setContent('<div class="lp" style="color:#8a94a0">No parcel here.</div>');return;}
-  var a=ft.attributes||{};
-  function g(){for(var i=0;i<arguments.length;i++){var k=arguments[i];for(var kk in a)if(kk.toLowerCase()===k.toLowerCase()&&a[kk]!=null&&a[kk]!=='')return a[kk];}return null;}
-  var pid=g('ParID'),apn=g('APN');
-  var h='<div class="lp"><b>'+esc(g('PropAddr')||'Parcel '+pid)+'</b>'
-   +'<div class="g">'
-   +'<span>Owner</span><span>'+esc(g('Owner')||'—')+'</span>'
-   +'<span>Owner addr</span><span>'+esc([g('Ownaddr1'),g('Owncity'),g('Ownstate')].filter(Boolean).join(', ')||'—')+'</span>'
-   +'<span>Land use</span><span>'+esc(g('LUDesc')||'(null)')+'</span>'
-   +'<span>Feature type</span><span>'+esc(g('Featuretype')||'—')+'</span>'
-   +'<span>Dwelling units</span><span>'+esc(g('DUCount')||'—')+'</span>'
-   +'<span>Zoning</span><span>'+esc(g('Zoning')||'—')+'</span>'
-   +'<span>Appraised</span><span>'+(g('TotlAppr')?('$'+Number(g('TotlAppr')).toLocaleString()):'—')+'</span>'
-   +'</div>'
-   +(pid?'<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(pid)+'">Parcel Report</a>':'')
-   +(apn?' &middot; <a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+esc(apn)+'">Parcel Viewer</a>':'')
-   +'</div>';
-  pop.setContent(h);
+  pop.setContent(parcelPopup(ft.attributes||{}));
  }).catch(function(){pop.setContent('<div class="lp" style="color:#c0392b">Could not reach the parcel service.</div>');});
 });
 
 // ---------------- wiring ---------------------------------------------------
-function update(){refreshOverlay();refreshCount();}
+function update(){drawParcels();refreshCount();}
 function chipRow(sel,key){document.querySelectorAll(sel+' .chip').forEach(function(ch){ch.onclick=function(){
  F[key]=this.getAttribute('data-v');
  document.querySelectorAll(sel+' .chip').forEach(function(x){x.classList.remove('on');});
