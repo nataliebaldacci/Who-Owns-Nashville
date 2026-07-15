@@ -125,21 +125,37 @@ function fwCount(){
 
 // ---------------- live county polygons (Metro map server renders them) -----
 var CAD='https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer';
-var overlay=null,imgSeq=0;
+var overlay=null,imgSeq=0,useDynamic=true;
+// explicit renderer + minScale 0 so parcels draw at EVERY zoom, overriding the
+// layer's default scale limits (which hide parcels until you zoom far in)
+function dynLayers(){
+ return JSON.stringify([{id:101,source:{type:'mapLayer',mapLayerId:4},
+  definitionExpression:whereClause(),minScale:0,maxScale:0,
+  drawingInfo:{transparency:0,renderer:{type:'simple',symbol:{
+   type:'esriSFS',style:'esriSFSSolid',color:[215,38,61,60],
+   outline:{type:'esriSLS',style:'esriSLSSolid',color:[122,16,32,200],width:0.6}}}}}]);
+}
+function exportURL(b,sz){
+ var p1=L.CRS.EPSG3857.project(b.getSouthWest()),p2=L.CRS.EPSG3857.project(b.getNorthEast());
+ var base=CAD+'/export?f=image&format=png32&transparent=true&dpi=96&bboxSR=3857&imageSR=3857'
+  +'&bbox='+[p1.x,p1.y,p2.x,p2.y].join(',')+'&size='+sz.x+','+sz.y;
+ return useDynamic
+  ? base+'&dynamicLayers='+encodeURIComponent(dynLayers())
+  : base+'&layers=show:4&layerDefs='+encodeURIComponent(JSON.stringify({4:whereClause()}));
+}
 function refreshOverlay(){
  var b=map.getBounds(),sz=map.getSize();
- var p1=L.CRS.EPSG3857.project(b.getSouthWest()),p2=L.CRS.EPSG3857.project(b.getNorthEast());
- var url=CAD+'/export?f=image&format=png32&transparent=true&dpi=96&bboxSR=3857&imageSR=3857'
-  +'&bbox='+[p1.x,p1.y,p2.x,p2.y].join(',')
-  +'&size='+sz.x+','+sz.y
-  +'&layers=show:4&layerDefs='+encodeURIComponent(JSON.stringify({4:whereClause()}));
+ var url=exportURL(b,sz);
  var seq=++imgSeq;
  var img=new Image();
  img.onload=function(){
   if(seq!==imgSeq)return;               // stale response
-  var o=L.imageOverlay(url,b,{opacity:.8,interactive:false}).addTo(map);
+  var o=L.imageOverlay(url,b,{opacity:.85,interactive:false}).addTo(map);
   if(overlay)map.removeLayer(overlay);
   overlay=o;
+ };
+ img.onerror=function(){
+  if(useDynamic){useDynamic=false;refreshOverlay();}  // server rejects dynamicLayers -> plain export
  };
  img.src=url;
 }
