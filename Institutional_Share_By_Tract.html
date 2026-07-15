@@ -57,12 +57,40 @@ var GEO='tract',D=null,layer=null;
 var RAMP=['#0d0887','#7e03a8','#cc4778','#f89441','#f0f921'];   // Plasma, per the Atlanta reference
 var BR=[];
 function share(f){return f.n?100*(f.inst||0)/f.n:0;}
+function jenks(data,k){
+ // Fisher-Jenks natural breaks — quantiles collapse here (most areas near 0%,
+ // a few BTR block groups at 70%), so let the clusters set the classes.
+ var d=data.slice().sort(function(a,b){return a-b;});
+ var n=d.length;
+ var LC=[],VC=[];
+ for(var i=0;i<=n;i++){LC.push(new Array(k+1).fill(0));VC.push(new Array(k+1).fill(0));}
+ for(var q=1;q<=k;q++){LC[1][q]=1;for(var i2=2;i2<=n;i2++)VC[i2][q]=Infinity;}
+ for(var l=2;l<=n;l++){
+  var s1=0,s2=0,w=0,v=0;
+  for(var m=1;m<=l;m++){
+   var i3=l-m+1,val=d[i3-1];
+   s2+=val*val;s1+=val;w++;
+   v=s2-(s1*s1)/w;
+   var i4=i3-1;
+   if(i4!==0){
+    for(var q2=2;q2<=k;q2++){
+     if(VC[l][q2]>=v+VC[i4][q2-1]){LC[l][q2]=i3;VC[l][q2]=v+VC[i4][q2-1];}
+    }
+   }
+  }
+  LC[l][1]=1;VC[l][1]=v;
+ }
+ var kc=new Array(k+1);kc[k]=d[n-1];kc[0]=d[0];
+ var count=k,idx=n;
+ while(count>1){var id=LC[idx][count]-2;kc[count-1]=d[id];idx=LC[idx][count]-1;count--;}
+ return kc;
+}
 function niceBreaks(vals){
- var s=vals.filter(function(v){return v>0;}).sort(function(a,b){return a-b;});
- if(!s.length)return [1,2,3,4];
- var q=[1,2,3,4].map(function(k){return s[Math.floor(s.length*k/5)];});
+ var s=vals.filter(function(v){return v>0;});
+ if(s.length<6)return [1,2,3,4];
+ var q=jenks(s,5).slice(1,5);
  q=q.map(function(v){return v<1?Math.round(v*10)/10:Math.round(v);});
- for(var i=1;i<q.length;i++)if(q[i]<=q[i-1])q[i]=q[i-1]+(q[i-1]<1?0.5:1);
+ for(var i=1;i<q.length;i++)if(q[i]<=q[i-1])q[i]=q[i-1]+(q[i-1]<1?0.1:1);
  return q;
 }
 function colorOf(v){for(var i=0;i<BR.length;i++)if(v<=BR[i])return RAMP[i];return RAMP[4];}
