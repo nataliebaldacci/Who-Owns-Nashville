@@ -60,13 +60,16 @@
  table.tx td:last-child a{font-family:'Montserrat',sans-serif;font-size:9.5px;overflow-wrap:anywhere}
  .amt{font-family:'Montserrat',sans-serif;font-weight:700;color:#20303f;font-size:10.5px}
  /* bottom deal card */
- #bottombox{bottom:0;left:50%;transform:translateX(-50%);width:min(1080px,97%);border-radius:12px 12px 0 0;box-shadow:0 -3px 16px rgba(0,0,0,.28);padding:0;overflow:hidden;z-index:1001}
+ #bottombox{bottom:0;left:50%;transform:translateX(-50%);width:min(1180px,97%);border-radius:12px 12px 0 0;box-shadow:0 -3px 16px rgba(0,0,0,.28);padding:0;overflow:hidden;z-index:1001;max-height:62vh;display:flex;flex-direction:column}
  #bb-summary{display:flex}
  #bb-summary .tile{padding:9px 18px;text-align:center;border-right:1px solid #e9ecf1;flex:1}
  #bb-summary .tile:last-child{border-right:none}
  #bb-summary .tile .v{font-family:'Montserrat',sans-serif;font-size:17px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;line-height:1.15}
  #bb-summary .tile .l{font-family:'Montserrat',sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:2px}
- #bb-deal{display:none}
+ #bb-deal{display:none;flex-direction:column;min-height:0;overflow:hidden}
+ #bb-body{overflow-y:auto;min-height:0}
+ #bb-tx{background:#fff;border-top:1px solid #e9ecf1;padding:9px 20px 14px}
+ #bb-tx h3{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:#1c458c;margin:0 0 6px;text-transform:uppercase;letter-spacing:.6px}
  #bb-deal .top{display:flex;align-items:baseline;gap:14px;padding:10px 20px 9px;color:#fff}
  #bb-deal .top .dname{font-family:'Montserrat',sans-serif;font-weight:800;font-size:25px;line-height:1.05;letter-spacing:-.3px}
  #bb-deal .top .dsub{font-size:12px;opacity:.93;font-family:'Montserrat',sans-serif;font-weight:600}
@@ -134,7 +137,6 @@
 <div class="panel" id="right">
   <h3 id="right-h">Securitization deals</h3>
   <div id="dlist"></div>
-  <div id="txwrap" style="display:none"></div>
 </div>
 
 <div class="panel" id="bottombox">
@@ -144,9 +146,12 @@
       <div><div class="dname" id="bb-name"></div><div class="dsub" id="bb-sub"></div></div>
       <div class="close" onclick="clearDeal()">&times;</div>
     </div>
-    <div class="idrow" id="bb-id"></div>
-    <div class="stats" id="bb-stats"></div>
-    <div class="foot" id="bb-foot"></div>
+    <div id="bb-body">
+      <div class="idrow" id="bb-id"></div>
+      <div class="stats" id="bb-stats"></div>
+      <div class="foot" id="bb-foot"></div>
+      <div id="bb-tx"></div>
+    </div>
   </div>
 </div>
 
@@ -341,6 +346,79 @@ function openParcel(p,ll){
  if(el)wireHistory(el,p);
 }
 
+// ---------- click any parcel: identify from the live cadastral layer ----------
+var CAD='https://maps.nashville.gov/arcgis/rest/services/Cadastral/Cadastral_Layers/MapServer/4/query';
+// field names vary in casing across ArcGIS layers; try candidates case-insensitively
+function attr(a,names){for(var i=0;i<names.length;i++){var k=names[i];
+ if(a[k]!=null&&a[k]!=='')return a[k];
+ var lk=Object.keys(a).filter(function(x){return x.toLowerCase()===k.toLowerCase();})[0];
+ if(lk&&a[lk]!=null&&a[lk]!=='')return a[lk];}return null;}
+function ownType(nm){var o=String(nm||'').toUpperCase();
+ if(!o)return 'Other';
+ if(/METRO|STATE OF|UNITED STATES|HOUSING AUTH|GOVERNMENT|COUNTY OF|BOARD OF/.test(o))return 'Government';
+ if(/\bBANK\b|MORTGAGE|LENDING|FINANCIAL/.test(o))return 'Bank';
+ if(/\bTRUST\b|TRUSTEE|LIVING TR|REV TR|FAMILY TR/.test(o))return 'Trust';
+ if(/LLC|L L C|\bLP\b|L\.P|\bINC\b|CORP|COMPANY|HOLDINGS|PARTNERS|\bLTD\b|PROPERTIES|HOMES\b|\bGP\b/.test(o))return 'Corporate';
+ return 'Individual';}
+function livePopup(p){
+ var apn=esc(String(p.apn||''));
+ var h='<div class="lp">';
+ if(apn)h+='<img class="ph" src="https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+apn+'_1.jpg" alt="" onerror="this.style.display=\'none\'"/>';
+ h+='<span class="badge" style="background:#5b6675">'+esc(p.cowner||'Unknown owner')+'</span>';
+ h+='<div class="addr">'+na(p.addr)+'</div>';
+ h+='<div class="sub">'+(p.city?esc(p.city)+', ':'')+'TN'+(p.zip?' '+esc(p.zip):'')+'</div>';
+ h+='<div class="sect">Current parcel record</div><div class="g">'
+  +'<span>APN</span><b>'+na(p.apn)+'</b>'
+  +'<span>Ownership type</span><b><span class="otype">'+esc(p.otype)+'</span></b>'
+  +'<span>Property type</span><b>'+(p.struct?titlecase(p.struct):'n/a')+'</b>'
+  +'<span>Year built</span><b>'+na(p.yrblt)+'</b>'
+  +'<span>Current zoning</span><b>'+na(p.czone)+'</b>'
+  +'<span>Assessment class</span><b>'+na(p['class'])+'</b>'
+  +'<span>Finished sq ft</span><b>'+(p.sqft?(+p.sqft).toLocaleString():'n/a')+'</b>'
+  +'<span>Beds / baths</span><b>'+(p.beds?parseFloat(p.beds)+' bd':'n/a')+' / '+(p.baths?parseFloat(p.baths)+' ba':'n/a')+'</b>'
+  +'<span>2025 appraised</span><b>'+money(p.appr2025)+'</b>'
+  +'<span>Current owner</span><b>'+na(p.cowner)+'</b>'
+  +'<span>Date of last sale</span><b>'+na(p.cacq)+'</b>'
+  +'<span>Purchase price</span><b>'+money(p.cprice)+'</b>'
+  +'</div>';
+ var tk=[];
+ if(apn)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a>');
+ if(p.pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(p.pid)+'">Parcel Report</a>');
+ tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+p.lat+','+p.lon+'">Street View</a>');
+ if(p.pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetGenInfo?ParcelID='+esc(p.pid)+'">Parcel info (API)</a>');
+ h+='<div class="links">'+tk.join(' &middot; ')+'</div>';
+ if(p.pid)[['owner','Owner history'],['prop','Property history'],['zone','Zoning history'],
+  ['asmt','Assessment history'],['permit','Building permits']].forEach(function(x){
+  h+='<details class="hx" data-kind="'+x[0]+'"><summary>'+x[1]+'</summary><div class="hxbody"></div></details>';});
+ return h+'</div>';
+}
+map.on('click',function(e){
+ var url=CAD+'?geometry='+e.latlng.lng+','+e.latlng.lat
+  +'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json';
+ var pop=L.popup({maxWidth:360,minWidth:300,autoPan:true})
+  .setLatLng(e.latlng).setContent('<div class="lp" style="color:#8a94a0">Looking up parcel&hellip;</div>').openOn(map);
+ fetch(url).then(function(r){return r.json();}).then(function(j){
+  var ft=(j.features||[])[0];
+  if(!ft){pop.setContent('<div class="lp" style="color:#8a94a0">No parcel record here.</div>');return;}
+  var a=ft.attributes||{};
+  var owner=attr(a,['Owner','OWNER']);
+  var p={pid:String(attr(a,['ParID','parid','parcelid'])||''),apn:String(attr(a,['APN','Apn','PIN','AsmtAPN'])||''),
+   addr:attr(a,['PropAddr','LocAddr','SitusAddr','FullAddress','Address']),
+   city:attr(a,['PropCity','LocCity','SitusCity']),zip:attr(a,['PropZip','LocZip','SitusZip','ZipCode']),
+   yrblt:attr(a,['YearBlt','YearBuilt','YRBLT','EffYearBlt']),struct:attr(a,['LUDesc','LUDESC','LandUse']),
+   'class':attr(a,['AsmtClass','AssessClass','Class','CLASS']),czone:attr(a,['Zoning','ZONE','ZoneCode']),
+   sqft:attr(a,['FinishArea','SqFt','SQFT','TotalFinishArea']),
+   beds:attr(a,['Bedrooms','Bedroom','BEDROOMS','NumBedrooms']),baths:attr(a,['Baths','FullBath','BATHS','NumBaths']),
+   cowner:owner,otype:ownType(owner),
+   cacq:dstr(attr(a,['OwnDate','SaleDate','DateSold'])),cprice:attr(a,['SalePrice','SALEPRICE']),
+   appr2025:attr(a,['TotlAppr','TotalAppr','TOTLAPPR']),
+   lat:e.latlng.lat,lon:e.latlng.lng};
+  pop.setContent(livePopup(p));
+  var el=document.querySelector('.leaflet-popup-content .lp');
+  if(el&&p.pid)wireHistory(el,p);
+ }).catch(function(){pop.setContent('<div class="lp" style="color:#c0392b">Could not reach the Nashville parcel service.</div>');});
+});
+
 // ---------- deal registry ----------
 function buildDeals(){
  var m={};
@@ -353,7 +431,10 @@ function buildDeals(){
  DEALS.sort(function(a,b){return b.n-a.n;});
  dealOrder=DEALS.map(function(d){return d.nm;});
  document.getElementById('dealSel').innerHTML='<option value="">Filter by deal name&hellip;</option>'+
-  DEALS.map(function(d){return '<option value="'+esc(d.nm)+'">'+esc(d.deal)+'  ('+(d.year||'n/a')+', '+d.n+' home'+(d.n===1?'':'s')+')</option>';}).join('');
+  DEALS.map(function(d){var c=CARDS[d.nm]||{};var bits=[c.closing?monthYear(c.closing):(d.year||'n/a')];
+   if(c.size)bits.push(big(c.size));
+   bits.push(d.n+' home'+(d.n===1?'':'s'));
+   return '<option value="'+esc(d.nm)+'">'+esc(d.deal)+'  ('+bits.join(' &middot; ')+')</option>';}).join('');
 }
 
 // ---------- selection ----------
@@ -397,10 +478,9 @@ function renderTx(card){
 // ---------- bottom deal card ----------
 function renderBottom(){
  var summ=document.getElementById('bb-summary'),cardEl=document.getElementById('bb-deal');
- var listEl=document.getElementById('dlist'),txEl=document.getElementById('txwrap'),hEl=document.getElementById('right-h');
  if(isolate){
   var c=CARDS[isolate]||{},d=dealByName(isolate)||{},col=opcol(c.brand||d.br);
-  summ.style.display='none';cardEl.style.display='block';
+  summ.style.display='none';cardEl.style.display='flex';
   document.getElementById('bb-top').style.background=col;
   document.getElementById('bb-name').textContent=c.deal||isolate;
   document.getElementById('bb-sub').textContent=isolate;
@@ -440,12 +520,10 @@ function renderBottom(){
     :'No other states disclosed in this deal\'s SEC schedule.';
   var zl=(c.zips||[]).length?('<b>ZIPs:</b> '+c.zips.join(', ')+'. '):'';
   document.getElementById('bb-foot').innerHTML=acs+'<div style="margin-top:5px">'+zl+sline+'</div>';
-  // right panel becomes the transactions table
-  hEl.textContent='Table of relevant transactions and people';
-  listEl.style.display='none';txEl.style.display='block';txEl.innerHTML=renderTx(c);
+  // transactions live inside the bottom panel, under the deal fields; scroll to see all
+  document.getElementById('bb-tx').innerHTML='<h3>Table of relevant transactions and people</h3>'+renderTx(c);
  }else{
   cardEl.style.display='none';summ.style.display='flex';
-  hEl.textContent='Securitization deals';listEl.style.display='block';txEl.style.display='none';
   var vis=[],appr=[],yrs=[],rent=[],deal={};
   DATA.features.forEach(function(fe){var p=fe.properties;if(!mapKeep(p))return;
    vis.push(1);
