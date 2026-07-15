@@ -1,0 +1,173 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Institutional Land Over Time — Who Owns Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #map{flex:1;min-height:0}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.96);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+ #timebar{bottom:16px;left:50%;transform:translateX(-50%);width:min(880px,95%);padding:10px 18px;display:flex;align-items:center;gap:12px}
+ #playBtn{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;background:#f0af1e;color:#1c458c;border:0;border-radius:6px;padding:8px 13px;cursor:pointer;white-space:nowrap}
+ #yr{font-family:'Montserrat',sans-serif;font-weight:800;font-size:24px;color:#1c458c;min-width:64px;text-align:center;font-variant-numeric:tabular-nums}
+ #slider{flex:1}
+ #mode{display:flex;gap:5px}
+ .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:5px 10px;border-radius:15px;cursor:pointer;white-space:nowrap}
+ .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ #stats{bottom:88px;left:50%;transform:translateX(-50%);padding:0;display:flex;overflow:hidden}
+ #stats .tile{padding:6px 16px;text-align:center;border-right:1px solid #e9ecf1}
+ #stats .tile:last-child{border-right:none}
+ #stats .tile .v{font-family:'Montserrat',sans-serif;font-size:15px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums}
+ #stats .tile .l{font-family:'Montserrat',sans-serif;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:1px}
+ #legend{top:66px;right:10px;width:250px;max-height:calc(100% - 200px);overflow:auto;padding:10px 12px}
+ #legend .lab{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin-bottom:5px}
+ #legend .row{display:flex;align-items:center;gap:7px;cursor:pointer;padding:2px 3px;border-radius:4px;font-size:12.5px;line-height:1.5}
+ #legend .row:hover{background:#f2f6fc}
+ #legend .row.dim{opacity:.35}
+ #legend .row.sel{background:#fdeef0;outline:1px solid #f2b8c2}
+ #legend .sw{width:11px;height:11px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.3)}
+ #legend b{font-family:'Montserrat',sans-serif;font-size:11.5px}
+ #legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto;font-size:11px;color:#1c458c;font-variant-numeric:tabular-nums}
+ #title{top:66px;left:12px;max-width:300px;padding:10px 14px}
+ #title h1{margin:0;font-size:15px;font-family:'Montserrat',sans-serif;color:#1a3a5c}
+ #title p{margin:4px 0 0;font-size:12px;color:#555;line-height:1.4}
+ .lp{font-family:'EB Garamond',serif;font-size:12.5px}
+ .lp b{font-family:'Montserrat',sans-serif;color:#1c458c}
+ .lp a{color:#1c458c}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>OVER TIME</small></a><div class="htitle">Institutional Land Acquisition &middot; 1990&ndash;2026</div></div>
+<div id="map"></div>
+<div class="panel" id="title"><h1>Institutional Land Over Time</h1>
+ <p>Every deed event by an institutional operator or major builder, 1990&ndash;2026, attributed to its parent through the owner rollup. Press play, or drag the year. Click an operator to isolate it; click a dot for the deed name.</p></div>
+<div class="panel" id="legend"><div class="lab">Operator &middot; click to isolate</div><div id="legrows"></div></div>
+<div class="panel" id="stats"></div>
+<div class="panel" id="timebar">
+ <button id="playBtn">&#9654; Play</button>
+ <span id="yr">2026</span>
+ <input id="slider" type="range" min="1990" max="2026" value="2026" step="1"/>
+ <div id="mode"><span class="chip on" data-m="cum">Cumulative</span><span class="chip" data-m="yr">That year only</span></div>
+</div>
+<script>
+var map=L.map('map',{center:[36.166,-86.784],zoom:11});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+map.createPane('mask');var _mp=map.getPane('mask');_mp.style.zIndex=350;_mp.style.pointerEvents='none';
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){
+ var feat=(g.features||[]).find(f=>f.properties&&f.properties.OBJECTID===4)||g.features[0];if(!feat)return;
+ L.geoJSON(feat,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+ var outer=[[85,-180],[85,180],[-85,180],[-85,-180]];
+ var polys=feat.geometry.type==='Polygon'?[feat.geometry.coordinates]:feat.geometry.coordinates;
+ var holes=polys.map(pl=>pl[0].map(c=>[c[1],c[0]]));
+ L.polygon([outer].concat(holes),{pane:'mask',stroke:false,fillColor:'#e9edf1',fillOpacity:.85,interactive:false}).addTo(map);
+}).catch(function(){});
+
+var PALETTE=['#d7263d','#1c458c','#f0af1e','#1e7a48','#8e44ad','#00838f','#e67e22','#4fa0bd','#b3282d','#6b3fa0','#8a6100','#2c7fb8','#e0952a','#5b6675'];
+var YEAR=2026,MODE='cum',ISO=null,PLAYING=null;
+var PTS=[],OPS=[],opColor={},opCount={};
+var D2R=Math.PI/180;
+
+fetch('Deed_Events_Timeline_ATTRIBUTED.geojson').then(r=>r.json()).then(function(gj){
+ var counts={};
+ gj.features.forEach(function(f){
+  var p=f.properties,c=f.geometry.coordinates;
+  counts[p.op]=(counts[p.op]||0)+1;
+  var s=Math.sin(c[1]*D2R);
+  PTS.push({mx:(c[0]+180)/360,my:0.5-Math.log((1+s)/(1-s))/(4*Math.PI),
+            y:p.y,op:p.op,n:p.n,pid:p.pid,lat:c[1],lon:c[0]});
+ });
+ OPS=Object.keys(counts).sort(function(a,b){return counts[b]-counts[a];});
+ OPS.forEach(function(o,i){opColor[o]=PALETTE[i%PALETTE.length];opCount[o]=counts[o];});
+ legend();draw();
+});
+
+// single-canvas dot layer
+var DotLayer=L.Layer.extend({
+ onAdd:function(m){this._map=m;this._canvas=L.DomUtil.create('canvas');
+  this._canvas.style.pointerEvents='none';
+  m.getPane('overlayPane').appendChild(this._canvas);
+  m.on('moveend zoomend resize',this._reset,this);this._reset();},
+ _reset:function(){var m=this._map,sz=m.getSize(),tl=m.containerPointToLayerPoint([0,0]);
+  L.DomUtil.setPosition(this._canvas,tl);
+  this._canvas.width=sz.x;this._canvas.height=sz.y;this.redraw();},
+ redraw:function(){
+  if(!this._map)return;
+  var ctx=this._canvas.getContext('2d');
+  ctx.clearRect(0,0,this._canvas.width,this._canvas.height);
+  if(!PTS.length)return;
+  var m=this._map,scale=256*Math.pow(2,m.getZoom()),pb=m.getPixelBounds();
+  var W=this._canvas.width,H=this._canvas.height,z=m.getZoom();
+  var r=z>=15?5:(z>=13?4:(z>=11?3:2));
+  var byC={};
+  for(var i=0;i<PTS.length;i++){
+   var p=PTS[i];
+   if(!keep(p))continue;
+   var x=p.mx*scale-pb.min.x,y=p.my*scale-pb.min.y;
+   if(x<-6||y<-6||x>W+6||y>H+6)continue;
+   var c=opColor[p.op]||'#888';
+   (byC[c]=byC[c]||[]).push(x,y);
+  }
+  for(var c in byC){ctx.fillStyle=c;var a=byC[c];
+   for(var j=0;j<a.length;j+=2){ctx.beginPath();ctx.arc(a[j],a[j+1],r,0,6.2832);ctx.fill();}}
+ }
+});
+var dots=new DotLayer().addTo(map);
+function keep(p){
+ if(ISO&&p.op!==ISO)return false;
+ return MODE==='cum'?p.y<=YEAR:p.y===YEAR;
+}
+// click: nearest kept point within 12px
+map.on('click',function(e){
+ if(!PTS.length)return;
+ var m=map,scale=256*Math.pow(2,m.getZoom()),pb=m.getPixelBounds();
+ var cp=m.latLngToContainerPoint(e.latlng);
+ var best=null,bd=144;
+ for(var i=0;i<PTS.length;i++){var p=PTS[i];
+  if(!keep(p))continue;
+  var dx=p.mx*scale-pb.min.x-cp.x,dy=p.my*scale-pb.min.y-cp.y,d=dx*dx+dy*dy;
+  if(d<bd){bd=d;best=p;}}
+ if(!best)return;
+ L.popup({maxWidth:300}).setLatLng([best.lat,best.lon]).setContent(
+  '<div class="lp"><b style="color:'+(opColor[best.op]||'#333')+'">'+best.op+'</b><br>'
+  +'Deed name: '+best.n+'<br>Year: '+best.y
+  +'<br><a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+best.pid+'">Parcel Report</a></div>').openOn(map);
+});
+function legend(){
+ var el=document.getElementById('legrows');
+ el.innerHTML=OPS.slice(0,30).map(function(o){
+  var cls=ISO?(ISO===o?' sel':' dim'):'';
+  var vis=PTS.reduce(function(s,p){return s+(p.op===o&&(MODE==='cum'?p.y<=YEAR:p.y===YEAR)?1:0);},0);
+  return '<div class="row'+cls+'" data-o="'+o.replace(/"/g,'&quot;')+'"><span class="sw" style="background:'+opColor[o]+'"></span><b>'+o+'</b><span class="n">'+vis.toLocaleString()+'</span></div>';}).join('');
+ el.querySelectorAll('.row').forEach(function(r){r.onclick=function(){
+  var o=this.getAttribute('data-o');ISO=(ISO===o)?null:o;draw();};});
+}
+function stats(){
+ var n=0,ops={},parc={};
+ PTS.forEach(function(p){if(keep(p)){n++;ops[p.op]=1;parc[p.pid]=1;}});
+ document.getElementById('stats').innerHTML=[
+  [n.toLocaleString(),'Deed events'],[Object.keys(parc).length.toLocaleString(),'Parcels'],
+  [Object.keys(ops).length,'Operators'],[ISO||'All','Showing']]
+  .map(function(t){return '<div class="tile"><div class="v">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>';}).join('');
+}
+function draw(){document.getElementById('yr').textContent=YEAR;dots.redraw();legend();stats();}
+document.getElementById('slider').addEventListener('input',function(){YEAR=+this.value;draw();});
+document.querySelectorAll('#mode .chip').forEach(function(c){c.onclick=function(){
+ MODE=this.dataset.m;
+ document.querySelectorAll('#mode .chip').forEach(function(x){x.classList.toggle('on',x===c);});
+ draw();};});
+document.getElementById('playBtn').onclick=function(){
+ if(PLAYING){clearInterval(PLAYING);PLAYING=null;this.innerHTML='&#9654; Play';return;}
+ this.innerHTML='&#10073;&#10073; Pause';
+ if(YEAR>=2026)YEAR=1990;
+ var btn=this;
+ PLAYING=setInterval(function(){
+  YEAR++;document.getElementById('slider').value=YEAR;draw();
+  if(YEAR>=2026){clearInterval(PLAYING);PLAYING=null;btn.innerHTML='&#9654; Play';}
+ },450);
+};
+</script></body></html>
