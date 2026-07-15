@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Landlord Registrations × Comper</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  html,body,#map{height:100%;margin:0;}
+  .title-card{
+    position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:1000;
+    background:rgba(255,255,255,0.85);font-family:Garamond,'EB Garamond',serif;
+    padding:6px 16px;border-radius:4px;text-align:center;box-shadow:0 1px 4px rgba(0,0,0,0.3);
+    font-size:16px;
+  }
+  .leaflet-popup-content{font-family:Garamond,'EB Garamond',serif;font-size:12px;max-width:380px;}
+  .status-ind{
+    position:absolute;bottom:10px;right:10px;z-index:1000;background:rgba(255,255,255,0.9);
+    font-family:Garamond,serif;font-size:12px;padding:4px 10px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.3);
+  }
+</style>
+</head>
+<body>
+<div class="title-card">Landlord Registrations &times; Comper Property Pull<br><span style="font-size:12px;">Davidson County &middot; <span id="tcN">&hellip;</span> mapped case addresses &middot; master file July 8, 2026</span></div>
+<div id="map"></div>
+<div class="status-ind" id="status">Loading&hellip;</div>
+<script>
+var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19});
+var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
+var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri World Imagery',maxZoom:19});
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,layers:[carto],preferCanvas:true});
+var canvasRenderer=L.canvas({padding:0.5});
+L.control.layers({'CARTO Positron':carto,'OpenStreetMap':osm,'Aerial (Esri)':aerial},null,{position:'topright',collapsed:false}).addTo(map);
+
+// Davidson County boundary
+fetch('Davidson_County_Boundary.geojson')
+ .then(r=>r.json()).then(b=>{
+   L.geoJSON(b,{filter:f=>f.properties&&(f.properties.OBJECTID===4||f.properties.objectid===4),
+     style:{color:'#1a3a5c',weight:2.0,fillOpacity:0,dashArray:'4,4'}}).addTo(map);
+ }).catch(()=>{});
+
+function esc(v){return v===undefined||v===null?'':String(v);}
+function popup(p){
+  var apn11=esc(p.apn).replace(/\W/g,'');if(apn11.length===10)apn11='0'+apn11;
+  var caseLink=p.caseNumber?('<a target="_blank" href="https://epermits.nashville.gov/#/permit/'+encodeURIComponent(p.caseNumber)+'">'+esc(p.caseNumber)+'</a>'):'';
+  var rows=[
+    ['Brand',p.brand||p.clean_owner_brand],['Owner (raw)',p.ownerName],['Address',p.fullAddress],['APN',p.apn],
+    ['Case',caseLink],['Status',p.status],['Issued',p.issued],
+    ['Person 1',(esc(p.P1_name)+(p.P1_role?' ('+p.P1_role+')':''))],
+    ['Person 2',(esc(p.P2_name)+(p.P2_role?' ('+p.P2_role+')':''))],
+    ['Person 3',(esc(p.P3_name)+(p.P3_role?' ('+p.P3_role+')':''))],
+    ['Sale price',p.comper_SalePrice?('$'+Number(p.comper_SalePrice).toLocaleString()):''],
+    ['Sale date',p.comper_SaleDate],
+    ['Market value',p.comper_MarketValue?('$'+Number(p.comper_MarketValue).toLocaleString()):''],
+    ['Year built',p.comper_fld_EffYearBlt]
+  ];
+  var h='<table style="border-collapse:collapse;">';
+  rows.forEach(function(r){if(esc(r[1]).trim()!==''){h+='<tr><td style="font-weight:bold;padding-right:8px;vertical-align:top;">'+r[0]+'</td><td>'+r[1]+'</td></tr>';}});
+  h+='</table>';
+  // live record links: the ePermits case, its people via the OData API, and the parcel
+  var L=[];
+  if(p.caseID)L.push('<a target="_blank" href="https://epermits.nashville.gov/api/permit/1.0/CasePeople?$filter=caseID%20eq%20'+p.caseID+'">Case people (API)</a>');
+  if(apn11){
+    L.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn11+'">Parcel Viewer</a>');
+    L.push('<a target="_blank" href="https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+apn11+'">Property Assessor</a>');
+    L.push('<a target="_blank" href="https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+apn11+'&searchType=permit">ePermits (APN)</a>');
+  }
+  if(L.length)h+='<div style="margin-top:6px;line-height:1.8;">'+L.join(' &middot; ')+'</div>';
+  return h;
+}
+
+var FEATS=[];           // {lat,lng,props}
+document.getElementById('status').innerHTML='Fetching points&hellip;';
+fetch('FINAL_ALL_Comper_map.geojson').then(r=>r.json()).then(function(gj){
+  // render-only canvas layer (non-interactive — clicks handled at map level for reliability)
+  var layer=L.geoJSON(gj,{
+    pointToLayer:function(f,ll){var c=f.properties._c||'#9aa5b1';return L.circleMarker(ll,{renderer:canvasRenderer,radius:4,fillOpacity:0.8,color:'#333',weight:0.3,fillColor:c,interactive:false});}
+  }).addTo(map);
+  gj.features.forEach(function(f){if(f.geometry){var c=f.geometry.coordinates;FEATS.push({lat:c[1],lng:c[0],props:f.properties});}});
+  try{map.fitBounds(layer.getBounds());}catch(e){}
+  document.getElementById('tcN').textContent=gj.features.length.toLocaleString();
+  document.getElementById('status').innerHTML=gj.features.length.toLocaleString()+' case addresses &middot; click a dot';
+}).catch(function(e){document.getElementById('status').innerHTML='Error loading data';});
+
+// click nearest point within ~12px — works no matter how many points
+map.on('click',function(e){
+  if(!FEATS.length) return;
+  var cp=map.latLngToContainerPoint(e.latlng), best=null, bd=1e9;
+  for(var i=0;i<FEATS.length;i++){
+    var p=map.latLngToContainerPoint([FEATS[i].lat,FEATS[i].lng]);
+    var dx=p.x-cp.x, dy=p.y-cp.y, d=dx*dx+dy*dy;
+    if(d<bd){bd=d;best=FEATS[i];}
+  }
+  if(best && bd<=144){
+    L.popup({maxWidth:380}).setLatLng([best.lat,best.lng]).setContent(popup(best.props)).openOn(map);
+  }
+});
+
+var legend=[["Amherst Residential","#8dcaf0"],["Progress Residential","#cf307a"],["American Homes 4 Rent","#2c719f"],["Tricon Residential","#1e7a48"],["Normandy Group","#f0af1e"],["RESICAP","#b8860b"],["My Community Homes","#d98a00"],["Brookfield / Conrex / Maymont","#7b5cd6"],["FirstKey Homes","#1f8166"],["Upward America (Lennar)","#8c564b"],["Invitation Homes","#d7263d"],["Hudson SFR","#4b8b3b"],["Arrived Homes","#e377c2"],["Other / individual","#9aa5b1"]];
+var lc=L.control({position:'bottomleft'});
+lc.onAdd=function(){var d=L.DomUtil.create('div');d.style.cssText='background:rgba(255,255,255,0.9);font-family:Garamond,serif;font-size:11px;padding:6px 10px;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,0.3);max-height:46%;overflow:auto;';var h='<b>Clean owner (brand)</b><br>';legend.forEach(function(r){h+='<span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:'+r[1]+';margin-right:5px;border:0.3px solid #333;"></span>'+r[0]+'<br>';});d.innerHTML=h;return d;};
+lc.addTo(map);
+</script>
+</body>
+</html>
