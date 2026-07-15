@@ -3,6 +3,7 @@
 <title>Who Finances Nashville? Securitized Homes</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="won_boundary_layers.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
  html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
@@ -132,7 +133,7 @@
 </div>
 
 <div class="panel" id="legend"><div class="lab">Operator &middot; click to highlight</div><div id="legrows"></div></div>
-<div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span></div>
+<div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span><span class="chip" data-base="muted">Muted</span></div>
 
 <div class="panel" id="right">
   <h3 id="right-h">Securitization deals</h3>
@@ -199,7 +200,12 @@ var map=L.map('map',{center:[36.13,-86.72],zoom:10,preferCanvas:true});
 var carto=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
 var osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'&copy; OpenStreetMap',maxZoom:19});
 var aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'Esri, Maxar',maxZoom:19});
-var BASES={gray:carto,streets:osm,aerial:aerial};
+var muted=L.tileLayer('https://maps.nashville.gov/arcgis/rest/services/Basemaps/NashvilleBasemapMuted/MapServer/tile/{z}/{y}/{x}',{attribution:'Metro Nashville',maxZoom:19});
+var BASES={gray:carto,streets:osm,aerial:aerial,muted:muted};
+// reference boundary overlays (ZIPs, tracts, council districts, subdivisions, ...)
+// from the saved catalog; each loads from its ArcGIS source on first toggle
+var refCtl=L.control.layers(null,null,{position:'bottomright',collapsed:true}).addTo(map);
+if(window.WON_LAYERS)WON_LAYERS.attach(map,refCtl,{tiles:false});
 function setBase(k){Object.keys(BASES).forEach(function(b){if(map.hasLayer(BASES[b]))map.removeLayer(BASES[b]);});BASES[k].addTo(map);}
 map.createPane('mask');var _mp=map.getPane('mask');_mp.style.zIndex=350;_mp.style.pointerEvents='none';
 fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(b){
