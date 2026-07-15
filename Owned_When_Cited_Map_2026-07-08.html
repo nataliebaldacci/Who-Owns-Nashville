@@ -50,7 +50,8 @@ html,body{height:100dvh;width:100vw;margin:0;padding:0;font-family:'Montserrat',
 .pp-enf.court{background:#fbe9ec;color:#8f0f22;border:1px solid #f0b9c3}
 .pp-enf.warr{background:#fdf0e0;color:#8a4d10;border:1px solid #f2d3ab}
 .pp-enf.abate{background:#eef1f5;color:#55606d;border:1px solid #dfe4ea;font-weight:400}
-.pp-case{display:block;margin-top:7px;background:var(--orange);color:#3a2a00!important;text-align:center;padding:6px;border-radius:3px;font-weight:800;text-decoration:none;font-size:11.5px}.pp-case:hover{background:#d99a10}
+.pp-case{display:block;margin-top:8px;background:#d7263d;color:#fff!important;text-align:center;padding:9px 8px;border-radius:5px;font-weight:800;text-decoration:none;font-size:13px;letter-spacing:.2px;box-shadow:0 1px 4px rgba(0,0,0,.28)}.pp-case:hover{background:#a80f26}
+.pp-case small{display:block;font-weight:700;font-size:9px;letter-spacing:1.4px;opacity:.85;margin-bottom:2px}
 .pp-court{margin-top:7px;padding:6px 8px;border-radius:4px;background:#f3eefb;border:1px solid #d9c9f0;font-size:10px;line-height:1.4}.pp-court .ch{font-weight:800;color:#5b3fa0;font-size:10px;text-transform:uppercase;letter-spacing:.4px;margin-bottom:3px}.pp-court .cc{margin-bottom:4px}.pp-court .cc b{color:#3a2a5e}.pp-court .cd{color:#7a6a95}
 .pp-stat{font-size:9.5px;color:#5a6675;line-height:1.42;margin-top:6px;background:#f6f8fb;border-left:3px solid var(--orange);padding:5px 7px;border-radius:0 3px 3px 0}
 </style></head><body>
@@ -122,13 +123,13 @@ function ppPortfolio(pid,lat,lon,e){const rec=ENR[pid]; if(rec)rec.parid=pid;
 function ppCited(e){const rec=CENR[e.cited_apn];
   return '<div class="pp"><div class="pp-h">&#9733; Cited property</div><div class="pp-s">'+esc(e.cited_addr)+' · <b style="color:'+e.color+'">'+e.operator+'</b> · '+e.date.split(" ")[0]+'</div>'
    +card(rec,e.cited[0],e.cited[1])+enfHTML(e.enf)+courtHTML(e.shell)
-   +'<a class="pp-case" href="https://epermits.nashville.gov/?#/permit/'+e.caseID+'" target="_blank">Open landlord-registration case '+e.caseID+' →</a>'
+   +'<a class="pp-case" href="https://epermits.nashville.gov/?#/permit/'+e.caseID+'" target="_blank"><small>VIOLATION RECORD</small>Open landlord-registration case '+e.caseID+' →</a>'
    +'<div class="pp-l" style="text-align:center;margin-top:5px">'+e.operator+' owned <b>'+e.n.toLocaleString()+'</b> Davidson homes this day</div>'
    +'<div class="pp-stat"><b>Failure to register as a landlord.</b> T.C.A. &sect; 66-28-101 requires each landlord of one or more units in Davidson County to pay a $10 fee and file the landlord (or agent) name, address and phone, plus every unit owned, leased, or subleased. Fee due with Metro property taxes. Landlord Registration, 800 Second Ave. South, 3rd Fl., Nashville, TN 37210 · www.nashville.gov/codes · 615-862-6590.</div></div>';}
 function ppVio(v){const enf={esc:v[9],w:v[10],c:v[11]};
   return '<div class="pp"><div class="pp-h">'+esc(v[4])+'</div><div class="pp-s">'+esc(v[7])+' &middot; cited '+esc(v[5].split(" ")[0])+'</div>'
    +(v[6]?('<div class="pp-l"><b>Owner at citation:</b> '+esc(v[6])+'</div>'):'')+enfHTML(enf)+courtHTML(v[6])
-   +'<a class="pp-case" href="https://epermits.nashville.gov/?#/permit/'+v[3]+'" target="_blank">Open landlord-registration case '+v[3]+' →</a></div>';}
+   +'<a class="pp-case" href="https://epermits.nashville.gov/?#/permit/'+v[3]+'" target="_blank"><small>VIOLATION RECORD</small>Open landlord-registration case '+v[3]+' →</a></div>';}
 const lyr=L.layerGroup().addTo(map), citedLyr=L.layerGroup().addTo(map), vioLyr=L.layerGroup();
 function clearVio(){document.getElementById('allVioRow').classList.remove('on');document.getElementById('vioLegend').classList.remove('show');vioLyr.clearLayers();}
 function showEvent(i){document.getElementById('allRow').classList.remove('on');clearVio();
