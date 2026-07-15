@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Non-Owner-Occupant Transactions Over Time — Who Owns Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ #chartwrap{flex:0 0 auto;background:#fff;border-bottom:1px solid #dbe0e8;padding:8px 14px 2px;position:relative}
+ #chartwrap h1{margin:0 0 1px;font-size:15px;font-family:'Montserrat',sans-serif;color:#1a3a5c}
+ #chartwrap .sub{font-size:12px;color:#66707c;margin-bottom:4px}
+ #chart{width:100%;height:190px;display:block;cursor:crosshair}
+ #tip{position:absolute;display:none;background:rgba(32,48,63,.95);color:#fff;font-size:11.5px;padding:7px 10px;border-radius:6px;pointer-events:none;z-index:50;font-family:'Montserrat',sans-serif;line-height:1.6;white-space:nowrap}
+ #tip b{color:#f0af1e}
+ #maparea{flex:1;position:relative;min-height:0}
+ #map{position:absolute;inset:0}
+ .panel{position:absolute;z-index:1000;background:rgba(255,255,255,.96);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+ #controls{bottom:16px;left:50%;transform:translateX(-50%);width:min(840px,95%);padding:9px 16px;display:flex;align-items:center;gap:10px}
+ #playBtn{font-family:'Montserrat',sans-serif;font-weight:800;font-size:13px;background:#f0af1e;color:#1c458c;border:0;border-radius:6px;padding:7px 12px;cursor:pointer;white-space:nowrap}
+ #yr{font-family:'Montserrat',sans-serif;font-weight:800;font-size:22px;color:#1c458c;min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+ #slider{flex:1}
+ .chip{font-family:'Montserrat',sans-serif;font-weight:700;font-size:10.5px;border:1px solid #cdd6e3;background:#fff;color:#1c458c;padding:4px 9px;border-radius:14px;cursor:pointer;white-space:nowrap}
+ .chip.on{background:#1c458c;color:#fff;border-color:#1c458c}
+ .chip.oos.on{background:#d7263d;border-color:#d7263d}
+ #filters{top:8px;right:10px;padding:7px 10px;display:flex;gap:5px;flex-wrap:wrap;max-width:340px}
+ #stats{top:8px;left:12px;padding:0;display:flex;overflow:hidden}
+ #stats .tile{padding:6px 14px;text-align:center;border-right:1px solid #e9ecf1}
+ #stats .tile:last-child{border-right:none}
+ #stats .tile .v{font-family:'Montserrat',sans-serif;font-size:14px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums}
+ #stats .tile .l{font-family:'Montserrat',sans-serif;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;margin-top:1px}
+ #legendbox{bottom:70px;left:12px;padding:8px 11px;font-size:12px;font-family:'Montserrat',sans-serif}
+ #legendbox i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:middle}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO BUYS</small></a><div class="htitle">Non-Owner-Occupant Transactions &middot; 1950&ndash;2026</div></div>
+<div id="chartwrap">
+ <h1>Homes bought by people who don't live in them</h1>
+ <div class="sub">516,509 non-owner-occupant transactions from the chain of title, 1950&ndash;2026. Red = corporate buyer; blue = individual investor / other. Dark line = share bought by out-of-state owners. Hover for details; click a year to set the map.</div>
+ <canvas id="chart"></canvas>
+ <div id="tip"></div>
+</div>
+<div id="maparea">
+<div id="map"></div>
+<div class="panel" id="stats"></div>
+<div class="panel" id="filters">
+ <span class="chip on" data-g="buyer" data-v="all">All buyers</span>
+ <span class="chip" data-g="buyer" data-v="corp">Corporate</span>
+ <span class="chip" data-g="buyer" data-v="indiv">Individual</span>
+ <span class="chip" data-g="loc" data-v="all">Any owner location</span>
+ <span class="chip oos" data-g="loc" data-v="oos">Out-of-state</span>
+ <span class="chip" data-g="loc" data-v="in">In-state</span>
+</div>
+<div class="panel" id="legendbox"><i style="background:#d7263d"></i>Corporate buyer&ensp;<i style="background:#4fa0bd"></i>Individual / other</div>
+<div class="panel" id="controls">
+ <button id="playBtn">&#9654; Play</button>
+ <span id="yr">2026</span>
+ <input id="slider" type="range" min="1950" max="2026" value="2026" step="1"/>
+ <span class="chip on" id="cumChip">Cumulative</span><span class="chip" id="yrChip">That year</span>
+</div>
+</div>
+<script>
+var YEAR=2026,MODE='cum',BUYER='all',LOC='all',PLAYING=null,AGG=[],aggBy={};
+var PN=0,PLAT=null,PMX=null,PMY=null,PYR=null,PFL=null;
+
+// ---------------- map ----------------
+var map=L.map('map',{center:[36.166,-86.784],zoom:10});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(function(g){
+ var feat=(g.features||[]).find(f=>f.properties&&f.properties.OBJECTID===4)||g.features[0];if(!feat)return;
+ L.geoJSON(feat,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);
+}).catch(function(){});
+var DotLayer=L.Layer.extend({
+ onAdd:function(m){this._map=m;this._canvas=L.DomUtil.create('canvas');
+  this._canvas.style.pointerEvents='none';
+  m.getPane('overlayPane').appendChild(this._canvas);
+  m.on('moveend zoomend resize',this._reset,this);this._reset();},
+ _reset:function(){var m=this._map,sz=m.getSize(),tl=m.containerPointToLayerPoint([0,0]);
+  L.DomUtil.setPosition(this._canvas,tl);
+  this._canvas.width=sz.x;this._canvas.height=sz.y;this.redraw();},
+ redraw:function(){
+  if(!this._map)return;
+  var ctx=this._canvas.getContext('2d');
+  ctx.clearRect(0,0,this._canvas.width,this._canvas.height);
+  if(!PN)return;
+  var m=this._map,scale=256*Math.pow(2,m.getZoom()),pb=m.getPixelBounds();
+  var W=this._canvas.width,H=this._canvas.height,z=m.getZoom();
+  var r=z>=15?3:(z>=12?2:1.4);
+  var corp=[],ind=[];
+  for(var i=0;i<PN;i++){
+   var y=PYR[i];
+   if(MODE==='cum'?y>YEAR:y!==YEAR)continue;
+   var f=PFL[i],isC=f&1,isO=f&2;
+   if(BUYER==='corp'&&!isC)continue;
+   if(BUYER==='indiv'&&isC)continue;
+   if(LOC==='oos'&&!isO)continue;
+   if(LOC==='in'&&isO)continue;
+   var x=PMX[i]*scale-pb.min.x,yy=PMY[i]*scale-pb.min.y;
+   if(x<-4||yy<-4||x>W+4||yy>H+4)continue;
+   (isC?corp:ind).push(x,yy);
+  }
+  ctx.fillStyle='#4fa0bd';for(var j=0;j<ind.length;j+=2)ctx.fillRect(ind[j]-r/2,ind[j+1]-r/2,r,r);
+  ctx.fillStyle='#d7263d';for(j=0;j<corp.length;j+=2)ctx.fillRect(corp[j]-r/2,corp[j+1]-r/2,r,r);
+  this._n=(corp.length+ind.length)/2;
+ }
+});
+var dots=new DotLayer().addTo(map);
+
+// ---------------- data ----------------
+fetch('nonowner_tx_yearly.json').then(r=>r.json()).then(function(j){
+ AGG=j.years.filter(a=>a.y>=1950);
+ AGG.forEach(a=>aggBy[a.y]=a);
+ drawChart();stats();
+});
+fetch('nonowner_tx_points.bin').then(r=>r.arrayBuffer()).then(function(buf){
+ var dv=new DataView(buf);PN=dv.getUint32(0,true);
+ var coords=new Float32Array(buf,4,PN*2);
+ PYR=new Uint16Array(buf,4+PN*8,PN);
+ PFL=new Uint8Array(buf,4+PN*8+PN*2,PN);
+ PMX=new Float32Array(PN);PMY=new Float32Array(PN);
+ var D2R=Math.PI/180;
+ for(var i=0;i<PN;i++){
+  var lat=coords[i*2],lon=coords[i*2+1];
+  PMX[i]=(lon+180)/360;
+  var s=Math.sin(lat*D2R);
+  PMY[i]=0.5-Math.log((1+s)/(1-s))/(4*Math.PI);
+ }
+ dots.redraw();stats();
+});
+
+// ---------------- chart ----------------
+var CV=document.getElementById('chart'),CTX=CV.getContext('2d');
+function drawChart(){
+ var W=CV.clientWidth,H=CV.clientHeight;
+ CV.width=W*devicePixelRatio;CV.height=H*devicePixelRatio;
+ CTX.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+ CTX.clearRect(0,0,W,H);
+ if(!AGG.length)return;
+ var L=42,R=14,T=8,B=22,iw=W-L-R,ih=H-T-B;
+ var y0=1950,y1=2026,maxN=Math.max.apply(null,AGG.map(a=>a.n))*1.05;
+ function bx(y){return L+(y-y0)/(y1-y0)*iw;}
+ var bw=Math.max(2,iw/(y1-y0+1)-1.5);
+ // gridlines
+ CTX.font='9.5px Montserrat,sans-serif';CTX.fillStyle='#8a94a0';CTX.strokeStyle='#eef0f3';
+ for(var g=0;g<=4;g++){var vy=T+ih-ih*g/4;
+  CTX.beginPath();CTX.moveTo(L,vy);CTX.lineTo(W-R,vy);CTX.stroke();
+  CTX.fillText(Math.round(maxN*g/4/1000)+'k',6,vy+3);}
+ AGG.forEach(function(a){
+  var x=bx(a.y),hAll=a.n/maxN*ih,hC=a.corp/maxN*ih;
+  CTX.fillStyle=(MODE==='cum'?a.y<=YEAR:a.y===YEAR)?'#4fa0bd':'#c8d9e4';
+  CTX.fillRect(x,T+ih-hAll,bw,hAll-hC);
+  CTX.fillStyle=(MODE==='cum'?a.y<=YEAR:a.y===YEAR)?'#d7263d':'#e8b8bf';
+  CTX.fillRect(x,T+ih-hC,bw,hC);
+ });
+ // OOS share line (0-60% right scale)
+ CTX.strokeStyle='#20303f';CTX.lineWidth=1.6;CTX.beginPath();
+ AGG.forEach(function(a,i){
+  var share=a.n?a.oos/a.n:0;
+  var x=bx(a.y)+bw/2,vy=T+ih-Math.min(share/0.6,1)*ih;
+  i?CTX.lineTo(x,vy):CTX.moveTo(x,vy);});
+ CTX.stroke();CTX.lineWidth=1;
+ // year marker
+ CTX.strokeStyle='#f0af1e';CTX.lineWidth=2;
+ CTX.beginPath();CTX.moveTo(bx(YEAR)+bw/2,T);CTX.lineTo(bx(YEAR)+bw/2,T+ih);CTX.stroke();CTX.lineWidth=1;
+ // x labels
+ CTX.fillStyle='#8a94a0';
+ for(var yy=1950;yy<=2026;yy+=10)CTX.fillText(yy,bx(yy)-8,H-7);
+}
+CV.addEventListener('mousemove',function(e){
+ var r=CV.getBoundingClientRect(),W=CV.clientWidth;
+ var y=Math.round(1950+(e.clientX-r.left-42)/(W-56)*(2026-1950));
+ var a=aggBy[y];var tip=document.getElementById('tip');
+ if(!a){tip.style.display='none';return;}
+ tip.style.display='block';
+ tip.style.left=Math.min(e.clientX-r.left+16,W-230)+'px';tip.style.top='30px';
+ tip.innerHTML='<b>'+y+'</b><br>'+a.n.toLocaleString()+' non-owner-occ. transactions<br>'
+  +a.corp.toLocaleString()+' corporate ('+Math.round(100*a.corp/a.n)+'%)<br>'
+  +a.oos.toLocaleString()+' out-of-state ('+Math.round(100*a.oos/a.n)+'%)'
+  +(a.medp?'<br>median price $'+a.medp.toLocaleString():'');
+});
+CV.addEventListener('mouseleave',function(){document.getElementById('tip').style.display='none';});
+CV.addEventListener('click',function(e){
+ var r=CV.getBoundingClientRect(),W=CV.clientWidth;
+ var y=Math.round(1950+(e.clientX-r.left-42)/(W-56)*(2026-1950));
+ if(y>=1950&&y<=2026){YEAR=y;document.getElementById('slider').value=y;update();}
+});
+window.addEventListener('resize',drawChart);
+
+// ---------------- wiring ----------------
+function stats(){
+ var a=aggBy[YEAR]||{n:0,corp:0,oos:0};
+ var shown=dots._n!=null?dots._n.toLocaleString():'…';
+ document.getElementById('stats').innerHTML=[
+  [shown,'Dots on map'],[YEAR,MODE==='cum'?'Through year':'Year'],
+  [(a.n||0).toLocaleString(),'That year'],
+  [a.n?Math.round(100*a.corp/a.n)+'%':'—','Corporate share'],
+  [a.n?Math.round(100*a.oos/a.n)+'%':'—','Out-of-state share']]
+  .map(t=>'<div class="tile"><div class="v">'+t[0]+'</div><div class="l">'+t[1]+'</div></div>').join('');
+}
+function update(){document.getElementById('yr').textContent=YEAR;dots.redraw();drawChart();stats();}
+document.getElementById('slider').addEventListener('input',function(){YEAR=+this.value;update();});
+document.getElementById('cumChip').onclick=function(){MODE='cum';this.classList.add('on');document.getElementById('yrChip').classList.remove('on');update();};
+document.getElementById('yrChip').onclick=function(){MODE='yr';this.classList.add('on');document.getElementById('cumChip').classList.remove('on');update();};
+document.querySelectorAll('#filters .chip').forEach(function(c){c.onclick=function(){
+ var g=this.dataset.g,v=this.dataset.v;
+ if(g==='buyer')BUYER=v;else LOC=v;
+ document.querySelectorAll('#filters .chip[data-g='+g+']').forEach(x=>x.classList.toggle('on',x===this));
+ update();};});
+document.getElementById('playBtn').onclick=function(){
+ if(PLAYING){clearInterval(PLAYING);PLAYING=null;this.innerHTML='&#9654; Play';return;}
+ this.innerHTML='&#10073;&#10073; Pause';
+ if(YEAR>=2026)YEAR=1950;
+ var btn=this;
+ PLAYING=setInterval(function(){
+  YEAR++;document.getElementById('slider').value=YEAR;update();
+  if(YEAR>=2026){clearInterval(PLAYING);PLAYING=null;btn.innerHTML='&#9654; Play';}
+ },260);
+};
+setTimeout(update,600);
+</script></body></html>
