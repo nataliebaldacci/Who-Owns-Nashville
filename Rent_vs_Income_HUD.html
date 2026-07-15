@@ -1,0 +1,186 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Rent vs. Income — HUD Fair Market Rents 2017–2026 — Who Owns Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{margin:0;font-family:'EB Garamond',Garamond,serif;background:#f4f6f9;color:#20303f}
+ #won-header{height:56px;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ .wrap{max-width:1080px;margin:0 auto;padding:18px 16px 40px}
+ .panel{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(20,40,70,.10);padding:18px 22px;margin-bottom:16px}
+ h1{font-family:'Montserrat',sans-serif;font-size:21px;color:#1a3a5c;margin:0 0 6px}
+ h2{font-family:'Montserrat',sans-serif;font-size:15px;color:#1a3a5c;margin:0 0 2px}
+ .sub{font-size:13.5px;color:#66707c;margin:0 0 10px;line-height:1.5}
+ p{font-size:14.5px;line-height:1.6}
+ .tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px;margin-bottom:16px}
+ .tile{background:#fff;border-radius:10px;box-shadow:0 1px 6px rgba(20,40,70,.10);padding:14px 16px}
+ .tile .v{font-family:'Montserrat',sans-serif;font-size:24px;font-weight:800;color:#1c458c;font-variant-numeric:tabular-nums;line-height:1.1}
+ .tile .v.red{color:#d7263d}
+ .tile .l{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#8a94a0;margin-top:4px;line-height:1.4}
+ .legend{display:flex;gap:16px;flex-wrap:wrap;font-family:'Montserrat',sans-serif;font-size:11.5px;font-weight:600;color:#4a5560;margin:4px 0 8px}
+ .legend i{display:inline-block;width:16px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+ .cwrap{position:relative}
+ canvas{display:block;width:100%}
+ .tip{position:absolute;pointer-events:none;background:rgba(28,36,46,.95);color:#fff;font-family:'Montserrat',sans-serif;font-size:11px;line-height:1.55;padding:7px 9px;border-radius:6px;display:none;z-index:5;white-space:nowrap}
+ .tip b{color:#f0af1e}
+ details{margin-top:10px}
+ summary{font-family:'Montserrat',sans-serif;font-size:11.5px;font-weight:700;color:#1c458c;cursor:pointer}
+ table.dv{border-collapse:collapse;font-size:12.5px;margin-top:8px;font-variant-numeric:tabular-nums}
+ table.dv th{font-family:'Montserrat',sans-serif;font-size:9.5px;text-transform:uppercase;letter-spacing:.4px;color:#8a94a0;text-align:right;padding:3px 12px;border-bottom:1.5px solid #20303f}
+ table.dv td{text-align:right;padding:3px 12px;border-bottom:1px solid #eef0f3}
+ table.dv th:first-child,table.dv td:first-child{text-align:left}
+ .meth{font-size:13px;color:#4a5560;line-height:1.65}
+ .meth code{font-family:'Montserrat',sans-serif;font-size:11.5px;background:#f2f5f9;padding:1px 5px;border-radius:4px}
+ .meth a{color:#1c458c}
+ .srcnote{font-size:11.5px;color:#8a94a0;font-style:italic;margin-top:8px}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>WHO CAN AFFORD IT</small></a><div class="htitle">HUD Fair Market Rent vs. Income Limits &middot; 2017&ndash;2026</div></div>
+<div class="wrap">
+
+<div class="panel">
+ <h1>Rents rose faster than incomes</h1>
+ <p style="margin:0">HUD's own administrative numbers for the Nashville metro, 2017&ndash;2026: the two-bedroom Fair Market Rent climbed 80% while the median family income rose 69%. The lines below show the rent against what a household at each HUD income limit can pay at the 30%-of-income standard &mdash; the extremely-low-income line never comes close, and the gap widens every year.</p>
+</div>
+
+<div class="tiles">
+ <div class="tile"><div class="v red">+80%</div><div class="l">2BR Fair Market Rent, 2017&rarr;2026 ($959 &rarr; $1,730)</div></div>
+ <div class="tile"><div class="v">+69%</div><div class="l">Median family income, 2017&rarr;2026 ($68,700 &rarr; $116,100)</div></div>
+ <div class="tile"><div class="v red">$859/mo</div><div class="l">2026 shortfall for an extremely-low-income family renting at the 2BR FMR</div></div>
+ <div class="tile"><div class="v">2.7&times;</div><div class="l">Spread in 2026 2BR rents across Davidson-area ZIPs ($970 &rarr; $2,600)</div></div>
+</div>
+
+<div class="panel">
+ <h2>The rent vs. what households can afford</h2>
+ <p class="sub">Two-bedroom Fair Market Rent for the Nashville metro against the monthly rent affordable at 30% of income for a four-person household at each HUD income limit. Hover for exact values.</p>
+ <div class="legend">
+  <span><i style="background:#d7263d"></i>2BR Fair Market Rent</span>
+  <span><i style="background:#1c458c"></i>Affordable at low income (80% AMI)</span>
+  <span><i style="background:#5d82c1"></i>Affordable at very low income (50% AMI)</span>
+  <span><i style="background:#8fb1de"></i>Affordable at extremely low income (30% AMI)</span>
+ </div>
+ <div class="cwrap"><canvas id="c1" height="380"></canvas><div class="tip" id="t1"></div></div>
+ <details><summary>Data table</summary><div style="overflow-x:auto"><table class="dv" id="tbl1"></table></div></details>
+</div>
+
+<div class="panel">
+ <h2>The same county, three rents apart</h2>
+ <p class="sub">2026 two-bedroom Small Area Fair Market Rent for all 126 ZIP codes HUD publishes for the Davidson pull, sorted low to high. The dashed line is the metro-wide 2BR FMR ($1,730). Hover any bar for its ZIP.</p>
+ <div class="cwrap"><canvas id="c2" height="300"></canvas><div class="tip" id="t2"></div></div>
+</div>
+
+<div class="panel meth">
+ <h2>Method &amp; sources</h2>
+ <p style="margin:8px 0 4px">Housing is affordable at the 30% standard when rent takes no more than 30% of income. Two quantities follow: the income a rent requires, <code>rent &times; 12 / 0.30</code> (the 2026 2BR FMR of $1,730 requires $69,200), and the rent an income affords, <code>income &times; 0.30 / 12</code> (the 2026 extremely-low-income limit of $34,850 affords $871). The shortfall against the FMR is $859 a month; paying it anyway would take 60% of that household's income. HUD reports the two-bedroom FMR and the four-person income limit as the standard pairing for a modest family unit.</p>
+ <p style="margin:4px 0">Fair Market Rents and Income Limits pulled from the <a href="https://www.huduser.gov/portal/dataset/fmr-api.html" target="_blank">HUD User Datasets API</a> for Davidson County, TN (HUD entity 4703799999, Nashville&ndash;Davidson&ndash;Murfreesboro&ndash;Franklin MSA), program years 2017&ndash;2026: <a href="https://www.huduser.gov/portal/datasets/fmr.html" target="_blank">Fair Market Rents</a> &middot; <a href="https://www.huduser.gov/portal/datasets/il.html" target="_blank">Income Limits</a>. County rent series uses metro-level values; the ZIP chart uses Small Area FMRs. Flattened extracts live in <a href="data/hud/Davidson_FMR_SmallArea_byZIP_20172026.csv">data/hud/</a> with the full <a href="data/hud/FINDINGS.md">findings</a> and <a href="data/hud/SOURCES.md">source notes</a>.</p>
+ <div class="srcnote">Nominal dollars throughout, not inflation-adjusted. The 2BR FMR peaked at $1,827 in 2025 before HUD reduced it about 5% for 2026.</div>
+</div>
+
+</div>
+<script>
+var HUD={"years":[2017,2018,2019,2020,2021,2022,2023,2024,2025,2026],"fmr2":[959,1002,1103,1136,1197,1253,1406,1619,1827,1730],"il30":[24600,25100,25750,26200,26500,28300,30000,32050,34450,34850],"il50":[34350,37450,40000,41150,42150,47150,49900,53450,57400,58050],"il80":[54950,59900,64000,65850,67450,75450,79850,85500,91850,92900],"mfi":[68700,74900,80000,82300,84300,96700,102500,106900,114800,116100],"zips":[["37110",970],["37012",1320],["37018",1320],["37025",1320],["37026",1320],["37029",1320],["37031",1320],["37032",1320],["37036",1320],["37048",1320],["37049",1320],["37051",1320],["37052",1320],["37055",1320],["37056",1320],["37057",1320],["37074",1320],["37080",1320],["37095",1320],["37101",1320],["37118",1320],["37148",1320],["37149",1320],["37160",1320],["37165",1320],["37166",1320],["37171",1320],["37180",1320],["37181",1320],["37184",1320],["37186",1320],["37187",1320],["37190",1320],["37357",1320],["38401",1320],["37010",1360],["37016",1360],["37020",1360],["37073",1390],["37087",1390],["38476",1390],["37152",1410],["37172",1410],["37043",1440],["37207",1450],["37015",1460],["37130",1470],["37132",1470],["37141",1470],["37189",1480],["37143",1490],["37082",1510],["37085",1520],["37066",1550],["37127",1560],["37210",1580],["37218",1580],["37077",1590],["37060",1600],["37022",1610],["37115",1620],["37072",1630],["37088",1630],["37121",1630],["37035",1640],["37090",1640],["37146",1640],["37167",1640],["37089",1660],["37131",1660],["37133",1660],["37188",1680],["37062",1690],["MSA level",1730],["37138",1730],["37228",1730],["37011",1770],["37024",1770],["37070",1770],["37116",1770],["37202",1770],["37222",1770],["37224",1770],["37229",1770],["37232",1770],["37236",1770],["37238",1770],["37243",1770],["37246",1770],["37076",1780],["37211",1780],["37217",1780],["37128",1800],["37129",1800],["37216",1810],["37212",1820],["37213",1830],["37206",1840],["37013",1870],["37046",1880],["37208",1880],["37075",1890],["37153",1920],["37209",1950],["37086",1990],["37203",1990],["37214",2000],["37174",2050],["37064",2150],["37037",2180],["37122",2200],["37215",2200],["37221",2200],["37205",2230],["37014",2250],["37067",2250],["37065",2280],["37068",2280],["37204",2280],["37201",2360],["37027",2440],["37179",2440],["37219",2440],["37220",2470],["37069",2600],["37135",2600]]};
+var C={fmr:'#d7263d',il80:'#1c458c',il50:'#5d82c1',il30:'#8fb1de',ink:'#20303f',mut:'#8a94a0',grid:'#e7ebf1'};
+function aff(a){return a*0.30/12;}
+var SERIES=[
+ {k:'fmr2',label:'2BR Fair Market Rent',col:C.fmr,vals:HUD.fmr2},
+ {k:'il80',label:'Affordable at 80% AMI',col:C.il80,vals:HUD.il80.map(aff)},
+ {k:'il50',label:'Affordable at 50% AMI',col:C.il50,vals:HUD.il50.map(aff)},
+ {k:'il30',label:'Affordable at 30% AMI',col:C.il30,vals:HUD.il30.map(aff)}
+];
+function $(id){return document.getElementById(id);}
+function setup(cv){var d=window.devicePixelRatio||1,w=cv.parentNode.clientWidth,h=+cv.getAttribute('height');
+ cv.style.height=h+'px';cv.width=w*d;cv.height=h*d;var x=cv.getContext('2d');x.scale(d,d);return {x:x,w:w,h:h};}
+function money(v){return '$'+Math.round(v).toLocaleString();}
+
+// ---------- chart 1: lines ----------
+var G1=null;
+function draw1(){
+ var cv=$('c1'),s=setup(cv),x=s.x,W=s.w,H=s.h;
+ var M={l:52,r:150,t:14,b:26},pw=W-M.l-M.r,ph=H-M.t-M.b;
+ var ymax=2600,y0=HUD.years[0],y1=HUD.years[HUD.years.length-1];
+ function X(yr){return M.l+pw*(yr-y0)/(y1-y0);}
+ function Y(v){return M.t+ph*(1-v/ymax);}
+ x.clearRect(0,0,W,H);
+ x.strokeStyle=C.grid;x.lineWidth=1;x.fillStyle=C.mut;
+ x.font='10.5px Montserrat,sans-serif';x.textAlign='right';x.textBaseline='middle';
+ for(var g=0;g<=ymax;g+=500){x.beginPath();x.moveTo(M.l,Y(g));x.lineTo(W-M.r,Y(g));x.stroke();x.fillText('$'+g.toLocaleString(),M.l-7,Y(g));}
+ x.textAlign='center';x.textBaseline='top';
+ HUD.years.forEach(function(yr){x.fillText(yr,X(yr),H-M.b+7);});
+ SERIES.forEach(function(sr){
+  x.strokeStyle=sr.col;x.lineWidth=2;x.beginPath();
+  sr.vals.forEach(function(v,i){var px=X(HUD.years[i]),py=Y(v);i?x.lineTo(px,py):x.moveTo(px,py);});
+  x.stroke();
+  sr.vals.forEach(function(v,i){x.fillStyle=sr.col;x.beginPath();x.arc(X(HUD.years[i]),Y(v),2.6,0,7);x.fill();});
+  // direct label at the right end (relief for the light ramp step)
+  var SHORT={fmr2:'2BR FMR',il80:'80% AMI',il50:'50% AMI',il30:'30% AMI'};
+  x.fillStyle=sr.col;x.font='700 11px Montserrat,sans-serif';x.textAlign='left';x.textBaseline='middle';
+  x.fillText(SHORT[sr.k]+' '+money(sr.vals[sr.vals.length-1]),W-M.r+8,Y(sr.vals[sr.vals.length-1]));
+  x.textAlign='center';x.textBaseline='top';
+ });
+ G1={X:X,Y:Y,M:M,W:W,H:H};
+}
+$('c1').parentNode.addEventListener('mousemove',function(e){
+ if(!G1)return;var r=$('c1').getBoundingClientRect(),mx=e.clientX-r.left;
+ var yr=Math.round(HUD.years[0]+(mx-G1.M.l)/( (G1.W-G1.M.l-G1.M.r)/(HUD.years.length-1) ));
+ var i=yr-HUD.years[0];if(i<0||i>=HUD.years.length){$('t1').style.display='none';draw1();return;}
+ draw1();
+ var x=$('c1').getContext('2d');x.strokeStyle='#b9c2cf';x.setLineDash([3,3]);x.beginPath();
+ x.moveTo(G1.X(HUD.years[i]),G1.M.t);x.lineTo(G1.X(HUD.years[i]),G1.H-G1.M.b);x.stroke();x.setLineDash([]);
+ var t=$('t1');t.style.display='block';
+ t.innerHTML='<b>'+HUD.years[i]+'</b><br>'+SERIES.map(function(sr){return sr.label+': '+money(sr.vals[i]);}).join('<br>')
+  +'<br>Median family income: '+money(HUD.mfi[i]);
+ var tx=Math.min(G1.X(HUD.years[i])+12,G1.W-235);t.style.left=tx+'px';t.style.top='30px';
+});
+$('c1').parentNode.addEventListener('mouseleave',function(){$('t1').style.display='none';draw1();});
+
+// ---------- chart 2: sorted ZIP bars ----------
+var G2=null;
+function draw2(){
+ var cv=$('c2'),s=setup(cv),x=s.x,W=s.w,H=s.h;
+ var M={l:52,r:14,t:16,b:30},pw=W-M.l-M.r,ph=H-M.t-M.b;
+ var ymax=2600,n=HUD.zips.length,bw=pw/n;
+ function Y(v){return M.t+ph*(1-v/ymax);}
+ x.clearRect(0,0,W,H);
+ x.strokeStyle=C.grid;x.lineWidth=1;x.fillStyle=C.mut;
+ x.font='10.5px Montserrat,sans-serif';x.textAlign='right';x.textBaseline='middle';
+ for(var g=0;g<=ymax;g+=500){x.beginPath();x.moveTo(M.l,Y(g));x.lineTo(W-M.r,Y(g));x.stroke();x.fillText('$'+g.toLocaleString(),M.l-7,Y(g));}
+ HUD.zips.forEach(function(z,i){
+  x.fillStyle=C.il80;
+  var bx=M.l+i*bw,byv=Y(z[1]);
+  x.fillRect(bx+0.5,byv,Math.max(1,bw-1.2),(H-M.b)-byv);
+ });
+ // metro FMR reference line
+ var fy=Y(1730);
+ x.strokeStyle=C.ink;x.setLineDash([5,4]);x.lineWidth=1.4;x.beginPath();x.moveTo(M.l,fy);x.lineTo(W-M.r,fy);x.stroke();x.setLineDash([]);
+ x.fillStyle=C.ink;x.font='700 10.5px Montserrat,sans-serif';x.textAlign='left';x.textBaseline='bottom';
+ x.fillText('Metro 2BR FMR $1,730',M.l+6,fy-3);
+ x.fillStyle=C.mut;x.font='10.5px Montserrat,sans-serif';x.textAlign='center';x.textBaseline='top';
+ x.fillText('126 ZIP codes, lowest to highest 2026 two-bedroom rent',M.l+pw/2,H-M.b+8);
+ // min / max callouts
+ x.font='700 10.5px Montserrat,sans-serif';x.fillStyle=C.ink;
+ x.strokeStyle='#fff';x.lineWidth=3;x.lineJoin='round';
+ var lo=HUD.zips[0][0]+' $'+HUD.zips[0][1].toLocaleString(),hi=HUD.zips[n-1][0]+' $'+HUD.zips[n-1][1].toLocaleString();
+ x.textAlign='left';x.strokeText(lo,M.l+2,Y(HUD.zips[0][1])-6);x.fillText(lo,M.l+2,Y(HUD.zips[0][1])-6);
+ x.textAlign='right';x.strokeText(hi,W-M.r-2,Y(HUD.zips[n-1][1])-6);x.fillText(hi,W-M.r-2,Y(HUD.zips[n-1][1])-6);
+ G2={M:M,bw:bw,H:H,W:W};
+}
+$('c2').parentNode.addEventListener('mousemove',function(e){
+ if(!G2)return;var r=$('c2').getBoundingClientRect(),mx=e.clientX-r.left;
+ var i=Math.floor((mx-G2.M.l)/G2.bw);
+ if(i<0||i>=HUD.zips.length){$('t2').style.display='none';return;}
+ var z=HUD.zips[i],t=$('t2');t.style.display='block';
+ t.innerHTML='<b>ZIP '+z[0]+'</b><br>2026 2BR Small Area FMR: '+money(z[1])
+  +'<br>Income required at 30%: '+money(z[1]*12/0.30);
+ t.style.left=Math.min(G2.M.l+i*G2.bw+10,G2.W-215)+'px';t.style.top='24px';
+});
+$('c2').parentNode.addEventListener('mouseleave',function(){$('t2').style.display='none';});
+
+// ---------- data table ----------
+$('tbl1').innerHTML='<tr><th>Year</th><th>2BR FMR</th><th>Median family income</th><th>30% AMI limit</th><th>50% AMI limit</th><th>80% AMI limit</th><th>ELI affords /mo</th></tr>'
+ +HUD.years.map(function(yr,i){return '<tr><td>'+yr+'</td><td>'+money(HUD.fmr2[i])+'</td><td>'+money(HUD.mfi[i])+'</td><td>'+money(HUD.il30[i])+'</td><td>'+money(HUD.il50[i])+'</td><td>'+money(HUD.il80[i])+'</td><td>'+money(aff(HUD.il30[i]))+'</td></tr>';}).join('');
+
+draw1();draw2();
+window.addEventListener('resize',function(){draw1();draw2();});
+</script></body></html>

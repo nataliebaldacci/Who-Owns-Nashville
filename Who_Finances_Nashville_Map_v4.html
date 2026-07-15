@@ -22,7 +22,16 @@
  .tourrow{display:flex;gap:6px;align-items:center;margin-bottom:7px}
  #tourBtn{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;background:#f0af1e;color:#1c458c;border:0;border-radius:6px;padding:7px 11px;cursor:pointer}
  .navb{font-family:'Montserrat',sans-serif;font-weight:800;font-size:12px;background:#eef1f6;color:#1c458c;border:1px solid #d3dbe6;border-radius:6px;padding:6px 9px;cursor:pointer}
- #dealSel{width:100%;font-family:'EB Garamond',serif;font-size:13px;padding:6px 7px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#20303f;margin-bottom:7px}
+ /* deal filter: custom dropdown that opens the ranked deal list */
+ #dealWrap{position:relative;margin-bottom:7px}
+ #dealBtn{width:100%;box-sizing:border-box;font-family:'EB Garamond',serif;font-size:13px;padding:6px 24px 6px 7px;border:1px solid #cdd6e3;border-radius:6px;background:#fff;color:#8a94a0;cursor:pointer;text-align:left;position:relative;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ #dealBtn:after{content:"\25BE";position:absolute;right:8px;top:6px;color:#8a94a0}
+ #dealBtn.has{color:#20303f;font-weight:700}
+ #dealDD{display:none;position:absolute;top:calc(100% + 4px);left:0;width:360px;max-height:56vh;background:#fff;border:1px solid #cdd6e3;border-radius:8px;box-shadow:0 6px 20px rgba(0,0,0,.28);z-index:1200;flex-direction:column;overflow:hidden}
+ #dealDD.open{display:flex}
+ #dealDD .ddh{font-family:'Montserrat',sans-serif;font-size:10px;font-weight:800;color:#1c458c;text-transform:uppercase;letter-spacing:.6px;padding:8px 10px 0}
+ #dealSearch{margin:6px 10px;padding:5px 8px;font-family:'EB Garamond',serif;font-size:13px;border:1px solid #cdd6e3;border-radius:6px;outline:none}
+ #dlist{overflow-y:auto;min-height:0;padding:0 10px 8px}
  #clearBtn{width:100%;font-family:'Montserrat',sans-serif;font-weight:700;font-size:11px;background:#fff;color:#d7263d;border:1px solid #f2b8c2;border-radius:6px;padding:6px;cursor:pointer}
  #clearBtn:hover{background:#fdeef0}
  #legend{bottom:214px;left:12px;padding:10px 12px;font-size:13px;width:236px}
@@ -34,9 +43,6 @@
  #legend b{font-family:'Montserrat',sans-serif;font-size:12px}
  #legend .n{font-family:'Montserrat',sans-serif;font-weight:800;margin-left:auto;font-size:11.5px;color:#1c458c}
  #baseToggle{top:66px;right:10px;padding:6px 8px;display:flex;gap:5px;z-index:1001}
- /* right panel: deal list OR transactions table */
- #right{top:112px;right:10px;width:560px;max-height:calc(100% - 330px);overflow:auto;padding:10px 12px}
- #right h3{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:#1c458c;margin:0 0 6px;text-transform:uppercase;letter-spacing:.6px}
  #dlist .o{display:flex;gap:7px;font-size:12.5px;padding:3px 4px;border-bottom:1px solid #eef0f3;cursor:pointer;border-radius:4px}
  #dlist .o:hover{background:#f2f6fc}
  #dlist .o.sel{background:#fdeef0;outline:1px solid #f2b8c2}
@@ -61,7 +67,8 @@
  table.tx td:last-child a{font-family:'Montserrat',sans-serif;font-size:9.5px;overflow-wrap:anywhere}
  .amt{font-family:'Montserrat',sans-serif;font-weight:700;color:#20303f;font-size:10.5px}
  /* bottom deal card */
- #bottombox{bottom:0;left:50%;transform:translateX(-50%);width:min(1180px,97%);border-radius:12px 12px 0 0;box-shadow:0 -3px 16px rgba(0,0,0,.28);padding:0;overflow:hidden;z-index:1001;max-height:62vh;display:flex;flex-direction:column}
+ /* keep the deal card to a strip at the bottom — the map stays the star; the body scrolls */
+ #bottombox{bottom:0;left:50%;transform:translateX(-50%);width:min(1180px,97%);border-radius:12px 12px 0 0;box-shadow:0 -3px 16px rgba(0,0,0,.28);padding:0;overflow:hidden;z-index:1001;max-height:38vh;display:flex;flex-direction:column}
  #bb-summary{display:flex}
  #bb-summary .tile{padding:9px 18px;text-align:center;border-right:1px solid #e9ecf1;flex:1}
  #bb-summary .tile:last-child{border-right:none}
@@ -71,8 +78,8 @@
  #bb-body{overflow-y:auto;min-height:0}
  #bb-tx{background:#fff;border-top:1px solid #e9ecf1;padding:9px 20px 14px}
  #bb-tx h3{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:800;color:#1c458c;margin:0 0 6px;text-transform:uppercase;letter-spacing:.6px}
- #bb-deal .top{display:flex;align-items:baseline;gap:14px;padding:10px 20px 9px;color:#fff}
- #bb-deal .top .dname{font-family:'Montserrat',sans-serif;font-weight:800;font-size:25px;line-height:1.05;letter-spacing:-.3px}
+ #bb-deal .top{display:flex;align-items:baseline;gap:14px;padding:8px 20px 7px;color:#fff}
+ #bb-deal .top .dname{font-family:'Montserrat',sans-serif;font-weight:800;font-size:19px;line-height:1.05;letter-spacing:-.3px}
  #bb-deal .top .dsub{font-size:12px;opacity:.93;font-family:'Montserrat',sans-serif;font-weight:600}
  #bb-deal .top .close{margin-left:auto;cursor:pointer;font-size:21px;opacity:.85;font-family:sans-serif}
  #bb-deal .idrow{display:flex;background:#f7f9fc;border-bottom:1px solid #e9ecf1;font-size:12px}
@@ -124,7 +131,14 @@
 
 <div class="panel" id="filters">
   <div class="tourrow"><button id="tourBtn">&#9654; Tour deals</button><button class="navb" id="prevBtn">&#9664;</button><button class="navb" id="nextBtn">&#9654;</button></div>
-  <select id="dealSel"><option value="">Filter by deal name&hellip;</option></select>
+  <div id="dealWrap">
+    <div id="dealBtn">Filter by deal name&hellip;</div>
+    <div id="dealDD">
+      <div class="ddh">Securitization deals &middot; click to filter</div>
+      <input id="dealSearch" type="text" placeholder="Type to search deals&hellip;"/>
+      <div id="dlist"></div>
+    </div>
+  </div>
   <div class="lab">Loan era</div>
   <div class="chips" id="eraChips">
     <span class="chip on" data-era="all">All</span><span class="chip" data-era="e1">2013-16</span><span class="chip" data-era="e2">2017-19</span><span class="chip" data-era="e3">2020-22</span><span class="chip" data-era="e4">2023+</span>
@@ -134,11 +148,6 @@
 
 <div class="panel" id="legend"><div class="lab">Operator &middot; click to highlight</div><div id="legrows"></div></div>
 <div class="panel" id="baseToggle"><span class="chip on" data-base="gray">Gray</span><span class="chip" data-base="aerial">Aerial</span><span class="chip" data-base="streets">Streets</span><span class="chip" data-base="muted">Muted</span></div>
-
-<div class="panel" id="right">
-  <h3 id="right-h">Securitization deals</h3>
-  <div id="dlist"></div>
-</div>
 
 <div class="panel" id="bottombox">
   <div id="bb-summary">loading&hellip;</div>
@@ -465,21 +474,22 @@ function buildDeals(){
   var c=CARDS[k];d.deal=c?c.deal:k;return d;});
  DEALS.sort(function(a,b){return b.n-a.n;});
  dealOrder=DEALS.map(function(d){return d.nm;});
- document.getElementById('dealSel').innerHTML='<option value="">Filter by deal name&hellip;</option>'+
-  DEALS.map(function(d){var c=CARDS[d.nm]||{};var bits=[c.closing?monthYear(c.closing):(d.year||'n/a')];
-   if(c.size)bits.push(big(c.size));
-   bits.push(d.n+' home'+(d.n===1?'':'s'));
-   return '<option value="'+esc(d.nm)+'">'+esc(d.deal)+'  ('+bits.join(' &middot; ')+')</option>';}).join('');
+}
+function setDealLabel(nm){
+ var b=document.getElementById('dealBtn');
+ if(nm){var d=dealByName(nm),c=CARDS[nm]||{};
+  b.innerHTML=esc(c.deal||nm)+(d?' &middot; '+d.n+' home'+(d.n===1?'':'s'):'');b.classList.add('has');}
+ else{b.innerHTML='Filter by deal name&hellip;';b.classList.remove('has');}
 }
 
 // ---------- selection ----------
 function selectDeal(nm,zoom){isolate=nm;opF=null;dealPos=dealOrder.indexOf(nm);
- document.getElementById('dealSel').value=nm;refresh();
+ setDealLabel(nm);closeDD();refresh();
  if(zoom){try{var b=layer.getBounds();if(b.isValid())map.fitBounds(b.pad(0.25),{maxZoom:15});}catch(e){}}}
-function clearDeal(){isolate=null;dealPos=-1;document.getElementById('dealSel').value='';stopTour();refresh();}
-function pickOp(k){opF=(opF===k)?null:k;isolate=null;dealPos=-1;document.getElementById('dealSel').value='';stopTour();refresh();}
+function clearDeal(){isolate=null;dealPos=-1;setDealLabel(null);stopTour();refresh();}
+function pickOp(k){opF=(opF===k)?null:k;isolate=null;dealPos=-1;setDealLabel(null);stopTour();refresh();}
 function clearAll(){eraF='all';opF=null;isolate=null;dealPos=-1;stopTour();
- document.getElementById('dealSel').value='';
+ setDealLabel(null);document.getElementById('dealSearch').value='';
  document.querySelectorAll('#eraChips .chip').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-era')==='all');});
  refresh();try{var b=layer.getBounds();if(b.isValid())map.fitBounds(b.pad(0.05));}catch(e){}}
 
@@ -493,6 +503,12 @@ function ityLabel(t){t=String(t||'').trim();
   'DEEDQC':'Quit Claim Deed','DEEDWARR':'Warranty Deed','DEEDWARRSP':'Special Warranty Deed',
   'LIENMISC':'Lien (HOA)','REL':'Lien Release'};
  return M[t.toUpperCase()]||t;}
+function txUrl(t){
+ // county filings always resolve from the 15-digit filing number; never trust a stale url field
+ var d=String(t.inst||'').replace(/\D/g,'');
+ if(d.length===15)return 'https://davidsonportal.com/gis/file.php?file='+d;
+ return t.url||'';
+}
 function renderTx(card){
  var tx=(card&&card.tx)||[];
  if(!tx.length)return '<div style="color:#8a94a0;font-size:12px">No recorded instruments matched this deal.</div>';
@@ -504,7 +520,7 @@ function renderTx(card){
    +'<td class="pty">'+esc(t.grantor||'')+'</td>'
    +'<td class="pty">'+esc(t.grantee||'')+'</td>'
    +'<td class="extra" title="'+esc(t.extra||'')+'">'+esc(shorten(t.extra,58))+'</td>'
-   +'<td class="dt">'+(t.url?'<a target="_blank" href="'+esc(t.url)+'">'+esc(t.inst||'view')+'</a>':esc(t.inst||''))+'</td>'
+   +'<td class="dt">'+(txUrl(t)?'<a target="_blank" href="'+esc(txUrl(t))+'">'+esc(t.inst||'view')+'</a>':esc(t.inst||''))+'</td>'
    +'</tr>';}).join('');
  return '<table class="tx"><tr><th>Instrument type</th><th>Date</th><th>Grantor / party</th><th>Grantee</th>'
   +'<th>Extra people</th><th>Filing no.</th></tr>'+rows+'</table>';
@@ -586,11 +602,17 @@ function refresh(){
   var cls=opF?(opF===k?' sel':' dim'):'';
   return '<div class="row'+cls+'" data-k="'+k+'"><span class="sw" style="background:'+OPS[k].c+'"></span><b>'+OPS[k].l+'</b><span class="n">'+(cc[k]||0).toLocaleString()+'</span></div>';}).join('');
  document.querySelectorAll('#legrows .row').forEach(function(row){row.onclick=function(){pickOp(row.getAttribute('data-k'));};});
- var lb=DEALS.filter(function(d){return eraF==='all'||era(d.year)===eraF;});
- document.getElementById('dlist').innerHTML=lb.map(function(o,i){var c=opcol(o.br);
-  return '<div class="o'+(o.nm===isolate?' sel':'')+'" data-nm="'+esc(o.nm)+'" title="'+esc(o.nm)+'"><span class="rk">'+(i+1)+'</span><span class="dot" style="background:'+c+'"></span><span class="nm">'+esc(o.deal)+'<br><span class="yr">'+(o.year||'n/a')+'</span></span><span class="ct">'+o.n+'</span></div>';}).join('');
- document.querySelectorAll('#dlist .o').forEach(function(row){row.onclick=function(){selectDeal(this.getAttribute('data-nm'),true);};});
+ renderDlist();
  renderBottom();
+}
+function renderDlist(){
+ var q=(document.getElementById('dealSearch').value||'').toLowerCase();
+ var lb=DEALS.filter(function(d){return (eraF==='all'||era(d.year)===eraF)
+  &&(!q||d.deal.toLowerCase().indexOf(q)>=0||d.nm.toLowerCase().indexOf(q)>=0);});
+ document.getElementById('dlist').innerHTML=lb.length?lb.map(function(o,i){var c=opcol(o.br);
+  return '<div class="o'+(o.nm===isolate?' sel':'')+'" data-nm="'+esc(o.nm)+'" title="'+esc(o.nm)+'"><span class="rk">'+(i+1)+'</span><span class="dot" style="background:'+c+'"></span><span class="nm">'+esc(o.deal)+'<br><span class="yr">'+(o.year||'n/a')+'</span></span><span class="ct">'+o.n+'</span></div>';}).join('')
+  :'<div style="color:#8a94a0;font-size:12px;padding:6px 2px">No deals match.</div>';
+ document.querySelectorAll('#dlist .o').forEach(function(row){row.onclick=function(){selectDeal(this.getAttribute('data-nm'),true);};});
 }
 
 // ---------- tour ----------
@@ -600,12 +622,18 @@ function step(dir){if(!dealOrder.length)return;dealPos=(dealPos+dir+dealOrder.le
 document.getElementById('tourBtn').onclick=function(){if(T){stopTour();return;}this.innerHTML='&#10073;&#10073; Pause';step(1);T=setInterval(function(){step(1);},4200);};
 document.getElementById('prevBtn').onclick=function(){stopTour();step(-1);};
 document.getElementById('nextBtn').onclick=function(){stopTour();step(1);};
-document.getElementById('dealSel').onchange=function(){var v=this.value;if(v)selectDeal(v,true);else clearDeal();};
+function openDD(){document.getElementById('dealDD').classList.add('open');document.getElementById('dealSearch').focus();}
+function closeDD(){document.getElementById('dealDD').classList.remove('open');}
+document.getElementById('dealBtn').onclick=function(e){e.stopPropagation();
+ document.getElementById('dealDD').classList.contains('open')?closeDD():openDD();};
+document.getElementById('dealDD').onclick=function(e){e.stopPropagation();};
+document.addEventListener('click',closeDD);
+document.getElementById('dealSearch').oninput=renderDlist;
 document.getElementById('clearBtn').onclick=clearAll;
 document.querySelectorAll('#eraChips .chip').forEach(function(ch){ch.onclick=function(){
  eraF=this.getAttribute('data-era');
  document.querySelectorAll('#eraChips .chip').forEach(function(x){x.classList.remove('on');});
- this.classList.add('on');isolate=null;dealPos=-1;document.getElementById('dealSel').value='';refresh();};});
+ this.classList.add('on');isolate=null;dealPos=-1;setDealLabel(null);refresh();};});
 document.querySelectorAll('#baseToggle .chip').forEach(function(ch){ch.onclick=function(){
  setBase(this.getAttribute('data-base'));
  document.querySelectorAll('#baseToggle .chip').forEach(function(x){x.classList.remove('on');});
