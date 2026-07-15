@@ -10,7 +10,7 @@ from shapely.strtree import STRtree
 
 U='/root/.claude/uploads/6ba4e66d-6ed7-5650-bff1-8b675f5eb8ef/'
 fw=pd.read_parquet(U+'d65a6f13-Nashville_Framework_Homes_CANONICAL_20260707_ENTITYFLAG.parquet',
- columns=['lat','lon','owner_type_canonical','flag_nonowner_occupant','flag_out_of_state'])
+ columns=['lat','lon','owner_type_canonical','flag_nonowner_occupant','flag_out_of_state','owner_category'])
 fw=fw.dropna(subset=['lat','lon'])
 fw=fw[(fw.lat.between(35.9,36.5))&(fw.lon.between(-87.2,-86.3))]
 pts=[Point(lo,la) for la,lo in zip(fw['lat'],fw['lon'])]
@@ -18,6 +18,7 @@ corp=((fw['owner_type_canonical']=='Entity')|(fw['owner_type_canonical']=='Bank-
 trust=(fw['owner_type_canonical']=='Trust').values
 noo=fw['flag_nonowner_occupant'].astype(bool).values
 oos=fw['flag_out_of_state'].astype(bool).values
+inst=(fw['owner_category']=='Long-term \u2014 National SFR').values   # the identified 350+ institutional operators
 print('framework points:',len(pts))
 
 acs_tr=pd.read_parquet(U+'61119b48-ACS_Framework_SF_Tenure_Tract_20202024.parquet')
@@ -39,7 +40,7 @@ def agg(geofile,label,namefn,tol,acsfn=None,minpts=0):
         except:continue
         geoms.append(g);metas.append(f['properties'])
     tree=STRtree(geoms)
-    counts=[dict(n=0,corp=0,trust=0,noo=0,oos=0) for _ in geoms]
+    counts=[dict(n=0,corp=0,trust=0,noo=0,oos=0,inst=0) for _ in geoms]
     # assign each point to the first polygon containing it
     for i,p in enumerate(pts):
         for j in tree.query(p):
@@ -49,6 +50,7 @@ def agg(geofile,label,namefn,tol,acsfn=None,minpts=0):
                 if trust[i]:c['trust']+=1
                 if noo[i]:c['noo']+=1
                 if oos[i]:c['oos']+=1
+                if inst[i]:c['inst']+=1
                 break
     feats=[]
     for g,m,c in zip(geoms,metas,counts):
