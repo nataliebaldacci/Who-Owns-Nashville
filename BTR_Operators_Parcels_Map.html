@@ -50,7 +50,7 @@ const positron=L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/
 const osm=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OSM',maxZoom:19});
 const aerial=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{attribution:'© Esri',maxZoom:19});
 L.control.layers({"CARTO Positron":positron,"OpenStreetMap":osm,"Aerial (Esri)":aerial},null,{position:'topright',collapsed:true}).addTo(map);
-fetch('https://nataliebaldacci.github.io/SFR_Nashville/data/Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{var fs=(g.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);L.geoJSON(fs.length?{type:'FeatureCollection',features:fs}:g,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);}).catch(()=>{});
+fetch('Davidson_County_Boundary.geojson').then(r=>r.json()).then(g=>{var fs=(g.features||[]).filter(x=>x.properties&&x.properties.OBJECTID===4);L.geoJSON(fs.length?{type:'FeatureCollection',features:fs}:g,{style:{color:'#1a3a5c',weight:2,fillOpacity:0,dashArray:'4,4'},interactive:false}).addTo(map);}).catch(()=>{});
 
 const COLORS={'VB TAH (NexPoint)':'#1f77b4','Resibuilt (Invitation)':'#ff7f0e','Pulte Homes':'#2ca02c','KLLB (Kennedy Lewis)':'#d62728','Lennar Homes':'#9467bd','TPG AG EHC':'#8c564b','ava madison':'#e377c2','Madison Nashville Trinity':'#7f7f7f','RSD':'#bcbd22','AHV':'#17becf','KSSK':'#3182bd','ACPF':'#ff9896','Brookfield':'#98df8a','Crescent':'#c49c94','CrescentBTR':'#c5b0d5'};
 function col(o){return COLORS[o]||'#888';}
@@ -60,9 +60,12 @@ let allData=null,layer=null,q='';
 function apnClean(a){return String(a||'').replace(/[^0-9A-Za-z]/g,'');}
 function toolkit(p){
   const apn=apnClean(p.APN||p.ParID), addr=encodeURIComponent((p.PropAddr||'')+' Nashville TN');
+  const pid=p.ParID?String(p.ParID):'';
   return '<div class="tk">'+
-    '<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcel='+esc(apn)+'">Parcel Viewer</a>'+
-    '<a target="_blank" href="https://www.padctn.org/prc/property/'+esc(apn)+'">Property Card</a>'+
+    '<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+esc(apn)+'">Parcel Viewer</a>'+
+    (pid?'<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(pid)+'">Parcel Report</a>':'')+
+    '<a target="_blank" href="https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+esc(apn)+'">Property Assessor</a>'+
+    '<a target="_blank" href="https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+esc(apn)+'&searchType=permit">ePermits</a>'+
     '<a target="_blank" href="https://www.google.com/maps/search/?api=1&query='+addr+'">Aerial</a>'+
     '<a target="_blank" href="https://www.google.com/maps/@?api=1&map_action=pano&viewpoint='+addr+'">Street View</a>'+
     '</div>';
