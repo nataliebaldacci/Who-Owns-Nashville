@@ -1,0 +1,152 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>ArcGIS Layer Saver — Who Owns Nashville?</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond&family=Montserrat:wght@600;700;800&display=swap" rel="stylesheet">
+<style>
+ html,body{height:100%;margin:0;font-family:'EB Garamond',Garamond,serif}
+ body{display:flex;flex-direction:column}
+ #won-header{height:56px;flex:0 0 auto;display:flex;align-items:center;gap:14px;background:#1c458c;color:#fff;padding:0 18px;border-bottom:4px solid #f0af1e;box-sizing:border-box}
+ #won-header .brand{font-family:'Montserrat',sans-serif;font-size:19px;font-weight:800;color:#fff;text-decoration:none;letter-spacing:-.2px}
+ #won-header .brand small{display:block;font-size:9.5px;font-weight:700;color:#f0af1e;letter-spacing:2px}
+ #won-header .htitle{font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;color:#dbe6f5;margin-left:auto}
+ #bar{flex:0 0 auto;background:#f4f6f9;border-bottom:1px solid #d6ddea;padding:10px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+ #url{flex:1;min-width:320px;font-family:ui-monospace,Menlo,monospace;font-size:12px;padding:8px 10px;border:1px solid #cdd6e3;border-radius:6px}
+ button{font-family:'Montserrat',sans-serif;font-weight:700;font-size:12px;border:0;border-radius:6px;padding:8px 14px;cursor:pointer}
+ #go{background:#1c458c;color:#fff}
+ .dl{background:#eef1f6;color:#1c458c;border:1px solid #d3dbe6}
+ .dl:disabled{opacity:.4;cursor:default}
+ #map{flex:1;min-height:0}
+ #info{flex:0 0 auto;background:#fff;border-top:1px solid #e9ecf1;padding:7px 14px;font-size:12.5px;color:#4a5560;display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+ #info b{font-family:'Montserrat',sans-serif;color:#1c458c;font-size:12px}
+ #legend{position:absolute;bottom:60px;right:12px;z-index:1000;background:rgba(255,255,255,.96);border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.3);padding:9px 12px;font-size:12px;max-height:44vh;overflow:auto;display:none}
+ #legend .r{display:flex;align-items:center;gap:7px;line-height:1.7}
+ #legend i{width:18px;height:4px;border-radius:2px;flex:none}
+ #legend i.pt{width:11px;height:11px;border-radius:50%}
+ #legend i.pg{height:12px;border-radius:2px}
+ #legend b{font-family:'Montserrat',sans-serif;font-size:11px;color:#20303f}
+</style></head><body>
+<div id="won-header"><a class="brand" href="index.html">Who Owns Nashville?<small>LAYER SAVER</small></a><div class="htitle">Save any ArcGIS layer, data + original styles</div></div>
+<div id="bar">
+ <input id="url" value="https://services2.arcgis.com/HdTo6HJqh92wn4D8/ArcGIS/rest/services/Street_Centerlines_view/FeatureServer/0" spellcheck="false"/>
+ <button id="go">Load layer</button>
+ <button class="dl" id="dlData" disabled>&#8595; data .geojson</button>
+ <button class="dl" id="dlStyle" disabled>&#8595; style .json</button>
+ <button class="dl" id="dlPack" disabled>&#8595; leaflet bundle .js</button>
+</div>
+<div id="map"></div>
+<div id="legend"></div>
+<div id="info">Paste any FeatureServer layer URL (ending in /FeatureServer/0 etc.) and load. The layer draws with its published ArcGIS symbology; the downloads capture the features, the raw drawingInfo, and a ready-to-load Leaflet bundle. Requests run from your browser, so the layer must allow public access.</div>
+<script>
+var map=L.map('map',{center:[36.166,-86.784],zoom:10,preferCanvas:true});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'&copy; OpenStreetMap, &copy; CARTO',maxZoom:19}).addTo(map);
+var layer=null,GJ=null,META=null,NAME='layer';
+function setInfo(h){document.getElementById('info').innerHTML=h;}
+function cssColor(c){return c&&c.length?('rgba('+c[0]+','+c[1]+','+c[2]+','+((c[3]==null?255:c[3])/255).toFixed(2)+')'):'#888';}
+
+// ---- ArcGIS drawingInfo -> Leaflet style ----
+function symToStyle(sym){
+ sym=sym||{};
+ var t=sym.type||'';
+ if(t==='esriSLS')return {kind:'line',color:cssColor(sym.color),weight:Math.max(1,(sym.width||1)*1.33),dashArray:(sym.style||'').indexOf('Dash')>=0?'6,4':null};
+ if(t==='esriSFS'){var o=sym.outline||{};return {kind:'poly',fillColor:cssColor(sym.color),fillOpacity:sym.color&&sym.color[3]!=null?sym.color[3]/255:.6,color:cssColor(o.color),weight:(o.width||1)*1.33};}
+ if(t==='esriSMS')return {kind:'point',radius:Math.max(3,(sym.size||6)/2),fillColor:cssColor(sym.color),fillOpacity:.9,color:cssColor((sym.outline||{}).color),weight:(sym.outline&&sym.outline.width||1)};
+ if(t==='esriPMS')return {kind:'point',radius:6,fillColor:'#1c458c',fillOpacity:.9,color:'#fff',weight:1};   // picture markers fall back to dots
+ return {kind:'line',color:'#1c458c',weight:1.5};
+}
+function makeStyler(di){
+ var r=(di||{}).renderer||{};
+ if(r.type==='uniqueValue'){
+  var f1=r.field1,f2=r.field2,f3=r.field3,delim=r.fieldDelimiter||',';
+  var m={};(r.uniqueValueInfos||[]).forEach(function(u){m[String(u.value)]={s:symToStyle(u.symbol),label:u.label||String(u.value)};});
+  var dflt=r.defaultSymbol?symToStyle(r.defaultSymbol):null;
+  return {kind:'uniqueValue',legend:m,dflt:dflt,pick:function(p){
+   var k=String(p[f1]);if(f2)k+=delim+p[f2];if(f3)k+=delim+p[f3];
+   return (m[k]&&m[k].s)||dflt||{color:'#888',weight:1};}};
+ }
+ if(r.type==='classBreaks'){
+  var fld=r.field,br=(r.classBreakInfos||[]).map(function(b){return {max:b.classMaxValue,s:symToStyle(b.symbol),label:b.label};});
+  return {kind:'classBreaks',breaks:br,pick:function(p){
+   var v=+p[fld];for(var i=0;i<br.length;i++)if(v<=br[i].max)return br[i].s;
+   return br.length?br[br.length-1].s:{color:'#888',weight:1};}};
+ }
+ var s=symToStyle(r.symbol);
+ return {kind:'simple',simple:s,pick:function(){return s;}};
+}
+function drawLegend(st){
+ var el=document.getElementById('legend'),rows='<b>'+NAME+'</b>';
+ function sw(s){var cls=s.kind==='point'?'pt':(s.kind==='poly'?'pg':'');
+  return '<i class="'+cls+'" style="background:'+(s.fillColor||s.color)+';border:1px solid '+(s.color||'#666')+'"></i>';}
+ if(st.kind==='uniqueValue'){Object.keys(st.legend).slice(0,40).forEach(function(k){rows+='<div class="r">'+sw(st.legend[k].s)+st.legend[k].label+'</div>';});}
+ else if(st.kind==='classBreaks'){st.breaks.forEach(function(b){rows+='<div class="r">'+sw(b.s)+b.label+'</div>';});}
+ else rows+='<div class="r">'+sw(st.simple)+'single symbol</div>';
+ el.innerHTML=rows;el.style.display='block';
+}
+
+// ---- fetch: metadata then paged features ----
+async function loadLayer(){
+ var base=document.getElementById('url').value.trim().replace(/\/+$/,'').replace(/\?.*$/,'');
+ setInfo('Fetching layer metadata&hellip;');
+ ['dlData','dlStyle','dlPack'].forEach(function(id){document.getElementById(id).disabled=true;});
+ var meta;
+ try{meta=await fetch(base+'?f=json').then(function(r){return r.json();});}
+ catch(e){setInfo('<span style="color:#c0392b">Could not reach the service ('+e.message+'). The layer must allow public access from the browser.</span>');return;}
+ if(meta.error){setInfo('<span style="color:#c0392b">Service error: '+(meta.error.message||JSON.stringify(meta.error))+'</span>');return;}
+ META=meta;NAME=meta.name||'layer';
+ var page=Math.min(meta.maxRecordCount||1000,2000);
+ var st=makeStyler(meta.drawingInfo);
+ var feats=[],offset=0,guard=0;
+ while(guard++<500){
+  setInfo('Fetching features&hellip; '+feats.length.toLocaleString()+' so far');
+  var u=base+'/query?where=1%3D1&outFields=*&outSR=4326&f=geojson&resultOffset='+offset+'&resultRecordCount='+page;
+  var gj;
+  try{gj=await fetch(u).then(function(r){return r.json();});}
+  catch(e){setInfo('<span style="color:#c0392b">Query failed at offset '+offset+': '+e.message+'</span>');return;}
+  if(gj.error){setInfo('<span style="color:#c0392b">Query error: '+(gj.error.message||'')+'</span>');return;}
+  var got=(gj.features||[]);
+  feats=feats.concat(got);
+  if(got.length<page)break;
+  offset+=page;
+ }
+ GJ={type:'FeatureCollection',features:feats};
+ if(layer)map.removeLayer(layer);
+ layer=L.geoJSON(GJ,{
+  style:function(f){var s=st.pick(f.properties||{});return {color:s.color,weight:s.weight,dashArray:s.dashArray||null,fillColor:s.fillColor,fillOpacity:s.fillOpacity};},
+  pointToLayer:function(f,ll){var s=st.pick(f.properties||{});return L.circleMarker(ll,{radius:s.radius||5,fillColor:s.fillColor,fillOpacity:s.fillOpacity||.9,color:s.color,weight:s.weight||1});},
+  onEachFeature:function(f,l){var p=f.properties||{};
+   var h=Object.keys(p).slice(0,14).map(function(k){return '<b>'+k+'</b> '+(p[k]==null?'':p[k]);}).join('<br>');
+   l.bindPopup('<div style="font-size:12px;max-height:220px;overflow:auto">'+h+'</div>');}
+ }).addTo(map);
+ try{map.fitBounds(layer.getBounds(),{padding:[20,20]});}catch(e){}
+ drawLegend(st);
+ setInfo('<b>'+NAME+'</b> &middot; '+feats.length.toLocaleString()+' features &middot; renderer: '+((meta.drawingInfo||{}).renderer||{}).type+' &middot; drawn with the published ArcGIS symbology. Use the download buttons to save.');
+ ['dlData','dlStyle','dlPack'].forEach(function(id){document.getElementById(id).disabled=false;});
+}
+function dl(name,text,mime){
+ var a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob([text],{type:mime||'application/json'}));
+ a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+document.getElementById('go').onclick=loadLayer;
+document.getElementById('dlData').onclick=function(){dl(NAME.replace(/\W+/g,'_')+'.geojson',JSON.stringify(GJ));};
+document.getElementById('dlStyle').onclick=function(){dl(NAME.replace(/\W+/g,'_')+'_style.json',JSON.stringify({name:NAME,source:document.getElementById('url').value.trim(),drawingInfo:META.drawingInfo,fields:META.fields},null,1));};
+document.getElementById('dlPack').onclick=function(){
+ // self-contained bundle: WON_LAYER.add(map) draws the data with the saved symbology
+ var pack='// '+NAME+' — saved from '+document.getElementById('url').value.trim()+'\n'
+  +'// Load leaflet, then this file; call WON_LAYER.add(map).\n'
+  +'var WON_LAYER=(function(){\n'
+  +'var DI='+JSON.stringify(META.drawingInfo)+';\n'
+  +'var GJ='+JSON.stringify(GJ)+';\n'
+  +'var cssColor='+cssColor.toString()+';\n'
+  +'var symToStyle='+symToStyle.toString()+';\n'
+  +'var makeStyler='+makeStyler.toString()+';\n'
+  +'var st=makeStyler(DI);\n'
+  +'return {name:'+JSON.stringify(NAME)+',geojson:GJ,drawingInfo:DI,add:function(map){\n'
+  +' return L.geoJSON(GJ,{style:function(f){var s=st.pick(f.properties||{});return {color:s.color,weight:s.weight,dashArray:s.dashArray||null,fillColor:s.fillColor,fillOpacity:s.fillOpacity};},\n'
+  +'  pointToLayer:function(f,ll){var s=st.pick(f.properties||{});return L.circleMarker(ll,{radius:s.radius||5,fillColor:s.fillColor,fillOpacity:s.fillOpacity||.9,color:s.color,weight:s.weight||1});}}).addTo(map);}};\n'
+  +'})();\n';
+ dl(NAME.replace(/\W+/g,'_')+'_bundle.js',pack,'application/javascript');
+};
+</script></body></html>
