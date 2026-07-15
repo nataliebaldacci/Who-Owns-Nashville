@@ -271,6 +271,37 @@ function wireHistory(el,p){
  });
 }
 
+// ---------- link toolkit: every popup gets the full set of per-parcel links ----------
+// Three IDs: APN (11-digit assessor no.), PIN/ParID (parcel key), ACCOUNTNUMBER (assessor account).
+function linkKit(apn,pid,acct,lat,lon,dig){
+ apn=apn?esc(String(apn)):'';pid=pid?esc(String(pid)):'';acct=acct?esc(String(acct)):'';
+ var tk=[];
+ if(apn)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a>');
+ if(pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+pid+'">Parcel Report</a>');
+ if(apn)tk.push('<a target="_blank" href="https://davidson-tn-citizen.comper.info/template.aspx?propertyID='+apn+'">Property Assessor</a>');
+ if(acct){
+  tk.push('<a target="_blank" href="https://portal.padctn.org/OFS/WP/Summary/'+acct+'">Property Card</a>');
+  tk.push('<a target="_blank" href="https://portal.padctn.org/OFS/WP/Print/'+acct+'">Card (print)</a>');
+  tk.push('<a target="_blank" href="https://portal.padctn.org/OFS/WP/Image/GetPropertyImage?propertyID='+acct+'&card=2">Photo (PADCTN)</a>');
+ }
+ if(apn){
+  tk.push('<a target="_blank" href="https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+apn+'_1.jpg">Photo (Spatialest)</a>');
+  tk.push('<a target="_blank" href="https://epermits.nashville.gov/#/search?searchCode=APN&page=1&searchText='+apn+'&searchType=permit">ePermits</a>');
+  tk.push('<a target="_blank" href="https://documents.nashville.gov/Request/Form/PermitCodes?parcelnumber='+apn+'">Permit Docs</a>');
+ }
+ if(dig&&dig.length>=12)tk.push('<a target="_blank" href="https://davidsonportal.com/gis/file.php?file='+dig+'">Deed image</a>');
+ if(lat&&lon)tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+lat+','+lon+'">Street View</a>');
+ return tk.join(' &middot; ');
+}
+// photo: try Spatialest first, fall back to the PADCTN property image, then hide
+function photoImg(apn,acct){
+ if(!apn&&!acct)return '';
+ var s=apn?'https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+esc(String(apn))+'_1.jpg':'';
+ var pad=acct?'https://portal.padctn.org/OFS/WP/Image/GetPropertyImage?propertyID='+esc(String(acct))+'&card=2':'';
+ var first=s||pad,second=(s&&pad)?pad:'';
+ var oe=second?"this.onerror=function(){this.style.display='none'};this.src='"+second+"'":"this.style.display='none'";
+ return '<img class="ph" src="'+first+'" alt="" onerror="'+oe+'"/>';
+}
 // ---------- property popup ----------
 function structLabel(p){var s=String(p.struct||'').toUpperCase();
  if(s.indexOf('CONDO')>=0)return 'Residential Condo';
@@ -278,9 +309,8 @@ function structLabel(p){var s=String(p.struct||'').toUpperCase();
  return p.struct?titlecase(p.struct):'n/a';}
 function popup(p){
  var apn=esc(String(p.apn||'')),dig=String(p.inst||'').replace(/\D/g,''),c=opcol(brandOf(p.op||p.br));
- var img='https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+apn+'_1.jpg';
  var h='<div class="lp">';
- h+='<img class="ph" src="'+img+'" alt="" onerror="this.style.display=\'none\'"/>';
+ h+=photoImg(p.apn,p.acct);
  h+='<span class="badge" style="background:'+c+'">'+esc(p.own)+'</span>';
  h+='<div class="addr">'+na(p.addr)+'</div>';
  h+='<div class="sub">'+na(p.city)+(p.city?', TN ':'TN ')+na(p.zip)+'</div>';
@@ -308,17 +338,8 @@ function popup(p){
    +'<span>Class at deal</span><b>'+na(p.d_class||p['class'])+'</b>'
    +'<span>Property type</span><b>'+(p.d_type?titlecase(p.d_type):structLabel(p))+'</b>'
    +'</div>';
- // full link toolkit
- var tk=[];
- if(p.apn)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a>');
- if(p.pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(p.pid)+'">Parcel Report</a>');
- if(dig.length>=12)tk.push('<a target="_blank" href="https://davidsonportal.com/gis/file.php?file='+dig+'">Deed image</a>');
- if(p.lat&&p.lon){
-   tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+p.lat+','+p.lon+'">Street View</a>');
-   tk.push('<a target="_blank" href="https://portal.patriotproperties.com/?APIKEY=5D050659143EB96630FB38B91DE12E40&LAT='+p.lat+'&LONG='+p.lon+'">Aerial</a>');
- }
- if(p.pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetGenInfo?ParcelID='+esc(p.pid)+'">Parcel info (API)</a>');
- h+='<div class="links">'+tk.join(' &middot; ')+'</div>';
+ // full link toolkit (no keyed/third-party-credential links on the public page)
+ h+='<div class="links">'+linkKit(p.apn,p.pid,p.acct,p.lat,p.lon,dig)+'</div>';
  // history dropdowns, loaded on demand from the ParcelHistory service
  [['owner','Owner history'],['prop','Property history'],['zone','Zoning history'],
   ['asmt','Assessment history'],['permit','Building permits']].forEach(function(x){
@@ -360,10 +381,20 @@ function ownType(nm){var o=String(nm||'').toUpperCase();
  if(/\bTRUST\b|TRUSTEE|LIVING TR|REV TR|FAMILY TR/.test(o))return 'Trust';
  if(/LLC|L L C|\bLP\b|L\.P|\bINC\b|CORP|COMPANY|HOLDINGS|PARTNERS|\bLTD\b|PROPERTIES|HOMES\b|\bGP\b/.test(o))return 'Corporate';
  return 'Individual';}
+// ACCOUNTNUMBER lookup for live-clicked parcels: parid,apn,acct — fetched once, on first use
+var ACCT=null,ACCT_P=null;
+function loadAcct(){
+ if(ACCT_P)return ACCT_P;
+ ACCT_P=fetch('parcel_acct_lookup.csv').then(function(r){return r.text();}).then(function(t){
+  ACCT={};var L=t.split('\n');
+  for(var i=1;i<L.length;i++){var c=L[i].split(',');if(c.length>=3)ACCT[c[0]]={apn:c[1],acct:c[2]};}
+  return ACCT;
+ }).catch(function(){ACCT={};return ACCT;});
+ return ACCT_P;
+}
 function livePopup(p){
- var apn=esc(String(p.apn||''));
  var h='<div class="lp">';
- if(apn)h+='<img class="ph" src="https://image-cdn.spatialest.com/image/tn-davidson-images/med/Images/'+apn+'_1.jpg" alt="" onerror="this.style.display=\'none\'"/>';
+ h+=photoImg(p.apn,p.acct);
  h+='<span class="badge" style="background:#5b6675">'+esc(p.cowner||'Unknown owner')+'</span>';
  h+='<div class="addr">'+na(p.addr)+'</div>';
  h+='<div class="sub">'+(p.city?esc(p.city)+', ':'')+'TN'+(p.zip?' '+esc(p.zip):'')+'</div>';
@@ -381,12 +412,7 @@ function livePopup(p){
   +'<span>Date of last sale</span><b>'+na(p.cacq)+'</b>'
   +'<span>Purchase price</span><b>'+money(p.cprice)+'</b>'
   +'</div>';
- var tk=[];
- if(apn)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/?parcelID='+apn+'">Parcel Viewer</a>');
- if(p.pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelViewer/PrintRecord.html?pin='+esc(p.pid)+'">Parcel Report</a>');
- tk.push('<a target="_blank" href="https://www.google.com/maps?q&layer=c&cbll='+p.lat+','+p.lon+'">Street View</a>');
- if(p.pid)tk.push('<a target="_blank" href="https://maps.nashville.gov/ParcelService/Search.asmx/GetGenInfo?ParcelID='+esc(p.pid)+'">Parcel info (API)</a>');
- h+='<div class="links">'+tk.join(' &middot; ')+'</div>';
+ h+='<div class="links">'+linkKit(p.apn,p.pid,p.acct,p.lat,p.lon,'')+'</div>';
  if(p.pid)[['owner','Owner history'],['prop','Property history'],['zone','Zoning history'],
   ['asmt','Assessment history'],['permit','Building permits']].forEach(function(x){
   h+='<details class="hx" data-kind="'+x[0]+'"><summary>'+x[1]+'</summary><div class="hxbody"></div></details>';});
@@ -397,7 +423,8 @@ map.on('click',function(e){
   +'&geometryType=esriGeometryPoint&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&returnGeometry=false&f=json';
  var pop=L.popup({maxWidth:360,minWidth:300,autoPan:true})
   .setLatLng(e.latlng).setContent('<div class="lp" style="color:#8a94a0">Looking up parcel&hellip;</div>').openOn(map);
- fetch(url).then(function(r){return r.json();}).then(function(j){
+ Promise.all([fetch(url).then(function(r){return r.json();}),loadAcct()]).then(function(res){
+  var j=res[0],LK=res[1]||{};
   var ft=(j.features||[])[0];
   if(!ft){pop.setContent('<div class="lp" style="color:#8a94a0">No parcel record here.</div>');return;}
   var a=ft.attributes||{};
@@ -413,6 +440,8 @@ map.on('click',function(e){
    cacq:dstr(attr(a,['OwnDate','SaleDate','DateSold'])),cprice:attr(a,['SalePrice','SALEPRICE']),
    appr2025:attr(a,['TotlAppr','TotalAppr','TOTLAPPR']),
    lat:e.latlng.lat,lon:e.latlng.lng};
+  var lk=LK[p.pid];
+  if(lk){p.acct=lk.acct;if(!p.apn||p.apn==='null')p.apn=lk.apn;}
   pop.setContent(livePopup(p));
   var el=document.querySelector('.leaflet-popup-content .lp');
   if(el&&p.pid)wireHistory(el,p);
