@@ -4,20 +4,24 @@ Pull absentee owned parcels from parcel GIS endpoints in major markets.
 
 Absentee means the owner mailing zip does not match the property zip. When a
 layer lacks one of the two zip fields the script falls back to out of state
-mailing address. Add --corporate to also require a business style owner name
-(LLC, LP, Inc, Trust, Holdings, Properties and similar).
+mailing address, and when it lacks both it falls back to corporate style
+owner names only. Each query is retried in simpler forms until the server
+accepts it, and the summary reports which filter actually ran.
+
+Add --corporate to also require a business style owner name (LLC, LP, Inc,
+Trust, Holdings, Properties and similar).
 
 Always run a survey first to see counts before downloading anything:
 
-  python3 pull_absentee_owners.py --count-only
+  python3 pull_absentee_owners.py --count-only --corporate
 
 Then pull one market:
 
-  python3 pull_absentee_owners.py --market FL_Statewide
+  python3 pull_absentee_owners.py --corporate --market Maricopa
 
 Or everything:
 
-  python3 pull_absentee_owners.py
+  python3 pull_absentee_owners.py --corporate
 
 Outputs (attributes only, no geometry, so files stay small) land in
 ~/Desktop/Master_Data/SFR_Markets/ as CSV plus raw NDJSON.
@@ -33,7 +37,7 @@ from datetime import datetime
 import requests
 
 TIMEOUT = 60
-MAX_RETRIES = 4
+MAX_RETRIES = 3
 
 # (market, home_state, layer or service url)
 ENDPOINTS = [
@@ -49,24 +53,26 @@ ENDPOINTS = [
     ("NC_Statewide", "NC", "https://services.nconemap.gov/secure/rest/services/NC1Map_Parcels/FeatureServer"),
     ("Marion_IN", "IN", "https://gis.indy.gov/server/rest/services/MapIndy/MapIndyProperty/MapServer/10"),
     ("MA_Statewide", "MA", "https://services1.arcgis.com/hGdibHYSPO59RG1h/arcgis/rest/services/Massachusetts_Property_Tax_Parcels/FeatureServer/0"),
-    ("Jefferson_KY", "KY", "https://services1.arcgis.com/79kfd2K6fskCAkyg/arcgis/rest/services/LOJIC_Parcels/FeatureServer/0"),
+    ("Jefferson_KY", "KY", "https://services1.arcgis.com/79kfd2K6fskCAkyg/arcgis/rest/services/Jefferson_County_KY_Parcels/FeatureServer/0"),
     ("NV_Statewide", "NV", "https://gis.dot.nv.gov/agsphs/rest/services/Reference/Statewide_Parcels/MapServer"),
-    ("TX_Statewide", "TX", "https://feature.geographic.texas.gov/arcgis/rest/services/Parcels/stratmap23_land_parcels_48/MapServer"),
+    ("TX_Statewide_2019", "TX", "https://feature.tnris.org/arcgis/rest/services/Parcels/stratmap19_land_parcels_48/MapServer"),
 ]
 
 OWNER_ZIP_HINTS = ("OWN_ZIP", "OWNZIP", "MAIL_ZIP", "MAILZIP", "MZIP",
-                   "OWNER_ZIP", "TAXPAYER_ZIP")
+                   "OWNER_ZIP", "TAXPAYER_ZIP", "OWNERADDRZIP")
 PROP_ZIP_HINTS = ("PHY_ZIP", "PROP_ZIP", "PROPZIP", "SITE_ZIP", "SITUS_ZIP",
-                  "SITEZIP", "SITUSZIP", "LOC_ZIP", "PZIP", "PARCEL_ZIP")
-OWNER_STATE_HINTS = ("OWN_STATE", "OWNSTATE", "MAIL_STATE", "MAILSTATE",
-                     "OWNER_STATE", "MSTATE", "OWN_ST", "MAIL_ST")
+                  "SITEZIP", "SITUSZIP", "LOC_ZIP", "PZIP", "PARCEL_ZIP",
+                  "SitusZip")
 OWNER_NAME_HINTS = ("OWNER", "OWN_NAME", "OWNNAME", "OWNERNAME", "OWNER_NAME",
-                    "OWNJAN1", "TAXPAYER")
+                    "OWNJAN1", "TAXPAYER", "PAR_OWN")
 
 CORPORATE_PATTERNS = ("% LLC%", "%L L C%", "% LP", "% L P", "%LTD%", "% INC%",
                       "%CORP%", "%TRUST%", "%HOLDINGS%", "%PROPERTIES%",
                       "%PARTNERS%", "%INVEST%", "%HOMES%", "%RENTAL%",
                       "%CAPITAL%", "%VENTURES%", "%FUND%", "%REALTY%")
+
+STATE_BAD_SUBSTRINGS = ("PARCEL", "NUMBER", "NUM", "CODE", "ESTATE",
+                        "INTERSTATE", "STATEMENT", "ROUTE", "ID_")
 
 
 def get_json(url, params=None):
@@ -87,6 +93,11 @@ def get_json(url, params=None):
     raise RuntimeError(f"{url}: {last}")
 
 
+def string_fields(meta):
+    return [f["name"] for f in meta.get("fields", []) or []
+            if f.get("type") == "esriFieldTypeString"]
+
+
 def resolve_layer(url):
     meta = get_json(url)
     if "fields" in meta:
@@ -103,37 +114,85 @@ def resolve_layer(url):
 
 
 def find_field(meta, hints):
-    names = [f["name"] for f in meta.get("fields", []) or []
-             if f.get("type") == "esriFieldTypeString"]
+    names = string_fields(meta)
     for hint in hints:
         for n in names:
-            if hint in n.upper():
+            if hint.upper() in n.upper():
                 return n
     return None
 
 
-def build_filter(meta, home_state, corporate):
-    """Return (where, mode). Prefers zip mismatch, falls back to state."""
+def find_state_field(meta):
+    """Owner mailing state field. Strict, so STATEPARCELNUMBER style fields
+    never match."""
+    names = [n for n in string_fields(meta)
+             if not any(b in n.upper() for b in STATE_BAD_SUBSTRINGS)]
+    # Owner or mailing prefixed first.
+    for n in names:
+        u = n.upper()
+        if u.endswith("STATE") and any(p in u for p in
+                                       ("OWN", "MAIL", "TAXPAYER", "ADDR")):
+            return n
+    for n in names:
+        if n.upper() in ("STATE", "MSTATE", "OSTATE", "ST", "STATE_ABBR",
+                         "STATEABBR", "ST_ABBR"):
+            return n
+    for n in names:
+        if n.upper().endswith("STATE"):
+            return n
+    return None
+
+
+def corporate_clause(oname, use_upper):
+    field = f"UPPER({oname})" if use_upper else oname
+    return "(" + " OR ".join(f"{field} LIKE '{p}'"
+                             for p in CORPORATE_PATTERNS) + ")"
+
+
+def build_filters(meta, home_state, corporate):
+    """Return list of (where, mode) candidates, strongest filter first.
+    Each base filter gets an UPPER and a plain variant because some servers
+    reject functions in where clauses."""
     ozip = find_field(meta, OWNER_ZIP_HINTS)
     pzip = find_field(meta, PROP_ZIP_HINTS)
-    ostate = find_field(meta, OWNER_STATE_HINTS) or find_field(meta, ("STATE",))
-    parts = []
-    mode = None
+    ostate = find_state_field(meta)
+    oname = find_field(meta, OWNER_NAME_HINTS)
+
+    bases = []
     if ozip and pzip and ozip != pzip:
-        parts.append(f"{ozip} <> {pzip} AND {ozip} IS NOT NULL AND {pzip} IS NOT NULL")
-        mode = f"zip mismatch ({ozip} vs {pzip})"
-    elif ostate:
-        parts.append(f"UPPER({ostate}) <> '{home_state}' AND {ostate} IS NOT NULL AND {ostate} <> ''")
-        mode = f"out of state ({ostate})"
-    else:
-        return None, "no owner zip or state field"
-    if corporate:
-        oname = find_field(meta, OWNER_NAME_HINTS)
-        if oname:
-            likes = " OR ".join(f"UPPER({oname}) LIKE '{p}'" for p in CORPORATE_PATTERNS)
-            parts.append(f"({likes})")
-            mode += " + corporate name"
-    return " AND ".join(f"({p})" for p in parts), mode
+        bases.append((f"({ozip} <> {pzip} AND {ozip} IS NOT NULL "
+                      f"AND {pzip} IS NOT NULL)",
+                      f"zip mismatch ({ozip} vs {pzip})"))
+    if ostate:
+        bases.append((None, f"out of state ({ostate})"))  # built per variant
+    if corporate and oname and not bases:
+        bases.append(("1=1", "corporate name only"))
+
+    out = []
+    for base_where, mode in bases:
+        for use_upper in (True, False):
+            parts = []
+            if mode.startswith("out of state"):
+                field = f"UPPER({ostate})" if use_upper else ostate
+                parts.append(f"({field} <> '{home_state}' AND {ostate} "
+                             f"IS NOT NULL AND {ostate} <> '')")
+            elif base_where != "1=1":
+                parts.append(base_where)
+            if corporate and oname:
+                parts.append(corporate_clause(oname, use_upper))
+            if not parts:
+                parts.append(base_where or "1=1")
+            where = " AND ".join(parts)
+            label = mode + (" + corporate name" if corporate and oname
+                            and mode != "corporate name only" else "")
+            out.append((where, label))
+    # Drop duplicate wheres while keeping order.
+    seen, dedup = set(), []
+    for w, m in out:
+        if w not in seen:
+            seen.add(w)
+            dedup.append((w, m))
+    return dedup
 
 
 def count(layer_url, where):
@@ -141,7 +200,20 @@ def count(layer_url, where):
                     {"where": where, "returnCountOnly": "true"}).get("count")
 
 
-def pull(layer_url, meta, where, outdir, name, ozip_pair):
+def working_filter(layer_url, meta, home_state, corporate):
+    """Try each candidate filter until the server accepts one."""
+    last_err = "no owner zip, state, or name field"
+    for where, mode in build_filters(meta, home_state, corporate):
+        try:
+            n = count(layer_url, where)
+            if n is not None:
+                return where, mode, n
+        except Exception as e:  # noqa: BLE001
+            last_err = str(e)[:90]
+    return None, last_err, None
+
+
+def pull(layer_url, meta, where, outdir, name, zip_pair):
     oid = meta.get("objectIdField") or next(
         (f["name"] for f in meta.get("fields", [])
          if f["type"] == "esriFieldTypeOID"), "OBJECTID")
@@ -180,9 +252,9 @@ def pull(layer_url, meta, where, outdir, name, ozip_pair):
         writer = None
         for line in src:
             row = json.loads(line)
-            if ozip_pair:
-                oz = str(row.get(ozip_pair[0]) or "")[:5]
-                pz = str(row.get(ozip_pair[1]) or "")[:5]
+            if zip_pair:
+                oz = str(row.get(zip_pair[0]) or "")[:5]
+                pz = str(row.get(zip_pair[1]) or "")[:5]
                 if oz and pz and oz == pz:
                     continue
             if writer is None:
@@ -223,16 +295,11 @@ def main():
             print("  no usable layer found")
             summary.append([market, "no layer", "", ""])
             continue
-        where, mode = build_filter(meta, home_state, args.corporate)
+        where, mode, n = working_filter(layer_url, meta, home_state,
+                                        args.corporate)
         if not where:
             print(f"  skipped: {mode}")
-            summary.append([market, mode, "", ""])
-            continue
-        try:
-            n = count(layer_url, where)
-        except Exception as e:  # noqa: BLE001
-            print(f"  count failed: {e}")
-            summary.append([market, f"count failed: {str(e)[:60]}", "", ""])
+            summary.append([market, f"skipped: {mode}", "", ""])
             continue
         print(f"  {mode}: {n} parcels")
         if args.count_only:
@@ -250,9 +317,9 @@ def main():
             print(f"  pull failed: {e}")
             summary.append([market, mode, n, f"pull failed: {str(e)[:60]}"])
 
-    print("\nMarket                 Filter                          Parcels")
+    print("\nMarket                 Filter                                Parcels")
     for row in summary:
-        print(f"{row[0]:<22} {str(row[1]):<32} {row[2]}")
+        print(f"{row[0]:<22} {str(row[1]):<38} {row[2]}")
 
     os.makedirs(args.outdir, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
