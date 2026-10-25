@@ -1,0 +1,60 @@
+deal,sponsor,year,deal_type,matched,matched_how
+IHSFR 2018-SFR4,Invitation Homes,2018,Single-borrower Deal,Y,sponsor-family
+PROG 2018-SFR3,Progress Residential,2018,Single-borrower Deal,Y,deal->CIK 1625909; sponsor-family
+PROG 2018-SFR2,Progress Residential,2018,Single-borrower Deal,Y,deal->CIK 1729058; sponsor-family
+CAFL 2018-1,CoreVest American Finance,2018,Multi-borrower Deal,Y,sponsor-family
+IHSFR 2018-SFR3,Invitation Homes,2018,Single-borrower Deal,Y,sponsor-family
+HPA 2018-1,Home Partners of America,2018,Single-borrower Deal,Y,"deal->CIK 1660817,1739830; sponsor-family"
+IHSFR 2018-SFR2,Invitation Homes,2018,Single-borrower Deal,Y,sponsor-family
+TAH 2018-SFR1,Tricon American Homes,2018,Single-borrower Deal,Y,deal->CIK 1732758; sponsor-family
+PROG 2018-SFR1,Progress Residential,2018,Single-borrower Deal,Y,"deal->CIK 1729058,1729483; sponsor-family"
+IHSFR 2018-SFR1,Invitation Homes,2018,Single-borrower Deal,Y,sponsor-family
+TAH 2017-SFR2,Tricon American Homes,2017,Single-borrower Deal,Y,deal->CIK 1721113; sponsor-family
+CAFL 2017-2,CoreVest American Finance (Freddie Mac FRESR),2017,Multi-borrower Deal,Y,sponsor-family
+PROG 2017-SFR2,Progress Residential,2017,Single-borrower Deal,Y,sponsor-family
+IHSFR 2017-SFR2,Invitation Homes,2017,Single-borrower Deal,Y,sponsor-family
+CAFL 2017-1,CoreVest American Finance,2017,Multi-borrower Deal,Y,sponsor-family
+SWH 2017-1,Starwood Waypoint Homes,2017,Single-borrower Deal,Y,"deal->CIK 1631651,1710262; sponsor-family"
+TAH 2017-1,Tricon American Homes,2017,Single-borrower Deal,Y,"deal->CIK 1713378,1721113; sponsor-family"
+PROG-2017-SFR1,Progress Residential,2017,Single-borrower Deal,Y,sponsor-family
+HPA 2017-1,Home Partners of America,2017,Single-borrower Deal,Y,deal->CIK 1660817; sponsor-family
+FNGT 2017-T1,Fannie Mae / Invitation Homes,2017,Single-borrower Deal,Y,sponsor-family
+RCO 2016-SFR1,RCO Mortgage,2016,Multi-borrower Deal,Y,"deal->CIK 1689145,1689387,1790290,1831576,1855169,"
+PROG 2016-SFR2,Progress Residential,2016,Single-borrower Deal,Y,sponsor-family
+CAFL 2016-2,Colony American Finance,2016,Multi-borrower Deal,Y,sponsor-family
+CSH 2016-2,Colony Starwood Homes,2016,Single-borrower Deal,Y,deal->CIK 1631651; sponsor-family
+TAH 2016-SFR1,Tricon American Homes,2016,Single-borrower Deal,Y,sponsor-family
+AMSR 2016-SFR1,Amherst SFR Assets,2016,Single-borrower Deal,Y,sponsor-family
+HPA 2016-2,Home Partners of America,2016,Single-borrower Deal,Y,deal->CIK 1660817; sponsor-family
+PROG 2016-1,Progress Residential,2016,Single-borrower Deal,Y,sponsor-family
+B2R 2016-1,B2R Finance,2016,Multi-borrower Deal,Y,deal->CIK 1649872
+CSH 2016-1,Colony Starwood Homes,2016,Single-borrower Deal,Y,deal->CIK 1631651; sponsor-family
+CAFL 2016-1,Colony American Finance,2016,Multi-borrower Deal,Y,sponsor-family
+HPA 2016-1,Home Partners of America,2016,Single-borrower Deal,Y,deal->CIK 1660817; sponsor-family
+B2R 2015-2,B2R Finance,2015,Multi-borrower Deal,Y,deal->CIK 1649872
+PROG 2015-3,Progress Residential,2015,Single-borrower Deal,Y,sponsor-family
+CAFL 2015-1,Colony American Finance,2015,Multi-borrower Deal,Y,sponsor-family
+AH4R 2015-SFR2,American Homes 4 Rent,2015,Single-borrower Deal,Y,sponsor-family
+IH 2015-SFR3,Invitation Homes,2015,Single-borrower Deal,Y,sponsor-family
+CAH 2015-1,Colony American,2015,Single-borrower Deal,Y,sponsor-family
+PROG 2015-SFR2,Progress Residential,2015,Single-borrower Deal,Y,sponsor-family
+TAH 2015-1,Tricon American Homes,2015,Single-borrower Deal,Y,sponsor-family
+FKL 2015-SFR1,First Key Lending,2015,Multi-borrower Deal,Y,sponsor-family
+B2R 2015-1,B2R Finance,2015,Multi-borrower Deal,N,
+IH 2015-SFR2,Invitation Homes,2015,Single-borrower Deal,Y,sponsor-family
+AH4R 2015-SFR1,American Homes 4 Rent,2015,Single-borrower Deal,Y,sponsor-family
+PROG 2015-SFR1,Progress Residential,2015,Single-borrower Deal,Y,sponsor-family
+IH 2015-SFR1,Invitation Homes,2015,Single-borrower Deal,Y,sponsor-family
+SWAY 2014-1,SWAY,2014,Single-borrower Deal,Y,deal->CIK 1631651
+AH4R 2014-SFR3,American Homes 4 Rent,2014,Single-borrower Deal,Y,sponsor-family
+IH 2014-SFR3,Invitation Homes,2014,Single-borrower Deal,Y,"deal->CIK 1694109,1720192; sponsor-family"
+PROG 2014-SFR1,Progress Residential,2014,Single-borrower Deal,Y,sponsor-family
+AH4R 2014-SFR2,American Homes 4 Rent,2014,Single-borrower Deal,Y,sponsor-family
+ARP 2014-1,American Residential Properties,2014,Single-borrower Deal,Y,sponsor-family
+IH 2014-SFR2,Invitation Homes,2014,Single-borrower Deal,Y,"deal->CIK 1694109,1720192; sponsor-family"
+SBY 2014-1,Silver Bay Realty,2014,Single-borrower Deal,N,
+CAH 2014-2,Colony American,2014,Single-borrower Deal,Y,"deal->CIK 1694109,1727549; sponsor-family"
+IH 2014-SFR1,Invitation Homes,2014,Single-borrower Deal,Y,sponsor-family
+AH4R 2014-SFR1,American Homes 4 Rent,2014,Single-borrower Deal,Y,sponsor-family
+CAH 2014-1,Colony American Homes,2014,Single-borrower Deal,Y,"deal->CIK 1694109,1727549; sponsor-family"
+IH 2013-SFR1,Invitation Homes,2013,Single-borrower Deal,Y,sponsor-family

@@ -1,0 +1,12 @@
+# Public-builder share of Davidson County new single-family construction
+# Source: Builder_Name_Dictionary_2026-06-30.csv (child->parent+category crosswalk). Rebuilt 2026-07-03.
+# Settles the 20.1% (abstracts) vs 24.2% (rerun) conflict: public-builder share = 25.3%.
+category,permit_rows,share_pct
+Local Builder,43877,63.6
+National Public Builder,17457,25.3
+Regional Builder,5477,7.9
+National Private Builder,938,1.4
+Non-Profit,669,1.0
+Self/Owner,336,0.5
+Institutional BTR,279,0.4
+TOTAL,69033,100.0
